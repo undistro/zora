@@ -1,0 +1,6 @@
+domain: snitch.undistro.io
+layout:
+- go.kubebuilder.io/v3
+projectName: snitch
+repo: github.com/getupio-undistro/snitch
+version: "3"
