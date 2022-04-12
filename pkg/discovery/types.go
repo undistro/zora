@@ -15,6 +15,7 @@ type ClusterDiscovery interface {
 	DiscoverNodes(context.Context) ([]NodeInfo, error)
 }
 
+// +k8s:deepcopy-gen=true
 type ClusterInfo struct {
 	// KubernetesVersion is the server's kubernetes version (git version).
 	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
@@ -26,6 +27,7 @@ type ClusterInfo struct {
 	Resources map[corev1.ResourceName]Resources `json:"resources,omitempty"`
 }
 
+// +k8s:deepcopy-gen=true
 type NodeInfo struct {
 	// Node name
 	Name string `json:"name,omitempty"`
@@ -40,6 +42,7 @@ type NodeInfo struct {
 	Ready bool `json:"ready,omitempty"`
 }
 
+// +k8s:deepcopy-gen=true
 type Resources struct {
 	// Quantity of resources available for scheduling
 	Available resource.Quantity `json:"available,omitempty"`

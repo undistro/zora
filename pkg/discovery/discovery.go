@@ -2,6 +2,7 @@ package discovery
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	corev1 "k8s.io/api/core/v1"
@@ -72,7 +73,7 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 func (r *clusterDiscovery) DiscoverVersion(_ context.Context) (string, error) {
 	v, err := r.kubernetes.Discovery().ServerVersion()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to discover server version: %w", err)
 	}
 	return v.String(), nil
 }
@@ -80,11 +81,11 @@ func (r *clusterDiscovery) DiscoverVersion(_ context.Context) (string, error) {
 func (r *clusterDiscovery) DiscoverNodes(ctx context.Context) ([]NodeInfo, error) {
 	metricsList, err := r.metrics.MetricsV1beta1().NodeMetricses().List(ctx, metav1.ListOptions{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list NodeMetrics: %w", err)
 	}
 	nodeList, err := r.kubernetes.CoreV1().Nodes().List(ctx, metav1.ListOptions{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list Nodes: %w", err)
 	}
 
 	return nodeResources(nodeList.Items, metricsList.Items), nil

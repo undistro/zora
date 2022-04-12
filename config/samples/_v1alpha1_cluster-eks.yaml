@@ -1,0 +1,11 @@
+apiVersion: snitch.undistro.io/v1alpha1
+kind: Cluster
+metadata:
+  name: cluster-sample-eks
+spec:
+  cloud:
+    eks:
+      name: sample
+      region: us-east-1
+      credentialsRef:
+        name: sample-credentials
