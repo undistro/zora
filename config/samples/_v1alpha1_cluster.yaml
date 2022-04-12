@@ -1,0 +1,7 @@
+apiVersion: snitch.undistro.io/v1alpha1
+kind: Cluster
+metadata:
+  name: cluster-sample
+spec:
+  kubeconfigRef:
+    name: sample-kubeconfig
