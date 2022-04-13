@@ -1,8 +1,29 @@
+# Port for the image registry.
+REG_PORT ?= 5000
+# Host for the image registry.
+REG_HOST ?= localhost
+# Address for the image registry.
+REG_ADDR ?= ${REG_HOST}:${REG_PORT}
+# Address for Minikube's inner registry.
+MINIK_ADDR ?= 192.168.49.2
+# Name for the local registry.
+LOCAL_REG_NAME ?= local_registry
+# Tag used in the Docker image.
+IMG_TAG ?= latest
 
-# Image URL to use all building/pushing image targets
-IMG ?= localhost:5000/snitch:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.23
+
+
+# Image URL to use for building and pushing.
+# Name of dockerfile to use in the image.  
+ifeq (${SNITCH_DEBUG}, true)
+IMG ?= ${REG_ADDR}/snitch-debug:${IMG_TAG}
+DOCKERFILE ?= snitch_debug.docker
+else
+IMG ?= ${REG_ADDR}/snitch:${IMG_TAG}
+DOCKERFILE ?= Dockerfile
+endif
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -11,11 +32,13 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
+
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # This is a requirement for 'setup-envtest.sh' in the test target.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
-SHELL = /usr/bin/env bash -o pipefail
+SHELL = /bin/bash -o pipefail
 .SHELLFLAGS = -ec
+
 
 .PHONY: all
 all: build
@@ -36,6 +59,7 @@ all: build
 .PHONY: help
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
 
 ##@ Development
 
@@ -70,8 +94,8 @@ run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go
 
 .PHONY: docker-build
-docker-build: test ## Build docker image with the manager.
-	docker build -t ${IMG} .
+docker-build: ## Build manager docker image.
+	docker build -t ${IMG} -f ${DOCKERFILE} .
 
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
@@ -92,7 +116,7 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 	$(KUSTOMIZE) build config/crd | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 .PHONY: deploy
-deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+deploy: docker-build docker-push generate install ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
@@ -103,28 +127,51 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 .PHONY: controller-gen
 controller-gen: ## Download controller-gen locally if necessary.
-	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.8.0)
+	$(call go-install-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.8.0)
 
 KUSTOMIZE = $(shell pwd)/bin/kustomize
 .PHONY: kustomize
 kustomize: ## Download kustomize locally if necessary.
-	$(call go-get-tool,$(KUSTOMIZE),sigs.k8s.io/kustomize/kustomize/v3@v3.8.7)
+	$(call go-install-tool,$(KUSTOMIZE),sigs.k8s.io/kustomize/kustomize/v4@v4.5.2)
 
 ENVTEST = $(shell pwd)/bin/setup-envtest
 .PHONY: envtest
 envtest: ## Download envtest-setup locally if necessary.
-	$(call go-get-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest@latest)
+	$(call go-install-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest@latest)
 
-# go-get-tool will 'go get' any package $2 and install it to $1.
+# go-install-tool will 'go get' any package $2 and install it to $1.
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
-define go-get-tool
+define go-install-tool
 @[ -f $(1) ] || { \
 set -e ;\
 TMP_DIR=$$(mktemp -d) ;\
 cd $$TMP_DIR ;\
 go mod init tmp ;\
 echo "Downloading $(2)" ;\
-GOBIN=$(PROJECT_DIR)/bin go get $(2) ;\
+GOBIN=$(PROJECT_DIR)/bin go install $(2) ;\
 rm -rf $$TMP_DIR ;\
 }
 endef
+
+
+##@ Local Deployment
+setup-local-registry: ## Create a local Docker registry.
+	@ REG_PORT=${REG_PORT} \
+	LOCAL_REG_NAME=${LOCAL_REG_NAME} \
+	./scripts/setup_local_registry.sh
+setup-kind: setup-local-registry ## Start Kind and a local Docker registry.
+	@ REG_PORT=${REG_PORT} \
+	LOCAL_REG_NAME=${LOCAL_REG_NAME} \
+	./scripts/setup_kind.sh
+delete-kind: ## Delete Kind node.
+	kind delete cluster
+setup-minikube:  ## Start Minikube with an inner Docker registry.
+	minikube start --addons="registry" \
+		--driver=docker \
+		--cni=kindnet \
+		--container-runtime=containerd \
+		--insecure-registry="${MINIK_ADDR}:${REG_PORT}" \
+		--extra-config="kubelet.container-runtime-endpoint='http://${MINIK_ADDR}:${REG_PORT}"
+delete-minikube: ## Delete Minikube node.
+	minikube delete
+
