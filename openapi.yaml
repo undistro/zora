@@ -1,0 +1,80 @@
+openapi: 3.0.1
+info:
+  title: Snitch
+  description: 'Snitch server'
+  version: 1.0.0
+servers:
+  - url: http://snitch/v1
+tags:
+  - name: cluster
+    description: Everything about Clusters
+paths:
+  /clusters:
+    get:
+      tags:
+        - cluster
+      summary: List clusters
+      operationId: listClusters
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+        500:
+          description: Internal Server Error
+          content: { }
+components:
+  schemas:
+    Cluster:
+      type: object
+      properties:
+        name:
+          type: string
+          example: mycluster-prd
+        provider:
+          type: string
+          example: aws
+        flavor:
+          type: string
+          example: eks
+        region:
+          type: string
+          example: v1.21.5-eks-bc4871b
+        totalNodes:
+          type: integer
+          minimum: 0
+          example: 178
+        ready:
+          type: boolean
+          example: true
+        totalIssues:
+          type: integer
+          minimum: 0
+          example: 4
+        resources:
+          $ref: '#/components/schemas/Resources'
+    Resources:
+      type: object
+      properties:
+        memory:
+          $ref: '#/components/schemas/Resource'
+        cpu:
+          $ref: '#/components/schemas/Resource'
+    Resource:
+      type: object
+      properties:
+        available:
+          type: string
+          example: '10033Mi'
+        usage:
+          type: string
+          example: '3363Mi'
+        usagePercentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 33
