@@ -20,4 +20,4 @@ case "$(docker inspect -f '{{.State.Running}}' $LOCAL_REG_NAME 2> /dev/null)" in
 			;;
 esac
 
-echo "Registry <$LOCAL_REG_NAME> is ready\n"
+echo -e "Registry <$LOCAL_REG_NAME> is ready\n"

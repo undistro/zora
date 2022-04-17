@@ -13,17 +13,11 @@ IMG_TAG ?= latest
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.23
-
-
 # Image URL to use for building and pushing.
-# Name of dockerfile to use in the image.  
-ifeq (${SNITCH_DEBUG}, true)
-IMG ?= ${REG_ADDR}/snitch-debug:${IMG_TAG}
-DOCKERFILE ?= snitch_debug.docker
-else
 IMG ?= ${REG_ADDR}/snitch:${IMG_TAG}
+# Name of dockerfile to use in the image.
 DOCKERFILE ?= Dockerfile
-endif
+
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
