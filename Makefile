@@ -6,8 +6,6 @@ REG_HOST ?= localhost
 REG_ADDR ?= ${REG_HOST}:${REG_PORT}
 # Address for Minikube's inner registry.
 MINIK_ADDR ?= 192.168.49.2
-# Name for the local registry.
-LOCAL_REG_NAME ?= local_registry
 # Tag used in the Docker image.
 IMG_TAG ?= latest
 
@@ -33,6 +31,12 @@ endif
 SHELL = /bin/bash -o pipefail
 .SHELLFLAGS = -ec
 
+# CLUSTER_NAME ?= snitched
+# KCONFIG_NAME ?= snitch-view-kubeconfig.yaml
+# KCONFIG_SECRET_NAME ?= ${CLUSTER_NAME}-kubeconfig
+# CLUSTER_ROLE_NAME ?= snitch-view
+# SVC_ACCOUNT_NS ?= kube-system
+# SVC_ACCOUNT_NAME ?= snitch-view
 
 .PHONY: all
 all: build
@@ -150,12 +154,8 @@ endef
 
 ##@ Local Deployment
 setup-local-registry: ## Create a local Docker registry.
-	@ REG_PORT=${REG_PORT} \
-	LOCAL_REG_NAME=${LOCAL_REG_NAME} \
 	./scripts/setup_local_registry.sh
 setup-kind: setup-local-registry ## Start Kind and a local Docker registry.
-	@ REG_PORT=${REG_PORT} \
-	LOCAL_REG_NAME=${LOCAL_REG_NAME} \
 	./scripts/setup_kind.sh
 delete-kind: ## Delete Kind node.
 	kind delete cluster
@@ -169,3 +169,5 @@ setup-minikube:  ## Start Minikube with an inner Docker registry.
 delete-minikube: ## Delete Minikube node.
 	minikube delete
 
+setup-snitch-view: ## Configure RBAC, create and apply view Secret.
+	./scripts/setup_snitch_view.sh
