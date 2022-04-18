@@ -71,7 +71,7 @@ func GetConfig(secretKeySelector cloud.SecretKeySelectorValueFunc, spec *v1alpha
 	// Just reuse the context name as an auth name.
 	config.Contexts[name] = &api.Context{Cluster: name, AuthInfo: name}
 
-	// AWS specific configation; use cloud platform scope.
+	// AWS specific configuration; use cloud platform scope.
 	config.AuthInfos[name] = &api.AuthInfo{Token: t.Token}
 
 	return &config, nil
