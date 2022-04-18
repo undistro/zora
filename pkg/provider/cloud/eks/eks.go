@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/eks"
 	"sigs.k8s.io/aws-iam-authenticator/pkg/token"
 
-	"github.com/getupio-undistro/snitch/api/v1alpha1"
+	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/pkg/provider/cloud"
 
 	corev1 "k8s.io/api/core/v1"

@@ -92,6 +92,9 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 //+kubebuilder:printcolumn:name="Nodes",type="integer",JSONPath=".status.totalNodes",description=""
 
 // Cluster is the Schema for the clusters API
+//+genclient
+//+genclient:onlyVerbs=list,get
+//+genclient:noStatus
 type Cluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

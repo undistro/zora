@@ -13,7 +13,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/getupio-undistro/snitch/api/v1alpha1"
+	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/pkg/discovery"
 	"github.com/getupio-undistro/snitch/pkg/kubeconfig"
 	"github.com/getupio-undistro/snitch/pkg/provider/cloud"
