@@ -48,7 +48,42 @@ Snitch just needs a token that can be obtained creating a new service account.
 1. Create the service account with `view` permissions:
 ```shell
 kubectl -n kube-system create serviceaccount snitch-view
-kubectl create clusterrolebinding snitch-view --clusterrole=view --serviceaccount=kube-system:snitch-view
+cat << EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: snitch-view
+rules:
+  - apiGroups: [ "" ]
+    resources:
+      - configmaps
+      - deployments
+      - endpoints
+      - horizontalpodautoscalers
+      - namespaces
+      - nodes
+      - persistentvolumes
+      - persistentvolumeclaims
+      - pods
+      - secrets
+      - serviceaccounts
+      - services
+      - statefulsets
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "rbac.authorization.k8s.io" ]
+    resources:
+      - clusterroles
+      - clusterrolebindings
+      - roles
+      - rolebindings
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "metrics.k8s.io" ]
+    resources:
+      - pods
+      - nodes
+    verbs: [ "get", "list" ]
+EOF
+kubectl create clusterrolebinding snitch-view --clusterrole=snitch-view --serviceaccount=kube-system:snitch-view
 ```
 
 2. Set up the following environment variables:
@@ -103,7 +138,6 @@ metadata:
 spec:
   kubeconfigRef:
     name: mycluster-kubeconfig
-
 EOF
 ```
 
