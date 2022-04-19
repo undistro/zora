@@ -5,6 +5,7 @@ import (
 
 	"github.com/getupio-undistro/snitch/pkg/apis"
 	"github.com/getupio-undistro/snitch/pkg/discovery"
+	"github.com/getupio-undistro/snitch/pkg/formats"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -20,28 +21,11 @@ type ClusterSpec struct {
 
 type ClusterCloudSpec struct {
 	EKS *ClusterEKSSpec `json:"eks,omitempty"`
-	AKS *ClusterAKSSpec `json:"aks,omitempty"`
-	GKE *ClusterGKESpec `json:"gke,omitempty"`
 }
 
 type ClusterEKSSpec struct {
 	Name           string                 `json:"name"`
 	Region         string                 `json:"region"`
-	CredentialsRef corev1.SecretReference `json:"credentialsRef"`
-}
-
-type ClusterAKSSpec struct {
-	Name           string                 `json:"name"`
-	TenantID       string                 `json:"tenantID"`
-	SubscriptionID string                 `json:"subscriptionID"`
-	ResourceGroup  string                 `json:"resourceGroup"`
-	CredentialsRef corev1.SecretReference `json:"credentialsRef"`
-}
-
-type ClusterGKESpec struct {
-	Name           string                 `json:"name"`
-	ServiceAccount string                 `json:"serviceAccount"`
-	Zone           string                 `json:"zone,omitempty"`
 	CredentialsRef corev1.SecretReference `json:"credentialsRef"`
 }
 
@@ -73,12 +57,12 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 	in.ClusterInfo = c
 	in.TotalNodes = len(c.Nodes)
 	if m, found := in.ClusterInfo.Resources[corev1.ResourceMemory]; found {
-		in.MemoryUsage = fmt.Sprintf("%vMi (%d%%)", m.Usage.Value()/(1024*1024), m.UsagePercentage)
-		in.MemoryAvailable = fmt.Sprintf("%vMi", m.Available.Value()/(1024*1024))
+		in.MemoryAvailable = formats.Memory(m.Available)
+		in.MemoryUsage = formats.MemoryUsage(m.Usage, m.UsagePercentage)
 	}
 	if c, found := in.ClusterInfo.Resources[corev1.ResourceCPU]; found {
-		in.CPUUsage = fmt.Sprintf("%vm (%d%%)", c.Usage.MilliValue(), c.UsagePercentage)
-		in.CPUAvailable = fmt.Sprintf("%vm", c.Available.MilliValue())
+		in.CPUAvailable = formats.CPU(c.Available)
+		in.CPUUsage = formats.CPUUsage(c.Usage, c.UsagePercentage)
 	}
 }
 

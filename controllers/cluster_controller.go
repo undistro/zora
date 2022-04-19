@@ -124,16 +124,6 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		return ctrl.Result{RequeueAfter: time.Minute * 10}, nil
 	}
 
-	// GKE
-	if cloudSpec.GKE != nil {
-		//TODO implements GKE (https://getupio.atlassian.net/browse/UD-32)
-	}
-
-	// AKS
-	if cloudSpec.AKS != nil {
-		//TODO implements AKS (https://getupio.atlassian.net/browse/UD-31)
-	}
-
 	return ctrl.Result{}, nil
 }
 
