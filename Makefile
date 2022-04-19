@@ -123,6 +123,10 @@ deploy: docker-build docker-push generate install ## Deploy controller to the K8
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
+.PHONY: template
+template: manifests kustomize ## Render kubernetes templates and display the output.
+	$(KUSTOMIZE) build config/default
+
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
