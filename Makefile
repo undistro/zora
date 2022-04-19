@@ -124,7 +124,7 @@ deploy: docker-build docker-push generate install ## Deploy controller to the K8
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
 .PHONY: template
-template: manifests kustomize ## Render kubernetes templates and display the output.
+template: manifests kustomize ## Render K8s templates and display the output.
 	$(KUSTOMIZE) build config/default
 
 .PHONY: undeploy
