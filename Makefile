@@ -31,12 +31,6 @@ endif
 SHELL = /bin/bash -o pipefail
 .SHELLFLAGS = -ec
 
-# CLUSTER_NAME ?= snitched
-# KCONFIG_NAME ?= snitch-view-kubeconfig.yaml
-# KCONFIG_SECRET_NAME ?= ${CLUSTER_NAME}-kubeconfig
-# CLUSTER_ROLE_NAME ?= snitch-view
-# SVC_ACCOUNT_NS ?= kube-system
-# SVC_ACCOUNT_NAME ?= snitch-view
 
 .PHONY: all
 all: build
