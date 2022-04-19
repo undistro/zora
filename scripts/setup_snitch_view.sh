@@ -168,7 +168,14 @@ setup_kubeconfig_secret() {
 	if ! kubectl get secret $KCONFIG_SECRET_NAME 2>&1 > /dev/null; then
 		create_kubeconfig_secret
 	fi
-	
+}
+setup_namespaces() {
+	if ! kubectl get namespace $SVC_ACCOUNT_NS 2>&1 > /dev/null; then
+		kubectl create namespace $SVC_ACCOUNT_NS
+	fi
+	if ! kubectl get namespace $CLUSTER_NS 2>&1 > /dev/null; then
+		kubectl create namespace $CLUSTER_NS 
+	fi
 }
 
 TOKEN_NAME=${TOKEN_NAME:-"$(get_token_name)"}
@@ -178,6 +185,7 @@ CURRENT_CLUSTER=${CURRENT_CLUSTER:-"$(get_current_cluster)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
+setup_namespaces
 setup_svc_account
 setup_cluster_role_binding
 setup_cluster_role_binding
