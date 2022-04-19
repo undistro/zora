@@ -133,7 +133,7 @@ EOF
 
 create_kubeconfig_secret() {
 	kubectl create secret generic $KCONFIG_SECRET_NAME \
-	  --from-file=$KCONFIG_NAME
+	  --from-file=value=$KCONFIG_NAME
 }
 
 apply_cluster_crd() {
