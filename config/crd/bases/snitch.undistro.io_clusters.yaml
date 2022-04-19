@@ -56,36 +56,6 @@ spec:
             properties:
               cloud:
                 properties:
-                  aks:
-                    properties:
-                      credentialsRef:
-                        description: SecretReference represents a Secret Reference.
-                          It has enough information to retrieve secret in any namespace
-                        properties:
-                          name:
-                            description: Name is unique within a namespace to reference
-                              a secret resource.
-                            type: string
-                          namespace:
-                            description: Namespace defines the space within which
-                              the secret name must be unique.
-                            type: string
-                        type: object
-                      name:
-                        type: string
-                      resourceGroup:
-                        type: string
-                      subscriptionID:
-                        type: string
-                      tenantID:
-                        type: string
-                    required:
-                    - credentialsRef
-                    - name
-                    - resourceGroup
-                    - subscriptionID
-                    - tenantID
-                    type: object
                   eks:
                     properties:
                       credentialsRef:
@@ -109,32 +79,6 @@ spec:
                     - credentialsRef
                     - name
                     - region
-                    type: object
-                  gke:
-                    properties:
-                      credentialsRef:
-                        description: SecretReference represents a Secret Reference.
-                          It has enough information to retrieve secret in any namespace
-                        properties:
-                          name:
-                            description: Name is unique within a namespace to reference
-                              a secret resource.
-                            type: string
-                          namespace:
-                            description: Namespace defines the space within which
-                              the secret name must be unique.
-                            type: string
-                        type: object
-                      name:
-                        type: string
-                      serviceAccount:
-                        type: string
-                      zone:
-                        type: string
-                    required:
-                    - credentialsRef
-                    - name
-                    - serviceAccount
                     type: object
                 type: object
               kubeconfigRef:

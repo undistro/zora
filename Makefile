@@ -43,9 +43,19 @@ help: ## Display this help.
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
+PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
-generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
+	@docker run -it --rm \
+		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
+		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
+		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
+		-e APIS_ROOT=$(PROJECT_PACKAGE)/apis \
+		-e GROUPS_VERSION="snitch:v1alpha1" \
+		-e GENERATION_TARGETS="client" \
+		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
+		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
