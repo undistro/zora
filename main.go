@@ -17,7 +17,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/getupio-undistro/snitch/api/v1alpha1"
+	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/controllers"
 	//+kubebuilder:scaffold:imports
 )

@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/eks"
 	"sigs.k8s.io/aws-iam-authenticator/pkg/token"
 
-	"github.com/getupio-undistro/snitch/api/v1alpha1"
+	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/pkg/provider/cloud"
 
 	corev1 "k8s.io/api/core/v1"
@@ -71,7 +71,7 @@ func GetConfig(secretKeySelector cloud.SecretKeySelectorValueFunc, spec *v1alpha
 	// Just reuse the context name as an auth name.
 	config.Contexts[name] = &api.Context{Cluster: name, AuthInfo: name}
 
-	// AWS specific configation; use cloud platform scope.
+	// AWS specific configuration; use cloud platform scope.
 	config.AuthInfos[name] = &api.AuthInfo{Token: t.Token}
 
 	return &config, nil

@@ -4,8 +4,11 @@ go 1.17
 
 require (
 	github.com/aws/aws-sdk-go v1.43.37
+	github.com/go-chi/chi/v5 v5.0.7
+	github.com/go-logr/logr v1.2.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
+	github.com/ory/graceful v0.1.2
 	go.uber.org/zap v1.19.1
 	k8s.io/api v0.23.5
 	k8s.io/apimachinery v0.23.5
@@ -29,7 +32,6 @@ require (
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/form3tech-oss/jwt-go v3.2.3+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-logr/zapr v1.2.0 // indirect
 	github.com/gofrs/flock v0.7.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
