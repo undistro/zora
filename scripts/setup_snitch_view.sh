@@ -150,33 +150,36 @@ EOF
 }
 
 setup_svc_account() {
-	if ! kubectl -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME 2>&1 > /dev/null; then
+	if ! kubectl -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
 		create_svc_account
 	fi
 }
 setup_cluster_role() {
-	if ! kubectl get clusterrole $CLUSTER_ROLE_NAME 2>&1 > /dev/null; then
+	if ! kubectl get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
 		create_cluster_role
 	fi
 }
 setup_cluster_role_binding() {
-	if ! kubectl get -n $SVC_ACCOUNT_NS clusterrolebinding $SVC_ACCOUNT_NAME 2>&1 > /dev/null; then
+	if ! kubectl get -n $SVC_ACCOUNT_NS clusterrolebinding $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
 		create_cluster_role_binding
 	fi
 }
 setup_kubeconfig_secret() {
-	if ! kubectl get secret $KCONFIG_SECRET_NAME 2>&1 > /dev/null; then
+	if ! kubectl get secret $KCONFIG_SECRET_NAME > /dev/null 2>&1; then
 		create_kubeconfig_secret
 	fi
 }
 setup_namespaces() {
-	if ! kubectl get namespace $SVC_ACCOUNT_NS 2>&1 > /dev/null; then
+	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
 		kubectl create namespace $SVC_ACCOUNT_NS
 	fi
-	if ! kubectl get namespace $CLUSTER_NS 2>&1 > /dev/null; then
+	if ! kubectl get namespace $CLUSTER_NS > /dev/null 2>&1; then
 		kubectl create namespace $CLUSTER_NS 
 	fi
 }
+
+setup_namespaces
+setup_svc_account
 
 TOKEN_NAME=${TOKEN_NAME:-"$(get_token_name)"}
 TOKEN_VALUE=${TOKEN_VALUE:-"$(get_token_value)"}
@@ -185,8 +188,6 @@ CURRENT_CLUSTER=${CURRENT_CLUSTER:-"$(get_current_cluster)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
-setup_namespaces
-setup_svc_account
 setup_cluster_role_binding
 setup_cluster_role_binding
 create_kubeconfig
