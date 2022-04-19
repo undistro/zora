@@ -13,7 +13,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/getupio-undistro/snitch/api/v1alpha1"
+	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/pkg/discovery"
 	"github.com/getupio-undistro/snitch/pkg/kubeconfig"
 	"github.com/getupio-undistro/snitch/pkg/provider/cloud"
@@ -122,16 +122,6 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		// the kubeconfig token is valid 14min, it will update token every 10min
 		log.Info("reconciliation finished, next run in 10m")
 		return ctrl.Result{RequeueAfter: time.Minute * 10}, nil
-	}
-
-	// GKE
-	if cloudSpec.GKE != nil {
-		//TODO implements GKE (https://getupio.atlassian.net/browse/UD-32)
-	}
-
-	// AKS
-	if cloudSpec.AKS != nil {
-		//TODO implements AKS (https://getupio.atlassian.net/browse/UD-31)
 	}
 
 	return ctrl.Result{}, nil
