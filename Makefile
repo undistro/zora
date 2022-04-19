@@ -58,6 +58,7 @@ help: ## Display this help.
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	@cp -r config/crd/bases/*.yaml charts/snitch/crds/
 
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
@@ -123,7 +124,7 @@ deploy: docker-build docker-push generate install ## Deploy controller to the K8
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
 .PHONY: template
-template: manifests kustomize ## Render kubernetes templates and display the output.
+template: manifests kustomize ## Render K8s templates and display the output.
 	$(KUSTOMIZE) build config/default
 
 .PHONY: undeploy
