@@ -92,3 +92,14 @@ Create the name of the service account to use in Operator
 {{- default "default" .Values.operator.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the name of the service account to use in Server
+*/}}
+{{- define "snitch.serverServiceAccountName" -}}
+{{- if .Values.server.serviceAccount.create }}
+{{- default (printf "%s-%s" (include "snitch.fullname" .) "server") .Values.server.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.server.serviceAccount.name }}
+{{- end }}
+{{- end }}

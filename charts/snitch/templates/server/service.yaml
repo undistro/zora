@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: {{ include "snitch.fullname" . }}
   labels:
-    {{- include "snitch.labels" . | nindent 4 }}
+    {{- include "snitch.serverLabels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.server.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.server.service.port }}
       targetPort: http
       protocol: TCP
       name: http
