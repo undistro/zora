@@ -102,6 +102,9 @@ operator:
       requests:
         cpu: 5m
         memory: 64Mi
+  metricsService:
+    type: ClusterIP
+    port: 8443
   autoscaling:
     enabled: false
     minReplicas: 1
