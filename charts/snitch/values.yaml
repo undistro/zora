@@ -1,53 +1,41 @@
+# -- String to partially override fullname template with a string (will prepend the release name)
 nameOverride: ""
+# -- String to fully override fullname template with a string
 fullnameOverride: ""
 
-server:
+operator:
+  # -- Number of replicas desired of Snitch operator
   replicaCount: 1
-  image: registry.undistro.io/snitch/server:v0.1.0
+  image: registry.undistro.io/snitch/operator:v0.1.0
+  # -- Image pull policy
   imagePullPolicy: IfNotPresent
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets: []
   serviceAccount:
+    # -- Specifies whether a service account should be created
     create: true
+    # -- Annotations to be added to service account
     annotations: {}
+    # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
     name: ""
-  podAnnotations: {}
-  podSecurityContext: {}
-  securityContext: {}
-  service:
+  # -- Annotations to be added to pods
+  podAnnotations:
+    kubectl.kubernetes.io/default-container: manager
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
+  podSecurityContext:
+    runAsNonRoot: true
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
+  securityContext:
+    allowPrivilegeEscalation: false
+  metricsService:
+    # -- Type of metrics service
     type: ClusterIP
-    port: 80
-  resources: {}
-  autoscaling:
+    # -- Port of metrics service
+    port: 8443
+  monitor:
+    # -- Specifies whether prometheus monitor should be enabled
     enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-operator:
-  image: registry.undistro.io/snitch/operator:v0.1.0
-  imagePullPolicy: IfNotPresent
-  imagePullSecrets: []
-  replicaCount: 1
+  # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container
   resources:
     limits:
       cpu: 500m
@@ -57,6 +45,7 @@ operator:
       memory: 64Mi
   rbacProxy:
     image: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0
+    # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
     resources:
       limits:
         cpu: 500m
@@ -64,21 +53,76 @@ operator:
       requests:
         cpu: 5m
         memory: 64Mi
-  metricsService:
-    type: ClusterIP
-    port: 8443
-  monitor:
-    enabled: false
-  podAnnotations:
-    kubectl.kubernetes.io/default-container: manager
-  podSecurityContext:
-    runAsNonRoot: true
-  securityContext:
-    allowPrivilegeEscalation: false
+  # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
   nodeSelector: {}
-  affinity: {}
+  # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
   tolerations: []
+  # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+  affinity: {}
+
+server:
+  # -- Number of replicas desired of Snitch server
+  replicaCount: 1
+  image: registry.undistro.io/snitch/server:v0.1.0
+  # -- Image pull policy
+  imagePullPolicy: IfNotPresent
+  # -- Specify docker-registry secret names as an array
+  imagePullSecrets: []
   serviceAccount:
+    # -- Specifies whether a service account should be created
     create: true
+    # -- Annotations to be added to service account
     annotations: {}
+    # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
     name: ""
+  # -- Annotations to be added to pods
+  podAnnotations: {}
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
+  podSecurityContext: {}
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
+  securityContext: {}
+  service:
+    # -- Service type
+    type: ClusterIP
+    # -- Service port
+    port: 80
+  # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
+  resources: {}
+  autoscaling:
+    # -- Enable replica autoscaling settings
+    enabled: false
+    # -- Minimum replicas for the pod autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for the pod autoscaling
+    maxReplicas: 100
+    # -- Percentage of CPU to consider when autoscaling
+    targetCPUUtilizationPercentage: 80
+    # -- Percentage of Memory to consider when autoscaling
+    targetMemoryUtilizationPercentage: ""
+  # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+  nodeSelector: {}
+  # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+  tolerations: []
+  # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+  affinity: {}
+
+ingress:
+  # -- Specifies whether the ingress should be created
+  enabled: false
+  # -- Ingress class name
+  className: ""
+  # -- Annotations to be added to Ingress
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- Configure ingress hosts
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
