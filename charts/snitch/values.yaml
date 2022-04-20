@@ -80,3 +80,44 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+operator:
+  image: registry.undistro.io/snitch/operator:v0.1.0
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  rbacProxy:
+    image: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  podAnnotations:
+    kubectl.kubernetes.io/default-container: manager
+  podSecurityContext:
+    runAsNonRoot: true
+  securityContext:
+    allowPrivilegeEscalation: false
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""

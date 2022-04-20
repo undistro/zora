@@ -14,15 +14,10 @@ and provides a multi cluster visibility.
 
 ## Install
 
-1. Create a namespace `snitch` for Snitch components:
-```shell
-kubectl create namespace snitch
-```
-
-2. Install Snitch using [Helm](https://helm.sh/docs/):
+1. Install Snitch using [Helm](https://helm.sh/docs/) in `snitch` namespace:
 ```shell
 helm repo add snitch https://registry.undistro.io/chartrepo/snitch
-helm install snitch snitch/snitch -n snitch
+helm install snitch snitch/snitch -n snitch --create-namespace
 ```
 
 These commands deploy Snitch on the Kubernetes cluster in the default configuration. 

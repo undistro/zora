@@ -43,6 +43,22 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Operator labels
+*/}}
+{{- define "snitch.operatorLabels" -}}
+{{ include "snitch.labels" . }}
+app.kubernetes.io/component: operator
+{{- end }}
+
+{{/*
+Server labels
+*/}}
+{{- define "snitch.serverLabels" -}}
+{{ include "snitch.labels" . }}
+app.kubernetes.io/component: server
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "snitch.selectorLabels" -}}
@@ -51,12 +67,28 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Operator selector labels
 */}}
-{{- define "snitch.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "snitch.fullname" .) .Values.serviceAccount.name }}
+{{- define "snitch.operatorSelectorLabels" -}}
+{{ include "snitch.selectorLabels" . }}
+app.kubernetes.io/component: operator
+{{- end }}
+
+{{/*
+Server selector labels
+*/}}
+{{- define "snitch.serverSelectorLabels" -}}
+{{ include "snitch.selectorLabels" . }}
+app.kubernetes.io/component: server
+{{- end }}
+
+{{/*
+Create the name of the service account to use in Operator
+*/}}
+{{- define "snitch.operatorServiceAccountName" -}}
+{{- if .Values.operator.serviceAccount.create }}
+{{- default (include "snitch.fullname" .) .Values.operator.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.operator.serviceAccount.name }}
 {{- end }}
 {{- end }}

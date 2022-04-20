@@ -1,14 +1,19 @@
+{{- if .Values.operator.serviceAccount.create -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: snitch-controller-manager
-  namespace: snitch-system
+  name: {{ include "snitch.operatorServiceAccountName" . }}
+  labels:
+    {{- include "snitch.labels" . | nindent 4 }}
+  {{- with .Values.operator.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: snitch-leader-election-role
-  namespace: snitch-system
+  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election-role
 rules:
   - apiGroups:
       - ""
@@ -45,8 +50,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
-  name: snitch-manager-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-manager-role
 rules:
   - apiGroups:
       - ""
@@ -90,7 +94,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: snitch-metrics-reader
+  name: {{ include "snitch.operatorServiceAccountName" . }}-metrics-reader
 rules:
   - nonResourceURLs:
       - /metrics
@@ -100,7 +104,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: snitch-proxy-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy-role
 rules:
   - apiGroups:
       - authentication.k8s.io
@@ -118,39 +122,36 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: snitch-leader-election-rolebinding
-  namespace: snitch-system
+  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: snitch-leader-election-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election-role
 subjects:
   - kind: ServiceAccount
-    name: snitch-controller-manager
-    namespace: snitch-system
+    name: {{ include "snitch.operatorServiceAccountName" . }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: snitch-manager-rolebinding
+  name: {{ include "snitch.operatorServiceAccountName" . }}-manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: snitch-manager-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-manager-role
 subjects:
   - kind: ServiceAccount
-    name: snitch-controller-manager
-    namespace: snitch-system
+    name: {{ include "snitch.operatorServiceAccountName" . }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: snitch-proxy-rolebinding
+  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: snitch-proxy-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy-role
 subjects:
   - kind: ServiceAccount
-    name: snitch-controller-manager
-    namespace: snitch-system
+    name: {{ include "snitch.operatorServiceAccountName" . }}
+{{- end }}

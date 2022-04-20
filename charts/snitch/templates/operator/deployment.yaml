@@ -1,55 +1,59 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: {{ include "snitch.fullname" . }}-operator
   labels:
-    control-plane: controller-manager
-  name: snitch-controller-manager
-  namespace: snitch-system
+    {{- include "snitch.operatorLabels" . | nindent 4 }}
 spec:
-  replicas: 1
+  {{- if not .Values.operator.autoscaling.enabled }}
+  replicas: {{ .Values.operator.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
-      control-plane: controller-manager
+      {{- include "snitch.operatorSelectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.operator.podAnnotations }}
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        control-plane: controller-manager
+        {{- include "snitch.operatorSelectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.operator.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-        - args:
+        - name: kube-rbac-proxy
+          args:
             - --secure-listen-address=0.0.0.0:8443
             - --upstream=http://127.0.0.1:8080/
             - --logtostderr=true
             - --v=0
-          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
-          name: kube-rbac-proxy
+          image: {{ .Values.operator.rbacProxy.image }}
+          imagePullPolicy: {{ .Values.operator.imagePullPolicy }}
           ports:
             - containerPort: 8443
               name: https
               protocol: TCP
           resources:
-            limits:
-              cpu: 500m
-              memory: 128Mi
-            requests:
-              cpu: 5m
-              memory: 64Mi
-        - args:
+            {{- toYaml .Values.operator.rbacProxy.resources | nindent 12 }}
+        - name: manager
+          command:
+            - /manager
+          args:
             - --health-probe-bind-address=:8081
             - --metrics-bind-address=127.0.0.1:8080
             - --leader-elect
-          command:
-            - /manager
-          image: controller:latest
+          image: {{ .Values.operator.image }}
+          imagePullPolicy: {{ .Values.operator.imagePullPolicy }}
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8081
             initialDelaySeconds: 15
             periodSeconds: 20
-          name: manager
           readinessProbe:
             httpGet:
               path: /readyz
@@ -57,15 +61,22 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
-            limits:
-              cpu: 500m
-              memory: 128Mi
-            requests:
-              cpu: 10m
-              memory: 64Mi
+            {{- toYaml .Values.operator.resources | nindent 12 }}
           securityContext:
-            allowPrivilegeEscalation: false
+            {{- toYaml .Values.operator.securityContext | nindent 12 }}
       securityContext:
-        runAsNonRoot: true
-      serviceAccountName: snitch-controller-manager
+        {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "snitch.operatorServiceAccountName" . }}
       terminationGracePeriodSeconds: 10
+      {{- with .Values.operator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.operator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.operator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
