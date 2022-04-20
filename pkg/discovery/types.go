@@ -5,6 +5,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var MeasuredResources = []corev1.ResourceName{corev1.ResourceCPU, corev1.ResourceMemory}
@@ -25,6 +26,10 @@ type ClusterInfo struct {
 
 	// Average of usage and available resources
 	Resources map[corev1.ResourceName]Resources `json:"resources,omitempty"`
+
+	// CreationTimestamp is a timestamp representing the server time when the oldest Node was created.
+	// It is represented in RFC3339 form and is in UTC.
+	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
@@ -40,6 +45,10 @@ type NodeInfo struct {
 
 	// True if node is in ready condition
 	Ready bool `json:"ready,omitempty"`
+
+	// CreationTimestamp is a timestamp representing the server time when this object was created.
+	// It is represented in RFC3339 form and is in UTC.
+	CreationTimestamp metav1.Time `json:"-"`
 }
 
 // +k8s:deepcopy-gen=true

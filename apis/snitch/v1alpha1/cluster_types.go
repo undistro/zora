@@ -34,8 +34,6 @@ type ClusterStatus struct {
 	apis.Status           `json:",inline"`
 	discovery.ClusterInfo `json:",inline"`
 
-	// Fields to be printed in columns
-
 	// Total of nodes
 	TotalNodes int `json:"totalNodes,omitempty"`
 
@@ -50,6 +48,9 @@ type ClusterStatus struct {
 
 	// Quantity of CPU available
 	CPUAvailable string `json:"cpuAvailable,omitempty"`
+
+	// Timestamp representing the server time of the last reconciliation
+	LastRun metav1.Time `json:"lastRun,omitempty"`
 }
 
 // SetClusterInfo fill ClusterInfo and temporary fields (TotalNodes, MemoryUsage and CPUUsage)
@@ -74,6 +75,7 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 //+kubebuilder:printcolumn:name="CPU Available",type="string",JSONPath=".status.cpuAvailable",description=""
 //+kubebuilder:printcolumn:name="CPU Usage (%)",type="string",JSONPath=".status.cpuUsage",description=""
 //+kubebuilder:printcolumn:name="Nodes",type="integer",JSONPath=".status.totalNodes",description=""
+//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".status.creationTimestamp",description=""
 
 // Cluster is the Schema for the clusters API
 //+genclient

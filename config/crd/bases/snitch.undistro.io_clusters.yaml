@@ -34,6 +34,9 @@ spec:
     - jsonPath: .status.totalNodes
       name: Nodes
       type: integer
+    - jsonPath: .status.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -174,9 +177,19 @@ spec:
               cpuUsage:
                 description: Usage of CPU in quantity and percentage
                 type: string
+              creationTimestamp:
+                description: CreationTimestamp is a timestamp representing the server
+                  time when the oldest Node was created. It is represented in RFC3339
+                  form and is in UTC.
+                format: date-time
+                type: string
               kubernetesVersion:
                 description: KubernetesVersion is the server's kubernetes version
                   (git version).
+                type: string
+              lastRun:
+                description: Timestamp representing the server time of the last reconciliation
+                format: date-time
                 type: string
               memoryAvailable:
                 description: Quantity of memory available in Mi

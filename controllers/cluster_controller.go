@@ -6,12 +6,15 @@ import (
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/pkg/discovery"
@@ -141,6 +144,8 @@ func (r *ClusterReconciler) discoverAndUpdateStatus(ctx context.Context, cluster
 		return err
 	}
 	cluster.Status.SetClusterInfo(*info)
+	cluster.Status.LastRun = metav1.NewTime(time.Now().UTC())
+	cluster.Status.ObservedGeneration = cluster.Generation
 	if err := r.Status().Update(ctx, cluster); err != nil {
 		log.Error(err, "failed to update cluster status")
 		return err
@@ -151,6 +156,6 @@ func (r *ClusterReconciler) discoverAndUpdateStatus(ctx context.Context, cluster
 // SetupWithManager sets up the controller with the Manager.
 func (r *ClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&v1alpha1.Cluster{}).
+		For(&v1alpha1.Cluster{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }

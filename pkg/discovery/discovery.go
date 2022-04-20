@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -67,7 +68,12 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		return nil, err
 	}
 
-	return &ClusterInfo{KubernetesVersion: v, Nodes: nodes, Resources: avgNodeResources(nodes)}, nil
+	return &ClusterInfo{
+		KubernetesVersion: v,
+		Nodes:             nodes,
+		Resources:         avgNodeResources(nodes),
+		CreationTimestamp: oldestNodeTimestamp(nodes),
+	}, nil
 }
 
 func (r *clusterDiscovery) DiscoverVersion(_ context.Context) (string, error) {
@@ -100,10 +106,11 @@ func nodeResources(nodes []corev1.Node, nodeMetrics []v1beta1.NodeMetrics) []Nod
 	for _, n := range nodes {
 		usage := metrics[n.Name]
 		info := NodeInfo{
-			Name:      n.Name,
-			Labels:    n.Labels,
-			Resources: make(map[corev1.ResourceName]Resources),
-			Ready:     nodeIsReady(n),
+			Name:              n.Name,
+			Labels:            n.Labels,
+			Resources:         make(map[corev1.ResourceName]Resources),
+			Ready:             nodeIsReady(n),
+			CreationTimestamp: n.CreationTimestamp,
 		}
 		for _, res := range MeasuredResources {
 			info.Resources[res] = NewResources(n.Status.Allocatable[res], usage[res])
@@ -144,4 +151,14 @@ func nodeIsReady(node corev1.Node) bool {
 		}
 	}
 	return false
+}
+
+func oldestNodeTimestamp(nodes []NodeInfo) metav1.Time {
+	oldest := metav1.NewTime(time.Now().UTC())
+	for _, node := range nodes {
+		if node.CreationTimestamp.Before(&oldest) {
+			oldest = node.CreationTimestamp
+		}
+	}
+	return oldest
 }
