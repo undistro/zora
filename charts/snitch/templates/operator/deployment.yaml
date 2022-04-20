@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "snitch.operatorLabels" . | nindent 4 }}
 spec:
-  {{- if not .Values.operator.autoscaling.enabled }}
   replicas: {{ .Values.operator.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "snitch.operatorSelectorLabels" . | nindent 6 }}
