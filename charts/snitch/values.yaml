@@ -105,6 +105,8 @@ operator:
   metricsService:
     type: ClusterIP
     port: 8443
+  monitor:
+    enabled: false
   autoscaling:
     enabled: false
     minReplicas: 1
