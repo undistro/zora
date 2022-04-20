@@ -83,7 +83,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		if err := r.discoverAndUpdateStatus(ctx, cluster, config); err != nil {
 			return ctrl.Result{}, err
 		}
-		return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+		return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 	}
 
 	// cloud
