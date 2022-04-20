@@ -21,7 +21,7 @@ helm install snitch snitch/snitch -n snitch --create-namespace
 ```
 
 These commands deploy Snitch on the Kubernetes cluster in the default configuration. 
-[This section](#TODO) lists the parameters that can be configured during installation.
+[This section](https://github.com/getupio-undistro/snitch/tree/main/charts/snitch) lists the parameters that can be configured during installation.
 
 ## Usage
 
