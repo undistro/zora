@@ -12,8 +12,9 @@ setup_namespaces() {
 	fi
 }
 setup_kubeconfig_secret() {
-	if ! kubectl get secret $KCONFIG_SECRET_NAME > /dev/null 2>&1; then
+	if ! kubectl -n $CLUSTER_NS get secret $KCONFIG_SECRET_NAME > /dev/null 2>&1; then
 		kubectl create secret generic $KCONFIG_SECRET_NAME \
+      --namespace $CLUSTER_NS \
 			--from-file=value=$KCONFIG_NAME
 	fi
 }
