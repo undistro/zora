@@ -58,6 +58,10 @@ components:
           type: integer
           minimum: 0
           example: 4
+        creationTimestamp:
+          type: string
+          format: date-time
+          example: "2022-03-17T19:45:07Z"
         resources:
           $ref: '#/components/schemas/Resources'
     Resources:

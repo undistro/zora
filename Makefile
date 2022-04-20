@@ -178,5 +178,7 @@ setup-minikube:  ## Start Minikube with an inner Docker registry.
 delete-minikube: ## Delete Minikube node.
 	minikube delete
 
-setup-snitch-view: ## Configure RBAC, create and apply view Secret.
+gen-snitch-view-kubeconfig: ## Create a service account and config RBAC for it.
+	./scripts/gen_snitch_view_kubeconfig.sh
+setup-snitch-view: ## Create and apply Snitch View Secret.
 	./scripts/setup_snitch_view.sh
