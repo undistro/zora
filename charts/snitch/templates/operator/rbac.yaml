@@ -13,7 +13,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election
 rules:
   - apiGroups:
       - ""
@@ -50,7 +50,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "snitch.operatorServiceAccountName" . }}-manager-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}
 rules:
   - apiGroups:
       - ""
@@ -104,7 +104,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy
 rules:
   - apiGroups:
       - authentication.k8s.io
@@ -122,11 +122,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election-rolebinding
+  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-leader-election
 subjects:
   - kind: ServiceAccount
     name: {{ include "snitch.operatorServiceAccountName" . }}
@@ -134,11 +134,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "snitch.operatorServiceAccountName" . }}-manager-rolebinding
+  name: {{ include "snitch.operatorServiceAccountName" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "snitch.operatorServiceAccountName" . }}-manager-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}
 subjects:
   - kind: ServiceAccount
     name: {{ include "snitch.operatorServiceAccountName" . }}
@@ -146,11 +146,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy-rolebinding
+  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy-role
+  name: {{ include "snitch.operatorServiceAccountName" . }}-proxy
 subjects:
   - kind: ServiceAccount
     name: {{ include "snitch.operatorServiceAccountName" . }}

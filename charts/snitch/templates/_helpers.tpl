@@ -87,7 +87,7 @@ Create the name of the service account to use in Operator
 */}}
 {{- define "snitch.operatorServiceAccountName" -}}
 {{- if .Values.operator.serviceAccount.create }}
-{{- default (include "snitch.fullname" .) .Values.operator.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "snitch.fullname" .) "operator") .Values.operator.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.operator.serviceAccount.name }}
 {{- end }}
