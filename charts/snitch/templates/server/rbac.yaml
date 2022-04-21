@@ -41,4 +41,5 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ include "snitch.serverServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
 {{- end }}
