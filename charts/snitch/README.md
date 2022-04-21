@@ -40,6 +40,13 @@ The following table lists the configurable parameters of the Snitch chart and th
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
 | imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array |
+| ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
+| ingress.className | string | `""` | Ingress class name |
+| ingress.annotations | object | `{}` | Annotations to be added to ingress |
+| ingress.host | string | `"snitch.domain"` | The host of Snitch in ingress rule |
+| ingress.server | object | `{"path":"/api","pathType":"ImplementationSpecific"}` | `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP) |
+| ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
+| ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
 | operator.image | string | `"registry.undistro.io/snitch/operator:v0.1.0"` |  |
 | operator.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -68,7 +75,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.podSecurityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
 | server.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
 | server.service.type | string | `"ClusterIP"` | Service type |
-| server.service.port | int | `80` | Service port |
+| server.service.port | int | `8080` | Service port |
 | server.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
 | server.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
 | server.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
@@ -88,7 +95,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ui.podSecurityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
 | ui.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
 | ui.service.type | string | `"ClusterIP"` | Service type |
-| ui.service.port | int | `80` | Service port |
+| ui.service.port | int | `8080` | Service port |
 | ui.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
 | ui.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
 | ui.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
@@ -118,11 +125,6 @@ The following table lists the configurable parameters of the Snitch chart and th
 | nginx.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | nginx.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | nginx.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
-| ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
-| ingress.className | string | `""` | Ingress class name |
-| ingress.annotations | object | `{}` | Annotations to be added to Ingress |
-| ingress.hosts | list | `[{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}]` | Configure ingress hosts |
-| ingress.tls | list | `[]` | Ingress TLS configuration |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "snitch.fullname" . }}:{{ .Values.server.service.port }}']
+      args: ['{{ include "snitch.fullname" . }}-server:{{ .Values.server.service.port }}']
   restartPolicy: Never

@@ -6,6 +6,27 @@ fullnameOverride: ""
 # -- Specify docker-registry secret names as an array
 imagePullSecrets: []
 
+ingress:
+  # -- Specifies whether the ingress should be created
+  enabled: false
+  # -- Ingress class name
+  className: ""
+  # -- Annotations to be added to ingress
+  annotations: {}
+  # kubernetes.io/tls-acme: "true"
+  # -- The host of Snitch in ingress rule
+  host: snitch.domain
+  # -- `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP)
+  server:
+    path: /api
+    pathType: ImplementationSpecific
+  # -- `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP)
+  ui:
+    path: /
+    pathType: ImplementationSpecific
+  # -- The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key
+  tlsSecretName: ""
+
 operator:
   # -- Number of replicas desired of Snitch operator
   replicaCount: 1
@@ -84,7 +105,7 @@ server:
     # -- Service type
     type: ClusterIP
     # -- Service port
-    port: 80
+    port: 8080
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
   resources: {}
   autoscaling:
@@ -128,7 +149,7 @@ ui:
     # -- Service type
     type: ClusterIP
     # -- Service port
-    port: 80
+    port: 8080
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
   resources: {}
   autoscaling:
@@ -194,24 +215,3 @@ nginx:
   tolerations: []
   # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
   affinity: {}
-
-ingress:
-  # -- Specifies whether the ingress should be created
-  enabled: false
-  # -- Ingress class name
-  className: ""
-  # -- Annotations to be added to Ingress
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  # -- Configure ingress hosts
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  # -- Ingress TLS configuration
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
