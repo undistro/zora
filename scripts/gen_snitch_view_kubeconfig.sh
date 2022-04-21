@@ -2,20 +2,21 @@
 set -o errexit
 
 KCONFIG_NAME=${KCONFIG_NAME:-"snitch-view-kubeconfig.yaml"}
+CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"snitch-system"}
 CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"snitch-view"}
-SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"kube-system"}
+SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"snitch-system"}
 SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"snitch-view"}
 
 get_token_name() {
 	echo $(kubectl -n $SVC_ACCOUNT_NS \
 		get serviceaccount $SVC_ACCOUNT_NAME \
-		-o=jsonpath='{.secrets[0].name}'
+		-o jsonpath='{.secrets[0].name}'
 	)
 }
 get_token_value() {
 	echo $(kubectl -n $SVC_ACCOUNT_NS \
 		get secret $TOKEN_NAME \
-		-o=jsonpath='{.data.token}' | base64 --decode
+		-o jsonpath='{.data.token}' | base64 --decode
 	)
 }
 get_current_context() {
@@ -23,7 +24,7 @@ get_current_context() {
 }
 get_current_cluster() {
 	echo $(kubectl config view \
-		--raw -o=go-template='
+		--raw -o go-template='
 			{{range .contexts}}
 				{{if eq .name "'$CURRENT_CONTEXT'"}}
 					{{index .context "cluster"}}
@@ -34,7 +35,7 @@ get_current_cluster() {
 }
 get_cluster_ca() {
 	echo $(kubectl config view \
-		--raw -o=go-template='
+		--raw -o go-template='
 			{{range .clusters}}
 				{{if eq .name "'$CURRENT_CLUSTER'"}}
 					{{with index .cluster "certificate-authority-data"}}
@@ -47,7 +48,7 @@ get_cluster_ca() {
 }
 get_cluster_server() {
 	echo $(kubectl config view \
-		--raw -o=go-template='
+		--raw -o go-template='
 			{{range .clusters}}
 				{{if eq .name "'$CURRENT_CLUSTER'"}}
 					{{ .cluster.server }}
@@ -67,6 +68,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: $CLUSTER_ROLE_NAME
+  namespace: $CLUSTER_ROLE_NS
 rules:
   - apiGroups: [ "" ]
     resources:
@@ -101,6 +103,7 @@ EOF
 
 create_cluster_role_binding() {
 	kubectl create clusterrolebinding $SVC_ACCOUNT_NAME \
+		--namespace $CLUSTER_ROLE_NS \
 		--clusterrole=snitch-view \
 		--serviceaccount=$SVC_ACCOUNT_NS:$SVC_ACCOUNT_NAME
 }
@@ -114,15 +117,15 @@ contexts:
   - name: $CURRENT_CONTEXT
     context:
       cluster: $CURRENT_CONTEXT
-      user: snitch-view
-      namespace: kube-system
+      user: $SVC_ACCOUNT_NAME
+      namespace: $SVC_ACCOUNT_NS
 clusters:
   - name: $CURRENT_CONTEXT
     cluster:
       certificate-authority-data: $CLUSTER_CA
       server: $CLUSTER_SERVER
 users:
-  - name: snitch-view
+  - name: $SVC_ACCOUNT_NAME
     user:
       token: $TOKEN_VALUE
 EOF
@@ -133,6 +136,9 @@ setup_namespaces() {
 	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
 		kubectl create namespace $SVC_ACCOUNT_NS
 	fi
+	if ! kubectl get namespace $CLUSTER_ROLE_NS > /dev/null 2>&1; then
+		kubectl create namespace $CLUSTER_ROLE_NS
+	fi
 }
 setup_svc_account() {
 	if ! kubectl -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
@@ -140,7 +146,7 @@ setup_svc_account() {
 	fi
 }
 setup_cluster_role() {
-	if ! kubectl get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
+	if ! kubectl -n $SVC_ACCOUNT_NS get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
 		create_cluster_role
 	fi
 }
@@ -161,6 +167,6 @@ CURRENT_CLUSTER=${CURRENT_CLUSTER:-"$(get_current_cluster)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
-setup_cluster_role_binding
+setup_cluster_role
 setup_cluster_role_binding
 create_kubeconfig
