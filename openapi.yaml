@@ -54,6 +54,9 @@ components:
         ready:
           type: boolean
           example: true
+        version:
+          type: string
+          example: v1.21.5-eks-bc4871b
         totalIssues:
           type: integer
           minimum: 0
