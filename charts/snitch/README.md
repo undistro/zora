@@ -98,6 +98,26 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ui.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | ui.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | ui.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
+| nginx.replicaCount | int | `1` | Number of replicas desired of nginx |
+| nginx.image | string | `"registry.undistro.io/dockerhub/library/nginx:1.20.2"` |  |
+| nginx.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| nginx.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| nginx.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
+| nginx.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| nginx.podAnnotations | object | `{}` | Annotations to be added to pods |
+| nginx.podSecurityContext | object | `{"fsGroup":10000,"runAsUser":10000}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| nginx.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
+| nginx.service.type | string | `"ClusterIP"` | Service type |
+| nginx.service.port | int | `80` | Service port |
+| nginx.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
+| nginx.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
+| nginx.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
+| nginx.autoscaling.maxReplicas | int | `100` | Maximum replicas for the pod autoscaling |
+| nginx.autoscaling.targetCPUUtilizationPercentage | int | `80` | Percentage of CPU to consider when autoscaling |
+| nginx.autoscaling.targetMemoryUtilizationPercentage | string | `""` | Percentage of Memory to consider when autoscaling |
+| nginx.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
+| nginx.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
+| nginx.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to Ingress |

@@ -149,6 +149,52 @@ ui:
   # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
   affinity: {}
 
+nginx:
+  # -- Number of replicas desired of nginx
+  replicaCount: 1
+  image: registry.undistro.io/dockerhub/library/nginx:1.20.2
+  # -- Image pull policy
+  imagePullPolicy: IfNotPresent
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: true
+    # -- Annotations to be added to service account
+    annotations: {}
+    # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+    name: ""
+  # -- Annotations to be added to pods
+  podAnnotations: {}
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
+  podSecurityContext:
+    runAsUser: 10000
+    fsGroup: 10000
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
+  securityContext: {}
+  service:
+    # -- Service type
+    type: ClusterIP
+    # -- Service port
+    port: 80
+  # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
+  resources: {}
+  autoscaling:
+    # -- Enable replica autoscaling settings
+    enabled: false
+    # -- Minimum replicas for the pod autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for the pod autoscaling
+    maxReplicas: 100
+    # -- Percentage of CPU to consider when autoscaling
+    targetCPUUtilizationPercentage: 80
+    # -- Percentage of Memory to consider when autoscaling
+    targetMemoryUtilizationPercentage: ""
+  # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+  nodeSelector: {}
+  # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+  tolerations: []
+  # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+  affinity: {}
+
 ingress:
   # -- Specifies whether the ingress should be created
   enabled: false

@@ -67,6 +67,14 @@ app.kubernetes.io/component: ui
 {{- end }}
 
 {{/*
+NGINX labels
+*/}}
+{{- define "snitch.nginxLabels" -}}
+{{ include "snitch.labels" . }}
+app.kubernetes.io/component: nginx
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "snitch.selectorLabels" -}}
@@ -99,6 +107,14 @@ app.kubernetes.io/component: ui
 {{- end }}
 
 {{/*
+NGINX selector labels
+*/}}
+{{- define "snitch.nginxSelectorLabels" -}}
+{{ include "snitch.selectorLabels" . }}
+app.kubernetes.io/component: nginx
+{{- end }}
+
+{{/*
 Create the name of the service account to use in Operator
 */}}
 {{- define "snitch.operatorServiceAccountName" -}}
@@ -120,7 +136,6 @@ Create the name of the service account to use in Server
 {{- end }}
 {{- end }}
 
-
 {{/*
 Create the name of the service account to use in UI
 */}}
@@ -129,5 +144,16 @@ Create the name of the service account to use in UI
 {{- default (printf "%s-%s" (include "snitch.fullname" .) "ui") .Values.ui.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.ui.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use in NGINX
+*/}}
+{{- define "snitch.nginxServiceAccountName" -}}
+{{- if .Values.nginx.serviceAccount.create }}
+{{- default (printf "%s-%s" (include "snitch.fullname" .) "nginx") .Values.nginx.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.nginx.serviceAccount.name }}
 {{- end }}
 {{- end }}
