@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: server
           command:
             - /server
           args:
