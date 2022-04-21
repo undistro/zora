@@ -123,10 +123,6 @@ deploy: docker-build docker-push generate install ## Deploy controller to the K8
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
-.PHONY: template
-template: manifests kustomize ## Render K8s templates and display the output.
-	$(KUSTOMIZE) build config/default
-
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
@@ -182,3 +178,10 @@ gen-snitch-view-kubeconfig: ## Create a service account and config RBAC for it.
 	./scripts/gen_snitch_view_kubeconfig.sh
 setup-snitch-view: ## Create and apply Snitch View Secret.
 	./scripts/setup_snitch_view.sh
+
+##@ Documentation
+helm-docs: ## Generate documentation for helm charts
+	@docker run -it --rm \
+		-v $(PWD):/helm-docs \
+		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
+		helm-docs -s=file
