@@ -3,14 +3,15 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+# -- Specify docker-registry secret names as an array
+imagePullSecrets: []
+
 operator:
   # -- Number of replicas desired of Snitch operator
   replicaCount: 1
   image: registry.undistro.io/snitch/operator:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets: []
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: true
@@ -66,8 +67,6 @@ server:
   image: registry.undistro.io/snitch/server:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets: []
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: true
@@ -112,8 +111,6 @@ ui:
   image: registry.undistro.io/snitch/ui:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets: []
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: true

@@ -39,10 +39,10 @@ The following table lists the configurable parameters of the Snitch chart and th
 |-----|------|---------|-------------|
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
+| imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array |
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
 | operator.image | string | `"registry.undistro.io/snitch/operator:v0.1.0"` |  |
 | operator.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| operator.imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array |
 | operator.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | operator.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | operator.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
@@ -61,7 +61,6 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
 | server.image | string | `"registry.undistro.io/snitch/server:v0.1.0"` |  |
 | server.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| server.imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array |
 | server.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | server.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | server.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
@@ -79,6 +78,26 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | server.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
+| ui.replicaCount | int | `1` | Number of replicas desired of Snitch UI |
+| ui.image | string | `"registry.undistro.io/snitch/ui:v0.1.0"` |  |
+| ui.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| ui.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
+| ui.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| ui.podAnnotations | object | `{}` | Annotations to be added to pods |
+| ui.podSecurityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| ui.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
+| ui.service.type | string | `"ClusterIP"` | Service type |
+| ui.service.port | int | `80` | Service port |
+| ui.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
+| ui.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
+| ui.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
+| ui.autoscaling.maxReplicas | int | `100` | Maximum replicas for the pod autoscaling |
+| ui.autoscaling.targetCPUUtilizationPercentage | int | `80` | Percentage of CPU to consider when autoscaling |
+| ui.autoscaling.targetMemoryUtilizationPercentage | string | `""` | Percentage of Memory to consider when autoscaling |
+| ui.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
+| ui.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
+| ui.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to Ingress |

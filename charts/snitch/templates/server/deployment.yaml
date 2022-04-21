@@ -20,7 +20,7 @@ spec:
       labels:
         {{- include "snitch.serverSelectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.server.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
