@@ -39,7 +39,11 @@ The following table lists the configurable parameters of the Snitch chart and th
 |-----|------|---------|-------------|
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
-| imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array |
+| imageCredentials.create | bool | `true` | Specifies whether the secret should be created by providing credentials |
+| imageCredentials.registry | string | `"registry.undistro.io"` | Docker registry host |
+| imageCredentials.username | string | `""` | Docker registry username |
+| imageCredentials.password | string | `""` | Docker registry password |
+| imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array to be used when `imageCredentials.create` is false |
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to ingress |

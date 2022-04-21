@@ -3,7 +3,17 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
-# -- Specify docker-registry secret names as an array
+imageCredentials:
+  # -- Specifies whether the secret should be created by providing credentials
+  create: true
+  # -- Docker registry host
+  registry: registry.undistro.io
+  # -- Docker registry username
+  username: ""
+  # -- Docker registry password
+  password: ""
+
+# -- Specify docker-registry secret names as an array to be used when `imageCredentials.create` is false
 imagePullSecrets: []
 
 ingress:
