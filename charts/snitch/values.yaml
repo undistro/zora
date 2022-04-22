@@ -43,7 +43,7 @@ operator:
   image:
     # -- Snitch operator image repository
     repository: registry.undistro.io/snitch/operator
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
     pullPolicy: IfNotPresent
@@ -111,7 +111,7 @@ server:
   image:
     # -- Snitch server image repository
     repository: registry.undistro.io/snitch/server
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
     pullPolicy: IfNotPresent

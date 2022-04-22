@@ -53,7 +53,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
 | operator.image.repository | string | `"registry.undistro.io/snitch/operator"` | Snitch operator image repository |
-| operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
 | operator.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -75,7 +75,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
 | server.image.repository | string | `"registry.undistro.io/snitch/server"` | Snitch server image repository |
-| server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
 | server.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
