@@ -54,9 +54,10 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
 | operator.image | string | `"registry.undistro.io/snitch/operator:v0.1.0"` |  |
 | operator.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| operator.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| operator.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
-| operator.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
+| operator.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| operator.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
+| operator.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | operator.podAnnotations | object | `{"kubectl.kubernetes.io/default-container":"manager"}` | Annotations to be added to pods |
 | operator.podSecurityContext | object | `{"runAsNonRoot":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
 | operator.securityContext | object | `{"allowPrivilegeEscalation":false}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |

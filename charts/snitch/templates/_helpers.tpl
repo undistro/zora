@@ -118,10 +118,10 @@ app.kubernetes.io/component: nginx
 Create the name of the service account to use in Operator
 */}}
 {{- define "snitch.operatorServiceAccountName" -}}
-{{- if .Values.operator.serviceAccount.create }}
-{{- default (printf "%s-%s" (include "snitch.fullname" .) "operator") .Values.operator.serviceAccount.name }}
+{{- if .Values.operator.rbac.serviceAccount.create }}
+{{- default (printf "%s-%s" (include "snitch.fullname" .) "operator") .Values.operator.rbac.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.operator.serviceAccount.name }}
+{{- default "default" .Values.operator.rbac.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
