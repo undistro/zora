@@ -108,10 +108,13 @@ operator:
 server:
   # -- Number of replicas desired of Snitch server
   replicaCount: 1
-  # -- Snitch server image
-  image: registry.undistro.io/snitch/server:v0.1.0
-  # -- Image pull policy
-  imagePullPolicy: IfNotPresent
+  image:
+    # -- Snitch server image repository
+    repository: registry.undistro.io/snitch/server
+    # -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
   rbac:
     # -- Specifies whether ClusterRole and ClusterRoleBinding should be created
     create: true

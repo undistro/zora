@@ -40,8 +40,8 @@ spec:
             - --port=3000
           securityContext:
             {{- toYaml .Values.server.securityContext | nindent 12 }}
-          image: {{ .Values.server.image }}
-          imagePullPolicy: {{ .Values.server.imagePullPolicy }}
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.server.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 3000

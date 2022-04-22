@@ -74,8 +74,9 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
-| server.image | string | `"registry.undistro.io/snitch/server:v0.1.0"` | Snitch server image |
-| server.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| server.image.repository | string | `"registry.undistro.io/snitch/server"` | Snitch server image repository |
+| server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
 | server.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | server.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
