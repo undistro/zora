@@ -40,6 +40,7 @@ ingress:
 operator:
   # -- Number of replicas desired of Snitch operator
   replicaCount: 1
+  # -- Snitch operator image
   image: registry.undistro.io/snitch/operator:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
@@ -79,6 +80,7 @@ operator:
       cpu: 10m
       memory: 64Mi
   rbacProxy:
+    # -- `kube-rbac-proxy` image
     image: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0
     # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
     resources:
@@ -98,6 +100,7 @@ operator:
 server:
   # -- Number of replicas desired of Snitch server
   replicaCount: 1
+  # -- Snitch server image
   image: registry.undistro.io/snitch/server:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
@@ -145,6 +148,7 @@ server:
 ui:
   # -- Number of replicas desired of Snitch UI
   replicaCount: 1
+  # -- Snitch UI image
   image: registry.undistro.io/snitch/ui:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
@@ -189,6 +193,7 @@ ui:
 nginx:
   # -- Number of replicas desired of nginx
   replicaCount: 1
+  # -- NGINX image
   image: registry.undistro.io/dockerhub/library/nginx:1.20.2
   # -- Image pull policy
   imagePullPolicy: IfNotPresent

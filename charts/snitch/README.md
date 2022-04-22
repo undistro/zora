@@ -52,7 +52,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
-| operator.image | string | `"registry.undistro.io/snitch/operator:v0.1.0"` |  |
+| operator.image | string | `"registry.undistro.io/snitch/operator:v0.1.0"` | Snitch operator image |
 | operator.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
 | operator.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -65,13 +65,13 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.metricsService.port | int | `8443` | Port of metrics service |
 | operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
 | operator.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container |
-| operator.rbacProxy.image | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0"` |  |
+| operator.rbacProxy.image | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0"` | `kube-rbac-proxy` image |
 | operator.rbacProxy.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container |
 | operator.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
-| server.image | string | `"registry.undistro.io/snitch/server:v0.1.0"` |  |
+| server.image | string | `"registry.undistro.io/snitch/server:v0.1.0"` | Snitch server image |
 | server.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
 | server.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -92,7 +92,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | ui.replicaCount | int | `1` | Number of replicas desired of Snitch UI |
-| ui.image | string | `"registry.undistro.io/snitch/ui:v0.1.0"` |  |
+| ui.image | string | `"registry.undistro.io/snitch/ui:v0.1.0"` | Snitch UI image |
 | ui.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | ui.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
@@ -112,7 +112,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ui.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | ui.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | nginx.replicaCount | int | `1` | Number of replicas desired of nginx |
-| nginx.image | string | `"registry.undistro.io/dockerhub/library/nginx:1.20.2"` |  |
+| nginx.image | string | `"registry.undistro.io/dockerhub/library/nginx:1.20.2"` | NGINX image |
 | nginx.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | nginx.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | nginx.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
