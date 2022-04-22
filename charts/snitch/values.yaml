@@ -207,10 +207,13 @@ ui:
 nginx:
   # -- Number of replicas desired of nginx
   replicaCount: 1
-  # -- NGINX image
-  image: registry.undistro.io/dockerhub/library/nginx:1.20.2
-  # -- Image pull policy
-  imagePullPolicy: IfNotPresent
+  image:
+    # -- NGINX image repository
+    repository: registry.undistro.io/dockerhub/library/nginx:1.20.2
+    # -- NGINX image tag
+    tag: 1.20.2
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: true

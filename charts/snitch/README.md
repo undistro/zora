@@ -117,8 +117,9 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ui.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | ui.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | nginx.replicaCount | int | `1` | Number of replicas desired of nginx |
-| nginx.image | string | `"registry.undistro.io/dockerhub/library/nginx:1.20.2"` | NGINX image |
-| nginx.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| nginx.image.repository | string | `"registry.undistro.io/dockerhub/library/nginx:1.20.2"` | NGINX image repository |
+| nginx.image.tag | string | `"1.20.2"` | NGINX image tag |
+| nginx.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | nginx.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | nginx.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | nginx.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
