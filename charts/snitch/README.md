@@ -73,9 +73,10 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
 | server.image | string | `"registry.undistro.io/snitch/server:v0.1.0"` |  |
 | server.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| server.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| server.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
-| server.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
+| server.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| server.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
+| server.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | server.podAnnotations | object | `{}` | Annotations to be added to pods |
 | server.podSecurityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
 | server.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |

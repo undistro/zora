@@ -101,13 +101,16 @@ server:
   image: registry.undistro.io/snitch/server:v0.1.0
   # -- Image pull policy
   imagePullPolicy: IfNotPresent
-  serviceAccount:
-    # -- Specifies whether a service account should be created
+  rbac:
+    # -- Specifies whether ClusterRole and ClusterRoleBinding should be created
     create: true
-    # -- Annotations to be added to service account
-    annotations: {}
-    # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
-    name: ""
+    serviceAccount:
+      # -- Specifies whether a service account should be created
+      create: true
+      # -- Annotations to be added to service account
+      annotations: {}
+      # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+      name: ""
   # -- Annotations to be added to pods
   podAnnotations: {}
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
