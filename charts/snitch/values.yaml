@@ -40,10 +40,13 @@ ingress:
 operator:
   # -- Number of replicas desired of Snitch operator
   replicaCount: 1
-  # -- Snitch operator image
-  image: registry.undistro.io/snitch/operator:v0.1.0
-  # -- Image pull policy
-  imagePullPolicy: IfNotPresent
+  image:
+    # -- Snitch operator image repository
+    repository: registry.undistro.io/snitch/operator
+    # -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
   rbac:
     # -- Specifies whether ClusterRoles and ClusterRoleBindings should be created
     create: true
@@ -80,8 +83,13 @@ operator:
       cpu: 10m
       memory: 64Mi
   rbacProxy:
-    # -- `kube-rbac-proxy` image
-    image: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0
+    image:
+      # -- `kube-rbac-proxy` image repository
+      repository: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy
+      # -- `kube-rbac-proxy` image tag
+      tag: v0.8.0
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
     # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
     resources:
       limits:

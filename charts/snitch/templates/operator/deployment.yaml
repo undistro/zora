@@ -34,8 +34,8 @@ spec:
             - --upstream=http://127.0.0.1:8080/
             - --logtostderr=true
             - --v=0
-          image: {{ .Values.operator.rbacProxy.image }}
-          imagePullPolicy: {{ .Values.operator.imagePullPolicy }}
+          image: "{{ .Values.operator.rbacProxy.image.repository }}:{{ .Values.operator.rbacProxy.image.tag }}"
+          imagePullPolicy: {{ .Values.operator.rbacProxy.image.pullPolicy }}
           ports:
             - containerPort: 8443
               name: https
@@ -49,8 +49,8 @@ spec:
             - --health-probe-bind-address=:8081
             - --metrics-bind-address=127.0.0.1:8080
             - --leader-elect
-          image: {{ .Values.operator.image }}
-          imagePullPolicy: {{ .Values.operator.imagePullPolicy }}
+          image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           livenessProbe:
             httpGet:
               path: /healthz

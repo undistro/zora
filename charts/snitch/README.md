@@ -52,8 +52,9 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
-| operator.image | string | `"registry.undistro.io/snitch/operator:v0.1.0"` | Snitch operator image |
-| operator.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| operator.image.repository | string | `"registry.undistro.io/snitch/operator"` | Snitch operator image repository |
+| operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
 | operator.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | operator.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
@@ -65,7 +66,9 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.metricsService.port | int | `8443` | Port of metrics service |
 | operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
 | operator.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container |
-| operator.rbacProxy.image | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0"` | `kube-rbac-proxy` image |
+| operator.rbacProxy.image.repository | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy"` | `kube-rbac-proxy` image repository |
+| operator.rbacProxy.image.tag | string | `"v0.8.0"` | `kube-rbac-proxy` image tag |
+| operator.rbacProxy.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbacProxy.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container |
 | operator.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
