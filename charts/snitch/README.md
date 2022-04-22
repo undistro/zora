@@ -1,6 +1,6 @@
 # Snitch Helm Chart
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
 
 Snitch denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
@@ -63,7 +63,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.securityContext | object | `{"allowPrivilegeEscalation":false}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
 | operator.metricsService.type | string | `"ClusterIP"` | Type of metrics service |
 | operator.metricsService.port | int | `8443` | Port of metrics service |
-| operator.monitor.enabled | bool | `false` | Specifies whether prometheus monitor should be enabled |
+| operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
 | operator.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container |
 | operator.rbacProxy.image | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy:v0.8.0"` |  |
 | operator.rbacProxy.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container |

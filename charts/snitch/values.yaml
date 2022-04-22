@@ -67,8 +67,8 @@ operator:
     type: ClusterIP
     # -- Port of metrics service
     port: 8443
-  monitor:
-    # -- Specifies whether prometheus monitor should be enabled
+  serviceMonitor:
+    # -- Specifies whether a Prometheus `ServiceMonitor` should be enabled
     enabled: false
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container
   resources:
