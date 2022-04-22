@@ -96,8 +96,9 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | ui.replicaCount | int | `1` | Number of replicas desired of Snitch UI |
-| ui.image | string | `"registry.undistro.io/snitch/ui:v0.1.0"` | Snitch UI image |
-| ui.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| ui.image.repository | string | `"registry.undistro.io/snitch/ui"` | Snitch UI image repository |
+| ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
+| ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | ui.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | ui.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |

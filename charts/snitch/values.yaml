@@ -159,10 +159,13 @@ server:
 ui:
   # -- Number of replicas desired of Snitch UI
   replicaCount: 1
-  # -- Snitch UI image
-  image: registry.undistro.io/snitch/ui:v0.1.0
-  # -- Image pull policy
-  imagePullPolicy: IfNotPresent
+  image:
+    # -- Snitch UI image repository
+    repository: registry.undistro.io/snitch/ui
+    # -- Overrides the image tag whose default is the chart appVersion
+    tag: ""
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: true
