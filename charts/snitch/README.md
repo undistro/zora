@@ -9,8 +9,8 @@ Snitch denounces potential issues in your Kubernetes cluster and provides multi 
 To install the chart with the release name `snitch`:
 
 ```console
-helm repo add snitch https://registry.undistro.io/chartrepo/snitch
-helm install snitch snitch/snitch -n snitch --create-namespace
+helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm install snitch undistro/snitch -n snitch-system --create-namespace
 ```
 
 These commands deploy Snitch on the Kubernetes cluster in the default configuration.
@@ -18,7 +18,7 @@ These commands deploy Snitch on the Kubernetes cluster in the default configurat
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tips:**
-> - List all charts available in `snitch` repo using `helm search repo snitch`
+> - List all charts available in `undistro` repo using `helm search repo undistro`
 > - List all releases using `helm list`
 
 ## Uninstalling the Chart
@@ -142,13 +142,13 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install snitch \
-  --set server.service.port=8080 snitch/snitch
+  --set server.service.port=8080 undistro/snitch
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install snitch -f values.yaml snitch/snitch
+$ helm install snitch -f values.yaml undistro/snitch
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

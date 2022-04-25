@@ -16,8 +16,8 @@ and provides multi cluster visibility.
 
 1. Install Snitch using [Helm](https://helm.sh/docs/):
 ```shell
-helm repo add snitch https://registry.undistro.io/chartrepo/snitch
-helm install snitch snitch/snitch -n snitch-system --create-namespace
+helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm install snitch undistro/snitch -n snitch-system --create-namespace
 ```
 
 These commands deploy Snitch to the Kubernetes cluster. 

@@ -1,0 +1,25 @@
+name: Package and Push Helm Chart
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  push-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/setup-helm@v1
+        with:
+          version: v3.8.2
+
+      - run: helm plugin install https://github.com/chartmuseum/helm-push
+
+      - uses: actions/checkout@v2
+
+      - working-directory: ./charts
+        env:
+          HELM_REPO_USERNAME: ${{ secrets.HELM_REPO_USERNAME }}
+          HELM_REPO_PASSWORD: ${{ secrets.HELM_REPO_PASSWORD }}
+        run: helm cm-push snitch/ https://registry.undistro.io/chartrepo/library --force
