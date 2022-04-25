@@ -10,7 +10,11 @@ To install the chart with the release name `snitch`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install snitch undistro/snitch -n snitch-system --create-namespace
+helm install snitch undistro/snitch \
+  --set imageCredentials.username=<USERNAME> \
+  --set imageCredentials.password=<PASSWORD> \
+  -n snitch-system \
+  --create-namespace
 ```
 
 These commands deploy Snitch on the Kubernetes cluster in the default configuration.
