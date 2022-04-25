@@ -10,10 +10,10 @@ import (
 
 var MeasuredResources = []corev1.ResourceName{corev1.ResourceCPU, corev1.ResourceMemory}
 
-type ClusterDiscovery interface {
+type ClusterDiscoverer interface {
 	Discover(context.Context) (*ClusterInfo, error)
-	DiscoverVersion(context.Context) (string, error)
-	DiscoverNodes(context.Context) ([]NodeInfo, error)
+	Version(context.Context) (string, error)
+	Nodes(context.Context) ([]NodeInfo, error)
 }
 
 // +k8s:deepcopy-gen=true
