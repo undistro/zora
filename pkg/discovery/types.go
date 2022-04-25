@@ -30,6 +30,13 @@ type ClusterInfo struct {
 	// CreationTimestamp is a timestamp representing the server time when the oldest Node was created.
 	// It is represented in RFC3339 form and is in UTC.
 	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
+
+	// Provider stores the cluster's source.
+	Provider string `json:"provider,omitempty"`
+	// Flavor is the type of cluster.
+	Flavor string `json:"flavor,omitempty"`
+	// Region holds the geographic location with most nodes.
+	Region string `json:"region,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

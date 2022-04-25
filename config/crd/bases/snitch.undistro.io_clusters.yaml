@@ -37,6 +37,18 @@ spec:
     - jsonPath: .status.creationTimestamp
       name: Age
       type: date
+    - jsonPath: .status.provider
+      name: Provider
+      priority: 1
+      type: string
+    - jsonPath: .status.flavor
+      name: Flavor
+      priority: 1
+      type: string
+    - jsonPath: .status.region
+      name: Region
+      priority: 1
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -183,6 +195,9 @@ spec:
                   form and is in UTC.
                 format: date-time
                 type: string
+              flavor:
+                description: Flavor is the type of cluster.
+                type: string
               kubernetesVersion:
                 description: KubernetesVersion is the server's kubernetes version
                   (git version).
@@ -243,6 +258,12 @@ spec:
                   that was last processed by the controller.
                 format: int64
                 type: integer
+              provider:
+                description: Provider stores the cluster's source.
+                type: string
+              region:
+                description: Region holds the geographic location with most nodes.
+                type: string
               resources:
                 additionalProperties:
                   properties:

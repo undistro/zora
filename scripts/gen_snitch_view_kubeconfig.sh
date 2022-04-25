@@ -1,7 +1,7 @@
 #!/bin/sh
 set -o errexit
 
-KCONFIG_NAME=${KCONFIG_NAME:-"snitch-view-kubeconfig.yaml"}
+KCONFIG_NAME=${KCONFIG_NAME:-"snitch_view_kubeconfig.yaml"}
 CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"snitch-system"}
 CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"snitch-view"}
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"snitch-system"}
