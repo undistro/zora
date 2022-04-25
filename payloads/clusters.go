@@ -31,6 +31,7 @@ func NewCluster(c v1alpha1.Cluster) Cluster {
 		Region:            "us-east-1",
 		TotalNodes:        c.Status.TotalNodes,
 		Ready:             true,
+		Version:           c.Status.KubernetesVersion,
 		TotalIssues:       0,
 		Resources:         res,
 		CreationTimestamp: c.Status.CreationTimestamp,
@@ -45,6 +46,7 @@ type Cluster struct {
 	Region            string      `json:"region,omitempty"`
 	TotalNodes        int         `json:"totalNodes,omitempty"`
 	Ready             bool        `json:"ready,omitempty"`
+	Version           string      `json:"version,omitempty"`
 	TotalIssues       int         `json:"totalIssues,omitempty"`
 	Resources         *Resources  `json:"resources,omitempty"`
 	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`

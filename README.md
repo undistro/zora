@@ -14,19 +14,18 @@ and provides multi cluster visibility.
 
 ## Install
 
-1. Create namespace `snitch-system` for Snitch components:
+1. Install Snitch using [Helm](https://helm.sh/docs/):
 ```shell
-kubectl create namespace snitch-system
-```
-
-2. Install Snitch using [Helm](https://helm.sh/docs/):
-```shell
-helm repo add snitch https://registry.undistro.io/chartrepo/snitch
-helm install snitch snitch/snitch -n snitch
+helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm install snitch undistro/snitch \
+  --set imageCredentials.username=<USERNAME> \
+  --set imageCredentials.password=<PASSWORD> \
+  -n snitch-system \
+  --create-namespace
 ```
 
 These commands deploy Snitch to the Kubernetes cluster. 
-[This section](#TODO) lists the parameters that can be configured during installation.
+[This section](https://github.com/getupio-undistro/snitch/tree/main/charts/snitch) lists the parameters that can be configured during installation.
 
 ## Usage
 
@@ -58,9 +57,8 @@ rules:
   - apiGroups: [ "" ]
     resources:
       - configmaps
-      - deployments
       - endpoints
-      - horizontalpodautoscalers
+      - limitranges
       - namespaces
       - nodes
       - persistentvolumes
@@ -69,7 +67,27 @@ rules:
       - secrets
       - serviceaccounts
       - services
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "apps" ]
+    resources:
+      - daemonsets
+      - deployments
       - statefulsets
+      - replicasets
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "autoscaling" ]
+    resources:
+      - horizontalpodautoscalers
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "networking.k8s.io" ]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "policy" ]
+    resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
     verbs: [ "get", "list" ]
   - apiGroups: [ "rbac.authorization.k8s.io" ]
     resources:

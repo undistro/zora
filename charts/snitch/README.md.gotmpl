@@ -1,0 +1,59 @@
+# Snitch Helm Chart
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+## Installing the Chart
+
+To install the chart with the release name `snitch`:
+
+```console
+helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm install snitch undistro/{{ template "chart.name" . }} \
+  --set imageCredentials.username=<USERNAME> \
+  --set imageCredentials.password=<PASSWORD> \
+  -n snitch-system \
+  --create-namespace
+```
+
+These commands deploy Snitch on the Kubernetes cluster in the default configuration.
+
+The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+
+> **Tips:**
+> - List all charts available in `undistro` repo using `helm search repo undistro`
+> - List all releases using `helm list`
+
+## Uninstalling the Chart
+
+To uninstall/delete the `snitch` release:
+
+```console
+$ helm delete snitch
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
+
+## Parameters
+
+The following table lists the configurable parameters of the Snitch chart and their default values.
+
+{{ template "chart.valuesTable" . }}
+
+Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
+
+```console
+$ helm install snitch \
+  --set server.service.port=8080 undistro/{{ template "chart.name" . }}
+```
+
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+
+```console
+$ helm install snitch -f values.yaml undistro/{{ template "chart.name" . }}
+```
+
+> **Tip**: You can use the default [values.yaml](values.yaml)

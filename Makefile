@@ -58,6 +58,7 @@ help: ## Display this help.
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	@cp -r config/crd/bases/*.yaml charts/snitch/crds/
 
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
@@ -177,3 +178,10 @@ gen-snitch-view-kubeconfig: ## Create a service account and config RBAC for it.
 	./scripts/gen_snitch_view_kubeconfig.sh
 setup-snitch-view: ## Create and apply Snitch View Secret.
 	./scripts/setup_snitch_view.sh
+
+##@ Documentation
+helm-docs: ## Generate documentation for helm charts
+	@docker run -it --rm \
+		-v $(PWD):/helm-docs \
+		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
+		helm-docs -s=file

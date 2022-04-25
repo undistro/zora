@@ -1,0 +1,47 @@
+{{- if .Values.server.rbac.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "snitch.serverServiceAccountName" . }}
+  labels:
+    {{- include "snitch.serverLabels" . | nindent 4 }}
+  {{- with .Values.server.rbac.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- if .Values.server.rbac.create -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "snitch.serverServiceAccountName" . }}
+rules:
+  - apiGroups:
+      - snitch.undistro.io
+    resources:
+      - clusters
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - snitch.undistro.io
+    resources:
+      - clusters/status
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "snitch.serverServiceAccountName" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "snitch.serverServiceAccountName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "snitch.serverServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
