@@ -17,18 +17,6 @@ const LabelEnvironment = "snitch.undistro.io/environment"
 type ClusterSpec struct {
 	// KubeconfigRef is a reference to a secret that contains the kubeconfig data
 	KubeconfigRef *corev1.SecretReference `json:"kubeconfigRef,omitempty"`
-
-	Cloud *ClusterCloudSpec `json:"cloud,omitempty"`
-}
-
-type ClusterCloudSpec struct {
-	EKS *ClusterEKSSpec `json:"eks,omitempty"`
-}
-
-type ClusterEKSSpec struct {
-	Name           string                 `json:"name"`
-	Region         string                 `json:"region"`
-	CredentialsRef corev1.SecretReference `json:"credentialsRef"`
 }
 
 // ClusterStatus defines the observed state of Cluster
