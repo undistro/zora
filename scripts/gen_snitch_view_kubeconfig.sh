@@ -67,8 +67,8 @@ cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: snitch-view
-  namespace: snitch-system
+  name: $CLUSTER_ROLE_NAME
+  namespace: $CLUSTER_ROLE_NS
 rules:
   - apiGroups: [ "" ]
     resources:
