@@ -55,7 +55,7 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 }
 
 func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Cluster) (ctrl.Result, error) {
-	log := ctrllog.FromContext(ctx, "name", cluster.Name, "namespace", cluster.Namespace)
+	// log := ctrllog.FromContext(ctx, "name", cluster.Name, "namespace", cluster.Namespace)
 
 	// itself
 	if cluster.Spec.KubeconfigRef == nil {

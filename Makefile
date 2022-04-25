@@ -107,7 +107,7 @@ docker-push: ## Push docker image with the manager.
 ##@ Deployment
 
 ifndef ignore-not-found
-  ignore-not-found = false
+  ignore-not-found = true
 endif
 
 .PHONY: install

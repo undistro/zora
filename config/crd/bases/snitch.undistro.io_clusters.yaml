@@ -69,33 +69,6 @@ spec:
           spec:
             description: ClusterSpec defines the desired state of Cluster
             properties:
-              cloud:
-                properties:
-                  eks:
-                    properties:
-                      credentialsRef:
-                        description: SecretReference represents a Secret Reference.
-                          It has enough information to retrieve secret in any namespace
-                        properties:
-                          name:
-                            description: Name is unique within a namespace to reference
-                              a secret resource.
-                            type: string
-                          namespace:
-                            description: Namespace defines the space within which
-                              the secret name must be unique.
-                            type: string
-                        type: object
-                      name:
-                        type: string
-                      region:
-                        type: string
-                    required:
-                    - credentialsRef
-                    - name
-                    - region
-                    type: object
-                type: object
               kubeconfigRef:
                 description: KubeconfigRef is a reference to a secret that contains
                   the kubeconfig data
