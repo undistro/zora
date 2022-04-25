@@ -67,15 +67,14 @@ cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: $CLUSTER_ROLE_NAME
-  namespace: $CLUSTER_ROLE_NS
+  name: snitch-view
+  namespace: snitch-system
 rules:
   - apiGroups: [ "" ]
     resources:
       - configmaps
-      - deployments
       - endpoints
-      - horizontalpodautoscalers
+      - limitranges
       - namespaces
       - nodes
       - persistentvolumes
@@ -84,7 +83,27 @@ rules:
       - secrets
       - serviceaccounts
       - services
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "apps" ]
+    resources:
+      - daemonsets
+      - deployments
       - statefulsets
+      - replicasets
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "autoscaling" ]
+    resources:
+      - horizontalpodautoscalers
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "networking.k8s.io" ]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "policy" ]
+    resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
     verbs: [ "get", "list" ]
   - apiGroups: [ "rbac.authorization.k8s.io" ]
     resources:
