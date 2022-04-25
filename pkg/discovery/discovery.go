@@ -69,14 +69,93 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(nodes) == 0 {
+		return nil, errors.New("cluster has no nodes")
+	}
+
+	clsource, err := r.ClusterSource(ctx, nodes[0])
+	if err != nil {
+		return nil, err
+	}
+	reg, err := r.Region(ctx, nodes)
+	if err != nil {
+		return nil, err
+	}
 
 	return &ClusterInfo{
 		KubernetesVersion: v,
 		Nodes:             nodes,
 		Resources:         avgNodeResources(nodes),
 		CreationTimestamp: oldestNodeTimestamp(nodes),
-		// Provider: ,
+		Provider:          clsource["provider"],
+		Flavor:            clsource["flavor"],
+		Region:            reg,
 	}, nil
+}
+
+func (r *clusterDiscovery) ClusterSource(_ context.Context, node NodeInfo) (map[string]string, error) {
+	match := false
+	cls := map[string]string{}
+	for l, _ := range node.Labels {
+		for pr, cs := range ClusterSourcePrefixes {
+			match = strings.HasPrefix(l, pr)
+			if match {
+				cls = cs
+				break
+			}
+		}
+		if match {
+			break
+		}
+	}
+	if !match {
+		return nil, errors.New("no labels match cluster flavor")
+	}
+	return cls, nil
+}
+
+func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, error) {
+	clsource, err := r.ClusterSource(nil, node)
+	if err != nil {
+		return "", fmt.Errorf("failed to discover provider: %w", err)
+	}
+	return clsource["provider"], nil
+}
+
+func (r *clusterDiscovery) Flavor(_ context.Context, node NodeInfo) (string, error) {
+	clsource, err := r.ClusterSource(nil, node)
+	if err != nil {
+		return "", fmt.Errorf("failed to discover flavor: %w", err)
+	}
+	return clsource["flavor"], nil
+}
+
+func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, error) {
+	regc := map[string]int{}
+	haslabel := false
+	for c := 0; c < len(nodes); c++ {
+		for l, reg := range nodes[c].Labels {
+			if l == RegionLabel {
+				if !haslabel {
+					haslabel = true
+				}
+				regc[reg]++
+			}
+		}
+	}
+	if !haslabel {
+		return "", fmt.Errorf("unable to discover region: %w",
+			fmt.Errorf("no node has the label <%s>", RegionLabel))
+	}
+	maxc := 0
+	maxcreg := ""
+	for reg, c := range regc {
+		if maxc < c {
+			maxc = c
+			maxcreg = reg
+		}
+	}
+	return maxcreg, nil
 }
 
 func (r *clusterDiscovery) Version(_ context.Context) (string, error) {

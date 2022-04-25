@@ -14,6 +14,9 @@ type ClusterDiscoverer interface {
 	Discover(context.Context) (*ClusterInfo, error)
 	Version(context.Context) (string, error)
 	Nodes(context.Context) ([]NodeInfo, error)
+	Provider(context.Context, NodeInfo) (string, error)
+	Flavor(context.Context, NodeInfo) (string, error)
+	Region(context.Context, []NodeInfo) (string, error)
 }
 
 // +k8s:deepcopy-gen=true
