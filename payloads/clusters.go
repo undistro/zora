@@ -28,7 +28,6 @@ func NewCluster(c v1alpha1.Cluster) Cluster {
 		Namespace:         c.Namespace,
 		Environment:       c.Labels[v1alpha1.LabelEnvironment],
 		Provider:          "aws",
-		Flavor:            "eks",
 		Region:            "us-east-1",
 		TotalNodes:        c.Status.TotalNodes,
 		Ready:             true,
@@ -44,7 +43,6 @@ type Cluster struct {
 	Namespace         string      `json:"namespace,omitempty"`
 	Environment       string      `json:"environment,omitempty"`
 	Provider          string      `json:"provider,omitempty"`
-	Flavor            string      `json:"flavor,omitempty"`
 	Region            string      `json:"region,omitempty"`
 	TotalNodes        int         `json:"totalNodes,omitempty"`
 	Ready             bool        `json:"ready,omitempty"`
