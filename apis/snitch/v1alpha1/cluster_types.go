@@ -67,7 +67,6 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 //+kubebuilder:printcolumn:name="Nodes",type="integer",priority=0,JSONPath=".status.totalNodes"
 //+kubebuilder:printcolumn:name="Age",type="date",priority=0,JSONPath=".status.creationTimestamp"
 //+kubebuilder:printcolumn:name="Provider",type="string",priority=1,JSONPath=".status.provider"
-//+kubebuilder:printcolumn:name="Flavor",type="string",priority=1,JSONPath=".status.flavor"
 //+kubebuilder:printcolumn:name="Region",type="string",priority=1,JSONPath=".status.region"
 
 // Cluster is the Schema for the clusters API

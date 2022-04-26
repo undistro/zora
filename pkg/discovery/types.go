@@ -15,7 +15,6 @@ type ClusterDiscoverer interface {
 	Version(context.Context) (string, error)
 	Nodes(context.Context) ([]NodeInfo, error)
 	Provider(context.Context, NodeInfo) (string, error)
-	Flavor(context.Context, NodeInfo) (string, error)
 	Region(context.Context, []NodeInfo) (string, error)
 }
 
@@ -36,8 +35,6 @@ type ClusterInfo struct {
 
 	// Provider stores the cluster's source.
 	Provider string `json:"provider,omitempty"`
-	// Flavor is the type of cluster.
-	Flavor string `json:"flavor,omitempty"`
 	// Region holds the geographic location with most nodes.
 	Region string `json:"region,omitempty"`
 }

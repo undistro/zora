@@ -41,10 +41,6 @@ spec:
       name: Provider
       priority: 1
       type: string
-    - jsonPath: .status.flavor
-      name: Flavor
-      priority: 1
-      type: string
     - jsonPath: .status.region
       name: Region
       priority: 1
@@ -167,9 +163,6 @@ spec:
                   time when the oldest Node was created. It is represented in RFC3339
                   form and is in UTC.
                 format: date-time
-                type: string
-              flavor:
-                description: Flavor is the type of cluster.
                 type: string
               kubernetesVersion:
                 description: KubernetesVersion is the server's kubernetes version

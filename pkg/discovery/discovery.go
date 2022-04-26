@@ -73,7 +73,7 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		return nil, errors.New("cluster has no nodes")
 	}
 
-	clsource, err := r.ClusterSource(ctx, nodes[0])
+	prov, err := r.Provider(ctx, nodes[0])
 	if err != nil {
 		return nil, err
 	}
@@ -87,20 +87,22 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		Nodes:             nodes,
 		Resources:         avgNodeResources(nodes),
 		CreationTimestamp: oldestNodeTimestamp(nodes),
-		Provider:          clsource["provider"],
-		Flavor:            clsource["flavor"],
+		Provider:          prov,
 		Region:            reg,
 	}, nil
 }
 
-func (r *clusterDiscovery) ClusterSource(_ context.Context, node NodeInfo) (map[string]string, error) {
+// Provider finds the cluster source by matching against provider specific
+// labels on a node, returning the provider if the match succeeds and
+// "self-hosted" if it fails.
+func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, error) {
 	match := false
-	cls := map[string]string{}
+	prov := ""
 	for l, _ := range node.Labels {
-		for pr, cs := range ClusterSourcePrefixes {
-			match = strings.HasPrefix(l, pr)
+		for pref, p := range ClusterSourcePrefixes {
+			match = strings.HasPrefix(l, pref)
 			if match {
-				cls = cs
+				prov = p
 				break
 			}
 		}
@@ -109,37 +111,27 @@ func (r *clusterDiscovery) ClusterSource(_ context.Context, node NodeInfo) (map[
 		}
 	}
 	if !match {
-		return nil, errors.New("no labels match cluster flavor")
+		return "self-hosted", nil
 	}
-	return cls, nil
+	return prov, nil
 }
 
-func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, error) {
-	clsource, err := r.ClusterSource(nil, node)
-	if err != nil {
-		return "", fmt.Errorf("failed to discover provider: %w", err)
-	}
-	return clsource["provider"], nil
-}
-
-func (r *clusterDiscovery) Flavor(_ context.Context, node NodeInfo) (string, error) {
-	clsource, err := r.ClusterSource(nil, node)
-	if err != nil {
-		return "", fmt.Errorf("failed to discover flavor: %w", err)
-	}
-	return clsource["flavor"], nil
-}
-
+// Region returns "multi-region" if the cluster nodes belong to distinct
+// locations, otherwise it returns the region itself.
 func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, error) {
-	regc := map[string]int{}
+	regs := map[string]struct{}{}
 	haslabel := false
 	for c := 0; c < len(nodes); c++ {
-		for l, reg := range nodes[c].Labels {
+		for l, v := range nodes[c].Labels {
 			if l == RegionLabel {
-				if !haslabel {
+				regs[v] = struct{}{}
+				if haslabel {
+					if len(regs) > 1 {
+						return "multi-region", nil
+					}
+				} else {
 					haslabel = true
 				}
-				regc[reg]++
 			}
 		}
 	}
@@ -147,15 +139,11 @@ func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, 
 		return "", fmt.Errorf("unable to discover region: %w",
 			fmt.Errorf("no node has the label <%s>", RegionLabel))
 	}
-	maxc := 0
-	maxcreg := ""
-	for reg, c := range regc {
-		if maxc < c {
-			maxc = c
-			maxcreg = reg
-		}
+	reg := ""
+	for reg, _ = range regs {
+		continue
 	}
-	return maxcreg, nil
+	return reg, nil
 }
 
 func (r *clusterDiscovery) Version(_ context.Context) (string, error) {
