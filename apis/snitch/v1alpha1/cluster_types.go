@@ -11,6 +11,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+const LabelEnvironment = "snitch.undistro.io/environment"
+
 // ClusterSpec defines the desired state of Cluster
 type ClusterSpec struct {
 	// KubeconfigRef is a reference to a secret that contains the kubeconfig data

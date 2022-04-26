@@ -156,11 +156,18 @@ kind: Cluster
 metadata:
   name: mycluster
   namespace: snitch-system
+  labels:
+    snitch.undistro.io/environment: prod
 spec:
   kubeconfigRef:
     name: mycluster-kubeconfig
 EOF
 ```
+
+> **Tip:**
+> Clusters can be grouped by environment with the `snitch.undistro.io/environment` label.
+> 
+> You can list all clusters from `prod` environment using: `kubectl get clusters -l snitch.undistro.io/environment=prod`
 
 ## Uninstall
 

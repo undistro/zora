@@ -26,6 +26,7 @@ func NewCluster(c v1alpha1.Cluster) Cluster {
 	return Cluster{
 		Name:              c.Name,
 		Namespace:         c.Namespace,
+		Environment:       c.Labels[v1alpha1.LabelEnvironment],
 		Provider:          "aws",
 		Flavor:            "eks",
 		Region:            "us-east-1",
@@ -41,6 +42,7 @@ func NewCluster(c v1alpha1.Cluster) Cluster {
 type Cluster struct {
 	Name              string      `json:"name,omitempty"`
 	Namespace         string      `json:"namespace,omitempty"`
+	Environment       string      `json:"environment,omitempty"`
 	Provider          string      `json:"provider,omitempty"`
 	Flavor            string      `json:"flavor,omitempty"`
 	Region            string      `json:"region,omitempty"`
