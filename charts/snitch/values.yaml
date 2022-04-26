@@ -209,9 +209,9 @@ nginx:
   replicaCount: 1
   image:
     # -- NGINX image repository
-    repository: registry.undistro.io/dockerhub/library/nginx:1.20.2
+    repository: registry.undistro.io/dockerhub/library/nginx
     # -- NGINX image tag
-    tag: 1.20.2
+    tag: 1.20.2-alpine
     # -- Image pull policy
     pullPolicy: IfNotPresent
   serviceAccount:
