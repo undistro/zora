@@ -38,6 +38,9 @@ components:
         namespace:
           type: string
           example: clusters-prod
+        environment:
+          type: string
+          example: prod
         provider:
           type: string
           example: aws
