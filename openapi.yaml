@@ -44,9 +44,6 @@ components:
         provider:
           type: string
           example: aws
-        flavor:
-          type: string
-          example: eks
         region:
           type: string
           example: v1.21.5-eks-bc4871b
