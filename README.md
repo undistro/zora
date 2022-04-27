@@ -1,7 +1,7 @@
 # Undistro Inspect
 
-Undistro Inspect denounces potential issues in your Kubernetes cluster
-and provides multi cluster visibility.
+Undistro Inspect denounces potential issues in your Kubernetes cluster and
+provides multi cluster visibility.
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -32,8 +32,8 @@ These commands deploy Undistro Inspect to the Kubernetes cluster.
 
 ### Connect to a cluster
 
-To connect a cluster, you must have a kubeconfig file with a `token`, and
-the target cluster's api-server must be reachable by the management cluster.
+To connect a cluster, you must have a kubeconfig file with a `token`, and the
+target cluster's api-server must be reachable by the management cluster. The 
 
 If you already have a kubeconfig, 
 skip the next step and go to the [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig) section. 
