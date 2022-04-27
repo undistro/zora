@@ -8,6 +8,7 @@ SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"undistro-inspect"}
 SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"inspect-view"}
 METRICS_SERVER_VERSION=${METRICS_SERVER_VERSION:-"latest"}
 METRICS_SERVER_DEPLOYMENT_NAME=${METRICS_SERVER_DEPLOYMENT_NAME:-"metrics-server"}
+METRICS_SERVER_DEPLOYMENT=${METRICS_SERVER_DEPLOYMENT:-"https://github.com/kubernetes-sigs/metrics-server/releases/$METRICS_SERVER_VERSION/download/components.yaml"}
 
 get_token_name() {
 	echo $(kubectl -n $SVC_ACCOUNT_NS \
@@ -154,7 +155,7 @@ EOF
 
 setup_metrics_server() {
 	if ! kubectl get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
-		kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/$METRICS_SERVER_VERSION/download/components.yaml"
+		kubectl apply -f "$METRICS_SERVER_DEPLOYMENT"
 	fi
 }
 
