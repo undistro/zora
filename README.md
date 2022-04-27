@@ -3,9 +3,9 @@
 Undistro Inspect denounces potential issues in your Kubernetes cluster
 and provides multi cluster visibility.
 
-- [Install](#install)
+- [Installation](#installation)
 - [Usage](#usage)
-    + [Connect a cluster](#connect-a-cluster)
+    + [Connect to a cluster](#connect-to-a-cluster)
         - [Generate a kubeconfig file](#generate-a-kubeconfig-file)
         - [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig)
         - [Create a Cluster resource](#create-a-cluster-resource)
@@ -13,7 +13,7 @@ and provides multi cluster visibility.
 - [Uninstall](#uninstall)
 - [Glossary](#glossary)
 
-## Install
+## Installation
 
 1. Install Undistro Inspect using [Helm](https://helm.sh/docs/):
 ```shell
@@ -30,7 +30,7 @@ These commands deploy Undistro Inspect to the Kubernetes cluster.
 
 ## Usage
 
-### Connect a cluster
+### Connect to a cluster
 
 To connect a cluster, you must have a kubeconfig file with a `token`, and
 the target cluster's api-server must be reachable by the management cluster.
