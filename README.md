@@ -37,7 +37,7 @@ To connect a cluster, you must have a kubeconfig file with an authentication
 `token`, the target cluster's api-server must be reachable by the management
 cluster, and Metrics Server must be deployed on the target cluster.
 
-If you already have a kubeconfig and the Metrics Server deployed, 
+If you already have Metrics Server deployed and a kubeconfig, 
 skip to the [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig) section. 
 
 #### Installing Metrics Server
