@@ -46,7 +46,7 @@ Snitch just needs a _serviceaccount_ token.
 
 1. Create the service account with `view` permissions:
 ```shell
-kubectl -n kube-system create serviceaccount snitch-view
+kubectl -n snitch-system create serviceaccount snitch-view
 cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -172,7 +172,7 @@ EOF
 ## Uninstall
 
 ```shell
-helm delete snitch -n snitch
+helm delete snitch -n snitch-system
 kubectl delete namespace snitch-system
 ```
 
