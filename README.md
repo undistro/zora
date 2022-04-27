@@ -25,25 +25,41 @@ helm install undistro-inspect undistro/inspect \
   --create-namespace
 ```
 
-These commands deploy Undistro Inspect to the Kubernetes cluster. 
-[This section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect) lists the parameters that can be configured during installation.
+These commands deploy Undistro Inspect to the Kubernetes cluster. [This
+section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect)
+lists the parameters that can be configured during installation.
 
 ## Usage
 
 ### Connect to a cluster
 
-To connect a cluster, you must have a kubeconfig file with a `token`, and the
-target cluster's api-server must be reachable by the management cluster. The 
+To connect a cluster, you must have a kubeconfig file with an authentication
+`token`, the target cluster's api-server must be reachable by the management
+cluster, and Metrics Server must be deployed on the target cluster.
 
-If you already have a kubeconfig, 
-skip the next step and go to the [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig) section. 
+If you already have a kubeconfig and the Metrics Server deployed, 
+skip to the [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig) section. 
+
+#### Installing Metrics Server
+
+Metrics Server can be installed through the deployment made available on its
+official repository. The following command will install its latest version on
+the namespace `kube-system`:
+
+```shell
+	kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+```
+
+For more information, visit the [Metrics Server
+documentation](https://github.com/kubernetes-sigs/metrics-server/blob/master/README.md).
+
 
 #### Generate a kubeconfig file
 
 Most cloud providers have CLI tools, such as Amazon's `aws` and Google Cloud's
 `gcloud`, which can be used to obtain an authentication token.
 
-Undistro Inspect just needs a _serviceaccount_ token.
+Undistro Inspect needs a _serviceaccount_ token.
 
 > **Important:**
 > Ensure you are in the context of the cluster that you want to connect.
