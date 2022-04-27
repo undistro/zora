@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "snitch.fullname" . }}-operator
+  name: {{ include "inspect.fullname" . }}-operator
   labels:
-    {{- include "snitch.operatorLabels" . | nindent 4 }}
+    {{- include "inspect.operatorLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.operator.replicaCount }}
   selector:
     matchLabels:
-      {{- include "snitch.operatorSelectorLabels" . | nindent 6 }}
+      {{- include "inspect.operatorSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.operator.podAnnotations }}
@@ -16,11 +16,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "snitch.operatorSelectorLabels" . | nindent 8 }}
+        {{- include "inspect.operatorSelectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.imageCredentials.create  }}
       imagePullSecrets:
-        - name: {{ include "snitch.fullname" . }}-registry-cred
+        - name: {{ include "inspect.fullname" . }}-registry-cred
       {{- else }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -70,7 +70,7 @@ spec:
             {{- toYaml .Values.operator.securityContext | nindent 12 }}
       securityContext:
         {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
-      serviceAccountName: {{ include "snitch.operatorServiceAccountName" . }}
+      serviceAccountName: {{ include "inspect.operatorServiceAccountName" . }}
       terminationGracePeriodSeconds: 10
       {{- with .Values.operator.nodeSelector }}
       nodeSelector:

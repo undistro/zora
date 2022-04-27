@@ -1,9 +1,9 @@
 #!/bin/sh
 set -o errexit
 
-CLUSTER_NAME=${CLUSTER_NAME:-"snitched"}
+CLUSTER_NAME=${CLUSTER_NAME:-"inspected"}
 CLUSTER_NS=${CLUSTER_NS:-"undistro-inspect"}
-KCONFIG_NAME=${KCONFIG_NAME:-"snitch_view_kubeconfig.yaml"}
+KCONFIG_NAME=${KCONFIG_NAME:-"inspect_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
 
 setup_namespaces() {
@@ -21,7 +21,7 @@ setup_kubeconfig_secret() {
 
 apply_cluster_crd() {
 cat << EOF | kubectl apply -f -
-apiVersion: snitch.undistro.io/v1alpha1
+apiVersion: inspect.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: $CLUSTER_NAME

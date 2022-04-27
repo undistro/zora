@@ -2,9 +2,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "snitch.fullname" . }}-metrics-monitor
+  name: {{ include "inspect.fullname" . }}-metrics-monitor
   labels:
-    {{- include "snitch.operatorLabels" . | nindent 4 }}
+    {{- include "inspect.operatorLabels" . | nindent 4 }}
 spec:
   endpoints:
     - path: /metrics
@@ -15,5 +15,5 @@ spec:
         insecureSkipVerify: true
   selector:
     matchLabels:
-      {{- include "snitch.operatorSelectorLabels" . | nindent 4 }}
+      {{- include "inspect.operatorSelectorLabels" . | nindent 4 }}
 {{- end }}

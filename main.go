@@ -17,8 +17,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
-	"github.com/getupio-undistro/snitch/controllers"
+	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	"github.com/getupio-undistro/inspect/controllers"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -58,7 +58,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "e0f4eef4.snitch.undistro.io",
+		LeaderElectionID:       "e0f4eef4.inspect.undistro.io",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

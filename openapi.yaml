@@ -4,7 +4,7 @@ info:
   description: 'Snitch server'
   version: 1.0.0
 servers:
-  - url: http://snitch/v1
+  - url: http://inspect/v1
 tags:
   - name: cluster
     description: Everything about Clusters

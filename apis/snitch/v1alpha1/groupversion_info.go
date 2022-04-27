@@ -1,6 +1,6 @@
-// Package v1alpha1 contains API Schema definitions for the snitch v1alpha1 API group
+// Package v1alpha1 contains API Schema definitions for the inspect v1alpha1 API group
 //+kubebuilder:object:generate=true
-//+groupName=snitch.undistro.io
+//+groupName=inspect.undistro.io
 package v1alpha1
 
 import (
@@ -10,7 +10,7 @@ import (
 
 var (
 	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "snitch.undistro.io", Version: "v1alpha1"}
+	GroupVersion = schema.GroupVersion{Group: "inspect.undistro.io", Version: "v1alpha1"}
 
 	// SchemeGroupVersion is a copy of GroupVersion, used by client-gen
 	SchemeGroupVersion = GroupVersion

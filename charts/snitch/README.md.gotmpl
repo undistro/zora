@@ -8,11 +8,11 @@
 
 ## Installing the Chart
 
-To install the chart with the release name `snitch`:
+To install the chart with the release name `inspect`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install snitch undistro/{{ template "chart.name" . }} \
+helm install inspect undistro/{{ template "chart.name" . }} \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n undistro-inspect \
@@ -29,10 +29,10 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `snitch` release:
+To uninstall/delete the `inspect` release:
 
 ```console
-$ helm delete snitch
+$ helm delete inspect
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -46,14 +46,14 @@ The following table lists the configurable parameters of the Snitch chart and th
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm install snitch \
+$ helm install inspect \
   --set server.service.port=8080 undistro/{{ template "chart.name" . }}
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install snitch -f values.yaml undistro/{{ template "chart.name" . }}
+$ helm install inspect -f values.yaml undistro/{{ template "chart.name" . }}
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

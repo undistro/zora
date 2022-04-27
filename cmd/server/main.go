@@ -17,8 +17,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/getupio-undistro/snitch/handlers"
-	"github.com/getupio-undistro/snitch/pkg/clientset/versioned"
+	"github.com/getupio-undistro/inspect/handlers"
+	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
 )
 
 var log = ctrl.Log.WithName("server")

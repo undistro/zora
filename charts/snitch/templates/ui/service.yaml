@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "snitch.fullname" . }}-ui
+  name: {{ include "inspect.fullname" . }}-ui
   labels:
-    {{- include "snitch.uiLabels" . | nindent 4 }}
+    {{- include "inspect.uiLabels" . | nindent 4 }}
 spec:
   type: {{ .Values.ui.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "snitch.uiSelectorLabels" . | nindent 4 }}
+    {{- include "inspect.uiSelectorLabels" . | nindent 4 }}

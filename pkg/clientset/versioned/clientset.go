@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	snitchv1alpha1 "github.com/getupio-undistro/snitch/pkg/clientset/versioned/typed/snitch/v1alpha1"
+	inspectv1alpha1 "github.com/getupio-undistro/inspect/pkg/clientset/versioned/typed/inspect/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -14,19 +14,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	SnitchV1alpha1() snitchv1alpha1.SnitchV1alpha1Interface
+	SnitchV1alpha1() inspectv1alpha1.SnitchV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	snitchV1alpha1 *snitchv1alpha1.SnitchV1alpha1Client
+	inspectV1alpha1 *inspectv1alpha1.SnitchV1alpha1Client
 }
 
 // SnitchV1alpha1 retrieves the SnitchV1alpha1Client
-func (c *Clientset) SnitchV1alpha1() snitchv1alpha1.SnitchV1alpha1Interface {
-	return c.snitchV1alpha1
+func (c *Clientset) SnitchV1alpha1() inspectv1alpha1.SnitchV1alpha1Interface {
+	return c.inspectV1alpha1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -69,7 +69,7 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.snitchV1alpha1, err = snitchv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.inspectV1alpha1, err = inspectv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.snitchV1alpha1 = snitchv1alpha1.New(c)
+	cs.inspectV1alpha1 = inspectv1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

@@ -25,7 +25,7 @@ ingress:
   annotations: {}
   # kubernetes.io/tls-acme: "true"
   # -- The host of Snitch in ingress rule
-  host: snitch.domain
+  host: inspect.domain
   # -- `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP)
   server:
     path: /api
@@ -42,7 +42,7 @@ operator:
   replicaCount: 1
   image:
     # -- Snitch operator image repository
-    repository: registry.undistro.io/snitch/operator
+    repository: registry.undistro.io/inspect/operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -110,7 +110,7 @@ server:
   replicaCount: 1
   image:
     # -- Snitch server image repository
-    repository: registry.undistro.io/snitch/server
+    repository: registry.undistro.io/inspect/server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -161,7 +161,7 @@ ui:
   replicaCount: 1
   image:
     # -- Snitch UI image repository
-    repository: registry.undistro.io/snitch/ui
+    repository: registry.undistro.io/inspect/ui
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy

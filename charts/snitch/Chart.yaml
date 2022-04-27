@@ -1,5 +1,5 @@
 apiVersion: v2
-name: snitch
+name: inspect
 description: Snitch denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
 type: application
@@ -16,4 +16,4 @@ version: 0.1.0
 appVersion: "v0.1.0"
 
 sources:
-  - https://github.com/getupio-undistro/snitch
+  - https://github.com/getupio-undistro/inspect

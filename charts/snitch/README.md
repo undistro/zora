@@ -6,11 +6,11 @@ Snitch denounces potential issues in your Kubernetes cluster and provides multi 
 
 ## Installing the Chart
 
-To install the chart with the release name `snitch`:
+To install the chart with the release name `inspect`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install snitch undistro/snitch \
+helm install inspect undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n undistro-inspect \
@@ -27,10 +27,10 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `snitch` release:
+To uninstall/delete the `inspect` release:
 
 ```console
-$ helm delete snitch
+$ helm delete inspect
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -51,12 +51,12 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to ingress |
-| ingress.host | string | `"snitch.domain"` | The host of Snitch in ingress rule |
+| ingress.host | string | `"inspect.domain"` | The host of Snitch in ingress rule |
 | ingress.server | object | `{"path":"/api","pathType":"ImplementationSpecific"}` | `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP) |
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
-| operator.image.repository | string | `"registry.undistro.io/snitch/operator"` | Snitch operator image repository |
+| operator.image.repository | string | `"registry.undistro.io/inspect/operator"` | Snitch operator image repository |
 | operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
@@ -78,7 +78,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
-| server.image.repository | string | `"registry.undistro.io/snitch/server"` | Snitch server image repository |
+| server.image.repository | string | `"registry.undistro.io/inspect/server"` | Snitch server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
@@ -100,7 +100,7 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | ui.replicaCount | int | `1` | Number of replicas desired of Snitch UI |
-| ui.image.repository | string | `"registry.undistro.io/snitch/ui"` | Snitch UI image repository |
+| ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Snitch UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -145,14 +145,14 @@ The following table lists the configurable parameters of the Snitch chart and th
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm install snitch \
-  --set server.service.port=8080 undistro/snitch
+$ helm install inspect \
+  --set server.service.port=8080 undistro/inspect
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install snitch -f values.yaml undistro/snitch
+$ helm install inspect -f values.yaml undistro/inspect
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

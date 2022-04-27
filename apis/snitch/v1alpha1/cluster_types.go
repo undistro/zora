@@ -3,15 +3,15 @@ package v1alpha1
 import (
 	"fmt"
 
-	"github.com/getupio-undistro/snitch/pkg/apis"
-	"github.com/getupio-undistro/snitch/pkg/discovery"
-	"github.com/getupio-undistro/snitch/pkg/formats"
+	"github.com/getupio-undistro/inspect/pkg/apis"
+	"github.com/getupio-undistro/inspect/pkg/discovery"
+	"github.com/getupio-undistro/inspect/pkg/formats"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
 
-const LabelEnvironment = "snitch.undistro.io/environment"
+const LabelEnvironment = "inspect.undistro.io/environment"
 
 // ClusterSpec defines the desired state of Cluster
 type ClusterSpec struct {

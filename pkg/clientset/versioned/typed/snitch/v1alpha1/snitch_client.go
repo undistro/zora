@@ -5,8 +5,8 @@ package v1alpha1
 import (
 	"net/http"
 
-	v1alpha1 "github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
-	"github.com/getupio-undistro/snitch/pkg/clientset/versioned/scheme"
+	v1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	"github.com/getupio-undistro/inspect/pkg/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
 )
 
@@ -15,7 +15,7 @@ type SnitchV1alpha1Interface interface {
 	ClustersGetter
 }
 
-// SnitchV1alpha1Client is used to interact with features provided by the snitch group.
+// SnitchV1alpha1Client is used to interact with features provided by the inspect group.
 type SnitchV1alpha1Client struct {
 	restClient rest.Interface
 }

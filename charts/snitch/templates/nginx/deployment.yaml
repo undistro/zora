@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "snitch.fullname" . }}-nginx
+  name: {{ include "inspect.fullname" . }}-nginx
   labels:
-    {{- include "snitch.nginxLabels" . | nindent 4 }}
+    {{- include "inspect.nginxLabels" . | nindent 4 }}
 spec:
   {{- if not .Values.nginx.autoscaling.enabled }}
   replicas: {{ .Values.nginx.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "snitch.nginxSelectorLabels" . | nindent 6 }}
+      {{- include "inspect.nginxSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.nginx.podAnnotations }}
@@ -19,18 +19,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "snitch.nginxSelectorLabels" . | nindent 8 }}
+        {{- include "inspect.nginxSelectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.imageCredentials.create  }}
       imagePullSecrets:
-        - name: {{ include "snitch.fullname" . }}-registry-cred
+        - name: {{ include "inspect.fullname" . }}-registry-cred
       {{- else }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- end }}
-      serviceAccountName: {{ include "snitch.nginxServiceAccountName" . }}
+      serviceAccountName: {{ include "inspect.nginxServiceAccountName" . }}
       securityContext:
         {{- toYaml .Values.nginx.podSecurityContext | nindent 8 }}
       containers:
@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "snitch.fullname" . }}-nginx
+            name: {{ include "inspect.fullname" . }}-nginx
       {{- with .Values.nginx.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

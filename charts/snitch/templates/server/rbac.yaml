@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "snitch.serverServiceAccountName" . }}
+  name: {{ include "inspect.serverServiceAccountName" . }}
   labels:
-    {{- include "snitch.serverLabels" . | nindent 4 }}
+    {{- include "inspect.serverLabels" . | nindent 4 }}
   {{- with .Values.server.rbac.serviceAccount.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -15,10 +15,10 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "snitch.serverServiceAccountName" . }}
+  name: {{ include "inspect.serverServiceAccountName" . }}
 rules:
   - apiGroups:
-      - snitch.undistro.io
+      - inspect.undistro.io
     resources:
       - clusters
     verbs:
@@ -26,7 +26,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - snitch.undistro.io
+      - inspect.undistro.io
     resources:
       - clusters/status
     verbs:
@@ -35,13 +35,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "snitch.serverServiceAccountName" . }}
+  name: {{ include "inspect.serverServiceAccountName" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "snitch.serverServiceAccountName" . }}
+  name: {{ include "inspect.serverServiceAccountName" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "snitch.serverServiceAccountName" . }}
+    name: {{ include "inspect.serverServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 {{- end }}

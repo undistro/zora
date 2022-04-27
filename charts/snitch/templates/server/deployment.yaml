@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "snitch.fullname" . }}-server
+  name: {{ include "inspect.fullname" . }}-server
   labels:
-    {{- include "snitch.serverLabels" . | nindent 4 }}
+    {{- include "inspect.serverLabels" . | nindent 4 }}
 spec:
   {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.server.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "snitch.serverSelectorLabels" . | nindent 6 }}
+      {{- include "inspect.serverSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.server.podAnnotations }}
@@ -18,18 +18,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "snitch.serverSelectorLabels" . | nindent 8 }}
+        {{- include "inspect.serverSelectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.imageCredentials.create  }}
       imagePullSecrets:
-        - name: {{ include "snitch.fullname" . }}-registry-cred
+        - name: {{ include "inspect.fullname" . }}-registry-cred
       {{- else }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- end }}
-      serviceAccountName: {{ include "snitch.serverServiceAccountName" . }}
+      serviceAccountName: {{ include "inspect.serverServiceAccountName" . }}
       securityContext:
         {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
       containers:

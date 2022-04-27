@@ -2,16 +2,16 @@ domain: undistro.io
 layout:
 - go.kubebuilder.io/v3
 multigroup: true
-projectName: snitch
-repo: github.com/getupio-undistro/snitch
+projectName: inspect
+repo: github.com/getupio-undistro/inspect
 resources:
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
   domain: undistro.io
-  group: snitch
+  group: inspect
   kind: Cluster
-  path: github.com/getupio-undistro/snitch/api/v1alpha1
+  path: github.com/getupio-undistro/inspect/api/v1alpha1
   version: v1alpha1
 version: "3"

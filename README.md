@@ -17,7 +17,7 @@ and provides multi cluster visibility.
 1. Install Snitch using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install snitch undistro/snitch \
+helm install inspect undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n undistro-inspect \
@@ -25,7 +25,7 @@ helm install snitch undistro/snitch \
 ```
 
 These commands deploy Snitch to the Kubernetes cluster. 
-[This section](https://github.com/getupio-undistro/snitch/tree/main/charts/snitch) lists the parameters that can be configured during installation.
+[This section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect) lists the parameters that can be configured during installation.
 
 ## Usage
 
@@ -46,12 +46,12 @@ Snitch just needs a _serviceaccount_ token.
 
 1. Create the service account with `view` permissions:
 ```shell
-kubectl -n undistro-inspect create serviceaccount snitch-view
+kubectl -n undistro-inspect create serviceaccount inspect-view
 cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: snitch-view
+  name: inspect-view
   namespace: undistro-inspect
 rules:
   - apiGroups: [ "" ]
@@ -102,12 +102,12 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl -n undistro-inspect create clusterrolebinding snitch-view --clusterrole=snitch-view --serviceaccount=kube-system:snitch-view
+kubectl -n undistro-inspect create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=kube-system:inspect-view
 ```
 
 2. Set up the following environment variables:
 ```shell
-export TOKEN_NAME=$(kubectl -n undistro-inspect get serviceaccount snitch-view -o=jsonpath='{.secrets[0].name}')
+export TOKEN_NAME=$(kubectl -n undistro-inspect get serviceaccount inspect-view -o=jsonpath='{.secrets[0].name}')
 export TOKEN_VALUE=$(kubectl -n undistro-inspect get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
 export CURRENT_CONTEXT=$(kubectl config current-context)
 export CURRENT_CLUSTER=$(kubectl config view --raw -o=go-template='{{range .contexts}}{{if eq .name "'''${CURRENT_CONTEXT}'''"}}{{ index .context "cluster" }}{{end}}{{end}}')
@@ -117,7 +117,7 @@ export CLUSTER_SERVER=$(kubectl config view --raw -o=go-template='{{range .clust
 
 3. Generate a kubeconfig file:
 ```shell
-cat << EOF > snitch-view-kubeconfig.yml
+cat << EOF > inspect-view-kubeconfig.yml
 apiVersion: v1
 kind: Config
 current-context: ${CURRENT_CONTEXT}
@@ -125,7 +125,7 @@ contexts:
 - name: ${CURRENT_CONTEXT}
   context:
     cluster: ${CURRENT_CONTEXT}
-    user: snitch-view
+    user: inspect-view
     namespace: undistro-inspect
 clusters:
 - name: ${CURRENT_CONTEXT}
@@ -133,7 +133,7 @@ clusters:
     certificate-authority-data: ${CLUSTER_CA}
     server: ${CLUSTER_SERVER}
 users:
-- name: snitch-view
+- name: inspect-view
   user:
     token: ${TOKEN_VALUE}
 EOF
@@ -144,20 +144,20 @@ EOF
 ```shell
 kubectl create secret generic mycluster-kubeconfig \
   -n undistro-inspect \
-  --from-file=value=snitch-view-kubeconfig.yml
+  --from-file=value=inspect-view-kubeconfig.yml
 ```
 
 #### Create a Cluster resource
 
 ```shell
 cat << EOF | kubectl apply -f -
-apiVersion: snitch.undistro.io/v1alpha1
+apiVersion: inspect.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: mycluster
   namespace: undistro-inspect
   labels:
-    snitch.undistro.io/environment: prod
+    inspect.undistro.io/environment: prod
 spec:
   kubeconfigRef:
     name: mycluster-kubeconfig
@@ -165,14 +165,14 @@ EOF
 ```
 
 > **Tip:**
-> Clusters can be grouped by environment with the `snitch.undistro.io/environment` label.
+> Clusters can be grouped by environment with the `inspect.undistro.io/environment` label.
 > 
-> You can list all clusters from `prod` environment using: `kubectl get clusters -l snitch.undistro.io/environment=prod`
+> You can list all clusters from `prod` environment using: `kubectl get clusters -l inspect.undistro.io/environment=prod`
 
 ## Uninstall
 
 ```shell
-helm delete snitch -n undistro-inspect
+helm delete inspect -n undistro-inspect
 kubectl delete namespace undistro-inspect
 ```
 

@@ -1,9 +1,9 @@
-apiVersion: snitch.undistro.io/v1alpha1
+apiVersion: inspect.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: cluster-sample
   labels:
-    snitch.undistro.io/environment: prod
+    inspect.undistro.io/environment: prod
 spec:
   kubeconfigRef:
     name: sample-kubeconfig

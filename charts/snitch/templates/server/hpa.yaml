@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "snitch.fullname" . }}-server
+  name: {{ include "inspect.fullname" . }}-server
   labels:
-    {{- include "snitch.serverLabels" . | nindent 4 }}
+    {{- include "inspect.serverLabels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "snitch.fullname" . }}-server
+    name: {{ include "inspect.fullname" . }}-server
   minReplicas: {{ .Values.server.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
   metrics:

@@ -1,4 +1,4 @@
-module github.com/getupio-undistro/snitch
+module github.com/getupio-undistro/inspect
 
 go 1.17
 

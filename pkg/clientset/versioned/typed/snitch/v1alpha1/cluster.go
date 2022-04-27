@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	v1alpha1 "github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
-	scheme "github.com/getupio-undistro/snitch/pkg/clientset/versioned/scheme"
+	v1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	scheme "github.com/getupio-undistro/inspect/pkg/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	rest "k8s.io/client-go/rest"
 )

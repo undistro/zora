@@ -1,11 +1,11 @@
 #!/bin/sh
 set -o errexit
 
-KCONFIG_NAME=${KCONFIG_NAME:-"snitch_view_kubeconfig.yaml"}
+KCONFIG_NAME=${KCONFIG_NAME:-"inspect_view_kubeconfig.yaml"}
 CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"undistro-inspect"}
-CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"snitch-view"}
+CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"inspect-view"}
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"undistro-inspect"}
-SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"snitch-view"}
+SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"inspect-view"}
 
 get_token_name() {
 	echo $(kubectl -n $SVC_ACCOUNT_NS \
@@ -123,7 +123,7 @@ EOF
 create_cluster_role_binding() {
 	kubectl create clusterrolebinding $SVC_ACCOUNT_NAME \
 		--namespace $CLUSTER_ROLE_NS \
-		--clusterrole=snitch-view \
+		--clusterrole=inspect-view \
 		--serviceaccount=$SVC_ACCOUNT_NS:$SVC_ACCOUNT_NAME
 }
 
