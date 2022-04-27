@@ -10,10 +10,12 @@ import (
 
 var MeasuredResources = []corev1.ResourceName{corev1.ResourceCPU, corev1.ResourceMemory}
 
-type ClusterDiscovery interface {
+type ClusterDiscoverer interface {
 	Discover(context.Context) (*ClusterInfo, error)
-	DiscoverVersion(context.Context) (string, error)
-	DiscoverNodes(context.Context) ([]NodeInfo, error)
+	Version(context.Context) (string, error)
+	Nodes(context.Context) ([]NodeInfo, error)
+	Provider(context.Context, NodeInfo) (string, error)
+	Region(context.Context, []NodeInfo) (string, error)
 }
 
 // +k8s:deepcopy-gen=true
@@ -30,6 +32,11 @@ type ClusterInfo struct {
 	// CreationTimestamp is a timestamp representing the server time when the oldest Node was created.
 	// It is represented in RFC3339 form and is in UTC.
 	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
+
+	// Provider stores the cluster's source.
+	Provider string `json:"provider,omitempty"`
+	// Region holds the geographic location with most nodes.
+	Region string `json:"region,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

@@ -19,8 +19,6 @@ import (
 	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
 	"github.com/getupio-undistro/snitch/pkg/discovery"
 	"github.com/getupio-undistro/snitch/pkg/kubeconfig"
-	"github.com/getupio-undistro/snitch/pkg/provider/cloud"
-	"github.com/getupio-undistro/snitch/pkg/provider/cloud/eks"
 )
 
 // ClusterReconciler reconciles a Cluster object
@@ -57,10 +55,10 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 }
 
 func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Cluster) (ctrl.Result, error) {
-	log := ctrllog.FromContext(ctx, "name", cluster.Name, "namespace", cluster.Namespace)
+	// log := ctrllog.FromContext(ctx, "name", cluster.Name, "namespace", cluster.Namespace)
 
 	// itself
-	if cluster.Spec.KubeconfigRef == nil && cluster.Spec.Cloud == nil {
+	if cluster.Spec.KubeconfigRef == nil {
 		if err := r.discoverAndUpdateStatus(ctx, cluster, r.Config); err != nil {
 			return ctrl.Result{}, err
 		}
@@ -84,47 +82,6 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 			return ctrl.Result{}, err
 		}
 		return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
-	}
-
-	// cloud
-	cloudSpec := cluster.Spec.Cloud
-	if cloudSpec == nil {
-		return ctrl.Result{}, nil
-	}
-	secretKeySelector := cloud.DefaultSecretKeySelectorValueFunc(ctx, r.Client, cluster.Namespace)
-
-	// EKS
-	if cloudSpec.EKS != nil {
-		ready, err := eks.ClusterIsReady(secretKeySelector, cloudSpec.EKS)
-		if err != nil {
-			log.Error(err, "failed to get EKS cluster status")
-			return ctrl.Result{}, err
-		}
-		if !ready {
-			log.Info("cluster is not ready, requeing after 1 minute")
-			return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
-		}
-		kcfg, err := eks.GetConfig(secretKeySelector, cloudSpec.EKS)
-		if err != nil {
-			log.Error(err, "failed to get config from EKS cluster")
-			return ctrl.Result{}, err
-		}
-		secret, err := kubeconfig.ApplyKubeconfigSecret(ctx, r.Client, kcfg, cluster.GetKubeconfigSecretName(), cluster)
-		if err != nil {
-			log.Error(err, "failed to apply kubeconfig secret")
-			return ctrl.Result{}, err
-		}
-		cfg, err := kubeconfig.ConfigFromSecret(secret)
-		if err != nil {
-			log.Error(err, "failed to get rest.Config from secret")
-			return ctrl.Result{}, err
-		}
-		if err := r.discoverAndUpdateStatus(ctx, cluster, cfg); err != nil {
-			return ctrl.Result{}, err
-		}
-		// the kubeconfig token is valid 14min, it will update token every 10min
-		log.Info("reconciliation finished, next run in 10m")
-		return ctrl.Result{RequeueAfter: time.Minute * 10}, nil
 	}
 
 	return ctrl.Result{}, nil

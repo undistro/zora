@@ -2,8 +2,10 @@ package discovery
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -15,7 +17,7 @@ import (
 	"k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
-func NewForConfig(c *rest.Config) (ClusterDiscovery, error) {
+func NewForConfig(c *rest.Config) (ClusterDiscoverer, error) {
 	kclient, err := kubernetes.NewForConfig(c)
 	if err != nil {
 		return nil, err
@@ -27,7 +29,7 @@ func NewForConfig(c *rest.Config) (ClusterDiscovery, error) {
 	return &clusterDiscovery{kubernetes: kclient, metrics: mclient}, nil
 }
 
-func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (ClusterDiscovery, error) {
+func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (ClusterDiscoverer, error) {
 	kclient, err := kubernetes.NewForConfigAndClient(c, httpClient)
 	if err != nil {
 		return nil, err
@@ -39,11 +41,11 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (ClusterDisc
 	return &clusterDiscovery{kubernetes: kclient, metrics: mclient}, nil
 }
 
-func NewForConfigOrDie(c *rest.Config) ClusterDiscovery {
+func NewForConfigOrDie(c *rest.Config) ClusterDiscoverer {
 	return &clusterDiscovery{kubernetes: kubernetes.NewForConfigOrDie(c), metrics: versioned.NewForConfigOrDie(c)}
 }
 
-func New(c rest.Interface) ClusterDiscovery {
+func New(c rest.Interface) ClusterDiscoverer {
 	return &clusterDiscovery{kubernetes: kubernetes.New(c), metrics: versioned.New(c)}
 }
 
@@ -58,12 +60,24 @@ type clusterDiscovery struct {
 }
 
 func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
-	v, err := r.DiscoverVersion(ctx)
+	v, err := r.Version(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	nodes, err := r.DiscoverNodes(ctx)
+	nodes, err := r.Nodes(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if len(nodes) == 0 {
+		return nil, errors.New("cluster has no nodes")
+	}
+
+	prov, err := r.Provider(ctx, nodes[0])
+	if err != nil {
+		return nil, err
+	}
+	reg, err := r.Region(ctx, nodes)
 	if err != nil {
 		return nil, err
 	}
@@ -73,10 +87,64 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		Nodes:             nodes,
 		Resources:         avgNodeResources(nodes),
 		CreationTimestamp: oldestNodeTimestamp(nodes),
+		Provider:          prov,
+		Region:            reg,
 	}, nil
 }
 
-func (r *clusterDiscovery) DiscoverVersion(_ context.Context) (string, error) {
+// Provider finds the cluster source by matching against provider specific
+// labels on a node, returning the provider if the match succeeds and
+// "self-hosted" if it fails.
+func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, error) {
+	match := false
+	prov := ""
+	for l, _ := range node.Labels {
+		for pref, p := range ClusterSourcePrefixes {
+			match = strings.HasPrefix(l, pref)
+			if match {
+				prov = p
+				break
+			}
+		}
+		if match {
+			break
+		}
+	}
+	if !match {
+		return "self-hosted", nil
+	}
+	return prov, nil
+}
+
+// Region returns "multi-region" if the cluster nodes belong to distinct
+// locations, otherwise it returns the region itself.
+func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, error) {
+	regs := map[string]struct{}{}
+	haslabel := false
+	for c := 0; c < len(nodes); c++ {
+		for l, v := range nodes[c].Labels {
+			if l == RegionLabel {
+				regs[v] = struct{}{}
+				if haslabel && len(regs) > 1 {
+					return "multi-region", nil
+				} else {
+					haslabel = true
+				}
+			}
+		}
+	}
+	if !haslabel {
+		return "", fmt.Errorf("unable to discover region: %w",
+			fmt.Errorf("no node has the label <%s>", RegionLabel))
+	}
+	reg := ""
+	for reg, _ = range regs {
+		continue
+	}
+	return reg, nil
+}
+
+func (r *clusterDiscovery) Version(_ context.Context) (string, error) {
 	v, err := r.kubernetes.Discovery().ServerVersion()
 	if err != nil {
 		return "", fmt.Errorf("failed to discover server version: %w", err)
@@ -84,7 +152,7 @@ func (r *clusterDiscovery) DiscoverVersion(_ context.Context) (string, error) {
 	return v.String(), nil
 }
 
-func (r *clusterDiscovery) DiscoverNodes(ctx context.Context) ([]NodeInfo, error) {
+func (r *clusterDiscovery) Nodes(ctx context.Context) ([]NodeInfo, error) {
 	metricsList, err := r.metrics.MetricsV1beta1().NodeMetricses().List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list NodeMetrics: %w", err)

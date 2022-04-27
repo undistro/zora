@@ -17,18 +17,6 @@ const LabelEnvironment = "snitch.undistro.io/environment"
 type ClusterSpec struct {
 	// KubeconfigRef is a reference to a secret that contains the kubeconfig data
 	KubeconfigRef *corev1.SecretReference `json:"kubeconfigRef,omitempty"`
-
-	Cloud *ClusterCloudSpec `json:"cloud,omitempty"`
-}
-
-type ClusterCloudSpec struct {
-	EKS *ClusterEKSSpec `json:"eks,omitempty"`
-}
-
-type ClusterEKSSpec struct {
-	Name           string                 `json:"name"`
-	Region         string                 `json:"region"`
-	CredentialsRef corev1.SecretReference `json:"credentialsRef"`
 }
 
 // ClusterStatus defines the observed state of Cluster
@@ -71,13 +59,15 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:printcolumn:name="Version",type="string",JSONPath=".status.kubernetesVersion",description=""
-//+kubebuilder:printcolumn:name="MEM Available",type="string",JSONPath=".status.memoryAvailable",description=""
-//+kubebuilder:printcolumn:name="MEM Usage (%)",type="string",JSONPath=".status.memoryUsage",description=""
-//+kubebuilder:printcolumn:name="CPU Available",type="string",JSONPath=".status.cpuAvailable",description=""
-//+kubebuilder:printcolumn:name="CPU Usage (%)",type="string",JSONPath=".status.cpuUsage",description=""
-//+kubebuilder:printcolumn:name="Nodes",type="integer",JSONPath=".status.totalNodes",description=""
-//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".status.creationTimestamp",description=""
+//+kubebuilder:printcolumn:name="Version",type="string",priority=0,JSONPath=".status.kubernetesVersion"
+//+kubebuilder:printcolumn:name="MEM Available",type="string",priority=0,JSONPath=".status.memoryAvailable"
+//+kubebuilder:printcolumn:name="MEM Usage (%)",type="string",priority=0,JSONPath=".status.memoryUsage"
+//+kubebuilder:printcolumn:name="CPU Available",type="string",priority=0,JSONPath=".status.cpuAvailable"
+//+kubebuilder:printcolumn:name="CPU Usage (%)",type="string",priority=0,JSONPath=".status.cpuUsage"
+//+kubebuilder:printcolumn:name="Nodes",type="integer",priority=0,JSONPath=".status.totalNodes"
+//+kubebuilder:printcolumn:name="Age",type="date",priority=0,JSONPath=".status.creationTimestamp"
+//+kubebuilder:printcolumn:name="Provider",type="string",priority=1,JSONPath=".status.provider"
+//+kubebuilder:printcolumn:name="Region",type="string",priority=1,JSONPath=".status.region"
 
 // Cluster is the Schema for the clusters API
 //+genclient
