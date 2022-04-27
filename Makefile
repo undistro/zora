@@ -176,7 +176,7 @@ delete-minikube: ## Delete Minikube node.
 
 gen-inspect-view-kubeconfig: ## Create a service account and config RBAC for it.
 	./scripts/gen_inspect_view_kubeconfig.sh
-setup-inspect-view: ## Create and apply Snitch View Secret.
+setup-inspect-view: ## Create and apply view secret.
 	./scripts/setup_inspect_view.sh
 
 ##@ Documentation

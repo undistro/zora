@@ -1,6 +1,6 @@
-# Snitch
+# Undistro Inspect
 
-Snitch denounces potential issues in your Kubernetes cluster
+Undistro Inspect denounces potential issues in your Kubernetes cluster
 and provides multi cluster visibility.
 
 - [Install](#install)
@@ -14,7 +14,7 @@ and provides multi cluster visibility.
 
 ## Install
 
-1. Install Snitch using [Helm](https://helm.sh/docs/):
+1. Install Undistro Inspect using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm install inspect undistro/inspect \
@@ -24,7 +24,7 @@ helm install inspect undistro/inspect \
   --create-namespace
 ```
 
-These commands deploy Snitch to the Kubernetes cluster. 
+These commands deploy Undistro Inspect to the Kubernetes cluster. 
 [This section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect) lists the parameters that can be configured during installation.
 
 ## Usage
@@ -42,7 +42,7 @@ skip the next step and go to the [Create a secret with your kubeconfig](#create-
 Most cloud providers have CLI tools, such as Amazon's `aws` and Google Cloud's
 `gcloud`, which can be used to obtain an authentication token.
 
-Snitch just needs a _serviceaccount_ token.
+Undistro Inspect just needs a _serviceaccount_ token.
 
 1. Create the service account with `view` permissions:
 ```shell
@@ -178,4 +178,4 @@ kubectl delete namespace undistro-inspect
 
 ## Glossary
 
-- **Management Cluster**: The only Kubernetes cluster where Snitch is installed.
+- **Management Cluster**: The only Kubernetes cluster where Undistro Inspect is installed.

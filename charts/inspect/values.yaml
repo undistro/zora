@@ -24,7 +24,7 @@ ingress:
   # -- Annotations to be added to ingress
   annotations: {}
   # kubernetes.io/tls-acme: "true"
-  # -- The host of Snitch in ingress rule
+  # -- The host of Undistro Inspect in ingress rule
   host: inspect.domain
   # -- `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP)
   server:
@@ -38,10 +38,10 @@ ingress:
   tlsSecretName: ""
 
 operator:
-  # -- Number of replicas desired of Snitch operator
+  # -- Number of replicas desired of Undistro Inspect operator
   replicaCount: 1
   image:
-    # -- Snitch operator image repository
+    # -- Undistro Inspect operator image repository
     repository: registry.undistro.io/inspect/operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
@@ -106,10 +106,10 @@ operator:
   affinity: {}
 
 server:
-  # -- Number of replicas desired of Snitch server
+  # -- Number of replicas desired of Undistro Inspect server
   replicaCount: 1
   image:
-    # -- Snitch server image repository
+    # -- Undistro Inspect server image repository
     repository: registry.undistro.io/inspect/server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
@@ -157,10 +157,10 @@ server:
   affinity: {}
 
 ui:
-  # -- Number of replicas desired of Snitch UI
+  # -- Number of replicas desired of Undistro Inspect UI
   replicaCount: 1
   image:
-    # -- Snitch UI image repository
+    # -- Undistro Inspect UI image repository
     repository: registry.undistro.io/inspect/ui
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""

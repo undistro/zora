@@ -1,8 +1,8 @@
-# Snitch Helm Chart
+# Undistro Inspect Helm Chart
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
 
-Snitch denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
+Undistro Inspect denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
 ## Installing the Chart
 
@@ -17,7 +17,7 @@ helm install inspect undistro/inspect \
   --create-namespace
 ```
 
-These commands deploy Snitch on the Kubernetes cluster in the default configuration.
+These commands deploy Undistro Inspect on the Kubernetes cluster in the default configuration.
 
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -37,7 +37,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Parameters
 
-The following table lists the configurable parameters of the Snitch chart and their default values.
+The following table lists the configurable parameters of the Undistro Inspect chart and their default values.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -51,12 +51,12 @@ The following table lists the configurable parameters of the Snitch chart and th
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to ingress |
-| ingress.host | string | `"inspect.domain"` | The host of Snitch in ingress rule |
+| ingress.host | string | `"inspect.domain"` | The host of Undistro Inspect in ingress rule |
 | ingress.server | object | `{"path":"/api","pathType":"ImplementationSpecific"}` | `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP) |
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
-| operator.replicaCount | int | `1` | Number of replicas desired of Snitch operator |
-| operator.image.repository | string | `"registry.undistro.io/inspect/operator"` | Snitch operator image repository |
+| operator.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect operator |
+| operator.image.repository | string | `"registry.undistro.io/inspect/operator"` | Undistro Inspect operator image repository |
 | operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
@@ -77,8 +77,8 @@ The following table lists the configurable parameters of the Snitch chart and th
 | operator.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
-| server.replicaCount | int | `1` | Number of replicas desired of Snitch server |
-| server.image.repository | string | `"registry.undistro.io/inspect/server"` | Snitch server image repository |
+| server.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect server |
+| server.image.repository | string | `"registry.undistro.io/inspect/server"` | Undistro Inspect server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
@@ -99,8 +99,8 @@ The following table lists the configurable parameters of the Snitch chart and th
 | server.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | server.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
-| ui.replicaCount | int | `1` | Number of replicas desired of Snitch UI |
-| ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Snitch UI image repository |
+| ui.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect UI |
+| ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Undistro Inspect UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |

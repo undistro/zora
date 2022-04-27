@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
-  title: Snitch
-  description: 'Snitch server'
+  title: Undistro Inspect
+  description: 'Undistro Inspect server'
   version: 1.0.0
 servers:
   - url: http://inspect/v1
