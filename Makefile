@@ -62,17 +62,8 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
-generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen clientset-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="boilerplate.go.txt" paths="./..."
-	@docker run -it --rm \
-		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
-		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
-		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
-		-e APIS_ROOT=$(PROJECT_PACKAGE)/apis \
-		-e GROUPS_VERSION="inspect:v1alpha1" \
-		-e GENERATION_TARGETS="client" \
-		-e BOILERPLATE_PATH="boilerplate.go.txt" \
-		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -131,6 +122,18 @@ CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 .PHONY: controller-gen
 controller-gen: ## Download controller-gen locally if necessary.
 	$(call go-install-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.8.0)
+
+.PHONY: clientset-gen
+clientset-gen: ## Generate clientset
+	@docker run -it --rm \
+		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
+		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
+		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
+		-e APIS_ROOT=$(PROJECT_PACKAGE)/apis \
+		-e GROUPS_VERSION="inspect:v1alpha1" \
+		-e GENERATION_TARGETS="client" \
+		-e BOILERPLATE_PATH="boilerplate.go.txt" \
+		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
 
 KUSTOMIZE = $(shell pwd)/bin/kustomize
 .PHONY: kustomize
