@@ -6,11 +6,11 @@ Undistro Inspect denounces potential issues in your Kubernetes cluster and provi
 
 ## Installing the Chart
 
-To install the chart with the release name `inspect`:
+To install the chart with the release name `undistro-inspect`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install inspect undistro/inspect \
+helm install undistro-inspect undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n undistro-inspect \
@@ -27,10 +27,10 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `inspect` release:
+To uninstall/delete the `undistro-inspect` release:
 
 ```console
-$ helm delete inspect
+$ helm delete undistro-inspect
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -121,8 +121,8 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | ui.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | ui.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | nginx.replicaCount | int | `1` | Number of replicas desired of nginx |
-| nginx.image.repository | string | `"registry.undistro.io/dockerhub/library/nginx:1.20.2"` | NGINX image repository |
-| nginx.image.tag | string | `"1.20.2"` | NGINX image tag |
+| nginx.image.repository | string | `"registry.undistro.io/dockerhub/library/nginx"` | NGINX image repository |
+| nginx.image.tag | string | `"1.20.2-alpine"` | NGINX image tag |
 | nginx.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | nginx.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | nginx.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
@@ -145,14 +145,14 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm install inspect \
+$ helm install undistro-inspect \
   --set server.service.port=8080 undistro/inspect
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install inspect -f values.yaml undistro/inspect
+$ helm install undistro-inspect -f values.yaml undistro/inspect
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

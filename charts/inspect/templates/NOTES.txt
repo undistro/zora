@@ -1,4 +1,9 @@
-1. Get the application URL by running these commands:
+1. Connect to a cluster with `kubectl`:
+
+  For in-depth information about how to connect to a cluster, visit
+    https://github.com/getupio-undistro/inspect#connect-to-a-cluster
+
+2. Get the UI URL by running these commands:
 {{- if .Values.ingress.enabled }}
   http{{ if .Values.ingress.tlsSecretName }}s{{ end }}://{{ .Values.ingress.host }}{{ .Values.ingress.ui.path }}
 {{- else if contains "NodePort" .Values.nginx.service.type }}

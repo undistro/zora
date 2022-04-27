@@ -3,21 +3,22 @@
 Undistro Inspect denounces potential issues in your Kubernetes cluster
 and provides multi cluster visibility.
 
-- [Install](#install)
+- [Installation](#installation)
 - [Usage](#usage)
-    + [Connect a cluster](#connect-a-cluster)
+    + [Connect to a cluster](#connect-to-a-cluster)
         - [Generate a kubeconfig file](#generate-a-kubeconfig-file)
         - [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig)
         - [Create a Cluster resource](#create-a-cluster-resource)
+  + [List clusters](#list-clusters)
 - [Uninstall](#uninstall)
 - [Glossary](#glossary)
 
-## Install
+## Installation
 
 1. Install Undistro Inspect using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install inspect undistro/inspect \
+helm install undistro-inspect undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n undistro-inspect \
@@ -29,7 +30,7 @@ These commands deploy Undistro Inspect to the Kubernetes cluster.
 
 ## Usage
 
-### Connect a cluster
+### Connect to a cluster
 
 To connect a cluster, you must have a kubeconfig file with a `token`, and
 the target cluster's api-server must be reachable by the management cluster.
@@ -43,6 +44,12 @@ Most cloud providers have CLI tools, such as Amazon's `aws` and Google Cloud's
 `gcloud`, which can be used to obtain an authentication token.
 
 Undistro Inspect just needs a _serviceaccount_ token.
+
+> **Important:**
+> Ensure you are in the context of the cluster that you want to connect.
+> - Display list of contexts: `kubectl config get-contexts`
+> - Display the current-context: `kubectl config current-context`
+> - Set the default context to my-cluster-name: `kubectl config use-context my-cluster-name`
 
 1. Create the service account with `view` permissions:
 ```shell
@@ -169,10 +176,42 @@ EOF
 > 
 > You can list all clusters from `prod` environment using: `kubectl get clusters -l inspect.undistro.io/environment=prod`
 
+### List clusters
+
+You can see the connected clusters with `kubectl` command:
+
+```shell
+$ kubectl get clusters
+NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   AGE
+mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       40d
+```
+
+> **Tips:**
+> - Get clusters from all namespaces using `--all-namespaces` flag
+> - Get clusters with additional information using `-o=wide` flag
+> - Get the documentation for `clusters` manifests using `kubectl explain clusters`
+
+The cluster list output has the following columns:
+
+- `NAME`: Cluster name
+- `VERSION`: Kubernetes version
+- `MEM AVAILABLE`: Quantity of memory available
+- `MEM USAGE (%)`: Usage of memory in quantity and percentage
+- `CPU AVAILABLE`: Quantity of CPU available
+- `CPU USAGE (%)`: Usage of CPU in quantity and percentage
+- `NODES`: Total of nodes
+- `AGE`: Age of the oldest Node in cluster
+- `PROVIDER`: Cluster's provider (with `-o=wide` flag)
+- `REGION`: Cluster's region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (with `-o=wide` flag)
+
+> **Info:**
+> - The quantity of available and in use resources, is an average of all Nodes.
+> - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
+
 ## Uninstall
 
 ```shell
-helm delete inspect -n undistro-inspect
+helm delete undistro-inspect -n undistro-inspect
 kubectl delete namespace undistro-inspect
 ```
 
