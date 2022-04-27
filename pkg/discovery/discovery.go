@@ -125,10 +125,8 @@ func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, 
 		for l, v := range nodes[c].Labels {
 			if l == RegionLabel {
 				regs[v] = struct{}{}
-				if haslabel {
-					if len(regs) > 1 {
-						return "multi-region", nil
-					}
+				if haslabel && len(regs) > 1 {
+					return "multi-region", nil
 				} else {
 					haslabel = true
 				}
