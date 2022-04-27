@@ -20,7 +20,7 @@ helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm install snitch undistro/snitch \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
-  -n snitch-system \
+  -n undistro-inspect \
   --create-namespace
 ```
 
@@ -46,13 +46,13 @@ Snitch just needs a _serviceaccount_ token.
 
 1. Create the service account with `view` permissions:
 ```shell
-kubectl -n snitch-system create serviceaccount snitch-view
+kubectl -n undistro-inspect create serviceaccount snitch-view
 cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: snitch-view
-  namespace: snitch-system
+  namespace: undistro-inspect
 rules:
   - apiGroups: [ "" ]
     resources:
@@ -102,13 +102,13 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl -n snitch-system create clusterrolebinding snitch-view --clusterrole=snitch-view --serviceaccount=kube-system:snitch-view
+kubectl -n undistro-inspect create clusterrolebinding snitch-view --clusterrole=snitch-view --serviceaccount=kube-system:snitch-view
 ```
 
 2. Set up the following environment variables:
 ```shell
-export TOKEN_NAME=$(kubectl -n snitch-system get serviceaccount snitch-view -o=jsonpath='{.secrets[0].name}')
-export TOKEN_VALUE=$(kubectl -n snitch-system get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
+export TOKEN_NAME=$(kubectl -n undistro-inspect get serviceaccount snitch-view -o=jsonpath='{.secrets[0].name}')
+export TOKEN_VALUE=$(kubectl -n undistro-inspect get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
 export CURRENT_CONTEXT=$(kubectl config current-context)
 export CURRENT_CLUSTER=$(kubectl config view --raw -o=go-template='{{range .contexts}}{{if eq .name "'''${CURRENT_CONTEXT}'''"}}{{ index .context "cluster" }}{{end}}{{end}}')
 export CLUSTER_CA=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}"{{with index .cluster "certificate-authority-data" }}{{.}}{{end}}"{{ end }}{{ end }}')
@@ -126,7 +126,7 @@ contexts:
   context:
     cluster: ${CURRENT_CONTEXT}
     user: snitch-view
-    namespace: snitch-system
+    namespace: undistro-inspect
 clusters:
 - name: ${CURRENT_CONTEXT}
   cluster:
@@ -143,7 +143,7 @@ EOF
 
 ```shell
 kubectl create secret generic mycluster-kubeconfig \
-  -n snitch-system \
+  -n undistro-inspect \
   --from-file=value=snitch-view-kubeconfig.yml
 ```
 
@@ -155,7 +155,7 @@ apiVersion: snitch.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: mycluster
-  namespace: snitch-system
+  namespace: undistro-inspect
   labels:
     snitch.undistro.io/environment: prod
 spec:
@@ -172,8 +172,8 @@ EOF
 ## Uninstall
 
 ```shell
-helm delete snitch -n snitch-system
-kubectl delete namespace snitch-system
+helm delete snitch -n undistro-inspect
+kubectl delete namespace undistro-inspect
 ```
 
 ## Glossary

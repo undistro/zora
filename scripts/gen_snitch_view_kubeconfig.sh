@@ -2,9 +2,9 @@
 set -o errexit
 
 KCONFIG_NAME=${KCONFIG_NAME:-"snitch_view_kubeconfig.yaml"}
-CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"snitch-system"}
+CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"undistro-inspect"}
 CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"snitch-view"}
-SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"snitch-system"}
+SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"undistro-inspect"}
 SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"snitch-view"}
 
 get_token_name() {

@@ -2,7 +2,7 @@
 set -o errexit
 
 CLUSTER_NAME=${CLUSTER_NAME:-"snitched"}
-CLUSTER_NS=${CLUSTER_NS:-"snitch-system"}
+CLUSTER_NS=${CLUSTER_NS:-"undistro-inspect"}
 KCONFIG_NAME=${KCONFIG_NAME:-"snitch_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
 

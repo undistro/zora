@@ -13,7 +13,7 @@ helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm install snitch undistro/snitch \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
-  -n snitch-system \
+  -n undistro-inspect \
   --create-namespace
 ```
 
