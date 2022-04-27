@@ -14,7 +14,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
+	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 

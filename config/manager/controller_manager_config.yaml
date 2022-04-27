@@ -8,4 +8,4 @@ webhook:
   port: 9443
 leaderElection:
   leaderElect: true
-  resourceName: e0f4eef4.snitch.undistro.io
+  resourceName: e0f4eef4.inspect.undistro.io

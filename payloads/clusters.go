@@ -1,8 +1,8 @@
 package payloads
 
 import (
-	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
-	"github.com/getupio-undistro/snitch/pkg/formats"
+	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	"github.com/getupio-undistro/inspect/pkg/formats"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

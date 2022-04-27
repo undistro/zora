@@ -3,9 +3,9 @@
 package fake
 
 import (
-	clientset "github.com/getupio-undistro/snitch/pkg/clientset/versioned"
-	snitchv1alpha1 "github.com/getupio-undistro/snitch/pkg/clientset/versioned/typed/snitch/v1alpha1"
-	fakesnitchv1alpha1 "github.com/getupio-undistro/snitch/pkg/clientset/versioned/typed/snitch/v1alpha1/fake"
+	clientset "github.com/getupio-undistro/inspect/pkg/clientset/versioned"
+	inspectv1alpha1 "github.com/getupio-undistro/inspect/pkg/clientset/versioned/typed/inspect/v1alpha1"
+	fakeinspectv1alpha1 "github.com/getupio-undistro/inspect/pkg/clientset/versioned/typed/inspect/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -63,7 +63,7 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// SnitchV1alpha1 retrieves the SnitchV1alpha1Client
-func (c *Clientset) SnitchV1alpha1() snitchv1alpha1.SnitchV1alpha1Interface {
-	return &fakesnitchv1alpha1.FakeSnitchV1alpha1{Fake: &c.Fake}
+// InspectV1alpha1 retrieves the InspectV1alpha1Client
+func (c *Clientset) InspectV1alpha1() inspectv1alpha1.InspectV1alpha1Interface {
+	return &fakeinspectv1alpha1.FakeInspectV1alpha1{Fake: &c.Fake}
 }

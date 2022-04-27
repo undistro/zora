@@ -16,9 +16,9 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/getupio-undistro/snitch/apis/snitch/v1alpha1"
-	"github.com/getupio-undistro/snitch/pkg/discovery"
-	"github.com/getupio-undistro/snitch/pkg/kubeconfig"
+	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	"github.com/getupio-undistro/inspect/pkg/discovery"
+	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
 )
 
 // ClusterReconciler reconciles a Cluster object
@@ -29,9 +29,9 @@ type ClusterReconciler struct {
 	Config   *rest.Config
 }
 
-//+kubebuilder:rbac:groups=snitch.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=snitch.undistro.io,resources=clusters/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=snitch.undistro.io,resources=clusters/finalizers,verbs=update
+//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to

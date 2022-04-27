@@ -12,7 +12,7 @@ IMG_TAG ?= latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.23
 # Image URL to use for building and pushing.
-IMG ?= ${REG_ADDR}/snitch:${IMG_TAG}
+IMG ?= ${REG_ADDR}/inspect:${IMG_TAG}
 # Name of dockerfile to use in the image.
 DOCKERFILE ?= Dockerfile
 
@@ -58,21 +58,12 @@ help: ## Display this help.
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
-	@cp -r config/crd/bases/*.yaml charts/snitch/crds/
+	@cp -r config/crd/bases/*.yaml charts/inspect/crds/
 
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
-generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen clientset-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="boilerplate.go.txt" paths="./..."
-	@docker run -it --rm \
-		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
-		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
-		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
-		-e APIS_ROOT=$(PROJECT_PACKAGE)/apis \
-		-e GROUPS_VERSION="snitch:v1alpha1" \
-		-e GENERATION_TARGETS="client" \
-		-e BOILERPLATE_PATH="boilerplate.go.txt" \
-		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -132,6 +123,18 @@ CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 controller-gen: ## Download controller-gen locally if necessary.
 	$(call go-install-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.8.0)
 
+.PHONY: clientset-gen
+clientset-gen: ## Generate clientset
+	@docker run -it --rm \
+		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
+		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
+		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
+		-e APIS_ROOT=$(PROJECT_PACKAGE)/apis \
+		-e GROUPS_VERSION="inspect:v1alpha1" \
+		-e GENERATION_TARGETS="client" \
+		-e BOILERPLATE_PATH="boilerplate.go.txt" \
+		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
+
 KUSTOMIZE = $(shell pwd)/bin/kustomize
 .PHONY: kustomize
 kustomize: ## Download kustomize locally if necessary.
@@ -174,10 +177,10 @@ setup-minikube:  ## Start Minikube with an inner Docker registry.
 delete-minikube: ## Delete Minikube node.
 	minikube delete
 
-gen-snitch-view-kubeconfig: ## Create a service account and config RBAC for it.
-	./scripts/gen_snitch_view_kubeconfig.sh
-setup-snitch-view: ## Create and apply Snitch View Secret.
-	./scripts/setup_snitch_view.sh
+gen-inspect-view-kubeconfig: ## Create a service account and config RBAC for it.
+	./scripts/gen_inspect_view_kubeconfig.sh
+setup-inspect-view: ## Create and apply view secret.
+	./scripts/setup_inspect_view.sh
 
 ##@ Documentation
 helm-docs: ## Generate documentation for helm charts
