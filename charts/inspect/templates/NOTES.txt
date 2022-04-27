@@ -1,7 +1,7 @@
-1. Connect a cluster with `kubectl`:
+1. Connect to a cluster with `kubectl`:
 
-  For in-depth information about how to connect a cluster, visit
-    https://github.com/getupio-undistro/inspect#connect-a-cluster
+  For in-depth information about how to connect to a cluster, visit
+    https://github.com/getupio-undistro/inspect#connect-to-a-cluster
 
 2. Get the UI URL by running these commands:
 {{- if .Values.ingress.enabled }}
