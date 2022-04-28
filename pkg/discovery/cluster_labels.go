@@ -7,4 +7,5 @@ var ClusterSourcePrefixes = map[string]string{
 	"eks.amazonaws.com/":     "aws",
 	"kubernetes.azure.com/":  "azure",
 	"doks.digitalocean.com/": "digitalocean",
+	"oke.oraclecloud.com/":   "oraclecloud",
 }
