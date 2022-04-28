@@ -47,7 +47,7 @@ official repository. The following command will install its latest version on
 the namespace `kube-system`:
 
 ```shell
-	kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
 ```
 
 For more information, visit the [Metrics Server
@@ -125,7 +125,7 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl -n undistro-inspect create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=kube-system:inspect-view
+kubectl -n undistro-inspect create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=undistro-inspect:inspect-view
 ```
 
 2. Set up the following environment variables:
