@@ -125,7 +125,7 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl -n undistro-inspect create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=kube-system:inspect-view
+kubectl -n undistro-inspect create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=undistro-inspect:inspect-view
 ```
 
 2. Set up the following environment variables:
