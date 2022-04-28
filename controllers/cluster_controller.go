@@ -21,6 +21,8 @@ import (
 	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
 )
 
+const failureReqTime = 5 * time.Minute
+
 // ClusterReconciler reconciles a Cluster object
 type ClusterReconciler struct {
 	client.Client
@@ -42,7 +44,7 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
 		log.Error(err, "failed to fetch Cluster")
-		return ctrl.Result{}, client.IgnoreNotFound(err)
+		return ctrl.Result{RequeueAfter: failureReqTime}, client.IgnoreNotFound(err)
 	}
 
 	result, err := r.reconcile(ctx, cluster)
@@ -62,7 +64,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		if err := r.discoverAndUpdateStatus(ctx, cluster, r.Config); err != nil {
 			return ctrl.Result{}, err
 		}
-		return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+		return ctrl.Result{RequeueAfter: failureReqTime}, nil
 	}
 
 	// raw kubeconfig
@@ -76,10 +78,10 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		}
 		config, err := kubeconfig.ConfigFromSecretName(ctx, r.Client, key)
 		if err != nil {
-			return ctrl.Result{}, err
+			return ctrl.Result{RequeueAfter: failureReqTime}, err
 		}
 		if err := r.discoverAndUpdateStatus(ctx, cluster, config); err != nil {
-			return ctrl.Result{}, err
+			return ctrl.Result{RequeueAfter: failureReqTime}, err
 		}
 		return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 	}

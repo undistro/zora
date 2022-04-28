@@ -96,8 +96,9 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 // labels on a node, returning the provider if the match succeeds and
 // "self-hosted" if it fails.
 func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, error) {
+	prov := "unknown"
 	match := false
-	prov := ""
+	hasmaster := false
 	for l, _ := range node.Labels {
 		for pref, p := range ClusterSourcePrefixes {
 			match = strings.HasPrefix(l, pref)
@@ -109,8 +110,11 @@ func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, e
 		if match {
 			break
 		}
+		if !hasmaster && l == MasterNodeLabel {
+			hasmaster = true
+		}
 	}
-	if !match {
+	if !match && hasmaster {
 		return "self-hosted", nil
 	}
 	return prov, nil

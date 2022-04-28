@@ -161,10 +161,13 @@ endef
 
 
 ##@ Local Deployment
+setup-region-label: # Add label used by Undistro Inspect to detect the cluster region.
+	./scripts/setup_region_label.sh
 setup-local-registry: ## Create a local Docker registry.
 	./scripts/setup_local_registry.sh
 setup-kind: setup-local-registry ## Start Kind and a local Docker registry.
 	./scripts/setup_kind.sh
+	$(MAKE) setup-region-label
 delete-kind: ## Delete Kind node.
 	kind delete cluster
 setup-minikube:  ## Start Minikube with an inner Docker registry.
@@ -174,6 +177,7 @@ setup-minikube:  ## Start Minikube with an inner Docker registry.
 		--container-runtime=containerd \
 		--insecure-registry="${MINIK_ADDR}:${REG_PORT}" \
 		--extra-config="kubelet.container-runtime-endpoint='http://${MINIK_ADDR}:${REG_PORT}"
+	$(MAKE) setup-region-label
 delete-minikube: ## Delete Minikube node.
 	minikube delete
 
@@ -184,7 +188,7 @@ setup-inspect-view: ## Create and apply view secret.
 
 ##@ Documentation
 helm-docs: ## Generate documentation for helm charts
-	@docker run -it --rm \
+	@ docker run -it --rm \
 		-v $(PWD):/helm-docs \
 		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
 		helm-docs -s=file
