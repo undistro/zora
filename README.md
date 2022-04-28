@@ -47,7 +47,7 @@ official repository. The following command will install its latest version on
 the namespace `kube-system`:
 
 ```shell
-	kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
 ```
 
 For more information, visit the [Metrics Server
