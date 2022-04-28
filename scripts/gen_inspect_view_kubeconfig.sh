@@ -6,6 +6,9 @@ CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"undistro-inspect"}
 CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"inspect-view"}
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"undistro-inspect"}
 SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"inspect-view"}
+METRICS_SERVER_VERSION=${METRICS_SERVER_VERSION:-"latest"}
+METRICS_SERVER_DEPLOYMENT_NAME=${METRICS_SERVER_DEPLOYMENT_NAME:-"metrics-server"}
+METRICS_SERVER_DEPLOYMENT=${METRICS_SERVER_DEPLOYMENT:-"https://github.com/kubernetes-sigs/metrics-server/releases/$METRICS_SERVER_VERSION/download/components.yaml"}
 
 get_token_name() {
 	echo $(kubectl -n $SVC_ACCOUNT_NS \
@@ -150,6 +153,11 @@ users:
 EOF
 }
 
+setup_metrics_server() {
+	if ! kubectl get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
+		kubectl apply -f "$METRICS_SERVER_DEPLOYMENT"
+	fi
+}
 
 setup_namespaces() {
 	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
@@ -186,6 +194,7 @@ CURRENT_CLUSTER=${CURRENT_CLUSTER:-"$(get_current_cluster)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
+setup_metrics_server
 setup_cluster_role
 setup_cluster_role_binding
 create_kubeconfig
