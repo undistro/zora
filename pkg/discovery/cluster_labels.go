@@ -1,6 +1,9 @@
 package discovery
 
-const RegionLabel = "topology.kubernetes.io/region"
+const (
+	RegionLabel     = "topology.kubernetes.io/region"
+	MasterNodeLabel = "node-role.kubernetes.io/master"
+)
 
 var ClusterSourcePrefixes = map[string]string{
 	"cloud.google.com/gke":   "gcp",
