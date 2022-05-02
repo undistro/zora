@@ -79,7 +79,8 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | operator.log.encoding | string | `"json"` | Log encoding (one of 'json' or 'console') |
 | operator.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
-| operator.log.stacktraceLevel | string | `"info"` | Level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
+| operator.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
+| operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | server.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect server |
 | server.image.repository | string | `"registry.undistro.io/inspect/server"` | Undistro Inspect server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
@@ -104,7 +105,8 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | server.log.encoding | string | `"json"` | Log encoding (one of 'json' or 'console') |
 | server.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
-| server.log.stacktraceLevel | string | `"info"` | Level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
+| server.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
+| server.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | ui.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect UI |
 | ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Undistro Inspect UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
