@@ -198,8 +198,8 @@ You can see the connected clusters with `kubectl` command:
 
 ```shell
 $ kubectl get clusters
-NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   AGE
-mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       40d
+NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   AGE   READY
+mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       40d   True
 ```
 
 > **Tips:**
@@ -217,12 +217,14 @@ The cluster list output has the following columns:
 - `CPU USAGE (%)`: Usage of CPU in quantity and percentage
 - `NODES`: Total of nodes
 - `AGE`: Age of the oldest Node in cluster
+- `READY`: Indicates whether the cluster is connected
 - `PROVIDER`: Cluster's provider (with `-o=wide` flag)
 - `REGION`: Cluster's region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (with `-o=wide` flag)
 
 > **Info:**
 > - The quantity of available and in use resources, is an average of all Nodes.
 > - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
+> - Show detailed description of a cluster, including **events**, running `kubectl describe cluster mycluster`.
 
 ## Uninstall
 

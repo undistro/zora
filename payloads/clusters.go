@@ -30,7 +30,7 @@ func NewCluster(c v1alpha1.Cluster) Cluster {
 		Provider:          c.Status.Provider,
 		Region:            c.Status.Region,
 		TotalNodes:        c.Status.TotalNodes,
-		Ready:             true,
+		Ready:             c.Status.ConditionIsTrue(v1alpha1.ClusterReady),
 		Version:           c.Status.KubernetesVersion,
 		TotalIssues:       0,
 		Resources:         res,
