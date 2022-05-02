@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 	"time"
 
@@ -29,26 +28,6 @@ func NewForConfig(c *rest.Config) (ClusterDiscoverer, error) {
 	return &clusterDiscovery{kubernetes: kclient, metrics: mclient}, nil
 }
 
-func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (ClusterDiscoverer, error) {
-	kclient, err := kubernetes.NewForConfigAndClient(c, httpClient)
-	if err != nil {
-		return nil, err
-	}
-	mclient, err := versioned.NewForConfigAndClient(c, httpClient)
-	if err != nil {
-		return nil, err
-	}
-	return &clusterDiscovery{kubernetes: kclient, metrics: mclient}, nil
-}
-
-func NewForConfigOrDie(c *rest.Config) ClusterDiscoverer {
-	return &clusterDiscovery{kubernetes: kubernetes.NewForConfigOrDie(c), metrics: versioned.NewForConfigOrDie(c)}
-}
-
-func New(c rest.Interface) ClusterDiscoverer {
-	return &clusterDiscovery{kubernetes: kubernetes.New(c), metrics: versioned.New(c)}
-}
-
 func NewResources(available, usage resource.Quantity) Resources {
 	fraction := float64(usage.MilliValue()) / float64(available.MilliValue()) * 100
 	return Resources{Available: available, Usage: usage, UsagePercentage: int32(fraction)}
@@ -60,11 +39,6 @@ type clusterDiscovery struct {
 }
 
 func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
-	v, err := r.Version(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	nodes, err := r.Nodes(ctx)
 	if err != nil {
 		return nil, err
@@ -83,7 +57,6 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 	}
 
 	return &ClusterInfo{
-		KubernetesVersion: v,
 		Nodes:             nodes,
 		Resources:         avgNodeResources(nodes),
 		CreationTimestamp: oldestNodeTimestamp(nodes),
@@ -99,7 +72,7 @@ func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, e
 	prov := "unknown"
 	match := false
 	hasmaster := false
-	for l, _ := range node.Labels {
+	for l := range node.Labels {
 		for pref, p := range ClusterSourcePrefixes {
 			match = strings.HasPrefix(l, pref)
 			if match {
@@ -142,13 +115,13 @@ func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, 
 			fmt.Errorf("no node has the label <%s>", RegionLabel))
 	}
 	reg := ""
-	for reg, _ = range regs {
+	for reg = range regs {
 		continue
 	}
 	return reg, nil
 }
 
-func (r *clusterDiscovery) Version(_ context.Context) (string, error) {
+func (r *clusterDiscovery) Version() (string, error) {
 	v, err := r.kubernetes.Discovery().ServerVersion()
 	if err != nil {
 		return "", fmt.Errorf("failed to discover server version: %w", err)
@@ -157,6 +130,9 @@ func (r *clusterDiscovery) Version(_ context.Context) (string, error) {
 }
 
 func (r *clusterDiscovery) Nodes(ctx context.Context) ([]NodeInfo, error) {
+	if err := r.checkMetricsAPI(); err != nil {
+		return nil, err
+	}
 	metricsList, err := r.metrics.MetricsV1beta1().NodeMetricses().List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list NodeMetrics: %w", err)
@@ -167,6 +143,24 @@ func (r *clusterDiscovery) Nodes(ctx context.Context) ([]NodeInfo, error) {
 	}
 
 	return nodeResources(nodeList.Items, metricsList.Items), nil
+}
+
+func (r *clusterDiscovery) checkMetricsAPI() error {
+	apiGroups, err := r.kubernetes.Discovery().ServerGroups()
+	if err != nil {
+		return err
+	}
+	for _, group := range apiGroups.Groups {
+		if group.Name != v1beta1.GroupName {
+			continue
+		}
+		for _, version := range group.Versions {
+			if version.Version == v1beta1.SchemeGroupVersion.Version {
+				return nil
+			}
+		}
+	}
+	return errors.New("metrics API not available")
 }
 
 func nodeResources(nodes []corev1.Node, nodeMetrics []v1beta1.NodeMetrics) []NodeInfo {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -21,8 +22,6 @@ import (
 	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
 )
 
-const failureReqTime = 5 * time.Minute
-
 // ClusterReconciler reconciles a Cluster object
 type ClusterReconciler struct {
 	client.Client
@@ -34,82 +33,74 @@ type ClusterReconciler struct {
 //+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters/finalizers,verbs=update
-//+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := ctrllog.FromContext(ctx, "name", req.Name, "namespace", req.Namespace)
+	log := ctrllog.FromContext(ctx, "cluster", req.NamespacedName)
 
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
 		log.Error(err, "failed to fetch Cluster")
-		return ctrl.Result{RequeueAfter: failureReqTime}, client.IgnoreNotFound(err)
+		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
 	}
 
-	result, err := r.reconcile(ctx, cluster)
-	if err != nil {
-		r.Recorder.Event(cluster, corev1.EventTypeWarning, "ClusterReconcileFailed", err.Error())
-	} else {
-		r.Recorder.Event(cluster, corev1.EventTypeNormal, "ClusterReconciled", fmt.Sprintf("Cluster %v reconciled", req.NamespacedName))
-	}
-	return result, err
+	err := r.reconcile(log, ctx, cluster)
+	_ = r.Status().Update(ctx, cluster)
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }
 
-func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Cluster) (ctrl.Result, error) {
-	// log := ctrllog.FromContext(ctx, "name", cluster.Name, "namespace", cluster.Namespace)
+func (r *ClusterReconciler) reconcile(log logr.Logger, ctx context.Context, cluster *v1alpha1.Cluster) error {
+	config := r.Config
 
-	// itself
-	if cluster.Spec.KubeconfigRef == nil {
-		if err := r.discoverAndUpdateStatus(ctx, cluster, r.Config); err != nil {
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{RequeueAfter: failureReqTime}, nil
-	}
-
-	// raw kubeconfig
-	if ref := cluster.Spec.KubeconfigRef; ref != nil {
-		if ref.Namespace == "" {
-			ref.Namespace = cluster.Namespace
-		}
-		key := client.ObjectKey{
-			Namespace: ref.Namespace,
-			Name:      ref.Name,
-		}
-		config, err := kubeconfig.ConfigFromSecretName(ctx, r.Client, key)
+	if cluster.Spec.KubeconfigRef != nil {
+		key := cluster.KubeconfigRefKey()
+		clusterConfig, err := kubeconfig.ConfigFromSecretName(ctx, r.Client, *key)
 		if err != nil {
-			return ctrl.Result{RequeueAfter: failureReqTime}, err
+			log.Error(err, "failed to get config from kubeconfigRef")
+			r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "KubeconfigError", err.Error())
+			return err
 		}
-		if err := r.discoverAndUpdateStatus(ctx, cluster, config); err != nil {
-			return ctrl.Result{RequeueAfter: failureReqTime}, err
-		}
-		return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
+		config = clusterConfig
 	}
 
-	return ctrl.Result{}, nil
-}
-
-// discoverAndUpdateStatus discover cluster info and update cluster status
-func (r *ClusterReconciler) discoverAndUpdateStatus(ctx context.Context, cluster *v1alpha1.Cluster, config *rest.Config) error {
-	log := ctrllog.FromContext(ctx, "name", cluster.Name, "namespace", cluster.Namespace)
-	d, err := discovery.NewForConfig(config)
+	discoverer, err := discovery.NewForConfig(config)
 	if err != nil {
 		log.Error(err, "failed to get new discovery client from config")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "ClusterNotConnected", err.Error())
 		return err
 	}
-	info, err := d.Discover(ctx)
+
+	version, err := discoverer.Version()
 	if err != nil {
-		log.Error(err, "failed to discover cluster info")
+		log.Error(err, "failed to discover cluster version")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "ClusterVersionError", err.Error())
+		return err
+	}
+	cluster.Status.KubernetesVersion = version
+	cluster.SetStatus(v1alpha1.ClusterReady, true, "ClusterConnected", fmt.Sprintf("cluster successfully connected, version %s", version))
+
+	info, err := discoverer.Discover(ctx)
+	if err != nil {
+		log.Error(err, "failed to discovery cluster info")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterNotDiscovered", err.Error())
 		return err
 	}
 	cluster.Status.SetClusterInfo(*info)
 	cluster.Status.LastRun = metav1.NewTime(time.Now().UTC())
 	cluster.Status.ObservedGeneration = cluster.Generation
-	if err := r.Status().Update(ctx, cluster); err != nil {
-		log.Error(err, "failed to update cluster status")
-		return err
-	}
+	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
 	return nil
+}
+
+func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, statusType string, status bool, reason string, msg string) {
+	cluster.SetStatus(statusType, status, reason, msg)
+	eventtype := corev1.EventTypeWarning
+	if status {
+		eventtype = corev1.EventTypeNormal
+	}
+	r.Recorder.Event(cluster, eventtype, reason, msg)
 }
 
 // SetupWithManager sets up the controller with the Manager.

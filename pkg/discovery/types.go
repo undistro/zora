@@ -12,7 +12,7 @@ var MeasuredResources = []corev1.ResourceName{corev1.ResourceCPU, corev1.Resourc
 
 type ClusterDiscoverer interface {
 	Discover(context.Context) (*ClusterInfo, error)
-	Version(context.Context) (string, error)
+	Version() (string, error)
 	Nodes(context.Context) ([]NodeInfo, error)
 	Provider(context.Context, NodeInfo) (string, error)
 	Region(context.Context, []NodeInfo) (string, error)
@@ -20,9 +20,6 @@ type ClusterDiscoverer interface {
 
 // +k8s:deepcopy-gen=true
 type ClusterInfo struct {
-	// KubernetesVersion is the server's kubernetes version (git version).
-	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
-
 	// Info from cluster nodes
 	Nodes []NodeInfo `json:"nodes,omitempty"`
 
@@ -35,6 +32,7 @@ type ClusterInfo struct {
 
 	// Provider stores the cluster's source.
 	Provider string `json:"provider,omitempty"`
+
 	// Region holds the geographic location with most nodes.
 	Region string `json:"region,omitempty"`
 }

@@ -1,8 +1,6 @@
 package v1alpha1
 
 import (
-	"fmt"
-
 	"github.com/getupio-undistro/inspect/pkg/apis"
 	"github.com/getupio-undistro/inspect/pkg/discovery"
 	"github.com/getupio-undistro/inspect/pkg/formats"
@@ -11,7 +9,11 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-const LabelEnvironment = "inspect.undistro.io/environment"
+const (
+	LabelEnvironment  = "inspect.undistro.io/environment"
+	ClusterReady      = "Ready"
+	ClusterDiscovered = "Discovered"
+)
 
 // ClusterSpec defines the desired state of Cluster
 type ClusterSpec struct {
@@ -23,6 +25,9 @@ type ClusterSpec struct {
 type ClusterStatus struct {
 	apis.Status           `json:",inline"`
 	discovery.ClusterInfo `json:",inline"`
+
+	// KubernetesVersion is the server's kubernetes version (git version).
+	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
 
 	// Total of nodes
 	TotalNodes int `json:"totalNodes,omitempty"`
@@ -66,6 +71,7 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 //+kubebuilder:printcolumn:name="CPU Usage (%)",type="string",priority=0,JSONPath=".status.cpuUsage"
 //+kubebuilder:printcolumn:name="Nodes",type="integer",priority=0,JSONPath=".status.totalNodes"
 //+kubebuilder:printcolumn:name="Age",type="date",priority=0,JSONPath=".status.creationTimestamp"
+//+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",description=""
 //+kubebuilder:printcolumn:name="Provider",type="string",priority=1,JSONPath=".status.provider"
 //+kubebuilder:printcolumn:name="Region",type="string",priority=1,JSONPath=".status.region"
 
@@ -81,11 +87,29 @@ type Cluster struct {
 	Status ClusterStatus `json:"status,omitempty"`
 }
 
-func (in *Cluster) GetKubeconfigSecretName() types.NamespacedName {
-	return types.NamespacedName{
-		Name:      fmt.Sprintf("%s-kubeconfig", in.Name),
-		Namespace: in.Namespace,
+func (in *Cluster) KubeconfigRefKey() *types.NamespacedName {
+	if in.Spec.KubeconfigRef == nil {
+		return nil
 	}
+	ns := in.Spec.KubeconfigRef.Namespace
+	if ns == "" {
+		ns = in.Namespace
+	}
+	return &types.NamespacedName{Name: in.Spec.KubeconfigRef.Name, Namespace: ns}
+}
+
+func (in *Cluster) SetStatus(statusType string, status bool, reason, msg string) {
+	s := metav1.ConditionFalse
+	if status {
+		s = metav1.ConditionTrue
+	}
+	in.Status.SetCondition(metav1.Condition{
+		Type:               statusType,
+		Status:             s,
+		ObservedGeneration: in.Generation,
+		Reason:             reason,
+		Message:            msg,
+	})
 }
 
 //+kubebuilder:object:root=true
