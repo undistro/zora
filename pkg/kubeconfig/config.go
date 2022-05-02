@@ -30,9 +30,10 @@ func ConfigFromSecret(secret *corev1.Secret) (*rest.Config, error) {
 
 	config, err := clientcmd.Load(b)
 	if err != nil {
-		if err = Check(config); err != nil {
-			return nil, fmt.Errorf("invalid kubeconfig: %w", err)
-		}
+		return nil, fmt.Errorf("failed to load kubeconfig: %w", err)
+	}
+	if err = Check(config); err != nil {
+		return nil, fmt.Errorf("invalid kubeconfig: %w", err)
 	}
 	return clientcmd.RESTConfigFromKubeConfig(b)
 }
