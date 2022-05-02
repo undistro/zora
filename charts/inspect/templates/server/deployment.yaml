@@ -38,7 +38,9 @@ spec:
             - /server
           args:
             - --port=3000
-            - --zap-devel=false
+            - --zap-encoder {{ .Values.server.log.encoding }}
+            - --zap-log-level {{ .Values.server.log.level }}
+            - --zap-stacktrace-level {{ .Values.server.log.stacktraceLevel }}
           securityContext:
             {{- toYaml .Values.server.securityContext | nindent 12 }}
           image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"

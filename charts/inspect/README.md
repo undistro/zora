@@ -77,6 +77,9 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | operator.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | operator.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
+| operator.log.encoding | string | `"json"` | Log encoding (one of 'json' or 'console') |
+| operator.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
+| operator.log.stacktraceLevel | string | `"info"` | Level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | server.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect server |
 | server.image.repository | string | `"registry.undistro.io/inspect/server"` | Undistro Inspect server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
@@ -99,6 +102,9 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | server.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | server.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | server.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
+| server.log.encoding | string | `"json"` | Log encoding (one of 'json' or 'console') |
+| server.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
+| server.log.stacktraceLevel | string | `"info"` | Level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | ui.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect UI |
 | ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Undistro Inspect UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
