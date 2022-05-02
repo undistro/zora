@@ -1,0 +1,53 @@
+name: Build and Push Docker Images
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+jobs:
+  build_n_push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    env: 
+      REPO: "registry.undistro.io"
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.17"
+      - name: Show Go version
+        run: go version
+      - name: Get dependencies
+        run: go mod download
+
+      - name: Show username
+        run: echo "${{ secrets.REGISTRY_USERNAME }}"
+
+      - name: Registry login
+        env:
+          LOGIN: "${{ secrets.REGISTRY_USERNAME }}"
+          PASSWORD: "${{ secrets.REGISTRY_PASSWORD }}"
+        run: echo $PASSWORD | docker login --username $LOGIN --password-stdin $REPO
+
+      - name: Fetch repo tags
+        run: git fetch --tags
+      - name: Set version tag
+        run: echo "VERSION_TAG=$(git tag --contains | grep -E 'v([0-9]+\.){2,2}[0-9]+')" >> $GITHUB_ENV
+      - name: Show version tag
+        run: |
+          echo "Tag: $VERSION_TAG"
+
+      - name: Build Undistro Inspect image
+        run: IMG=$REPO/inspect/inspect:$VERSION_TAG make docker-build
+      - name: Build Undistro Inspect server image
+        run: IMG=$REPO/inspect/inspect-server:$VERSION_TAG DOCKERFILE=Dockerfile.server make docker-build
+
+      - name: Push Undistro Inspect image
+        run: IMG=$REPO/inspect/inspect:$VERSION_TAG make docker-push
+      - name: Push Undistro Inspect server image
+        run: IMG=$REPO/inspect/inspect-server:$VERSION_TAG make docker-push
+
+      - name: Registry logout 
+        run: docker logout

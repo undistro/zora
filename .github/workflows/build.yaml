@@ -1,0 +1,26 @@
+name: Build
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.17"
+      - name: Show Go Version
+        run: go version
+      - name: Get dependencies
+        run: go mod download
+
+      - name: Run unit tests
+        run: make test
+      - name: Call build target
+        run: make

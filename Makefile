@@ -125,7 +125,7 @@ controller-gen: ## Download controller-gen locally if necessary.
 
 .PHONY: clientset-gen
 clientset-gen: ## Generate clientset
-	@docker run -it --rm \
+	@docker run -i --rm \
 		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
 		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
 		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
