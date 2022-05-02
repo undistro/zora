@@ -161,7 +161,7 @@ endef
 
 
 ##@ Local Deployment
-setup-region-label: # Add label used by Undistro Inspect to detect the cluster region.
+setup-region-label: ## Add label used by Undistro Inspect to detect the cluster region.
 	./scripts/setup_region_label.sh
 setup-local-registry: ## Create a local Docker registry.
 	./scripts/setup_local_registry.sh
