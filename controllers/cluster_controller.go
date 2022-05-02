@@ -47,7 +47,9 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	}
 
 	err := r.reconcile(log, ctx, cluster)
-	_ = r.Status().Update(ctx, cluster)
+	if err := r.Status().Update(ctx, cluster); err != nil {
+		log.Error(err, "failed to update cluster status")
+	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }
 
