@@ -1,6 +1,6 @@
 # Undistro Inspect Helm Chart
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
 
 Undistro Inspect denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
@@ -23,6 +23,8 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 
 > **Tips:**
 > - List all charts available in `undistro` repo using `helm search repo undistro`
+> - Update `undistro` chart repository using `helm repo update undistro`
+> - List all versions available of `undistro/inspect` chart using `helm search repo undistro/inspect --versions`
 > - List all releases using `helm list`
 
 ## Uninstalling the Chart
