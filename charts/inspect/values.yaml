@@ -104,6 +104,16 @@ operator:
   tolerations: []
   # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
   affinity: {}
+  log:
+    # -- Log encoding (one of 'json' or 'console')
+    encoding: json
+    # -- Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error',
+    # or any integer value > 0 which corresponds to custom debug levels of increasing verbosity
+    level: info
+    # -- Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic')
+    stacktraceLevel: error
+    # -- Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')
+    timeEncoding: rfc3339
 
 server:
   # -- Number of replicas desired of Undistro Inspect server
@@ -155,6 +165,16 @@ server:
   tolerations: []
   # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
   affinity: {}
+  log:
+    # -- Log encoding (one of 'json' or 'console')
+    encoding: json
+    # -- Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error',
+    # or any integer value > 0 which corresponds to custom debug levels of increasing verbosity
+    level: info
+    # -- Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic')
+    stacktraceLevel: error
+    # -- Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')
+    timeEncoding: rfc3339
 
 ui:
   # -- Number of replicas desired of Undistro Inspect UI

@@ -61,6 +61,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
   - apiGroups:
       - inspect.undistro.io
     resources:
