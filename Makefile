@@ -62,7 +62,7 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
-generate: controller-gen clientset-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="boilerplate.go.txt" paths="./..."
 
 .PHONY: fmt
