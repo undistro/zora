@@ -22,9 +22,6 @@ jobs:
       - name: Get dependencies
         run: go mod download
 
-      - name: Show username
-        run: echo "${{ secrets.REGISTRY_USERNAME }}"
-
       - name: Registry login
         env:
           LOGIN: "${{ secrets.REGISTRY_USERNAME }}"
