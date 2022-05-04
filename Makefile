@@ -62,7 +62,7 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
-generate: controller-gen clientset-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="boilerplate.go.txt" paths="./..."
 
 .PHONY: fmt
@@ -82,6 +82,7 @@ test: manifests generate fmt vet envtest ## Run tests.
 .PHONY: build
 build: generate fmt vet ## Build manager binary.
 	go build -o bin/manager main.go
+	go build -o bin/server cmd/server/main.go
 
 .PHONY: run
 run: install manifests generate fmt vet ## Run a controller from your host.
@@ -125,7 +126,7 @@ controller-gen: ## Download controller-gen locally if necessary.
 
 .PHONY: clientset-gen
 clientset-gen: ## Generate clientset
-	@docker run -it --rm \
+	@docker run -i --rm \
 		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
 		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
 		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
@@ -161,7 +162,7 @@ endef
 
 
 ##@ Local Deployment
-setup-region-label: # Add label used by Undistro Inspect to detect the cluster region.
+setup-region-label: ## Add label used by Undistro Inspect to detect the cluster region.
 	./scripts/setup_region_label.sh
 setup-local-registry: ## Create a local Docker registry.
 	./scripts/setup_local_registry.sh
