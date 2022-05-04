@@ -23,3 +23,5 @@
 .vscode/
 
 README.md.gotmpl
+
+values-hml.yaml
