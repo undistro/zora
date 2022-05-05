@@ -1,8 +1,7 @@
 package discovery
 
 const (
-	RegionLabel     = "topology.kubernetes.io/region"
-	MasterNodeLabel = "node-role.kubernetes.io/master"
+	RegionLabel = "topology.kubernetes.io/region"
 )
 
 var ClusterSourcePrefixes = map[string]string{
