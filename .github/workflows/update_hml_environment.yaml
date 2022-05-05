@@ -30,7 +30,7 @@ jobs:
           echo "CHART_VERSION=$(
             helm search repo undistro/inspect | awk '/inspect/{print $2}'
           )" >> $GITHUB_ENV
-      - name:
+      - name: Upgrade Helm release
         run: |
           helm upgrade --install undistro-inspect undistro/inspect \
             -f charts/inspect/values-hml.yaml \
