@@ -3,6 +3,7 @@ package discovery
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -214,4 +215,268 @@ func resourcesAreEqual(x, y map[corev1.ResourceName]Resources) bool {
 	}
 
 	return true
+}
+
+func TestProvider(t *testing.T) {
+	type args struct {
+		node NodeInfo
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "eks",
+			args: args{NodeInfo{
+				Labels: map[string]string{
+					"beta.kubernetes.io/arch":                  "amd64",
+					"beta.kubernetes.io/instance-type":         "t3a.medium",
+					"beta.kubernetes.io/os":                    "linux",
+					"eks.amazonaws.com/capacityType":           "ON_DEMAND",
+					"eks.amazonaws.com/nodegroup-image":        "ami-0e1b6f116a3733fef",
+					"eks.amazonaws.com/nodegroup":              "cluster-mp-0",
+					"failure-domain.beta.kubernetes.io/region": "us-east-1",
+					"failure-domain.beta.kubernetes.io/zone":   "us-east-1a",
+					"kubernetes.io/arch":                       "amd64",
+					"kubernetes.io/hostname":                   "ip-10-0-107-23.ec2.internal",
+					"kubernetes.io/os":                         "linux",
+					"node.kubernetes.io/instance-type":         "t3a.medium",
+					"topology.kubernetes.io/region":            "us-east-1",
+					"topology.kubernetes.io/zone":              "us-east-1a",
+				},
+			}},
+			want: "aws",
+		},
+		{
+			name: "gke",
+			args: args{NodeInfo{
+				Labels: map[string]string{
+					"beta.kubernetes.io/arch":                  "amd64",
+					"beta.kubernetes.io/instance-type":         "g1-small",
+					"beta.kubernetes.io/os":                    "linux",
+					"cloud.google.com/gke-boot-disk":           "pd-standard",
+					"cloud.google.com/gke-container-runtime":   "containerd",
+					"cloud.google.com/gke-nodepool":            "default-pool",
+					"cloud.google.com/gke-os-distribution":     "cos",
+					"cloud.google.com/machine-family":          "g1",
+					"failure-domain.beta.kubernetes.io/region": "us-central1",
+					"failure-domain.beta.kubernetes.io/zone":   "us-central1-c",
+					"kubernetes.io/arch":                       "amd64",
+					"kubernetes.io/hostname":                   "gke-cluster-default-pool-7d29f8fc-wkg5",
+					"kubernetes.io/os":                         "linux",
+					"node.kubernetes.io/instance-type":         "g1-small",
+					"topology.kubernetes.io/region":            "us-central1",
+					"topology.kubernetes.io/zone":              "us-central1-c",
+				},
+			}},
+			want: "gcp",
+		},
+		{
+			name: "aks",
+			args: args{NodeInfo{
+				Labels: map[string]string{
+					"agentpool":                                "default",
+					"beta.kubernetes.io/arch":                  "amd64",
+					"beta.kubernetes.io/instance-type":         "Standard_B2s",
+					"beta.kubernetes.io/os":                    "linux",
+					"failure-domain.beta.kubernetes.io/region": "australiaeast",
+					"failure-domain.beta.kubernetes.io/zone":   "0",
+					"kubernetes.azure.com/agentpool":           "default",
+					"kubernetes.azure.com/cluster":             "MC_azure-k8stest_k8stest_australiaeast",
+					"kubernetes.azure.com/mode":                "system",
+					"kubernetes.azure.com/node-image-version":  "AKSUbuntu-1804gen2containerd-2022.04.13",
+					"kubernetes.azure.com/os-sku":              "Ubuntu",
+					"kubernetes.azure.com/role":                "agent",
+					"kubernetes.azure.com/storageprofile":      "managed",
+					"kubernetes.azure.com/storagetier":         "Premium_LRS",
+					"kubernetes.io/arch":                       "amd64",
+					"kubernetes.io/hostname":                   "aks-default-32454763-vmss000000",
+					"kubernetes.io/os":                         "linux",
+					"kubernetes.io/role":                       "agent",
+					"node-role.kubernetes.io/agent":            " ",
+					"node.kubernetes.io/instance-type":         "Standard_B2s",
+					"storageprofile":                           "managed",
+					"storagetier":                              "Premium_LRS",
+					"topology.disk.csi.azure.com/zone":         " ",
+					"topology.kubernetes.io/region":            "australiaeast",
+					"topology.kubernetes.io/zone":              "0",
+				},
+			}},
+			want: "azure",
+		},
+		{
+			name: "doks",
+			args: args{NodeInfo{
+				Labels: map[string]string{
+					"beta.kubernetes.io/arch":                  "amd64",
+					"beta.kubernetes.io/instance-type":         "s-2vcpu-2gb",
+					"beta.kubernetes.io/os":                    "linux",
+					"doks.digitalocean.com/node-id":            "1cf0f149-1502-4fbf-83e5-7d454f474ee5",
+					"doks.digitalocean.com/node-pool-id":       "843e43f9-8ef9-48fb-9806-a5a9e880a7d2",
+					"doks.digitalocean.com/node-pool":          "default",
+					"doks.digitalocean.com/version":            "1.22.8-do.1",
+					"failure-domain.beta.kubernetes.io/region": "nyc1",
+					"kubernetes.io/arch":                       "amd64",
+					"kubernetes.io/hostname":                   "default-cj7j3",
+					"kubernetes.io/os":                         "linux",
+					"node.kubernetes.io/instance-type":         "s-2vcpu-2gb",
+					"region":                                   "nyc1",
+					"topology.kubernetes.io/region":            "nyc1",
+				}}},
+			want: "digitalocean",
+		},
+		{
+			name: "oke",
+			args: args{NodeInfo{
+				Labels: map[string]string{
+					"beta.kubernetes.io/arch":                      "amd64",
+					"beta.kubernetes.io/instance-type":             "VM.Standard.E3.Flex",
+					"beta.kubernetes.io/os":                        "linux",
+					"displayName":                                  "oke-c7ayj7ifseq-nker2wfokza-sxq6xdxqcra-0",
+					"failure-domain.beta.kubernetes.io/region":     "sa-vinhedo-1",
+					"failure-domain.beta.kubernetes.io/zone":       "SA-VINHEDO-1-AD-1",
+					"hostname":                                     "oke-c7ayj7ifseq-nker2wfokza-sxq6xdxqcra-0",
+					"internal_addr":                                "10.0.10.130",
+					"kubernetes.io/arch":                           "amd64",
+					"kubernetes.io/hostname":                       "10.0.10.130",
+					"kubernetes.io/os":                             "linux",
+					"last-migration-failure":                       "get_kubesvc_failure",
+					"name":                                         "cluster1",
+					"node-role.kubernetes.io/node":                 "",
+					"node.info.ds_proxymux_client":                 "true",
+					"node.info/compartment.id_prefix":              "ocid1.tenancy.oc1",
+					"node.info/compartment.id_suffix":              "aaaaaaaa2pajrajctgxzjwujd24bz6zvdytxnbzmer5ner4r4uwellipwx6q",
+					"node.info/compartment.name":                   "mfariam",
+					"node.info/kubeletVersion":                     "v1.22",
+					"node.kubernetes.io/instance-type":             "VM.Standard.E3.Flex",
+					"oci.oraclecloud.com/fault-domain":             "FAULT-DOMAIN-1",
+					"oke.oraclecloud.com/node.info.private_subnet": "true",
+					"oke.oraclecloud.com/node.info.private_worker": "true",
+					"oke.oraclecloud.com/tenant_agent.version":     "1.42.6-bae5d92f49-820",
+					"topology.kubernetes.io/region":                "sa-vinhedo-1",
+					"topology.kubernetes.io/zone":                  "SA-VINHEDO-1-AD-1",
+				},
+			}},
+			want: "oraclecloud",
+		},
+		{
+			name: "kind",
+			args: args{NodeInfo{
+				Labels: map[string]string{
+					"beta.kubernetes.io/arch":                                 "amd64",
+					"beta.kubernetes.io/os":                                   "linux",
+					"kubernetes.io/arch":                                      "amd64",
+					"kubernetes.io/hostname":                                  "kind-control-plane",
+					"kubernetes.io/os":                                        "linux",
+					"node-role.kubernetes.io/control-plane":                   "",
+					"node-role.kubernetes.io/master":                          "",
+					"node.kubernetes.io/exclude-from-external-load-balancers": "",
+				},
+			}},
+			want: "unknown",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &clusterDiscovery{}
+			if got := r.Provider(tt.args.node); got != tt.want {
+				t.Errorf("Provider() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRegion(t *testing.T) {
+	type args struct {
+		nodes []NodeInfo
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "OK",
+			args: args{nodes: []NodeInfo{
+				{
+					Name:   "node1",
+					Labels: map[string]string{},
+				},
+				{
+					Name: "node2",
+					Labels: map[string]string{
+						RegionLabel: "us-east-1",
+					},
+				},
+			}},
+			want:    "us-east-1",
+			wantErr: false,
+		},
+		{
+			name: "multi-region",
+			args: args{nodes: []NodeInfo{
+				{
+					Name:   "node1",
+					Labels: map[string]string{},
+				},
+				{
+					Name:   "node2",
+					Labels: map[string]string{},
+				},
+				{
+					Name: "node3",
+				},
+			}},
+			want:    "",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &clusterDiscovery{}
+			got, err := r.Region(tt.args.nodes)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Region() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Region() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestOldestNodeTimestamp(t *testing.T) {
+	type args struct {
+		nodes []NodeInfo
+	}
+	tests := []struct {
+		name string
+		args args
+		want metav1.Time
+	}{
+		{
+			name: "OK",
+			args: args{nodes: []NodeInfo{
+				{CreationTimestamp: parseTime("2022-05-05T11:03:23Z")},
+				{CreationTimestamp: parseTime("2022-05-02T18:41:51Z")},
+				{CreationTimestamp: parseTime("2022-05-02T18:41:50Z")},
+			}},
+			want: parseTime("2022-05-02T18:41:50Z"),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := oldestNodeTimestamp(tt.args.nodes); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("oldestNodeTimestamp() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func parseTime(value string) metav1.Time {
+	tt, _ := time.Parse(time.RFC3339, value)
+	return metav1.NewTime(tt)
 }

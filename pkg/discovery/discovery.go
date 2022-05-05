@@ -47,11 +47,8 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		return nil, errors.New("cluster has no nodes")
 	}
 
-	prov, err := r.Provider(ctx, nodes[0])
-	if err != nil {
-		return nil, err
-	}
-	reg, err := r.Region(ctx, nodes)
+	prov := r.Provider(nodes[0])
+	reg, err := r.Region(nodes)
 	if err != nil {
 		return nil, err
 	}
@@ -67,41 +64,27 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 
 // Provider finds the cluster source by matching against provider specific
 // labels on a node, returning the provider if the match succeeds and
-// "self-hosted" if it fails.
-func (r *clusterDiscovery) Provider(_ context.Context, node NodeInfo) (string, error) {
-	prov := "unknown"
-	match := false
-	hasmaster := false
+// "unknown" if it fails.
+func (r *clusterDiscovery) Provider(node NodeInfo) string {
 	for l := range node.Labels {
 		for pref, p := range ClusterSourcePrefixes {
-			match = strings.HasPrefix(l, pref)
-			if match {
-				prov = p
-				break
+			if strings.HasPrefix(l, pref) {
+				return p
 			}
 		}
-		if match {
-			break
-		}
-		if !hasmaster && l == MasterNodeLabel {
-			hasmaster = true
-		}
 	}
-	if !match && hasmaster {
-		return "self-hosted", nil
-	}
-	return prov, nil
+	return "unknown"
 }
 
 // Region returns "multi-region" if the cluster nodes belong to distinct
 // locations, otherwise it returns the region itself.
-func (r *clusterDiscovery) Region(_ context.Context, nodes []NodeInfo) (string, error) {
-	regs := map[string]struct{}{}
+func (r *clusterDiscovery) Region(nodes []NodeInfo) (string, error) {
+	regs := map[string]bool{}
 	haslabel := false
 	for c := 0; c < len(nodes); c++ {
 		for l, v := range nodes[c].Labels {
 			if l == RegionLabel {
-				regs[v] = struct{}{}
+				regs[v] = true
 				if haslabel && len(regs) > 1 {
 					return "multi-region", nil
 				} else {
