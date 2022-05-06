@@ -1,0 +1,46 @@
+name: Update Homologation Environment
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "hml*"
+jobs:
+  update_hml_environment:
+    name: Update Homologation Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Helm
+        env:
+          HELM_VERSION: v3.8.2
+        run: |
+          curl -sL "https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz" -o - | tar -xz
+          mv linux-amd64/helm /usr/local/bin
+          rm -r linux-amd64
+
+      - name: Add Undistro Helm repository
+        run: helm repo add undistro "https://registry.undistro.io/chartrepo/library"
+      - name: Update Undistro Helm repository
+        run: helm repo update undistro
+
+      - name: Get Chart version
+        run: |
+          echo "CHART_VERSION=$(
+            helm search repo undistro/inspect | awk '/inspect/{print $2}'
+          )" >> $GITHUB_ENV
+      - name: Create kubeconfig file
+        run: echo "${{ secrets.HML_KUBECONFIG }}" > /tmp/hlm_kubeconfig.yaml
+      - name: Upgrade Helm release
+        run: |
+          helm upgrade --install undistro-inspect undistro/inspect \
+            -f charts/inspect/values-hml.yaml \
+            --set imageCredentials.username="${{ secrets.REGISTRY_USERNAME }}" \
+            --set imageCredentials.password="${{ secrets.REGISTRY_PASSWORD }}" \
+            --set operator.image.tag=$GITHUB_REF_NAME \
+            --set server.image.tag=$GITHUB_REF_NAME \
+            --version $CHART_VERSION \
+            --namespace undistro-inspect \
+            --create-namespace \
+            --kubeconfig /tmp/hlm_kubeconfig.yaml
