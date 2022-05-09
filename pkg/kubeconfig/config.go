@@ -12,6 +12,8 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const SecretField = "value"
+
 // ConfigFromSecretName return a rest.Config from a kubeconfig secret name
 func ConfigFromSecretName(ctx context.Context, client ctrlclient.Client, name types.NamespacedName) (*rest.Config, error) {
 	existing := &corev1.Secret{}
