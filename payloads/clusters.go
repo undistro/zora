@@ -45,7 +45,7 @@ type Cluster struct {
 	Provider          string      `json:"provider,omitempty"`
 	Region            string      `json:"region,omitempty"`
 	TotalNodes        int         `json:"totalNodes,omitempty"`
-	Ready             bool        `json:"ready,omitempty"`
+	Ready             bool        `json:"ready"`
 	Version           string      `json:"version,omitempty"`
 	TotalIssues       int         `json:"totalIssues,omitempty"`
 	Resources         *Resources  `json:"resources,omitempty"`
