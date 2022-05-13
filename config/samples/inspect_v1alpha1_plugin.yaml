@@ -1,0 +1,11 @@
+apiVersion: inspect.undistro.io/v1alpha1
+kind: Plugin
+metadata:
+  name: popeye
+spec:
+  image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
+  command: [ "/bin/popeye" ]
+  args:
+    - -o=json
+    - --kubeconfig="$KUBECONFIG"
+    - --all-namespaces
