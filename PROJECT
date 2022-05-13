@@ -22,4 +22,12 @@ resources:
   kind: Plugin
   path: github.com/getupio-undistro/inspect/apis/inspect/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: undistro.io
+  group: inspect
+  kind: ClusterIssue
+  path: github.com/getupio-undistro/inspect/apis/inspect/v1alpha1
+  version: v1alpha1
 version: "3"

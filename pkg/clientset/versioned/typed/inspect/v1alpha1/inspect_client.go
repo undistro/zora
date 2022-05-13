@@ -13,6 +13,7 @@ import (
 type InspectV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClustersGetter
+	ClusterIssuesGetter
 }
 
 // InspectV1alpha1Client is used to interact with features provided by the inspect group.
@@ -22,6 +23,10 @@ type InspectV1alpha1Client struct {
 
 func (c *InspectV1alpha1Client) Clusters(namespace string) ClusterInterface {
 	return newClusters(c, namespace)
+}
+
+func (c *InspectV1alpha1Client) ClusterIssues(namespace string) ClusterIssueInterface {
+	return newClusterIssues(c, namespace)
 }
 
 // NewForConfig creates a new InspectV1alpha1Client for the given config.

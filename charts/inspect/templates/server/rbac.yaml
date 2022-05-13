@@ -21,6 +21,8 @@ rules:
       - inspect.undistro.io
     resources:
       - clusters
+      - clusterissues
+      - plugins
     verbs:
       - get
       - list

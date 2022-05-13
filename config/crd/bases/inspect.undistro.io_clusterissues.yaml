@@ -1,0 +1,103 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+  creationTimestamp: null
+  name: clusterissues.inspect.undistro.io
+spec:
+  group: inspect.undistro.io
+  names:
+    kind: ClusterIssue
+    listKind: ClusterIssueList
+    plural: clusterissues
+    singular: clusterissue
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.cluster
+      name: Cluster
+      type: string
+    - jsonPath: .spec.id
+      name: ID
+      type: string
+    - jsonPath: .spec.message
+      name: Message
+      type: string
+    - jsonPath: .spec.severity
+      name: Severity
+      type: string
+    - jsonPath: .spec.category
+      name: Category
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .spec.totalResources
+      name: Total
+      priority: 1
+      type: integer
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ClusterIssue is the Schema for the clusterissues API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ClusterIssueSpec defines the desired state of ClusterIssue
+            properties:
+              category:
+                type: string
+              cluster:
+                type: string
+              id:
+                type: string
+              message:
+                type: string
+              resources:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                type: object
+              severity:
+                enum:
+                - None
+                - Low
+                - Medium
+                - High
+                type: string
+              totalResources:
+                type: integer
+            required:
+            - cluster
+            - id
+            - message
+            - severity
+            type: object
+          status:
+            description: ClusterIssueStatus defines the observed state of ClusterIssue
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
