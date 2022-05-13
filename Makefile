@@ -163,11 +163,11 @@ endef
 
 ##@ Local Deployment
 setup-region-label: ## Add label used by Undistro Inspect to detect the cluster region.
-	./hack/setup_region_label.sh
+	./hack/scripts/setup_region_label.sh
 setup-local-registry: ## Create a local Docker registry.
-	./hack/setup_local_registry.sh
+	./hack/scripts/setup_local_registry.sh
 setup-kind: setup-local-registry ## Start Kind and a local Docker registry.
-	./hack/setup_kind.sh
+	./hack/scripts/setup_kind.sh
 	$(MAKE) setup-region-label
 delete-kind: ## Delete Kind node.
 	kind delete cluster
@@ -183,9 +183,9 @@ delete-minikube: ## Delete Minikube node.
 	minikube delete
 
 gen-inspect-view-kubeconfig: ## Create a service account and config RBAC for it.
-	./hack/gen_inspect_view_kubeconfig.sh
+	./hack/scripts/gen_inspect_view_kubeconfig.sh
 setup-inspect-view: ## Create and apply view secret.
-	./hack/setup_inspect_view.sh
+	./hack/scripts/setup_inspect_view.sh
 
 ##@ Documentation
 helm-docs: ## Generate documentation for helm charts
