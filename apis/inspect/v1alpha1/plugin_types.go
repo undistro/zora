@@ -68,6 +68,7 @@ type PluginStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="Image",type="string",JSONPath=".spec.image"
+//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // Plugin is the Schema for the plugins API
 type Plugin struct {

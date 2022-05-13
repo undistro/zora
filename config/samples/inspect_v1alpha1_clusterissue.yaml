@@ -1,0 +1,6 @@
+apiVersion: inspect.undistro.io/v1alpha1
+kind: ClusterIssue
+metadata:
+  name: clusterissue-sample
+spec:
+  # TODO(user): Add fields here
