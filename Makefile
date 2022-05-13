@@ -63,7 +63,7 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 PROJECT_PACKAGE = $(shell go list -m)
 .PHONY: generate
 generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
-	$(CONTROLLER_GEN) object:headerFile="boilerplate.go.txt" paths="./..."
+	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -133,7 +133,7 @@ clientset-gen: ## Generate clientset
 		-e APIS_ROOT=$(PROJECT_PACKAGE)/apis \
 		-e GROUPS_VERSION="inspect:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
-		-e BOILERPLATE_PATH="boilerplate.go.txt" \
+		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
 		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
 
 KUSTOMIZE = $(shell pwd)/bin/kustomize
@@ -163,11 +163,11 @@ endef
 
 ##@ Local Deployment
 setup-region-label: ## Add label used by Undistro Inspect to detect the cluster region.
-	./scripts/setup_region_label.sh
+	./hack/setup_region_label.sh
 setup-local-registry: ## Create a local Docker registry.
-	./scripts/setup_local_registry.sh
+	./hack/setup_local_registry.sh
 setup-kind: setup-local-registry ## Start Kind and a local Docker registry.
-	./scripts/setup_kind.sh
+	./hack/setup_kind.sh
 	$(MAKE) setup-region-label
 delete-kind: ## Delete Kind node.
 	kind delete cluster
@@ -183,9 +183,9 @@ delete-minikube: ## Delete Minikube node.
 	minikube delete
 
 gen-inspect-view-kubeconfig: ## Create a service account and config RBAC for it.
-	./scripts/gen_inspect_view_kubeconfig.sh
+	./hack/gen_inspect_view_kubeconfig.sh
 setup-inspect-view: ## Create and apply view secret.
-	./scripts/setup_inspect_view.sh
+	./hack/setup_inspect_view.sh
 
 ##@ Documentation
 helm-docs: ## Generate documentation for helm charts
