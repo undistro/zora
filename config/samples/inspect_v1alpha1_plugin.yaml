@@ -3,7 +3,7 @@ kind: Plugin
 metadata:
   name: popeye
 spec:
-  image: derailed/popeye:v0.10.0
+  image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
   command: [ "/bin/popeye" ]
   args:
     - -o=json
