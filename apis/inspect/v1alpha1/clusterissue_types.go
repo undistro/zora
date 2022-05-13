@@ -38,7 +38,7 @@ type ClusterIssueStatus struct {
 //+kubebuilder:printcolumn:name="Severity",type="string",JSONPath=".spec.severity",priority=0
 //+kubebuilder:printcolumn:name="Category",type="string",JSONPath=".spec.category",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
-//+kubebuilder:printcolumn:name="Total",type="integer",JSONPath=".spec.category",priority=1
+//+kubebuilder:printcolumn:name="Total",type="integer",JSONPath=".spec.totalResources",priority=1
 
 // ClusterIssue is the Schema for the clusterissues API
 //+genclient
