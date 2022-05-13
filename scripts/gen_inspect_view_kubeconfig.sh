@@ -2,7 +2,6 @@
 set -o errexit
 
 KCONFIG_NAME=${KCONFIG_NAME:-"inspect_view_kubeconfig.yaml"}
-CLUSTER_ROLE_NS=${CLUSTER_ROLE_NAME:-"undistro-inspect"}
 CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"inspect-view"}
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"undistro-inspect"}
 SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"inspect-view"}
@@ -71,7 +70,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: $CLUSTER_ROLE_NAME
-  namespace: $CLUSTER_ROLE_NS
 rules:
   - apiGroups: [ "" ]
     resources:
@@ -125,7 +123,6 @@ EOF
 
 create_cluster_role_binding() {
 	kubectl create clusterrolebinding $SVC_ACCOUNT_NAME \
-		--namespace $CLUSTER_ROLE_NS \
 		--clusterrole=inspect-view \
 		--serviceaccount=$SVC_ACCOUNT_NS:$SVC_ACCOUNT_NAME
 }
@@ -162,9 +159,6 @@ setup_metrics_server() {
 setup_namespaces() {
 	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
 		kubectl create namespace $SVC_ACCOUNT_NS
-	fi
-	if ! kubectl get namespace $CLUSTER_ROLE_NS > /dev/null 2>&1; then
-		kubectl create namespace $CLUSTER_ROLE_NS
 	fi
 }
 setup_svc_account() {

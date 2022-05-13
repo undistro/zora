@@ -75,7 +75,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: inspect-view
-  namespace: undistro-inspect
 rules:
   - apiGroups: [ "" ]
     resources:
@@ -125,7 +124,7 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl -n undistro-inspect create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=undistro-inspect:inspect-view
+kubectl create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=undistro-inspect:inspect-view
 ```
 
 2. Set up the following environment variables:
@@ -163,6 +162,9 @@ EOF
 ```
 
 #### Create a secret with your kubeconfig
+
+> **Important:**
+> Ensure you are in the context of the management cluster.
 
 ```shell
 kubectl create secret generic mycluster-kubeconfig \
