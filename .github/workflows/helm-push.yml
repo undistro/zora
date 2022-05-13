@@ -10,15 +10,22 @@ jobs:
   push-chart:
     runs-on: ubuntu-latest
     steps:
-      - uses: azure/setup-helm@v1
-        with:
-          version: v3.8.2
+      - name: Install Helm
+        env:
+          HELM_VERSION: v3.8.2
+        run: |
+          curl -sL "https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz" -o - | tar -xz
+          mv linux-amd64/helm /usr/local/bin
+          rm -r linux-amd64
 
-      - run: helm plugin install https://github.com/chartmuseum/helm-push
+      - name: Install helm-push plugin
+        run: helm plugin install https://github.com/chartmuseum/helm-push
 
-      - uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-      - working-directory: ./charts
+      - name: Package and push chart
+        working-directory: ./charts
         env:
           HELM_REPO_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           HELM_REPO_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}

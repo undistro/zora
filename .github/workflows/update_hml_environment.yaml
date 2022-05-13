@@ -1,4 +1,4 @@
-name: Update Homologation Environment
+name: Update HML Environment
 on:
   workflow_dispatch:
   push:
@@ -6,7 +6,7 @@ on:
       - "hml*"
 jobs:
   update_hml_environment:
-    name: Update Homologation Environment
+    name: Update HML Environment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -31,10 +31,12 @@ jobs:
             helm search repo undistro/inspect | awk '/inspect/{print $2}'
           )" >> $GITHUB_ENV
       - name: Create kubeconfig file
-        run: echo "${{ secrets.HML_KUBECONFIG }}" > /tmp/hlm_kubeconfig.yaml
+        run: echo "${{ secrets.HML_KUBECONFIG }}" > /tmp/hml_kubeconfig.yaml
+
       - name: Upgrade Helm release
         run: |
           helm upgrade --install undistro-inspect undistro/inspect \
+            --reuse-values \
             -f charts/inspect/values-hml.yaml \
             --set imageCredentials.username="${{ secrets.REGISTRY_USERNAME }}" \
             --set imageCredentials.password="${{ secrets.REGISTRY_PASSWORD }}" \
@@ -43,4 +45,4 @@ jobs:
             --version $CHART_VERSION \
             --namespace undistro-inspect \
             --create-namespace \
-            --kubeconfig /tmp/hlm_kubeconfig.yaml
+            --kubeconfig /tmp/hml_kubeconfig.yaml
