@@ -1,0 +1,24 @@
+# permissions for end users to edit clusterscans.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clusterscan-editor-role
+rules:
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans/status
+  verbs:
+  - get

@@ -1,0 +1,20 @@
+# permissions for end users to view clusterscans.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clusterscan-viewer-role
+rules:
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans/status
+  verbs:
+  - get

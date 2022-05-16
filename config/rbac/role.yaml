@@ -39,3 +39,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - clusterscans/status
+  verbs:
+  - get
+  - patch
+  - update

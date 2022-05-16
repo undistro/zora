@@ -67,6 +67,7 @@ rules:
     resources:
       - clusters
       - clusterissues
+      - clusterscans
       - plugins
     verbs:
       - create
@@ -80,12 +81,14 @@ rules:
       - inspect.undistro.io
     resources:
       - clusters/finalizers
+      - clusterscans/finalizers
     verbs:
       - update
   - apiGroups:
       - inspect.undistro.io
     resources:
       - clusters/status
+      - clusterscans/status
     verbs:
       - get
       - patch

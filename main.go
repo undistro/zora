@@ -20,6 +20,7 @@ import (
 	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	inspectv1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	"github.com/getupio-undistro/inspect/controllers"
+	inspectcontrollers "github.com/getupio-undistro/inspect/controllers/inspect"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -74,6 +75,13 @@ func main() {
 		Config:   mgr.GetConfig(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
+		os.Exit(1)
+	}
+	if err = (&inspectcontrollers.ClusterScanReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
