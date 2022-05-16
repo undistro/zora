@@ -1,4 +1,4 @@
-package controllers
+package inspect
 
 import (
 	"context"
