@@ -17,9 +17,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	inspectv1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/controllers"
 	inspectcontrollers "github.com/getupio-undistro/inspect/controllers/inspect"
 	//+kubebuilder:scaffold:imports
 )
@@ -32,7 +30,6 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(v1alpha1.AddToScheme(scheme))
 	utilruntime.Must(inspectv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
@@ -68,7 +65,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.ClusterReconciler{
+	if err = (&inspectcontrollers.ClusterReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
