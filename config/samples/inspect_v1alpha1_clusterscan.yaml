@@ -1,6 +1,8 @@
 apiVersion: inspect.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
-  name: clusterscan-sample
+  name: mycluster
 spec:
-  # TODO(user): Add fields here
+  clusterRef:
+    name: mycluster
+  schedule: "*/2 * * * *"

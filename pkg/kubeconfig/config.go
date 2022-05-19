@@ -14,11 +14,20 @@ import (
 
 const SecretField = "value"
 
+// SecretFromRef return the referenced Secret
+func SecretFromRef(ctx context.Context, client ctrlclient.Client, name types.NamespacedName) (*corev1.Secret, error) {
+	s := &corev1.Secret{}
+	if err := client.Get(ctx, name, s); err != nil {
+		return nil, fmt.Errorf("failed to get secret %v: %w", name, err)
+	}
+	return s, nil
+}
+
 // ConfigFromSecretName return a rest.Config from a kubeconfig secret name
 func ConfigFromSecretName(ctx context.Context, client ctrlclient.Client, name types.NamespacedName) (*rest.Config, error) {
-	existing := &corev1.Secret{}
-	if err := client.Get(ctx, name, existing); err != nil {
-		return nil, fmt.Errorf("failed to get secret %v: %w", name, err)
+	existing, err := SecretFromRef(ctx, client, name)
+	if err != nil {
+		return nil, err
 	}
 	return ConfigFromSecret(existing)
 }

@@ -181,47 +181,6 @@ spec:
               memoryUsage:
                 description: Usage of memory in quantity and percentage
                 type: string
-              nodes:
-                description: Info from cluster nodes
-                items:
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      description: Node labels
-                      type: object
-                    name:
-                      description: Node name
-                      type: string
-                    ready:
-                      description: True if node is in ready condition
-                      type: boolean
-                    resources:
-                      additionalProperties:
-                        properties:
-                          available:
-                            anyOf:
-                            - type: integer
-                            - type: string
-                            description: Quantity of resources available for scheduling
-                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                            x-kubernetes-int-or-string: true
-                          usage:
-                            anyOf:
-                            - type: integer
-                            - type: string
-                            description: Quantity of resources in use
-                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                            x-kubernetes-int-or-string: true
-                          usagePercentage:
-                            description: Percentage of resources in use
-                            format: int32
-                            type: integer
-                        type: object
-                      description: Usage and available resources
-                      type: object
-                  type: object
-                type: array
               observedGeneration:
                 description: ObservedGeneration is the 'Generation' of the resource
                   that was last processed by the controller.

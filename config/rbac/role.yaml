@@ -14,6 +14,24 @@ rules:
   - list
   - watch
 - apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs/status
+  verbs:
+  - get
+- apiGroups:
   - inspect.undistro.io
   resources:
   - clusters
@@ -65,3 +83,11 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - inspect.undistro.io
+  resources:
+  - plugins
+  verbs:
+  - get
+  - list
+  - watch

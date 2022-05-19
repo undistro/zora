@@ -8,6 +8,9 @@ spec:
   image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
   command: ["/bin/popeye"]
   args:
-    - -o=json
-    - --kubeconfig="$KUBECONFIG"
+    - -o
+    - json
+    - --kubeconfig
+    - "$(KUBECONFIG)"
     - --all-namespaces
+    - --force-exit-zero
