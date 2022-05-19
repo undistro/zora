@@ -47,7 +47,7 @@ type Cluster struct {
 	TotalNodes        int         `json:"totalNodes,omitempty"`
 	Ready             bool        `json:"ready"`
 	Version           string      `json:"version,omitempty"`
-	TotalIssues       int         `json:"totalIssues,omitempty"`
+	TotalIssues       int         `json:"totalIssues"`
 	Resources         *Resources  `json:"resources,omitempty"`
 	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
 }
