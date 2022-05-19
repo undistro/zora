@@ -273,3 +273,18 @@ nginx:
   tolerations: []
   # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
   affinity: {}
+
+scan:
+  worker:
+    image:
+      # -- worker image repository
+      repository: registry.undistro.io/inspect/worker
+      # -- Overrides the image tag whose default is the chart appVersion
+      tag: ""
+  plugins:
+    popeye:
+      image:
+        # -- popeye plugin image repository
+        repository: registry.undistro.io/dockerhub/derailed/popeye
+        # -- popeye plugin image tag
+        tag: v0.10.0

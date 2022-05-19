@@ -101,7 +101,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		}
 		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", cluster.Name, plugin.Name), kubeconfigSecret.Namespace)
 
-		cronJobMutator := cronjobs.Mutator{
+		cronJobMutator := &cronjobs.Mutator{
 			Scheme:           r.Scheme,
 			WorkerImage:      r.WorkerImage,
 			Existing:         cronJob,
@@ -130,7 +130,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	clusterscan.Status.ClusterNamespacedName = clusterKey.String()
 	clusterscan.Status.Plugins = strings.Join(pluginNames, ",")
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
-	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins %s", clusterscan.Status.Plugins))
+	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.Plugins))
 	return nil
 }
 

@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "inspect.labels" . | nindent 4 }}
 spec:
-  image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
+  image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
   command: ["/bin/popeye"]
   args:
     - -o
