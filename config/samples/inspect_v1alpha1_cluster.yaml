@@ -1,7 +1,7 @@
 apiVersion: inspect.undistro.io/v1alpha1
 kind: Cluster
 metadata:
-  name: cluster-sample
+  name: mycluster
 spec:
   kubeconfigRef:
-    name: sample-kubeconfig
+    name: mycluster-kubeconfig

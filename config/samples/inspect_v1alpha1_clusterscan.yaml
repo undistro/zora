@@ -1,0 +1,8 @@
+apiVersion: inspect.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  name: mycluster
+spec:
+  clusterRef:
+    name: mycluster
+  schedule: "*/2 * * * *"

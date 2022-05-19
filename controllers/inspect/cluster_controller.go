@@ -1,11 +1,10 @@
-package controllers
+package inspect
 
 import (
 	"context"
 	"fmt"
 	"time"
 
-	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -38,7 +37,7 @@ type ClusterReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := ctrllog.FromContext(ctx, "cluster", req.NamespacedName)
+	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
@@ -46,16 +45,17 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
 	}
 
-	err := r.reconcile(log, ctx, cluster)
+	err := r.reconcile(ctx, cluster)
 	if err := r.Status().Update(ctx, cluster); err != nil {
 		log.Error(err, "failed to update cluster status")
 	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }
 
-func (r *ClusterReconciler) reconcile(log logr.Logger, ctx context.Context, cluster *v1alpha1.Cluster) error {
-	config := r.Config
+func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Cluster) error {
+	log := ctrllog.FromContext(ctx)
 
+	config := r.Config
 	if cluster.Spec.KubeconfigRef != nil {
 		key := cluster.KubeconfigRefKey()
 		clusterConfig, err := kubeconfig.ConfigFromSecretName(ctx, r.Client, *key)

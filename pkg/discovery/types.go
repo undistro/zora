@@ -21,7 +21,7 @@ type ClusterDiscoverer interface {
 // +k8s:deepcopy-gen=true
 type ClusterInfo struct {
 	// Info from cluster nodes
-	Nodes []NodeInfo `json:"nodes,omitempty"`
+	Nodes []NodeInfo `json:"-"`
 
 	// Average of usage and available resources
 	Resources map[corev1.ResourceName]Resources `json:"resources,omitempty"`

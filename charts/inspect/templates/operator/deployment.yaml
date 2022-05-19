@@ -53,6 +53,8 @@ spec:
             - --zap-log-level={{ .Values.operator.log.level }}
             - --zap-stacktrace-level={{ .Values.operator.log.stacktraceLevel }}
             - --zap-time-encoding={{ .Values.operator.log.timeEncoding }}
+            - --default-plugins-namespace={{ .Release.Namespace }}
+            - --worker-image="{{ .Values.scan.worker.image.repository }}:{{ .Values.scan.worker.image.tag | default .Chart.AppVersion }}"
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           livenessProbe:

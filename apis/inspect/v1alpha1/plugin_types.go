@@ -61,6 +61,13 @@ type PluginSpec struct {
 	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty"`
 }
 
+func (in *PluginSpec) GetImagePullPolicy() corev1.PullPolicy {
+	if in.ImagePullPolicy == "" {
+		return corev1.PullIfNotPresent
+	}
+	return in.ImagePullPolicy
+}
+
 // PluginStatus defines the observed state of Plugin
 type PluginStatus struct {
 }
