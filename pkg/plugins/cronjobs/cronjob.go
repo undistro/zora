@@ -27,7 +27,7 @@ var (
 	// commonEnv environment variables to be used in worker and plugin containers
 	commonEnv = []corev1.EnvVar{
 		{
-			Name:  "RESULTS_DIR",
+			Name:  "DONE_DIR",
 			Value: resultsDir,
 		},
 	}
