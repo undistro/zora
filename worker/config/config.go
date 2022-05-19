@@ -35,7 +35,7 @@ type Config struct {
 // New instanciates a new <Config> struct, with the default path for the
 // "done" file.
 func New() *Config {
-	return *Config{DonePath: DefaultDonePath}
+	return &Config{DonePath: fmt.Sprintf("%s/done", DefaultDoneDir)}
 }
 
 // Validate ensures a <Config> instance has all its fields populated, and the
@@ -48,6 +48,7 @@ func (r *Config) Validate() bool {
 	if _, ok := PluginParsers[r.Plugin]; !ok {
 		return false
 	}
+	return true
 }
 
 // HandleDonePath ensures the directory wherefrom the "done" file will be
@@ -58,7 +59,7 @@ func (r *Config) HandleDonePath() error {
 
 	}
 	dir := path.Dir(r.DonePath)
-	if _, err := os.Stat(dir); err != nil && err != os.IsNotExist(err) {
+	if _, err := os.Stat(dir); err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf("Unable to check existance of dir <%d>: %w", dir, err)
 	}
 	if err := os.MkdirAll(dir, 0755); err != nil {

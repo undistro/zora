@@ -21,10 +21,10 @@ func Parse(r io.Reader, c *config.Config) (*inspectv1a1.ClusterIssueList, error)
 	}
 	cispecs, err := config.PluginParsers[c.Plugin](repby)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	cilist := *inspectv1a1.ClusterIssueList{
+	cilist := &inspectv1a1.ClusterIssueList{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ClusterIssueList",
 			APIVersion: inspectv1a1.SchemeGroupVersion.String(),

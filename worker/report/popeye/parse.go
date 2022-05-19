@@ -35,16 +35,16 @@ func Parse(popr []byte) ([]*inspectv1a1.ClusterIssueSpec, error) {
 					return nil, fmt.Errorf("Unable to parse Popeye issue on <%s>: %w", typ, err)
 				}
 				if ci, ok := issuesmap[id]; ok {
-					ci.Resources[iss.GVR] = append(ci.Resources[iss.GVR], ty)
+					ci.Resources[iss.GVR] = append(ci.Resources[iss.GVR], typ)
 					ci.TotalResources++
 				} else {
 					issuesmap[id] = &inspectv1a1.ClusterIssueSpec{
 						ID:       id,
 						Message:  msg,
-						Severity: report.LevelToIssueSeverity[iss.Level],
+						Severity: LevelToIssueSeverity[iss.Level],
 						Category: san.Sanitizer,
 						Resources: map[string][]string{
-							iss.GVR: {ty},
+							iss.GVR: {typ},
 						},
 						TotalResources: 1,
 					}
