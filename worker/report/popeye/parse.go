@@ -9,7 +9,7 @@ import (
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 )
 
-// Extracts Popeye's error code and message as separate strings.
+// Extracts Popeye's error code and message from the original issue message.
 func splitCodeAndMsg(msg string) (string, string, error) {
 	msgre := regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
 	s := msgre.FindStringSubmatch(msg)
@@ -19,6 +19,8 @@ func splitCodeAndMsg(msg string) (string, string, error) {
 	return s[1], s[2], nil
 }
 
+// Parse transforms a Popeye report into a slice of <ClusterIssueSpec>. This
+// function is called by the <report> package when a Popeye plugin is used.
 func Parse(popr []byte) ([]*inspectv1a1.ClusterIssueSpec, error) {
 	r := &Report{}
 	if err := json.Unmarshal(popr, r); err != nil {

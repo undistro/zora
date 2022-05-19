@@ -18,10 +18,13 @@ const (
 	ClusterIssuesNsEnvVar = "CLUSTER_ISSUES_NAMESPACE"
 )
 
+// PluginParsers correlates plugins with their respective parsing functions.
 var PluginParsers = map[string]func([]byte) ([]*inspectv1a1.ClusterIssueSpec, error){
 	"popeye": popeye.Parse,
 }
 
+// Config stores information used by the worker to create a list of
+// <ClusterIssue> instances, and to specify the "done" file path.
 type Config struct {
 	DonePath        string `json:"donePath"`
 	Plugin          string `json:"plugin"`
@@ -29,10 +32,14 @@ type Config struct {
 	ClusterIssuesNs string `json:"listClusterIssueNs"`
 }
 
+// New instanciates a new <Config> struct, with the default path for the
+// "done" file.
 func New() *Config {
 	return *Config{DonePath: DefaultDonePath}
 }
 
+// Validate ensures a <Config> instance has all its fields populated, and the
+// plugin specified is supported by the worker.
 func (r *Config) Validate() bool {
 	if len(r.DonePath) == 0 || len(r.Cluster) == 0 || len(r.ClusterIssuesNs) == 0 ||
 		len(r.Plugin) == 0 {
@@ -43,6 +50,8 @@ func (r *Config) Validate() bool {
 	}
 }
 
+// HandleDonePath ensures the directory wherefrom the "done" file will be
+// written exists.
 func (r *Config) HandleDonePath() error {
 	if len(r.DonePath) == 0 {
 		return errors.New("Empty <DonePath>")

@@ -9,6 +9,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// Parse receives a reader pointing to a plugin's report file, transforming such
+// report into an instance of <ClusterIssueList> according to the cluster name
+// and issues namespace specified on the <Config> struct. The parsing for each
+// plugin is left to dedicated functions which are called according to the
+// plugin type.
 func Parse(r io.Reader, c *config.Config) (*inspectv1a1.ClusterIssueList, error) {
 	repby := []byte{}
 	if _, err := r.Read(repby); err != nil {
