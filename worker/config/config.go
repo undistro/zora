@@ -52,7 +52,7 @@ func (r *Config) HandleDonePath() error {
 	if _, err := os.Stat(dir); err != nil && err != os.IsNotExist(err) {
 		return fmt.Errorf("Unable to check existance of dir <%d>: %w", dir, err)
 	}
-	if err := os.Mkdir(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0755); err != nil {
 		return fmt.Errorf("Unable to create results dir <%d>: %w", dir, err)
 	}
 	return nil
