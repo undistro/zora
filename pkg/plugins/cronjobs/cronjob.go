@@ -168,6 +168,24 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 			Name:  "CLUSTER_ISSUES_NAMESPACE",
 			Value: r.Clusterscan.Namespace,
 		},
+		corev1.EnvVar{
+			Name: "JOB_NAME",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.labels['job-name']", APIVersion: "v1"},
+			},
+		},
+		corev1.EnvVar{
+			Name: "JOB_NAMESPACE",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.namespace", APIVersion: "v1"},
+			},
+		},
+		corev1.EnvVar{
+			Name: "JOB_UID",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.labels['controller-uid']", APIVersion: "v1"},
+			},
+		},
 	)
 }
 
