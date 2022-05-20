@@ -9,8 +9,8 @@ import (
 
 // ClusterScanSpec defines the desired state of ClusterScan
 type ClusterScanSpec struct {
-	// ClusterRef is a reference to a Cluster
-	ClusterRef ClusterReference `json:"clusterRef"`
+	// ClusterRef is a reference to a Cluster in the same namespace
+	ClusterRef corev1.LocalObjectReference `json:"clusterRef"`
 
 	// This flag tells the controller to suspend subsequent executions, it does
 	// not apply to already started executions.  Defaults to false.
@@ -21,16 +21,6 @@ type ClusterScanSpec struct {
 
 	// The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
 	Plugins []PluginReference `json:"plugins,omitempty"`
-}
-
-// ClusterReference represents a Cluster Reference. It has enough information to retrieve cluster
-// in any namespace
-type ClusterReference struct {
-	// Name is unique within a namespace to reference a Cluster resource.
-	Name string `json:"name"`
-
-	// Namespace defines the space within which the Cluster name must be unique.
-	Namespace string `json:"namespace,omitempty"`
 }
 
 type PluginReference struct {
@@ -100,11 +90,7 @@ func (in *ClusterScan) SetReadyStatus(status bool, reason, msg string) {
 }
 
 func (in *ClusterScan) ClusterKey() types.NamespacedName {
-	ns := in.Spec.ClusterRef.Namespace
-	if ns == "" {
-		ns = in.Namespace
-	}
-	return types.NamespacedName{Name: in.Spec.ClusterRef.Name, Namespace: ns}
+	return types.NamespacedName{Name: in.Spec.ClusterRef.Name, Namespace: in.Namespace}
 }
 
 //+kubebuilder:object:root=true

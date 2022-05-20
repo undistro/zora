@@ -17,8 +17,8 @@ const (
 
 // ClusterSpec defines the desired state of Cluster
 type ClusterSpec struct {
-	// KubeconfigRef is a reference to a secret that contains the kubeconfig data
-	KubeconfigRef *corev1.SecretReference `json:"kubeconfigRef,omitempty"`
+	// KubeconfigRef is a reference to a secret in the same namespace that contains the kubeconfig data
+	KubeconfigRef *corev1.LocalObjectReference `json:"kubeconfigRef,omitempty"`
 }
 
 // ClusterStatus defines the observed state of Cluster
@@ -91,11 +91,7 @@ func (in *Cluster) KubeconfigRefKey() *types.NamespacedName {
 	if in.Spec.KubeconfigRef == nil {
 		return nil
 	}
-	ns := in.Spec.KubeconfigRef.Namespace
-	if ns == "" {
-		ns = in.Namespace
-	}
-	return &types.NamespacedName{Name: in.Spec.KubeconfigRef.Name, Namespace: ns}
+	return &types.NamespacedName{Name: in.Spec.KubeconfigRef.Name, Namespace: in.Namespace}
 }
 
 func (in *Cluster) SetStatus(statusType string, status bool, reason, msg string) {
