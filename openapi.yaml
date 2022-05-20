@@ -4,7 +4,7 @@ info:
   description: 'Undistro Inspect server'
   version: 1.0.0
 servers:
-  - url: http://inspect/v1
+  - url: https://inspect-hml.undistro.io/api/v1
 tags:
   - name: cluster
     description: Everything about Clusters
@@ -23,21 +23,80 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Cluster'
+                  $ref: '#/components/schemas/ClusterItem'
         500:
           description: Internal Server Error
-          content: { }
+          content: {}
+  /namespaces/{namespace}/clusters/{clusterName}:
+    get:
+      tags:
+        - cluster
+      summary: Get a cluster and its issues
+      operationId: getCluster
+      parameters:
+        - in: path
+          name: namespace
+          schema:
+            type: string
+            example: clusters-prd
+          required: true
+        - in: path
+          name: clusterName
+          schema:
+            type: string
+            example: mycluster
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+  /issues:
+    get:
+      tags:
+        - cluster
+      summary: List Issues
+      operationId: listIssues
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Issue'
+        500:
+          description: Internal Server Error
+          content: {}
 components:
   schemas:
     Cluster:
+      allOf:
+        - $ref: '#/components/schemas/ClusterItem'
+        - type: object
+          properties:
+            issues:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClusterIssue'
+    ClusterItem:
       type: object
       properties:
         name:
           type: string
-          example: mycluster-prd
+          example: mycluster
         namespace:
           type: string
-          example: clusters-prod
+          example: clusters-prd
         environment:
           type: string
           example: prod
@@ -88,3 +147,39 @@ components:
           minimum: 0
           maximum: 100
           example: 33
+    ClusterIssue:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "POP-106"
+        message:
+          type: string
+          example: "No resources requests/limits defined"
+        category:
+          type: string
+          example: "Container"
+        severity:
+          type: string
+          example: "Medium"
+        infoURL:
+          type: string
+          example: "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits"
+    Issue:
+      allOf:
+        - $ref: '#/components/schemas/ClusterIssue'
+        - type: object
+          properties:
+            clusters:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClusterKey'
+    ClusterKey:
+      type: object
+      properties:
+        name:
+          type: string
+          example: mycluster
+        namespace:
+          type: string
+          example: clusters-prd
