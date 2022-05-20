@@ -42,6 +42,8 @@ func main() {
 	var defaultPluginsNamespace string
 	var defaultPluginsNames string
 	var workerImage string
+	var cronJobClusterRoleBinding string
+	var cronJobServiceAccount string
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -51,6 +53,8 @@ func main() {
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
 	//TODO fix worker image
 	flag.StringVar(&workerImage, "worker-image", "alpine", "Docker image name of worker component")
+	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "undistro-inspect-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
+	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "undistro-inspect-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	opts := zap.Options{
 		Development: true,
 		TimeEncoder: zapcore.TimeEncoderOfLayout(time.RFC3339),
@@ -89,6 +93,8 @@ func main() {
 		DefaultPluginsNamespace: defaultPluginsNamespace,
 		DefaultPluginsNames:     strings.Split(defaultPluginsNames, ","),
 		WorkerImage:             workerImage,
+		ClusterRoleBindingName:  cronJobClusterRoleBinding,
+		ServiceAccountName:      cronJobServiceAccount,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)

@@ -174,6 +174,8 @@ kubectl create secret generic mycluster-kubeconfig \
 
 #### Create a Cluster resource
 
+Create a `Cluster` resource referencing the kubeconfig Secret in the same namespace:
+
 ```shell
 cat << EOF | kubectl apply -f -
 apiVersion: inspect.undistro.io/v1alpha1

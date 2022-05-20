@@ -69,16 +69,12 @@ spec:
             description: ClusterSpec defines the desired state of Cluster
             properties:
               kubeconfigRef:
-                description: KubeconfigRef is a reference to a secret that contains
-                  the kubeconfig data
+                description: KubeconfigRef is a reference to a secret in the same
+                  namespace that contains the kubeconfig data
                 properties:
                   name:
-                    description: Name is unique within a namespace to reference a
-                      secret resource.
-                    type: string
-                  namespace:
-                    description: Namespace defines the space within which the secret
-                      name must be unique.
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
                     type: string
                 type: object
             type: object

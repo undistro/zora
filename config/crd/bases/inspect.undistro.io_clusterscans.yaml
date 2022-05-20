@@ -55,18 +55,12 @@ spec:
             description: ClusterScanSpec defines the desired state of ClusterScan
             properties:
               clusterRef:
-                description: ClusterRef is a reference to a Cluster
+                description: ClusterRef is a reference to a Cluster in the same namespace
                 properties:
                   name:
-                    description: Name is unique within a namespace to reference a
-                      Cluster resource.
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
                     type: string
-                  namespace:
-                    description: Namespace defines the space within which the Cluster
-                      name must be unique.
-                    type: string
-                required:
-                - name
                 type: object
               plugins:
                 description: The list of Plugin references that are used to scan the
