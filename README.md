@@ -5,11 +5,12 @@ provides multi cluster visibility.
 
 - [Installation](#installation)
 - [Usage](#usage)
-    + [Connect to a cluster](#connect-to-a-cluster)
-        - [Generate a kubeconfig file](#generate-a-kubeconfig-file)
-        - [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig)
-        - [Create a Cluster resource](#create-a-cluster-resource)
+  + [Connect to a cluster](#connect-to-a-cluster)
+      - [Generate a kubeconfig file](#generate-a-kubeconfig-file)
+      - [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig)
+      - [Create a Cluster resource](#create-a-cluster-resource)
   + [List clusters](#list-clusters)
+  + [Configure a cluster scan](#configure-a-cluster-scan)
 - [Uninstall](#uninstall)
 - [Glossary](#glossary)
 
@@ -192,6 +193,7 @@ EOF
 ```
 
 > **Tip:**
+> 
 > Clusters can be grouped by environment with the `inspect.undistro.io/environment` label.
 > 
 > You can list all clusters from `prod` environment using: `kubectl get clusters -l inspect.undistro.io/environment=prod`
@@ -230,6 +232,48 @@ The cluster list output has the following columns:
 > - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
 > - Show detailed description of a cluster, including **events**, running `kubectl describe cluster mycluster`.
 
+### Configure a cluster scan
+
+Since your clusters are connected it's possible configure a scan for them
+creating a `ClusterScan` resource in the same namespace as `Cluster`:
+
+Here is a sample configuration that scan `mycluster` once an hour.
+You can modify per your needs/wants.
+
+```shell
+cat << EOF | kubectl apply -f -
+apiVersion: inspect.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  name: mycluster
+spec:
+  clusterRef:
+    name: mycluster
+  schedule: "* */1 * * *"
+EOF
+```
+
+Once the cluster is successfully scanned, 
+the reported issues are available in `ClusterIssue` resources:
+
+```shell
+kubectl get clusterissues -l cluster=mycluster
+NAME                CLUSTER     ID        MESSAGE                                SEVERITY   CATEGORY    AGE   TOTAL
+mycluster-pop-106   mycluster   POP-106   No resources requests/limits defined   Medium     Container   17s   10
+```
+
+It's possible filter issues by cluster, issue ID, severity and category:
+```shell
+# issues from mycluster
+kubectl get clusterissues -l cluster=mycluster
+
+# clusters with issue POP-106
+kubectl get clusterissues -l id=POP-106
+
+# issues from mycluster with high severity
+kubectl get clusterissues -l cluster=mycluster,severity=high
+```
+
 ## Uninstall
 
 ```shell
@@ -240,3 +284,4 @@ kubectl delete namespace undistro-inspect
 ## Glossary
 
 - **Management Cluster**: The only Kubernetes cluster where Undistro Inspect is installed.
+- **Target Cluster**: The Kubernetes cluster that you connect to Undistro Inspect (which is running on management cluster).
