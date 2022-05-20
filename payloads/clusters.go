@@ -7,37 +7,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func NewCluster(c v1alpha1.Cluster) Cluster {
-	res := &Resources{}
-	if cpu, ok := c.Status.Resources[corev1.ResourceCPU]; ok {
-		res.CPU = &Resource{
-			Available:       formats.CPU(cpu.Available),
-			Usage:           formats.CPU(cpu.Usage),
-			UsagePercentage: cpu.UsagePercentage,
-		}
-	}
-	if mem, ok := c.Status.Resources[corev1.ResourceMemory]; ok {
-		res.Memory = &Resource{
-			Available:       formats.Memory(mem.Available),
-			Usage:           formats.Memory(mem.Usage),
-			UsagePercentage: mem.UsagePercentage,
-		}
-	}
-	return Cluster{
-		Name:              c.Name,
-		Namespace:         c.Namespace,
-		Environment:       c.Labels[v1alpha1.LabelEnvironment],
-		Provider:          c.Status.Provider,
-		Region:            c.Status.Region,
-		TotalNodes:        c.Status.TotalNodes,
-		Ready:             c.Status.ConditionIsTrue(v1alpha1.ClusterReady),
-		Version:           c.Status.KubernetesVersion,
-		TotalIssues:       0,
-		Resources:         res,
-		CreationTimestamp: c.Status.CreationTimestamp,
-	}
-}
-
 type Cluster struct {
 	Name              string      `json:"name,omitempty"`
 	Namespace         string      `json:"namespace,omitempty"`
@@ -50,6 +19,7 @@ type Cluster struct {
 	TotalIssues       int         `json:"totalIssues"`
 	Resources         *Resources  `json:"resources,omitempty"`
 	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
+	Issues            []Issue     `json:"issues,omitempty"`
 }
 
 type Resources struct {
@@ -61,4 +31,43 @@ type Resource struct {
 	Available       string `json:"available,omitempty"`
 	Usage           string `json:"usage,omitempty"`
 	UsagePercentage int32  `json:"usagePercentage,omitempty"`
+}
+
+func NewCluster(cluster v1alpha1.Cluster) Cluster {
+	res := &Resources{}
+	if cpu, ok := cluster.Status.Resources[corev1.ResourceCPU]; ok {
+		res.CPU = &Resource{
+			Available:       formats.CPU(cpu.Available),
+			Usage:           formats.CPU(cpu.Usage),
+			UsagePercentage: cpu.UsagePercentage,
+		}
+	}
+	if mem, ok := cluster.Status.Resources[corev1.ResourceMemory]; ok {
+		res.Memory = &Resource{
+			Available:       formats.Memory(mem.Available),
+			Usage:           formats.Memory(mem.Usage),
+			UsagePercentage: mem.UsagePercentage,
+		}
+	}
+	return Cluster{
+		Name:              cluster.Name,
+		Namespace:         cluster.Namespace,
+		Environment:       cluster.Labels[v1alpha1.LabelEnvironment],
+		Provider:          cluster.Status.Provider,
+		Region:            cluster.Status.Region,
+		TotalNodes:        cluster.Status.TotalNodes,
+		Ready:             cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady),
+		Version:           cluster.Status.KubernetesVersion,
+		CreationTimestamp: cluster.Status.CreationTimestamp,
+		Resources:         res,
+	}
+}
+
+func NewClusterWithIssues(cluster v1alpha1.Cluster, issues []v1alpha1.ClusterIssue) Cluster {
+	c := NewCluster(cluster)
+	for _, i := range issues {
+		c.Issues = append(c.Issues, NewIssue(i))
+	}
+	c.TotalIssues = len(issues)
+	return c
 }

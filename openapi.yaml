@@ -183,3 +183,6 @@ components:
         namespace:
           type: string
           example: clusters-prd
+        totalResources:
+          type: integer
+          example: 10
