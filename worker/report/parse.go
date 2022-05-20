@@ -3,6 +3,7 @@ package report
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	"github.com/getupio-undistro/inspect/worker/config"
@@ -15,8 +16,8 @@ import (
 // plugin is left to dedicated functions which are called according to the
 // plugin type.
 func Parse(r io.Reader, c *config.Config) (*inspectv1a1.ClusterIssueList, error) {
-	repby := []byte{}
-	if _, err := r.Read(repby); err != nil {
+	repby, err := ioutil.ReadAll(r)
+	if err != nil {
 		return nil, fmt.Errorf("Unable to read results of plugin <%s> from cluster <%s>: %w", c.Plugin, c.Cluster, err)
 	}
 	cispecs, err := config.PluginParsers[c.Plugin](repby)
