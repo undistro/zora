@@ -284,3 +284,4 @@ kubectl delete namespace undistro-inspect
 ## Glossary
 
 - **Management Cluster**: The only Kubernetes cluster where Undistro Inspect is installed.
+- **Target Cluster**: The Kubernetes cluster that you connect to Undistro Inspect (which is running on management cluster).
