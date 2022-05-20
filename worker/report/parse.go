@@ -16,6 +16,9 @@ import (
 // plugin is left to dedicated functions which are called according to the
 // plugin type.
 func Parse(r io.Reader, c *config.Config) (*inspectv1a1.ClusterIssueList, error) {
+	if err := c.Validate(); err != nil {
+		return nil, fmt.Errorf("Invalid configuration: %w", err)
+	}
 	repby, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read results of plugin <%s> from cluster <%s>: %w", c.Plugin, c.Cluster, err)
