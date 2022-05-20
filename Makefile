@@ -103,7 +103,7 @@ ifndef ignore-not-found
 endif
 
 .PHONY: install
-install: manifests kustomize ## Install default configuration (RBAC for plugins) CRDs into the K8s cluster specified in ~/.kube/config.
+install: manifests kustomize ## Install default configuration (RBAC for plugins) and CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 	kubectl apply -f config/rbac/clusterissue_editor_role.yaml
 	kubectl create -f config/rbac/plugins_role_binding.yaml || true
