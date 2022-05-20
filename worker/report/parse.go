@@ -4,18 +4,19 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"strings"
 
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	"github.com/getupio-undistro/inspect/worker/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// Parse receives a reader pointing to a plugin's report file, transforming such
-// report into an instance of <ClusterIssueList> according to the cluster name
-// and issues namespace specified on the <Config> struct. The parsing for each
-// plugin is left to dedicated functions which are called according to the
-// plugin type.
-func Parse(r io.Reader, c *config.Config) (*inspectv1a1.ClusterIssueList, error) {
+// Parse receives a reader pointing to a plugin's report file, transforming
+// such report into an array of <ClusterIssue> pointers according to the
+// cluster name and issues namespace specified on the <Config> struct. The
+// parsing for each plugin is left to dedicated functions which are called
+// according to the plugin type.
+func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 	if err := c.Validate(); err != nil {
 		return nil, fmt.Errorf("Invalid configuration: %w", err)
 	}
@@ -28,24 +29,20 @@ func Parse(r io.Reader, c *config.Config) (*inspectv1a1.ClusterIssueList, error)
 		return nil, err
 	}
 
-	cilist := &inspectv1a1.ClusterIssueList{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "ClusterIssueList",
-			APIVersion: inspectv1a1.SchemeGroupVersion.String(),
-		},
-	}
-	for _, cis := range cispecs {
-		cis.Cluster = c.Cluster
-		cilist.Items = append(cilist.Items, inspectv1a1.ClusterIssue{
+	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
+	for i := 0; i < len(cispecs); i++ {
+		cispecs[i].Cluster = c.Cluster
+		ciarr[i] = &inspectv1a1.ClusterIssue{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ClusterIssue",
-				APIVersion: cilist.APIVersion,
+				APIVersion: inspectv1a1.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: c.ClusterIssuesNs,
+				Name:      fmt.Sprintf("clusterissue-%s-%s", strings.ToLower(cispecs[i].Category), strings.ToLower(cispecs[i].ID)),
 			},
-			Spec: *cis,
-		})
+			Spec: *cispecs[i],
+		}
 	}
-	return cilist, nil
+	return ciarr, nil
 }
