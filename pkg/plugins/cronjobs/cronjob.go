@@ -51,13 +51,14 @@ func New(name, namespace string) *batchv1.CronJob {
 }
 
 type Mutator struct {
-	Scheme           *runtime.Scheme
-	WorkerImage      string
-	Existing         *batchv1.CronJob
-	Plugin           *v1alpha1.Plugin
-	PluginRef        v1alpha1.PluginReference
-	Clusterscan      *v1alpha1.ClusterScan
-	KubeconfigSecret *corev1.Secret
+	Scheme             *runtime.Scheme
+	Existing           *batchv1.CronJob
+	Plugin             *v1alpha1.Plugin
+	PluginRef          v1alpha1.PluginReference
+	Clusterscan        *v1alpha1.ClusterScan
+	KubeconfigSecret   *corev1.Secret
+	WorkerImage        string
+	ServiceAccountName string
 }
 
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
@@ -67,6 +68,7 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.Clusterscan.Spec.Suspend)
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyOnFailure
+		r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
 			{
 				Name: kubeconfigVolumeName,

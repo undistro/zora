@@ -9,6 +9,8 @@ import (
 
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/utils/pointer"
@@ -32,6 +34,8 @@ type ClusterScanReconciler struct {
 	DefaultPluginsNamespace string
 	DefaultPluginsNames     []string
 	WorkerImage             string
+	ClusterRoleBindingName  string
+	ServiceAccountName      string
 }
 
 //+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusterscans,verbs=get;list;watch;create;update;patch;delete
@@ -40,6 +44,8 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=inspect.undistro.io,resources=plugins,verbs=get;list;watch
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
+//+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterrolebindings,verbs=get;list;watch;update;patch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -66,7 +72,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	cluster := &v1alpha1.Cluster{}
 	clusterKey := clusterscan.ClusterKey()
 	if err := r.Get(ctx, clusterKey, cluster); err != nil {
-		log.Error(err, "failed to fetch Cluster")
+		log.Error(err, fmt.Sprintf("failed to fetch Cluster %s", clusterKey.String()))
 		clusterscan.SetReadyStatus(false, "ClusterFetchError", err.Error())
 		return err
 	}
@@ -77,10 +83,15 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		clusterscan.SetReadyStatus(false, "ClusterNotReady", err.Error())
 		return err
 	}
-	kubeconfigSecret, err := kubeconfig.SecretFromRef(ctx, r.Client, *cluster.KubeconfigRefKey())
+	kubeconfigKey := cluster.KubeconfigRefKey()
+	kubeconfigSecret, err := kubeconfig.SecretFromRef(ctx, r.Client, *kubeconfigKey)
 	if err != nil {
-		log.Error(err, "failed to get kubeconfig secret")
+		log.Error(err, fmt.Sprintf("failed to get kubeconfig secret %s", kubeconfigKey.String()))
 		clusterscan.SetReadyStatus(false, "ClusterKubeconfigError", err.Error())
+		return err
+	}
+
+	if err := r.applyRBAC(ctx, clusterscan); err != nil {
 		return err
 	}
 
@@ -95,20 +106,21 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		pluginKey := ref.PluginKey(r.DefaultPluginsNamespace)
 		plugin := &v1alpha1.Plugin{}
 		if err := r.Get(ctx, pluginKey, plugin); err != nil {
-			log.Error(err, fmt.Sprintf("failed to fetch Plugin %v", pluginKey))
+			log.Error(err, fmt.Sprintf("failed to fetch Plugin %s", pluginKey.String()))
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
 		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", cluster.Name, plugin.Name), kubeconfigSecret.Namespace)
 
 		cronJobMutator := &cronjobs.Mutator{
-			Scheme:           r.Scheme,
-			WorkerImage:      r.WorkerImage,
-			Existing:         cronJob,
-			Plugin:           plugin,
-			PluginRef:        ref,
-			Clusterscan:      clusterscan,
-			KubeconfigSecret: kubeconfigSecret,
+			Scheme:             r.Scheme,
+			Existing:           cronJob,
+			Plugin:             plugin,
+			PluginRef:          ref,
+			Clusterscan:        clusterscan,
+			KubeconfigSecret:   kubeconfigSecret,
+			WorkerImage:        r.WorkerImage,
+			ServiceAccountName: r.ServiceAccountName,
 		}
 
 		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate())
@@ -117,7 +129,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "CronJobApplyError", err.Error())
 			return err
 		}
-		msg := fmt.Sprintf("CronJob %s has been %v", cronJob.Name, result)
+		msg := fmt.Sprintf("CronJob %s has been %s", cronJob.Name, result)
 		log.Info(msg)
 		if result != controllerutil.OperationResultNone {
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
@@ -143,6 +155,60 @@ func (r *ClusterScanReconciler) defaultPlugins() []v1alpha1.PluginReference {
 		})
 	}
 	return defaultPlugins
+}
+
+// applyRBAC Create or Update a ServiceAccount (with ClusterScan as Owner) and append it to ClusterRoleBinding
+func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
+	log := ctrllog.FromContext(ctx)
+
+	crb := &rbacv1.ClusterRoleBinding{}
+	crbKey := client.ObjectKey{Name: r.ClusterRoleBindingName}
+	if err := r.Get(ctx, crbKey, crb); err != nil {
+		log.Error(err, fmt.Sprintf("failed to fetch ClusterRoleBinding %s", r.ClusterRoleBindingName))
+		clusterscan.SetReadyStatus(false, "ClusterRoleBindingFetchError", err.Error())
+		return err
+	}
+
+	sa := &corev1.ServiceAccount{ObjectMeta: metav1.ObjectMeta{Name: r.ServiceAccountName, Namespace: clusterscan.Namespace}}
+	res, err := ctrl.CreateOrUpdate(ctx, r.Client, sa, func() error {
+		return controllerutil.SetOwnerReference(clusterscan, sa, r.Scheme)
+	})
+	if err != nil {
+		log.Error(err, fmt.Sprintf("failed to apply ServiceAccount %s", r.ServiceAccountName))
+		clusterscan.SetReadyStatus(false, "ServiceAccountApplyError", err.Error())
+		return err
+	}
+	msg := fmt.Sprintf("ServiceAccount %s has been %s", r.ServiceAccountName, res)
+	log.Info(msg)
+	if res != controllerutil.OperationResultNone {
+		r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "ServiceAccountConfigured", msg)
+	}
+	subject := rbacv1.Subject{
+		Kind:      "ServiceAccount",
+		Name:      sa.Name,
+		Namespace: sa.Namespace,
+	}
+	exists := false
+	for _, s := range crb.Subjects {
+		if s.Kind == subject.Kind && s.Namespace == subject.Namespace && s.Name == subject.Name {
+			exists = true
+			break
+		}
+	}
+	if !exists {
+		crb.Subjects = append(crb.Subjects, subject)
+		if err := r.Update(ctx, crb); err != nil {
+			log.Error(err, fmt.Sprintf("failed to update ClusterRoleBinding %s", crb.Name))
+			clusterscan.SetReadyStatus(false, "ClusterRoleBindingUpdateError", err.Error())
+			return err
+		}
+		msg := fmt.Sprintf("ClusterRoleBinding %s has been updated", crb.Name)
+		log.Info(msg)
+		r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "ClusterRoleBindingConfigured", msg)
+	} else {
+		log.Info(fmt.Sprintf("ServiceAccount %s/%s already exists in ClusterRoleBinding %s subjects", sa.Namespace, sa.Name, crb.Name))
+	}
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

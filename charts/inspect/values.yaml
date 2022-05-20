@@ -278,7 +278,7 @@ scan:
   worker:
     image:
       # -- worker image repository
-      repository: registry.undistro.io/inspect/worker
+      repository: registry.undistro.io/library/inspect-worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
   plugins:
