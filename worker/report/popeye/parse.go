@@ -9,9 +9,10 @@ import (
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 )
 
+var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
+
 // Extracts Popeye's error code and message from the original issue message.
 func splitCodeAndMsg(msg string) (string, string, error) {
-	msgre := regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
 	s := msgre.FindStringSubmatch(msg)
 	if len(s) != 3 {
 		return "", "", errors.New("Unable to split Popeye error code from message.")
