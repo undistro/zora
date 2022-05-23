@@ -19,6 +19,8 @@ const (
 	PluginEnvVar          = "PLUGIN_NAME"
 	ClusterEnvVar         = "CLUSTER_NAME"
 	ClusterIssuesNsEnvVar = "CLUSTER_ISSUES_NAMESPACE"
+	JobEnvVar             = "JOB_NAME"
+	JobUidEnvVar          = "JOB_UID"
 )
 
 // PluginParsers correlates plugins with their respective parsing functions.
@@ -33,6 +35,8 @@ type Config struct {
 	Plugin          string `json:"plugin"`
 	Cluster         string `json:"cluster"`
 	ClusterIssuesNs string `json:"listClusterIssueNs"`
+	Job             string `json:"job"`
+	JobUid          string `json:"jobUid"`
 }
 
 // New instantiates a new <Config> struct, with the default path for the
@@ -61,6 +65,18 @@ func FromEnv() (*Config, error) {
 	} else {
 		return nil, fmt.Errorf("Empty environment variable <%s>", ClusterIssuesNsEnvVar)
 	}
+
+	if e := os.Getenv(JobEnvVar); len(e) != 0 {
+		c.Job = e
+	} else {
+		return nil, fmt.Errorf("Empty environment variable <%s>", JobEnvVar)
+	}
+	if e := os.Getenv(JobUidEnvVar); len(e) != 0 {
+		c.JobUid = e
+	} else {
+		return nil, fmt.Errorf("Empty environment variable <%s>", JobUidEnvVar)
+	}
+
 	if e := os.Getenv(DoneDirEnvVar); len(e) != 0 {
 		c.DonePath = fmt.Sprintf("%s/done", e)
 	}
@@ -82,6 +98,16 @@ func (r *Config) Validate() error {
 	if len(r.Plugin) == 0 {
 		return errors.New("Config's <Plugin> field is empty")
 	}
+
+	if len(r.Job) == 0 {
+		return errors.New("Config's <Job> field is empty")
+	} else if i := strings.LastIndex(r.Job, "-"); i == -1 || i == len(r.Job)-1 {
+		return errors.New("Config's <Job> field is invalid")
+	}
+	if len(r.JobUid) == 0 {
+		return errors.New("Config's <JobUid> field is empty")
+	}
+
 	if _, ok := PluginParsers[r.Plugin]; !ok {
 		return fmt.Errorf("Invalid plugin: <%s>", r.Plugin)
 	}

@@ -68,7 +68,6 @@ func Run() error {
 	if err = CreateClusterIssues(c, ciarr); err != nil {
 		return fmt.Errorf("Failed to create issues: %w", err)
 	}
-	// fmt.Println(*ciarr[0])
 
 	return nil
 }
