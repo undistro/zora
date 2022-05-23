@@ -51,8 +51,7 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "undistro-inspect", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
-	//TODO fix worker image
-	flag.StringVar(&workerImage, "worker-image", "alpine", "Docker image name of worker component")
+	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:latest", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "undistro-inspect-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "undistro-inspect-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	opts := zap.Options{
