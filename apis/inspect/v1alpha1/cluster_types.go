@@ -46,6 +46,9 @@ type ClusterStatus struct {
 
 	// Timestamp representing the server time of the last reconciliation
 	LastRun metav1.Time `json:"lastRun,omitempty"`
+
+	// Total of ClusterIssues reported
+	TotalIssues int `json:"totalIssues,omitempty"`
 }
 
 // SetClusterInfo fill ClusterInfo and temporary fields (TotalNodes, MemoryUsage and CPUUsage)

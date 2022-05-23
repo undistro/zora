@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -26,6 +27,8 @@ import (
 	"github.com/getupio-undistro/inspect/pkg/plugins/cronjobs"
 )
 
+const jobOwnerKey = ".metadata.controller"
+
 // ClusterScanReconciler reconciles a ClusterScan object
 type ClusterScanReconciler struct {
 	client.Client
@@ -44,6 +47,8 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=inspect.undistro.io,resources=plugins,verbs=get;list;watch
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
+//+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch
+//+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 //+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterrolebindings,verbs=get;list;watch;update;patch
 
@@ -63,7 +68,7 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "failed to update ClusterScan status")
 	}
 
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
+	return ctrl.Result{RequeueAfter: 10 * time.Minute}, err
 }
 
 func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
@@ -101,6 +106,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		pluginRefs = clusterscan.Spec.Plugins
 	}
 
+	var lastSuccessfulTime *metav1.Time
+	successfulCronJobs := make([]*batchv1.CronJob, 0, len(pluginRefs))
 	pluginNames := make([]string, 0, len(pluginRefs))
 	for _, ref := range pluginRefs {
 		pluginKey := ref.PluginKey(r.DefaultPluginsNamespace)
@@ -134,10 +141,53 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		if result != controllerutil.OperationResultNone {
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
+		if lst := cronJob.Status.LastSuccessfulTime; lst != nil && !lst.IsZero() {
+			log.Info(fmt.Sprintf("CronJob %s has successfully completed jobs", cronJob.Name))
+			successfulCronJobs = append(successfulCronJobs, cronJob)
+			if lastSuccessfulTime != nil && lastSuccessfulTime.Before(lst) {
+				lastSuccessfulTime = lst
+			}
+		}
 		pluginNames = append(pluginNames, plugin.Name)
 	}
 
+	var latestFinishedJobs []batchv1.Job
+	for _, c := range successfulCronJobs {
+		jobList := &batchv1.JobList{}
+		if err := r.List(ctx, jobList, client.MatchingFields{jobOwnerKey: c.Name}); err != nil {
+			log.Error(err, "failed to list Jobs")
+			return err
+		}
+		log.Info(fmt.Sprintf("found %d Jobs owned by Cronjob %s", len(jobList.Items), c.Name))
+		sort.Slice(jobList.Items, func(i, j int) bool {
+			if jobList.Items[i].Status.StartTime == nil {
+				return jobList.Items[j].Status.StartTime != nil
+			}
+			return jobList.Items[j].Status.StartTime.Before(jobList.Items[i].Status.StartTime)
+		})
+		for _, j := range jobList.Items {
+			if isJobFinished(&j) {
+				log.Info(fmt.Sprintf("%s is the latest finished Job owned by CronJob %s", j.Name, c.Name))
+				latestFinishedJobs = append(latestFinishedJobs, j)
+				break
+			}
+		}
+	}
+
+	var totalIssues int
+	for _, job := range latestFinishedJobs {
+		issueList := &v1alpha1.ClusterIssueList{}
+		eid := executionID(&job)
+		if err := r.List(ctx, issueList, client.MatchingLabels{"executionID": eid}); err != nil {
+			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by executionID %s", eid))
+			return err
+		}
+		log.Info(fmt.Sprintf("found %d ClusterIssues by executionID %s", len(issueList.Items), eid))
+		totalIssues += len(issueList.Items)
+	}
+
 	// update ClusterScan status
+	clusterscan.Status.LastSuccessfulTime = lastSuccessfulTime
 	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
 	clusterscan.Status.ClusterNamespacedName = clusterKey.String()
 	clusterscan.Status.Plugins = strings.Join(pluginNames, ",")
@@ -211,8 +261,35 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 	return nil
 }
 
+func executionID(job *batchv1.Job) string {
+	subs := strings.Split(job.Name, "-")
+	return subs[len(job.Name)-1]
+}
+
+func isJobFinished(job *batchv1.Job) bool {
+	for _, c := range job.Status.Conditions {
+		if (c.Type == batchv1.JobComplete || c.Type == batchv1.JobFailed) && c.Status == corev1.ConditionTrue {
+			return true
+		}
+	}
+	return false
+}
+
 // SetupWithManager sets up the controller with the Manager.
 func (r *ClusterScanReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &batchv1.Job{}, jobOwnerKey, func(rawObj client.Object) []string {
+		job := rawObj.(*batchv1.Job)
+		owner := metav1.GetControllerOf(job)
+		if owner == nil {
+			return nil
+		}
+		if owner.APIVersion != batchv1.SchemeGroupVersion.String() || owner.Kind != "CronJob" {
+			return nil
+		}
+		return []string{owner.Name}
+	}); err != nil {
+		return err
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.ClusterScan{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Owns(&batchv1.CronJob{}).
