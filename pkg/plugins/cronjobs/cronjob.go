@@ -125,7 +125,6 @@ func (r *Mutator) workerContainer() corev1.Container {
 	return corev1.Container{
 		Name:            workerContainerName,
 		Image:           r.WorkerImage,
-		Command:         []string{"printenv"}, //TODO remove printenv command
 		Env:             r.workerEnv(),
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		VolumeMounts:    commonVolumeMounts,
@@ -171,15 +170,13 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 			Value: r.Clusterscan.Namespace,
 		},
 		corev1.EnvVar{
+			Name:  "PLUGIN_NAME",
+			Value: r.Plugin.Name,
+		},
+		corev1.EnvVar{
 			Name: "JOB_NAME",
 			ValueFrom: &corev1.EnvVarSource{
 				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.labels['job-name']", APIVersion: "v1"},
-			},
-		},
-		corev1.EnvVar{
-			Name: "JOB_NAMESPACE",
-			ValueFrom: &corev1.EnvVarSource{
-				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.namespace", APIVersion: "v1"},
 			},
 		},
 		corev1.EnvVar{
