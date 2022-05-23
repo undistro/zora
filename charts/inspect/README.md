@@ -151,7 +151,7 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | nginx.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | nginx.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | nginx.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
-| scan.worker.image.repository | string | `"registry.undistro.io/inspect/worker"` | worker image repository |
+| scan.worker.image.repository | string | `"registry.undistro.io/library/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.plugins.popeye.image.repository | string | `"registry.undistro.io/dockerhub/derailed/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"v0.10.0"` | popeye plugin image tag |
