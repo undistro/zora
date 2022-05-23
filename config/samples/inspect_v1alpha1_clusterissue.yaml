@@ -2,6 +2,11 @@ apiVersion: inspect.undistro.io/v1alpha1
 kind: ClusterIssue
 metadata:
   name: mycluster-pop-106
+  labels:
+    cluster: mycluster
+    id: POP-106
+    severity: Medium
+    category: Container
 spec:
   cluster: mycluster
   id: POP-106

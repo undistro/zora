@@ -33,14 +33,16 @@ func main() {
 	ctrl.SetLogger(logger)
 
 	config := ctrl.GetConfigOrDie()
-	clusterClient, err := versioned.NewForConfig(config)
+	client, err := versioned.NewForConfig(config)
 	if err != nil {
 		log.Error(err, "failed to create Clusters clientset")
 		os.Exit(1)
 	}
 
 	r := chi.NewRouter()
-	r.Get("/api/v1/clusters", handlers.ClusterListHandler(clusterClient, logger))
+	r.Get("/api/v1/clusters", handlers.ClusterListHandler(client, logger))
+	r.Get("/api/v1/issues", handlers.IssueListHandler(client, logger))
+	r.Get("/api/v1/namespaces/{namespace}/clusters/{clusterName}", handlers.ClusterHandler(client, logger))
 	r.Get("/health", handlers.Health)
 
 	server := graceful.WithDefaults(&http.Server{
