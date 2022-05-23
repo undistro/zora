@@ -9,6 +9,7 @@ import (
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	"github.com/getupio-undistro/inspect/worker/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 // Parse receives a reader pointing to a plugin's report file, transforming
@@ -32,6 +33,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
 	for i := 0; i < len(cispecs); i++ {
 		cispecs[i].Cluster = c.Cluster
+		jid := c.Job[strings.LastIndex(c.Job, "-")+1:]
 		ciarr[i] = &inspectv1a1.ClusterIssue{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ClusterIssue",
@@ -39,7 +41,14 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 			},
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: c.ClusterIssuesNs,
-				Name:      fmt.Sprintf("clusterissue-%s-%s", strings.ToLower(cispecs[i].Category), strings.ToLower(cispecs[i].ID)),
+				Name:      fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispecs[i].ID), jid),
+				Labels:    map[string]string{"executionID": jid},
+				OwnerReferences: []metav1.OwnerReference{{
+					APIVersion: "batch/v1",
+					Kind:       "Job",
+					Name:       c.Job,
+					UID:        types.UID(c.JobUid),
+				}},
 			},
 			Spec: *cispecs[i],
 		}
