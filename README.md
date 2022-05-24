@@ -203,9 +203,9 @@ EOF
 You can see the connected clusters with `kubectl` command:
 
 ```shell
-$ kubectl get clusters
-NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   AGE   READY
-mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       40d   True
+kubectl get clusters -o wide
+NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   READY   AGE   PROVIDER   REGION      ISSUES
+mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       True    40d   aws        us-east-1   22
 ```
 
 > **Tips:**
@@ -222,10 +222,11 @@ The cluster list output has the following columns:
 - `CPU AVAILABLE`: Quantity of CPU available
 - `CPU USAGE (%)`: Usage of CPU in quantity and percentage
 - `NODES`: Total of nodes
-- `AGE`: Age of the oldest Node in cluster
 - `READY`: Indicates whether the cluster is connected
+- `AGE`: Age of the oldest Node in cluster
 - `PROVIDER`: Cluster's provider (with `-o=wide` flag)
 - `REGION`: Cluster's region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (with `-o=wide` flag)
+- `ISSUES`: Total of issues reported in this Cluster (with `-o=wide` flag)
 
 > **Info:**
 > - The quantity of available and in use resources, is an average of all Nodes.
@@ -258,8 +259,13 @@ the reported issues are available in `ClusterIssue` resources:
 
 ```shell
 kubectl get clusterissues -l cluster=mycluster
-NAME                CLUSTER     ID        MESSAGE                                SEVERITY   CATEGORY    AGE   TOTAL
-mycluster-pop-106   mycluster   POP-106   No resources requests/limits defined   Medium     Container   17s   10
+NAME                          CLUSTER      ID         MESSAGE                                                                        SEVERITY   CATEGORY          AGE
+mycluster-pop-102-27557035    mycluster    POP-102    No probes defined                                                              Medium     pods              4m8s
+mycluster-pop-105-27557035    mycluster    POP-105    Liveness probe uses a port#, prefer a named port                               Low        pods              4m8s
+mycluster-pop-106-27557035    mycluster    POP-106    No resources requests/limits defined                                           Medium     daemonsets        4m8s
+mycluster-pop-1100-27557035   mycluster    POP-1100   No pods match service selector                                                 High       services          4m8s
+mycluster-pop-306-27557035    mycluster    POP-306    Container could be running as root user. Check SecurityContext/Image           Medium     pods              4m8s
+mycluster-pop-500-27557035    mycluster    POP-500    Zero scale detected                                                            Medium     deployments       4m8s
 ```
 
 It's possible filter issues by cluster, issue ID, severity and category:
@@ -268,10 +274,13 @@ It's possible filter issues by cluster, issue ID, severity and category:
 kubectl get clusterissues -l cluster=mycluster
 
 # clusters with issue POP-106
-kubectl get clusterissues -l id=POP-106
+kubectl get clusterissues -l issueID=POP-106
 
 # issues from mycluster with high severity
 kubectl get clusterissues -l cluster=mycluster,severity=high
+
+# only issues reported by the last execution from mycluster
+kubectl get clusterissues -l cluster=mycluster,executionID=27557035
 ```
 
 ## Uninstall

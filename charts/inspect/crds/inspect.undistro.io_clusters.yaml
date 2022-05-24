@@ -34,12 +34,12 @@ spec:
     - jsonPath: .status.totalNodes
       name: Nodes
       type: integer
-    - jsonPath: .status.creationTimestamp
-      name: Age
-      type: date
     - jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
       type: string
+    - jsonPath: .status.creationTimestamp
+      name: Age
+      type: date
     - jsonPath: .status.provider
       name: Provider
       priority: 1
@@ -48,6 +48,10 @@ spec:
       name: Region
       priority: 1
       type: string
+    - jsonPath: .status.totalIssues
+      name: Issues
+      priority: 1
+      type: integer
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -171,6 +175,11 @@ spec:
                 description: Timestamp representing the server time of the last reconciliation
                 format: date-time
                 type: string
+              lastScans:
+                description: List of last execution IDs
+                items:
+                  type: string
+                type: array
               memoryAvailable:
                 description: Quantity of memory available in Mi
                 type: string
@@ -212,9 +221,14 @@ spec:
                   type: object
                 description: Average of usage and available resources
                 type: object
+              totalIssues:
+                description: Total of ClusterIssues reported by ClusterScan
+                type: integer
               totalNodes:
                 description: Total of nodes
                 type: integer
+            required:
+            - totalIssues
             type: object
         type: object
     served: true

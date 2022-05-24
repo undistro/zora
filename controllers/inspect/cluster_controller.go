@@ -21,6 +21,8 @@ import (
 	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
 )
 
+const clusterScanRefKey = ".metadata.cluster"
+
 // ClusterReconciler reconciles a Cluster object
 type ClusterReconciler struct {
 	client.Client
@@ -89,6 +91,24 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterNotDiscovered", err.Error())
 		return err
 	}
+
+	clusterScanList := &v1alpha1.ClusterScanList{}
+	if err := r.List(ctx, clusterScanList, client.MatchingFields{clusterScanRefKey: cluster.Name}); err != nil {
+		log.Error(err, fmt.Sprintf("failed to list ClusterScan referenced by Cluster %s", cluster.Name))
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanListError", err.Error())
+		return err
+	}
+	var totalIssues int
+	var lastScans []string
+	for _, cs := range clusterScanList.Items {
+		totalIssues += cs.Status.TotalIssues
+		lastScans = append(lastScans, cs.Status.LastScans...)
+	}
+	if cluster.Status.TotalIssues != totalIssues {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", fmt.Sprintf("cluster successfully scanned: %d issues reported", totalIssues))
+	}
+	cluster.Status.TotalIssues = totalIssues
+	cluster.Status.LastScans = lastScans
 	cluster.Status.SetClusterInfo(*info)
 	cluster.Status.LastRun = metav1.NewTime(time.Now().UTC())
 	cluster.Status.ObservedGeneration = cluster.Generation
@@ -107,7 +127,18 @@ func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, s
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &v1alpha1.ClusterScan{}, clusterScanRefKey, func(rawObj client.Object) []string {
+		clusterScan := rawObj.(*v1alpha1.ClusterScan)
+		if clusterName := clusterScan.Spec.ClusterRef.Name; clusterName == "" {
+			return nil
+		} else {
+			return []string{clusterName}
+		}
+	}); err != nil {
+		return err
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.Cluster{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		Owns(&v1alpha1.ClusterScan{}).
 		Complete(r)
 }

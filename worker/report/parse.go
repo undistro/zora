@@ -42,7 +42,10 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: c.ClusterIssuesNs,
 				Name:      fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispecs[i].ID), jid),
-				Labels:    map[string]string{"executionID": jid},
+				Labels: map[string]string{
+					inspectv1a1.LabelExecutionID: jid,
+					inspectv1a1.LabelCluster:     c.Cluster,
+				},
 				OwnerReferences: []metav1.OwnerReference{{
 					APIVersion: "batch/v1",
 					Kind:       "Job",
