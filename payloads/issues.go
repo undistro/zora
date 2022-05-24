@@ -26,24 +26,28 @@ func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 }
 
 func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
-	clustersByIssueID := make(map[string]*Issue)
+	issuesByID := make(map[string]*Issue)
+	clustersByIssue := make(map[string]map[string]*ClusterReference)
 	for _, clusterIssue := range clusterIssues {
-		clusterRef := ClusterReference{
+		clusterRef := &ClusterReference{
 			Name:           clusterIssue.Spec.Cluster,
 			Namespace:      clusterIssue.Namespace,
 			TotalResources: clusterIssue.Spec.TotalResources,
 		}
-		i, ok := clustersByIssueID[clusterIssue.Spec.ID]
-		if !ok {
-			newIssue := NewIssue(clusterIssue)
-			newIssue.Clusters = append(newIssue.Clusters, clusterRef)
-			clustersByIssueID[clusterIssue.Spec.ID] = &newIssue
-		} else {
-			i.Clusters = append(i.Clusters, clusterRef)
+		newIssue := NewIssue(clusterIssue)
+		issueID := clusterIssue.Spec.ID
+		issuesByID[issueID] = &newIssue
+		if _, ok := clustersByIssue[issueID]; !ok {
+			clustersByIssue[issueID] = make(map[string]*ClusterReference)
 		}
+		clustersByIssue[issueID][clusterRef.Name] = clusterRef
 	}
-	res := make([]Issue, 0, len(clustersByIssueID))
-	for _, i := range clustersByIssueID {
+	res := make([]Issue, 0, len(issuesByID))
+	for id, i := range issuesByID {
+		for _, ref := range clustersByIssue[id] {
+			i.Clusters = append(i.Clusters, *ref)
+		}
+
 		res = append(res, *i)
 	}
 	return res
