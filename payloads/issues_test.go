@@ -163,6 +163,9 @@ func TestNewIssues(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := NewIssues(tt.args.issues)
+			sort.Slice(got, func(i, j int) bool {
+				return got[i].ID < got[j].ID
+			})
 			for _, issue := range got {
 				sort.Slice(issue.Clusters, func(i, j int) bool {
 					return issue.Clusters[i].Name < issue.Clusters[j].Name
