@@ -43,8 +43,11 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 				Namespace: c.ClusterIssuesNs,
 				Name:      fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispecs[i].ID), jid),
 				Labels: map[string]string{
-					inspectv1a1.LabelExecutionID: jid,
-					inspectv1a1.LabelCluster:     c.Cluster,
+					"executionID":   jid,
+					"cluster":       c.Cluster,
+					"severity":      cispecs[i].Severity,
+					"issueID":       cispecs[i].ID,
+					"issueCategory": cispecs[i].Category,
 				},
 				OwnerReferences: []metav1.OwnerReference{{
 					APIVersion: "batch/v1",
