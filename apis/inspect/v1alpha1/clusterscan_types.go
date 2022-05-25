@@ -51,10 +51,25 @@ func (in *PluginReference) PluginKey(defaultNamespace string) types.NamespacedNa
 
 // ClusterScanStatus defines the observed state of ClusterScan
 type ClusterScanStatus struct {
-	apis.Status           `json:",inline"`
-	Plugins               string `json:"plugins,omitempty"`
+	apis.Status `json:",inline"`
+
+	// Comma separated list of default plugins
+	Plugins string `json:"plugins,omitempty"`
+
+	// Namespaced name of referenced Cluster
 	ClusterNamespacedName string `json:"clusterName,omitempty"`
-	Suspend               bool   `json:"suspend"`
+
+	// Suspend field value from ClusterScan spec
+	Suspend bool `json:"suspend"`
+
+	// Information when was the last time the job successfully completed.
+	LastSuccessfulTime *metav1.Time `json:"lastSuccessfulTime,omitempty"`
+
+	// Total of ClusterIssues reported by Plugins
+	TotalIssues int `json:"totalIssues"`
+
+	// List of last execution IDs
+	LastScans []string `json:"lastScans,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -63,8 +78,10 @@ type ClusterScanStatus struct {
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend"
 //+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule"
 //+kubebuilder:printcolumn:name="Plugins",type="string",JSONPath=".status.plugins"
-//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+//+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime"
+//+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues"
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status"
+//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // ClusterScan is the Schema for the clusterscans API
 type ClusterScan struct {

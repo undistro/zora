@@ -59,6 +59,7 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 		Ready:             cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady),
 		Version:           cluster.Status.KubernetesVersion,
 		CreationTimestamp: cluster.Status.CreationTimestamp,
+		TotalIssues:       cluster.Status.TotalIssues,
 		Resources:         res,
 	}
 }

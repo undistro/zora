@@ -44,6 +44,20 @@ rules:
   verbs:
   - get
 - apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs/status
+  verbs:
+  - get
+- apiGroups:
   - inspect.undistro.io
   resources:
   - clusters

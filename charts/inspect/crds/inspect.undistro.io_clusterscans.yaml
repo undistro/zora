@@ -28,12 +28,18 @@ spec:
     - jsonPath: .status.plugins
       name: Plugins
       type: string
-    - jsonPath: .metadata.creationTimestamp
-      name: Age
+    - jsonPath: .status.lastSuccessfulTime
+      name: Last Successful
       type: date
+    - jsonPath: .status.totalIssues
+      name: Issues
+      type: integer
     - jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
       type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -219,6 +225,7 @@ spec:
             description: ClusterScanStatus defines the observed state of ClusterScan
             properties:
               clusterName:
+                description: Namespaced name of referenced Cluster
                 type: string
               conditions:
                 description: Conditions the latest available observations of a resource's
@@ -290,17 +297,33 @@ spec:
                   - type
                   type: object
                 type: array
+              lastScans:
+                description: List of last execution IDs
+                items:
+                  type: string
+                type: array
+              lastSuccessfulTime:
+                description: Information when was the last time the job successfully
+                  completed.
+                format: date-time
+                type: string
               observedGeneration:
                 description: ObservedGeneration is the 'Generation' of the resource
                   that was last processed by the controller.
                 format: int64
                 type: integer
               plugins:
+                description: Comma separated list of default plugins
                 type: string
               suspend:
+                description: Suspend field value from ClusterScan spec
                 type: boolean
+              totalIssues:
+                description: Total of ClusterIssues reported by Plugins
+                type: integer
             required:
             - suspend
+            - totalIssues
             type: object
         type: object
     served: true

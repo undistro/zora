@@ -33,7 +33,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
 	for i := 0; i < len(cispecs); i++ {
 		cispecs[i].Cluster = c.Cluster
-		jid := c.Job[strings.LastIndex(c.Job, "-")+1:]
+		jid := c.JobUid
 		ciarr[i] = &inspectv1a1.ClusterIssue{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ClusterIssue",
@@ -42,7 +42,10 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: c.ClusterIssuesNs,
 				Name:      fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispecs[i].ID), jid),
-				Labels:    map[string]string{"executionID": jid},
+				Labels: map[string]string{
+					inspectv1a1.LabelExecutionID: jid,
+					inspectv1a1.LabelCluster:     c.Cluster,
+				},
 				OwnerReferences: []metav1.OwnerReference{{
 					APIVersion: "batch/v1",
 					Kind:       "Job",

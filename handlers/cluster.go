@@ -3,7 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	"github.com/getupio-undistro/inspect/payloads"
 	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
 	"github.com/go-chi/chi/v5"
@@ -30,11 +32,13 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 			return
 		}
 
-		issueList, err := client.InspectV1alpha1().ClusterIssues(namespace).List(r.Context(), metav1.ListOptions{
-			LabelSelector: fmt.Sprintf("cluster=%s", clusterName),
-		})
+		ls := fmt.Sprintf("%s=%s", v1alpha1.LabelCluster, clusterName)
+		if len(cluster.Status.LastScans) > 0 {
+			ls = fmt.Sprintf("%s,%s in (%s)", ls, v1alpha1.LabelExecutionID, strings.Join(cluster.Status.LastScans, ","))
+		}
+		issueList, err := client.InspectV1alpha1().ClusterIssues(namespace).List(r.Context(), metav1.ListOptions{LabelSelector: ls})
 		if err != nil {
-			log.Error(err, fmt.Sprintf("failed to list ClusterIssues from cluster %s", clusterName))
+			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by label selector %s", ls))
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterIssues", err.Error())
 			return
 		}
