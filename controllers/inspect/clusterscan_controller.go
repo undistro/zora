@@ -161,13 +161,13 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	ids := make([]string, 0, len(lastFinishedJobs))
 	for _, job := range lastFinishedJobs {
 		issueList := &v1alpha1.ClusterIssueList{}
-		jid := job.Name[strings.LastIndex(job.Name, "-")+1:]
+		jid := string(job.UID)
 		if err := r.List(ctx, issueList, client.MatchingLabels{v1alpha1.LabelExecutionID: jid}); err != nil {
-			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by executionID %s", jid))
+			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by %s %s", v1alpha1.LabelExecutionID, jid))
 			clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 			return err
 		}
-		log.Info(fmt.Sprintf("found %d ClusterIssues by executionID %s", len(issueList.Items), jid))
+		log.Info(fmt.Sprintf("found %d ClusterIssues by %s %s", len(issueList.Items), v1alpha1.LabelExecutionID, jid))
 		totalIssues += len(issueList.Items)
 		ids = append(ids, jid)
 	}
@@ -233,6 +233,7 @@ func (r *ClusterScanReconciler) setControllerReference(ctx context.Context, clus
 		log.Error(err, "failed to update ClusterScan")
 		return err
 	}
+	log.Info("ClusterScan updated " + clusterscan.ResourceVersion)
 	return nil
 }
 

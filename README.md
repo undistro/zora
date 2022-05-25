@@ -280,7 +280,7 @@ kubectl get clusterissues -l issueID=POP-106
 kubectl get clusterissues -l cluster=mycluster,severity=high
 
 # only issues reported by the last execution from mycluster
-kubectl get clusterissues -l cluster=mycluster,executionID=27557035
+kubectl get clusterissues -l cluster=mycluster,executionID=fa4e63cc-5236-40f3-aa7f-599e1c83208b
 ```
 
 ## Uninstall

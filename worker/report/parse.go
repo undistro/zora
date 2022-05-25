@@ -33,7 +33,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
 	for i := 0; i < len(cispecs); i++ {
 		cispecs[i].Cluster = c.Cluster
-		jid := c.Job[strings.LastIndex(c.Job, "-")+1:]
+		jid := c.JobUid
 		ciarr[i] = &inspectv1a1.ClusterIssue{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ClusterIssue",
