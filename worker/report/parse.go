@@ -56,7 +56,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 		return nil, err
 	}
 
-	jid := c.JobUid[strings.LastIndex(c.JobUid, "-")+1:]
+	juid := c.JobUid[strings.LastIndex(c.JobUid, "-")+1:]
 	orefs := []metav1.OwnerReference{{
 		APIVersion: "batch/v1",
 		Kind:       "Job",
@@ -65,7 +65,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 	}}
 	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
 	for i := 0; i < len(cispecs); i++ {
-		ciarr[i] = NewClusterIssue(c, cispecs[i], orefs, &jid)
+		ciarr[i] = NewClusterIssue(c, cispecs[i], orefs, &juid)
 	}
 	return ciarr, nil
 }
