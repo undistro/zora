@@ -42,6 +42,7 @@ jobs:
             --set imageCredentials.password="${{ secrets.REGISTRY_PASSWORD }}" \
             --set operator.image.tag=$GITHUB_REF_NAME \
             --set server.image.tag=$GITHUB_REF_NAME \
+            --set scan.worker.image.tag=$GITHUB_REF_NAME \
             --version $CHART_VERSION \
             --namespace undistro-inspect \
             --create-namespace \

@@ -33,15 +33,19 @@ jobs:
         run: |
           echo "Tag: $GITHUB_REF_NAME"
 
-      - name: Build Undistro Inspect image
+      - name: Build operator
         run: IMG=$REPO/inspect/operator:$GITHUB_REF_NAME make docker-build
-      - name: Build Undistro Inspect server image
+      - name: Build server
         run: IMG=$REPO/inspect/server:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.server make docker-build
+      - name: Build worker
+        run: IMG=$REPO/library/worker:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.worker make docker-build
 
-      - name: Push Undistro Inspect image
+      - name: Push operator
         run: IMG=$REPO/inspect/operator:$GITHUB_REF_NAME make docker-push
-      - name: Push Undistro Inspect server image
+      - name: Push server
         run: IMG=$REPO/inspect/server:$GITHUB_REF_NAME make docker-push
+      - name: Push worker
+        run: IMG=$REPO/library/worker:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.worker make docker-push
 
       - name: Registry logout
         run: docker logout
