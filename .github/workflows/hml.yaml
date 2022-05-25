@@ -34,19 +34,26 @@ jobs:
           echo "CHART_VERSION=$(
             helm search repo undistro/inspect | awk '/inspect/{print $2}'
           )" >> $GITHUB_ENV
+
       - name: Create kubeconfig file
         run: echo "${{ secrets.HML_KUBECONFIG }}" > /tmp/hml_kubeconfig.yaml
+
+      - name: Get UI image tag
+        run: |
+          echo "UI_IMAGE_TAG=$(
+            helm get values undistro-inspect -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
+          )" >> $GITHUB_ENV
 
       - name: Upgrade Helm release
         run: |
           helm upgrade --install undistro-inspect undistro/inspect \
-            --reuse-values \
             -f charts/inspect/values-hml.yaml \
             --set imageCredentials.username="${{ secrets.REGISTRY_USERNAME }}" \
             --set imageCredentials.password="${{ secrets.REGISTRY_PASSWORD }}" \
             --set operator.image.tag=$GITHUB_REF_NAME \
             --set server.image.tag=$GITHUB_REF_NAME \
             --set scan.worker.image.tag=$GITHUB_REF_NAME \
+            --set ui.image.tag=$UI_IMAGE_TAG \
             --version $CHART_VERSION \
             --namespace undistro-inspect \
             --create-namespace \
