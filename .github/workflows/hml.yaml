@@ -5,7 +5,11 @@ on:
     tags:
       - "hml*"
 jobs:
+  build:
+    uses: ./.github/workflows/docker-push.yaml
+    secrets: inherit
   update_hml_environment:
+    needs: build
     name: Update HML Environment
     runs-on: ubuntu-latest
     steps:
