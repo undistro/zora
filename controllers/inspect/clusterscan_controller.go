@@ -62,6 +62,12 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "failed to fetch ClusterIssue")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	log = log.WithValues("resourceVersion", clusterscan.ResourceVersion)
+	ctx = ctrllog.IntoContext(ctx, log)
+
+	defer func(t time.Time) {
+		log.Info(fmt.Sprintf("ClusterScan has been reconciled in %v", time.Since(t)))
+	}(time.Now())
 
 	err := r.reconcile(ctx, clusterscan)
 	if err := r.Status().Update(ctx, clusterscan); err != nil {
@@ -84,7 +90,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 	if !cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady) {
 		err := errors.New(fmt.Sprintf("the Cluster %s is not Ready", cluster.Name))
-		log.Error(err, "cluster is not ready")
+		log.Error(err, "Cluster is not ready")
 		clusterscan.SetReadyStatus(false, "ClusterNotReady", err.Error())
 		return err
 	}

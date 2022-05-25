@@ -46,10 +46,16 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		log.Error(err, "failed to fetch Cluster")
 		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
 	}
+	log = log.WithValues("resourceVersion", cluster.ResourceVersion)
+	ctx = ctrllog.IntoContext(ctx, log)
+
+	defer func(t time.Time) {
+		log.Info(fmt.Sprintf("Cluster has been reconciled in %v", time.Since(t)))
+	}(time.Now())
 
 	err := r.reconcile(ctx, cluster)
 	if err := r.Status().Update(ctx, cluster); err != nil {
-		log.Error(err, "failed to update cluster status")
+		log.Error(err, "failed to update Cluster status")
 	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }
