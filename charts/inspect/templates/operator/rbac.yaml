@@ -154,7 +154,9 @@ rules:
       - inspect.undistro.io
     resources:
       - clusters/status
+      - clusterissues/status
       - clusterscans/status
+      - plugins/status
     verbs:
       - get
       - patch
