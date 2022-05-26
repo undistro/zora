@@ -75,6 +75,12 @@ rules:
       - update
       - watch
   - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts/status
+    verbs:
+      - get
+  - apiGroups:
       - rbac.authorization.k8s.io
     resources:
       - clusterrolebindings
@@ -84,6 +90,12 @@ rules:
       - patch
       - update
       - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings/status
+    verbs:
+      - get
   - apiGroups:
       - batch
     resources:
