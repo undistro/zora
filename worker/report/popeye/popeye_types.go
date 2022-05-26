@@ -1,18 +1,5 @@
 package popeye
 
-import (
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-)
-
-// LevelToIssueSeverity maps Popeye's <Level> type to Inspect's
-// <ClusterIssueSeverity>.
-var LevelToIssueSeverity = [4]inspectv1a1.ClusterIssueSeverity{
-	inspectv1a1.SeverityNone,
-	inspectv1a1.SeverityLow,
-	inspectv1a1.SeverityMedium,
-	inspectv1a1.SeverityHigh,
-}
-
 // Level tracks lint check level.
 type Level int
 

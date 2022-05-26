@@ -11,11 +11,16 @@ import (
 
 var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
 
-// Extracts Popeye's error code and message from the original issue message.
-func splitCodeAndMsg(msg string) (string, string, error) {
+// Extracts Popeye's issue code and description from the original issue
+// message, ensuring the returned description doesn't contain specific data
+// related to cluster resources.
+func prepareIdAndMsg(msg string) (string, string, error) {
 	s := msgre.FindStringSubmatch(msg)
 	if len(s) != 3 {
 		return "", "", errors.New("Unable to split Popeye error code from message.")
+	}
+	if msg, ok := IssueIDtoGenericMsg[s[1]]; ok {
+		return s[1], msg, nil
 	}
 	return s[1], s[2], nil
 }
@@ -31,7 +36,7 @@ func Parse(popr []byte) ([]*inspectv1a1.ClusterIssueSpec, error) {
 	for _, san := range r.Popeye.Sanitizers {
 		for typ, issues := range san.Issues {
 			for _, iss := range issues {
-				id, msg, err := splitCodeAndMsg(iss.Message)
+				id, msg, err := prepareIdAndMsg(iss.Message)
 				if err != nil {
 					return nil, fmt.Errorf("Unable to parse Popeye issue on <%s>: %w", typ, err)
 				}
