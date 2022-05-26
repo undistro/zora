@@ -27,7 +27,7 @@ func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, ore
 			Namespace:       c.ClusterIssuesNs,
 			OwnerReferences: orefs,
 			Labels: map[string]string{
-				inspectv1a1.LabelExecutionID:   *jid,
+				inspectv1a1.LabelExecutionID:   c.JobUid,
 				inspectv1a1.LabelCluster:       c.Cluster,
 				inspectv1a1.LabelSeverity:      string(cispec.Severity),
 				inspectv1a1.LabelIssueID:       cispec.ID,
