@@ -44,12 +44,31 @@ jobs:
             helm get values undistro-inspect -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
           )" >> $GITHUB_ENV
 
+      - name: Dry run
+        run: |
+          helm upgrade --install undistro-inspect undistro/inspect \
+            -f charts/inspect/values-hml.yaml \
+            --set imageCredentials.username=${{ secrets.REGISTRY_USERNAME }} \
+            --set imageCredentials.password=${{ secrets.REGISTRY_PASSWORD }} \
+            --set operator.image.tag=$GITHUB_REF_NAME \
+            --set server.image.tag=$GITHUB_REF_NAME \
+            --set scan.worker.image.tag=$GITHUB_REF_NAME \
+            --set ui.image.tag=$UI_IMAGE_TAG \
+            --version $CHART_VERSION \
+            --namespace undistro-inspect \
+            --create-namespace \
+            --kubeconfig /tmp/hml_kubeconfig.yaml \
+            --dry-run
+
+      - name: Apply CRDs
+        run: kubectl --kubeconfig=/tmp/hml_kubeconfig.yaml apply --recursive -f charts/inspect/crds/
+
       - name: Upgrade Helm release
         run: |
           helm upgrade --install undistro-inspect undistro/inspect \
             -f charts/inspect/values-hml.yaml \
-            --set imageCredentials.username="${{ secrets.REGISTRY_USERNAME }}" \
-            --set imageCredentials.password="${{ secrets.REGISTRY_PASSWORD }}" \
+            --set imageCredentials.username=${{ secrets.REGISTRY_USERNAME }} \
+            --set imageCredentials.password=${{ secrets.REGISTRY_PASSWORD }} \
             --set operator.image.tag=$GITHUB_REF_NAME \
             --set server.image.tag=$GITHUB_REF_NAME \
             --set scan.worker.image.tag=$GITHUB_REF_NAME \
