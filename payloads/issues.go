@@ -3,11 +3,11 @@ package payloads
 import "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 
 type Issue struct {
-	ID       string             `json:"id,omitempty"`
-	Message  string             `json:"message,omitempty"`
-	Severity string             `json:"severity,omitempty"`
-	Category string             `json:"category,omitempty"`
-	Clusters []ClusterReference `json:"clusters,omitempty"`
+	ID       string             `json:"id"`
+	Message  string             `json:"message"`
+	Severity string             `json:"severity"`
+	Category string             `json:"category"`
+	Clusters []ClusterReference `json:"clusters"`
 }
 
 type ClusterReference struct {
