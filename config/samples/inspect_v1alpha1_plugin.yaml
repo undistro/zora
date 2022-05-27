@@ -7,4 +7,13 @@ spec:
   command:
     - /bin/sh
     - -c
-    - "echo 'Running...'; /bin/popeye -o json --kubeconfig $(KUBECONFIG) --all-namespaces --force-exit-zero > $(DONE_DIR)/results.json; echo $(DONE_DIR)/results.json > $(DONE_DIR)/done; echo 'Done.'"
+    - |
+      echo Running...
+      /bin/popeye \
+        -o json \
+        --kubeconfig $(KUBECONFIG) \
+        --all-namespaces \
+        --force-exit-zero \
+        > $(DONE_DIR)/results.json
+      echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
+      echo Done.
