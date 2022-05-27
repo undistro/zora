@@ -16,4 +16,5 @@ spec:
         --force-exit-zero \
         > $(DONE_DIR)/results.json
       echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
+      ls -lh $(DONE_DIR)/
       echo Done.
