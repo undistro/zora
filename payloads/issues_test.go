@@ -28,7 +28,7 @@ func TestNewIssues(t *testing.T) {
 							Name:      "prd1-pop-106-123",
 							Namespace: "prd",
 							Labels: map[string]string{
-								v1alpha1.LabelExecutionID: "123",
+								v1alpha1.LabelScanID: "123",
 							},
 						},
 						Spec: v1alpha1.ClusterIssueSpec{
@@ -45,7 +45,7 @@ func TestNewIssues(t *testing.T) {
 							Name:      "prd1-pop-106-456",
 							Namespace: "prd",
 							Labels: map[string]string{
-								v1alpha1.LabelExecutionID: "456",
+								v1alpha1.LabelScanID: "456",
 							},
 						},
 						Spec: v1alpha1.ClusterIssueSpec{

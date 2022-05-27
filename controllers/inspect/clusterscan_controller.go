@@ -170,12 +170,12 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	for _, job := range lastFinishedJobs {
 		issueList := &v1alpha1.ClusterIssueList{}
 		jid := string(job.UID)
-		if err := r.List(ctx, issueList, client.MatchingLabels{v1alpha1.LabelExecutionID: jid}); err != nil {
-			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by %s %s", v1alpha1.LabelExecutionID, jid))
+		if err := r.List(ctx, issueList, client.MatchingLabels{v1alpha1.LabelScanID: jid}); err != nil {
+			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by %s %s", v1alpha1.LabelScanID, jid))
 			clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 			return err
 		}
-		log.Info(fmt.Sprintf("found %d ClusterIssues by %s %s", len(issueList.Items), v1alpha1.LabelExecutionID, jid))
+		log.Info(fmt.Sprintf("found %d ClusterIssues by %s %s", len(issueList.Items), v1alpha1.LabelScanID, jid))
 		totalIssues += len(issueList.Items)
 		ids = append(ids, jid)
 	}

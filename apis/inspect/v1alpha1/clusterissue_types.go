@@ -14,7 +14,7 @@ const (
 	SeverityMedium ClusterIssueSeverity = "Medium"
 	SeverityHigh   ClusterIssueSeverity = "High"
 
-	LabelExecutionID   = "executionID"
+	LabelScanID        = "scanID"
 	LabelCluster       = "cluster"
 	LabelSeverity      = "severity"
 	LabelIssueID       = "issueID"
