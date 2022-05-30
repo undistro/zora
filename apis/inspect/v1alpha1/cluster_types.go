@@ -51,7 +51,7 @@ type ClusterStatus struct {
 	// Total of ClusterIssues reported by ClusterScan
 	TotalIssues int `json:"totalIssues"`
 
-	// List of last execution IDs
+	// List of last scan IDs
 	LastScans []string `json:"lastScans,omitempty"`
 }
 

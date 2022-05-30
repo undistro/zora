@@ -34,7 +34,7 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 
 		ls := fmt.Sprintf("%s=%s", v1alpha1.LabelCluster, clusterName)
 		if len(cluster.Status.LastScans) > 0 {
-			ls = fmt.Sprintf("%s,%s in (%s)", ls, v1alpha1.LabelExecutionID, strings.Join(cluster.Status.LastScans, ","))
+			ls = fmt.Sprintf("%s,%s in (%s)", ls, v1alpha1.LabelScanID, strings.Join(cluster.Status.LastScans, ","))
 		}
 		issueList, err := client.InspectV1alpha1().ClusterIssues(namespace).List(r.Context(), metav1.ListOptions{LabelSelector: ls})
 		if err != nil {

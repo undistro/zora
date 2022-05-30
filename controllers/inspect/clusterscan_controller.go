@@ -198,12 +198,12 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 // getClusterIssues returns the ClusterIssues from scanIDs
 func (r *ClusterScanReconciler) getClusterIssues(ctx context.Context, scanIDs ...string) ([]v1alpha1.ClusterIssue, error) {
-	log := ctrllog.FromContext(ctx, v1alpha1.LabelExecutionID, scanIDs)
+	log := ctrllog.FromContext(ctx, v1alpha1.LabelScanID, scanIDs)
 
 	if len(scanIDs) <= 0 {
 		return nil, nil
 	}
-	req, err := labels.NewRequirement(v1alpha1.LabelExecutionID, selection.In, scanIDs)
+	req, err := labels.NewRequirement(v1alpha1.LabelScanID, selection.In, scanIDs)
 	if err != nil {
 		log.Error(err, "failed to build label selector")
 		return nil, err
