@@ -10,7 +10,8 @@ spec:
     - /bin/sh
     - -c
     - |
-      echo Running...
+      start=$(date +%s)
+      echo Scanning...
       /bin/popeye \
         -o json \
         --kubeconfig $(KUBECONFIG) \
@@ -19,4 +20,5 @@ spec:
         > $(DONE_DIR)/results.json
       echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
       ls -lh $(DONE_DIR)/
-      echo Done.
+      end=$(date +%s)
+      echo "Scan has finished in $(($end-$start)) seconds"
