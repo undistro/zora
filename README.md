@@ -128,9 +128,35 @@ EOF
 kubectl create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=undistro-inspect:inspect-view
 ```
 
-2. Set up the following environment variables:
+2. Check which version of Kubernetes your cluster is running, then proceed to section 2.2 for version 1.24.0 or later, otherwise, follow up on section 2.1.
+
+2.1. For versions prior to 1.24.0, set the `TOKEN_NAME` variable as follows:
+
 ```shell
 export TOKEN_NAME=$(kubectl -n undistro-inspect get serviceaccount inspect-view -o=jsonpath='{.secrets[0].name}')
+```
+
+2.2. For clusters running Kubernetes 1.24.0 or later, create a Secret to generate a ServiceAccount token and set the `TOKEN_NAME` variable with the Secret name as follows:
+
+```shell
+export TOKEN_NAME="inspect-view-token"
+
+cat << EOF | kubectl apply -f - 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "$TOKEN_NAME"
+  namespace: "undistro-inspect"
+  annotations:
+    kubernetes.io/service-account.name: "inspect-view"
+type: kubernetes.io/service-account-token
+EOF
+```
+
+
+3. Set up the remaining environment variables:
+
+```shell
 export TOKEN_VALUE=$(kubectl -n undistro-inspect get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
 export CURRENT_CONTEXT=$(kubectl config current-context)
 export CURRENT_CLUSTER=$(kubectl config view --raw -o=go-template='{{range .contexts}}{{if eq .name "'''${CURRENT_CONTEXT}'''"}}{{ index .context "cluster" }}{{end}}{{end}}')
@@ -138,7 +164,7 @@ export CLUSTER_CA=$(kubectl config view --raw -o=go-template='{{range .clusters}
 export CLUSTER_SERVER=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}{{ .cluster.server }}{{end}}{{ end }}')
 ```
 
-3. Generate a kubeconfig file:
+4. Generate a kubeconfig file:
 ```shell
 cat << EOF > inspect-view-kubeconfig.yml
 apiVersion: v1
