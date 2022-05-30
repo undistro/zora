@@ -106,8 +106,8 @@ endif
 install: manifests kustomize ## Install default configuration (RBAC for plugins) and CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 	kubectl apply -f config/rbac/clusterissue_editor_role.yaml
+	kubectl apply -f config/samples/inspect_v1alpha1_plugin.yaml
 	kubectl create -f config/rbac/plugins_role_binding.yaml || true
-	kubectl create -f config/samples/inspect_v1alpha1_plugin.yaml || true
 
 .PHONY: uninstall
 uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
