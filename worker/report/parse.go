@@ -27,11 +27,12 @@ func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, ore
 			Namespace:       c.ClusterIssuesNs,
 			OwnerReferences: orefs,
 			Labels: map[string]string{
-				inspectv1a1.LabelExecutionID:   c.JobUid,
+				inspectv1a1.LabelExecutionID:   c.JobUID,
 				inspectv1a1.LabelCluster:       c.Cluster,
 				inspectv1a1.LabelSeverity:      string(cispec.Severity),
 				inspectv1a1.LabelIssueID:       cispec.ID,
 				inspectv1a1.LabelIssueCategory: cispec.Category,
+				inspectv1a1.LabelPlugin:        c.Plugin,
 			},
 		},
 		Spec: *cispec,
@@ -56,12 +57,12 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 		return nil, err
 	}
 
-	juid := c.JobUid[strings.LastIndex(c.JobUid, "-")+1:]
+	juid := c.JobUID[strings.LastIndex(c.JobUID, "-")+1:]
 	orefs := []metav1.OwnerReference{{
 		APIVersion: "batch/v1",
 		Kind:       "Job",
 		Name:       c.Job,
-		UID:        types.UID(c.JobUid),
+		UID:        types.UID(c.JobUID),
 	}}
 	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
 	for i := 0; i < len(cispecs); i++ {
