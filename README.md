@@ -7,7 +7,7 @@ provides multi cluster visibility.
 - [Usage](#usage)
   + [Connect to a cluster](#connect-to-a-cluster)
       - [Generate a kubeconfig file](#generate-a-kubeconfig-file)
-      - [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig)
+      - [Create a Secret with your kubeconfig](#create-a-secret-with-your-kubeconfig)
       - [Create a Cluster resource](#create-a-cluster-resource)
   + [List clusters](#list-clusters)
   + [Configure a cluster scan](#configure-a-cluster-scan)
@@ -34,33 +34,20 @@ lists the parameters that can be configured during installation.
 
 ### Connect to a cluster
 
-To connect a cluster, you must have a kubeconfig file with an authentication
-`token`, the target cluster's api-server must be reachable by the management
-cluster, and Metrics Server must be deployed on the target cluster.
+**Before you begin**
+- You must have a kubeconfig file with an authentication `token` of the target cluster.
+- The api-server of target cluster must be reachable by the management cluster.
+- The target cluster must have Metrics Server deployed. For more information, visit the 
+[official documentation](https://github.com/kubernetes-sigs/metrics-server/#readme).
 
-If you already have Metrics Server deployed and a kubeconfig, 
-skip to the [Create a secret with your kubeconfig](#create-a-secret-with-your-kubeconfig) section. 
-
-#### Installing Metrics Server
-
-Metrics Server can be installed through the deployment made available on its
-official repository. The following command will install its latest version on
-the namespace `kube-system`:
-
-```shell
-kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-```
-
-For more information, visit the [Metrics Server
-documentation](https://github.com/kubernetes-sigs/metrics-server/blob/master/README.md).
-
+If you already have a kubeconfig, 
+skip to the [Create a Secret with your kubeconfig](#create-a-secret-with-your-kubeconfig) section. 
 
 #### Generate a kubeconfig file
 
-Most cloud providers have CLI tools, such as Amazon's `aws` and Google Cloud's
-`gcloud`, which can be used to obtain an authentication token.
+Most cloud providers have CLI tools, such as `aws` and `gcloud`, which can be used to obtain an authentication token.
 
-Undistro Inspect needs a _serviceaccount_ token.
+Undistro Inspect needs a _ServiceAccount_ token.
 
 > **Important:**
 > Ensure you are in the context of the cluster that you want to connect.
@@ -188,7 +175,7 @@ users:
 EOF
 ```
 
-#### Create a secret with your kubeconfig
+#### Create a Secret with your kubeconfig
 
 > **Important:**
 > Ensure you are in the context of the management cluster.
@@ -250,8 +237,8 @@ The cluster list output has the following columns:
 - `NODES`: Total of nodes
 - `READY`: Indicates whether the cluster is connected
 - `AGE`: Age of the oldest Node in cluster
-- `PROVIDER`: Cluster's provider (with `-o=wide` flag)
-- `REGION`: Cluster's region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (with `-o=wide` flag)
+- `PROVIDER`: Cluster provider (with `-o=wide` flag)
+- `REGION`: Cluster region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (with `-o=wide` flag)
 - `ISSUES`: Total of issues reported in this Cluster (with `-o=wide` flag)
 
 > **Info:**
@@ -305,8 +292,8 @@ kubectl get clusterissues -l issueID=POP-106
 # issues from mycluster with high severity
 kubectl get clusterissues -l cluster=mycluster,severity=high
 
-# only issues reported by the last execution from mycluster
-kubectl get clusterissues -l cluster=mycluster,executionID=fa4e63cc-5236-40f3-aa7f-599e1c83208b
+# only issues reported by the last scan from mycluster
+kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-599e1c83208b
 ```
 
 ## Uninstall
