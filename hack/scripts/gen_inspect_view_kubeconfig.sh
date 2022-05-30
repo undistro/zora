@@ -5,6 +5,8 @@ KCONFIG_NAME=${KCONFIG_NAME:-"inspect_view_kubeconfig.yaml"}
 CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"inspect-view"}
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"undistro-inspect"}
 SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"inspect-view"}
+SVC_ACCOUNT_SECRET_NS=${SVC_ACCOUNT_SECRET_NS:-$SVC_ACCOUNT_NS}
+SVC_ACCOUNT_SECRET_NAME=${SVC_ACCOUNT_SECRET_NAME:-"$SVC_ACCOUNT_NAME-token"}
 METRICS_SERVER_VERSION=${METRICS_SERVER_VERSION:-"latest"}
 METRICS_SERVER_DEPLOYMENT_NAME=${METRICS_SERVER_DEPLOYMENT_NAME:-"metrics-server"}
 METRICS_SERVER_DEPLOYMENT=${METRICS_SERVER_DEPLOYMENT:-"https://github.com/kubernetes-sigs/metrics-server/releases/$METRICS_SERVER_VERSION/download/components.yaml"}
@@ -62,6 +64,19 @@ get_cluster_server() {
 
 create_svc_account() {
 	kubectl -n $SVC_ACCOUNT_NS create serviceaccount $SVC_ACCOUNT_NAME
+}
+
+create_svc_account_secret() {
+cat << EOF | kubectl create -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "$SVC_ACCOUNT_SECRET_NAME"
+  namespace: "$SVC_ACCOUNT_SECRET_NS"
+  annotations:
+    kubernetes.io/service-account.name: "$SVC_ACCOUNT_NAME"
+type: kubernetes.io/service-account-token
+EOF
 }
 
 create_cluster_role() {
@@ -166,6 +181,11 @@ setup_svc_account() {
 		create_svc_account
 	fi
 }
+setup_svc_account_secret() {
+	if ! kubectl -n $SVC_ACCOUNT_SECRET_NS get secret $SVC_ACCOUNT_SECRET_NAME > /dev/null 2>&1; then
+		create_svc_account_secret
+	fi
+}
 setup_cluster_role() {
 	if ! kubectl -n $SVC_ACCOUNT_NS get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
 		create_cluster_role
@@ -181,7 +201,13 @@ setup_cluster_role_binding() {
 setup_namespaces
 setup_svc_account
 
-TOKEN_NAME=${TOKEN_NAME:-"$(get_token_name)"}
+if kubectl version --short | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
+  setup_svc_account_secret
+  TOKEN_NAME=${TOKEN_NAME:-"$SVC_ACCOUNT_SECRET_NAME"}
+else
+  TOKEN_NAME=${TOKEN_NAME:-"$(get_token_name)"}
+fi
+
 TOKEN_VALUE=${TOKEN_VALUE:-"$(get_token_value)"}
 CURRENT_CONTEXT=${CURRENT_CONTEXT:-"$(get_current_context)"}
 CURRENT_CLUSTER=${CURRENT_CLUSTER:-"$(get_current_cluster)"}
