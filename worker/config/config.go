@@ -20,7 +20,8 @@ const (
 	ClusterEnvVar         = "CLUSTER_NAME"
 	ClusterIssuesNsEnvVar = "CLUSTER_ISSUES_NAMESPACE"
 	JobEnvVar             = "JOB_NAME"
-	JobUidEnvVar          = "JOB_UID"
+	JobUIDEnvVar          = "JOB_UID"
+	PodEnvVar             = "POD_NAME"
 )
 
 // PluginParsers correlates plugins with their respective parsing functions.
@@ -31,12 +32,13 @@ var PluginParsers = map[string]func([]byte) ([]*inspectv1a1.ClusterIssueSpec, er
 // Config stores information used by the worker to create a list of
 // <ClusterIssue> instances, and to specify the "done" file path.
 type Config struct {
-	DonePath        string `json:"donePath"`
-	Plugin          string `json:"plugin"`
-	Cluster         string `json:"cluster"`
-	ClusterIssuesNs string `json:"listClusterIssueNs"`
-	Job             string `json:"job"`
-	JobUid          string `json:"jobUid"`
+	DonePath        string
+	Plugin          string
+	Cluster         string
+	ClusterIssuesNs string
+	Job             string
+	JobUID          string
+	Pod             string
 }
 
 // New instantiates a new <Config> struct, with the default path for the
@@ -71,10 +73,15 @@ func FromEnv() (*Config, error) {
 	} else {
 		return nil, fmt.Errorf("Empty environment variable <%s>", JobEnvVar)
 	}
-	if e := os.Getenv(JobUidEnvVar); len(e) != 0 {
-		c.JobUid = e
+	if e := os.Getenv(JobUIDEnvVar); len(e) != 0 {
+		c.JobUID = e
 	} else {
-		return nil, fmt.Errorf("Empty environment variable <%s>", JobUidEnvVar)
+		return nil, fmt.Errorf("Empty environment variable <%s>", JobUIDEnvVar)
+	}
+	if e := os.Getenv(PodEnvVar); len(e) != 0 {
+		c.Pod = e
+	} else {
+		return nil, fmt.Errorf("Empty environment variable <%s>", PodEnvVar)
 	}
 
 	if e := os.Getenv(DoneDirEnvVar); len(e) != 0 {
@@ -104,8 +111,8 @@ func (r *Config) Validate() error {
 	} else if i := strings.LastIndex(r.Job, "-"); i == -1 || i == len(r.Job)-1 {
 		return errors.New("Config's <Job> field is invalid")
 	}
-	if len(r.JobUid) == 0 {
-		return errors.New("Config's <JobUid> field is empty")
+	if len(r.JobUID) == 0 {
+		return errors.New("Config's <JobUID> field is empty")
 	}
 
 	if _, ok := PluginParsers[r.Plugin]; !ok {

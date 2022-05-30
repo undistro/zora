@@ -8,29 +8,29 @@ import (
 )
 
 type Cluster struct {
-	Name              string      `json:"name,omitempty"`
-	Namespace         string      `json:"namespace,omitempty"`
-	Environment       string      `json:"environment,omitempty"`
-	Provider          string      `json:"provider,omitempty"`
-	Region            string      `json:"region,omitempty"`
-	TotalNodes        int         `json:"totalNodes,omitempty"`
+	Name              string      `json:"name"`
+	Namespace         string      `json:"namespace"`
+	Environment       string      `json:"environment"`
+	Provider          string      `json:"provider"`
+	Region            string      `json:"region"`
+	TotalNodes        int         `json:"totalNodes"`
+	Version           string      `json:"version"`
 	Ready             bool        `json:"ready"`
-	Version           string      `json:"version,omitempty"`
 	TotalIssues       int         `json:"totalIssues"`
-	Resources         *Resources  `json:"resources,omitempty"`
-	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
-	Issues            []Issue     `json:"issues,omitempty"`
+	Resources         *Resources  `json:"resources"`
+	CreationTimestamp metav1.Time `json:"creationTimestamp"`
+	Issues            []Issue     `json:"issues"`
 }
 
 type Resources struct {
-	Memory *Resource `json:"memory,omitempty"`
-	CPU    *Resource `json:"cpu,omitempty"`
+	Memory *Resource `json:"memory"`
+	CPU    *Resource `json:"cpu"`
 }
 
 type Resource struct {
-	Available       string `json:"available,omitempty"`
-	Usage           string `json:"usage,omitempty"`
-	UsagePercentage int32  `json:"usagePercentage,omitempty"`
+	Available       string `json:"available"`
+	Usage           string `json:"usage"`
+	UsagePercentage int32  `json:"usagePercentage"`
 }
 
 func NewCluster(cluster v1alpha1.Cluster) Cluster {

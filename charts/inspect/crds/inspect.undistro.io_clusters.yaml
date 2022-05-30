@@ -176,7 +176,7 @@ spec:
                 format: date-time
                 type: string
               lastScans:
-                description: List of last execution IDs
+                description: List of last scan IDs
                 items:
                   type: string
                 type: array

@@ -5,14 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"sort"
-	"strings"
 	"time"
 
+	"github.com/robfig/cron/v3"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/selection"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -114,9 +116,6 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		pluginRefs = clusterscan.Spec.Plugins
 	}
 
-	var lastSuccessfulTime *metav1.Time
-	successfulCronJobs := make([]*batchv1.CronJob, 0, len(pluginRefs))
-	pluginNames := make([]string, 0, len(pluginRefs))
 	for _, ref := range pluginRefs {
 		pluginKey := ref.PluginKey(r.DefaultPluginsNamespace)
 		plugin := &v1alpha1.Plugin{}
@@ -132,7 +131,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			Existing:           cronJob,
 			Plugin:             plugin,
 			PluginRef:          ref,
-			Clusterscan:        clusterscan,
+			ClusterScan:        clusterscan,
 			KubeconfigSecret:   kubeconfigSecret,
 			WorkerImage:        r.WorkerImage,
 			ServiceAccountName: r.ServiceAccountName,
@@ -149,82 +148,101 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		if result != controllerutil.OperationResultNone {
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
-		if lst := cronJob.Status.LastSuccessfulTime; lst != nil && !lst.IsZero() {
-			log.Info(fmt.Sprintf("CronJob %s has successfully completed jobs", cronJob.Name))
-			successfulCronJobs = append(successfulCronJobs, cronJob)
-			if lastSuccessfulTime == nil || lastSuccessfulTime.Before(lst) {
-				lastSuccessfulTime = lst
+		if clusterscan.Status.PluginStatus == nil {
+			clusterscan.Status.PluginStatus = make(map[string]*v1alpha1.PluginCronJobStatus)
+		}
+		_, ok := clusterscan.Status.PluginStatus[plugin.Name]
+		if !ok {
+			clusterscan.Status.PluginStatus[plugin.Name] = &v1alpha1.PluginCronJobStatus{}
+		}
+		pluginStatus := clusterscan.Status.PluginStatus[plugin.Name]
+		active := len(cronJob.Status.Active) > 0
+		pluginStatus.Active = &active
+		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
+			log.Error(err, "failed to parse CronJob Schedule")
+		} else {
+			pluginStatus.NextScheduleTime = &metav1.Time{Time: sched.Next(time.Now().UTC())}
+		}
+		if cronJob.Status.LastScheduleTime != nil {
+			log.Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
+			if j, err := r.getLastFinishedJob(ctx, cronJob); err != nil {
+				clusterscan.SetReadyStatus(false, "JobListError", err.Error())
+				return err
+			} else if j != nil {
+				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
+				pluginStatus.LastSuccessfulTime = j.Status.CompletionTime
+				pluginStatus.LastScanID = string(j.UID)
 			}
 		}
-		pluginNames = append(pluginNames, plugin.Name)
 	}
 
-	lastFinishedJobs, err := r.getFinishedJobs(ctx, successfulCronJobs)
-	if err != nil {
-		clusterscan.SetReadyStatus(false, "JobListError", err.Error())
+	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs()...); err != nil {
+		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 		return err
-	}
-
-	var totalIssues int
-	ids := make([]string, 0, len(lastFinishedJobs))
-	for _, job := range lastFinishedJobs {
-		issueList := &v1alpha1.ClusterIssueList{}
-		jid := string(job.UID)
-		if err := r.List(ctx, issueList, client.MatchingLabels{v1alpha1.LabelExecutionID: jid}); err != nil {
-			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by %s %s", v1alpha1.LabelExecutionID, jid))
-			clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
-			return err
-		}
-		log.Info(fmt.Sprintf("found %d ClusterIssues by %s %s", len(issueList.Items), v1alpha1.LabelExecutionID, jid))
-		totalIssues += len(issueList.Items)
-		ids = append(ids, jid)
+	} else {
+		clusterscan.Status.TotalIssues = len(issues)
 	}
 
 	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
+		clusterscan.SetReadyStatus(false, "ClusterScanSetOwnerError", err.Error())
 		return err
 	}
 
-	// update ClusterScan status
-	clusterscan.Status.TotalIssues = totalIssues
-	clusterscan.Status.LastScans = ids
-	clusterscan.Status.LastSuccessfulTime = lastSuccessfulTime
+	clusterscan.Status.SyncStatus()
 	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
 	clusterscan.Status.ClusterNamespacedName = clusterKey.String()
-	clusterscan.Status.Plugins = strings.Join(pluginNames, ",")
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
-	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.Plugins))
+	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
 	return nil
 }
 
-// getFinishedJobs return the latest finished Jobs from CronJobs
-func (r *ClusterScanReconciler) getFinishedJobs(ctx context.Context, cronJobs []*batchv1.CronJob) ([]batchv1.Job, error) {
-	log := ctrllog.FromContext(ctx)
+// getClusterIssues returns the ClusterIssues from scanIDs
+func (r *ClusterScanReconciler) getClusterIssues(ctx context.Context, scanIDs ...string) ([]v1alpha1.ClusterIssue, error) {
+	log := ctrllog.FromContext(ctx, v1alpha1.LabelScanID, scanIDs)
 
-	var finished []batchv1.Job
-	for _, cronJob := range cronJobs {
-		jobList := &batchv1.JobList{}
-		if err := r.List(ctx, jobList, client.MatchingFields{jobOwnerKey: cronJob.Name}); err != nil {
-			log.Error(err, "failed to list Jobs")
-			return nil, err
+	if len(scanIDs) <= 0 {
+		return nil, nil
+	}
+	req, err := labels.NewRequirement(v1alpha1.LabelScanID, selection.In, scanIDs)
+	if err != nil {
+		log.Error(err, "failed to build label selector")
+		return nil, err
+	}
+	sel := labels.NewSelector().Add(*req)
+	list := &v1alpha1.ClusterIssueList{}
+	if err := r.List(ctx, list, client.MatchingLabelsSelector{Selector: sel}); err != nil {
+		log.Error(err, "failed to list ClusterIssues")
+		return nil, err
+	}
+	log.Info(fmt.Sprintf("%d ClusterIssues found", len(list.Items)))
+	return list.Items, nil
+}
+
+// getLastFinishedJob returns the last finished Job from a CronJob
+func (r *ClusterScanReconciler) getLastFinishedJob(ctx context.Context, cronJob *batchv1.CronJob) (*batchv1.Job, error) {
+	log := ctrllog.FromContext(ctx, "CronJob", cronJob.Name)
+
+	jobList := &batchv1.JobList{}
+	if err := r.List(ctx, jobList, client.MatchingFields{jobOwnerKey: cronJob.Name}); err != nil {
+		log.Error(err, "failed to list Jobs")
+		return nil, err
+	}
+	log.Info(fmt.Sprintf("found %d Jobs", len(jobList.Items)))
+	sort.Slice(jobList.Items, func(i, j int) bool {
+		if jobList.Items[i].Status.StartTime == nil {
+			return jobList.Items[j].Status.StartTime != nil
 		}
-		log.Info(fmt.Sprintf("found %d Jobs owned by Cronjob %s", len(jobList.Items), cronJob.Name))
-		sort.Slice(jobList.Items, func(i, j int) bool {
-			if jobList.Items[i].Status.StartTime == nil {
-				return jobList.Items[j].Status.StartTime != nil
-			}
-			return jobList.Items[j].Status.StartTime.Before(jobList.Items[i].Status.StartTime)
-		})
+		return jobList.Items[j].Status.StartTime.Before(jobList.Items[i].Status.StartTime)
+	})
 
-		for _, j := range jobList.Items {
-			if isJobFinished(&j) {
-				log.Info(fmt.Sprintf("%s is the latest finished Job owned by CronJob %s", j.Name, cronJob.Name))
-				finished = append(finished, j)
-				break
-			}
+	for _, j := range jobList.Items {
+		if isJobFinished(&j) {
+			log.Info(fmt.Sprintf("%s is the last finished Job", j.Name))
+			return &j, nil
 		}
 	}
 
-	return finished, nil
+	return nil, nil
 }
 
 // setControllerReference add Cluster as owner (controller) of ClusterScan and update
@@ -241,19 +259,19 @@ func (r *ClusterScanReconciler) setControllerReference(ctx context.Context, clus
 		log.Error(err, "failed to update ClusterScan")
 		return err
 	}
-	log.Info("ClusterScan updated " + clusterscan.ResourceVersion)
+	log.Info("ClusterScan updated")
 	return nil
 }
 
 func (r *ClusterScanReconciler) defaultPlugins() []v1alpha1.PluginReference {
-	defaultPlugins := make([]v1alpha1.PluginReference, 0, len(r.DefaultPluginsNames))
+	p := make([]v1alpha1.PluginReference, 0, len(r.DefaultPluginsNames))
 	for _, name := range r.DefaultPluginsNames {
-		defaultPlugins = append(defaultPlugins, v1alpha1.PluginReference{
+		p = append(p, v1alpha1.PluginReference{
 			Name:      name,
 			Namespace: r.DefaultPluginsNamespace,
 		})
 	}
-	return defaultPlugins
+	return p
 }
 
 // applyRBAC Create or Update a ServiceAccount (with ClusterScan as Owner) and append it to ClusterRoleBinding

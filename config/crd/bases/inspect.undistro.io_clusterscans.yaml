@@ -25,9 +25,12 @@ spec:
     - jsonPath: .spec.schedule
       name: Schedule
       type: string
-    - jsonPath: .status.plugins
+    - jsonPath: .status.pluginNames
       name: Plugins
       type: string
+    - jsonPath: .status.lastScheduleTime
+      name: Last Schedule
+      type: date
     - jsonPath: .status.lastSuccessfulTime
       name: Last Successful
       type: date
@@ -40,6 +43,10 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
+    - jsonPath: .status.nextScheduleTimeString
+      name: Next Schedule
+      priority: 1
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -297,29 +304,61 @@ spec:
                   - type
                   type: object
                 type: array
-              lastScans:
-                description: List of last execution IDs
-                items:
-                  type: string
-                type: array
+              lastScheduleTime:
+                description: Information when was the last time the job was successfully
+                  scheduled.
+                format: date-time
+                type: string
               lastSuccessfulTime:
                 description: Information when was the last time the job successfully
                   completed.
                 format: date-time
+                type: string
+              nextScheduleTime:
+                description: Time when the next job will schedule.
+                format: date-time
+                type: string
+              nextScheduleTimeString:
                 type: string
               observedGeneration:
                 description: ObservedGeneration is the 'Generation' of the resource
                   that was last processed by the controller.
                 format: int64
                 type: integer
-              plugins:
-                description: Comma separated list of default plugins
+              pluginNames:
+                description: Comma separated list of plugins
                 type: string
+              pluginStatus:
+                additionalProperties:
+                  properties:
+                    active:
+                      description: Indicates whether this plugin is currently running
+                      type: boolean
+                    lastScheduleTime:
+                      description: Information when was the last time the job was
+                        successfully scheduled.
+                      format: date-time
+                      type: string
+                    lastSuccessfulTime:
+                      description: Information when was the last time the job successfully
+                        completed.
+                      format: date-time
+                      type: string
+                    nextScheduleTime:
+                      description: Time when the next job will schedule.
+                      format: date-time
+                      type: string
+                    scanID:
+                      description: ID of the last plugin scan
+                      type: string
+                  type: object
+                description: Last scan ID, schedule and successful time of plugins
+                type: object
               suspend:
                 description: Suspend field value from ClusterScan spec
                 type: boolean
               totalIssues:
-                description: Total of ClusterIssues reported by Plugins
+                description: Total of ClusterIssues reported by plugins
                 type: integer
             required:
             - suspend
