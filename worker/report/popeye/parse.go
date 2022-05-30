@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 )
@@ -19,7 +20,7 @@ func prepareIdAndMsg(msg string) (string, string, error) {
 	if len(s) != 3 {
 		return "", "", errors.New("Unable to split Popeye error code from message.")
 	}
-	if msg, ok := IssueIDtoGenericMsg[s[1]]; ok {
+	if msg, ok := IssueIDtoGenericMsg[s[1][strings.LastIndex(s[1], "-")+1:]]; ok {
 		return s[1], msg, nil
 	}
 	return s[1], s[2], nil
