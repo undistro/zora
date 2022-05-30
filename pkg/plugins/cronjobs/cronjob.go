@@ -21,6 +21,8 @@ const (
 	kubeconfigFile       = "kubeconfig.yml"
 	resultsVolumeName    = "results"
 	resultsDir           = "/tmp/undistro-inspect/results"
+	LabelClusterScan     = "inspect.undistro.io/cluster-scan"
+	LabelPlugin          = "inspect.undistro.io/plugin"
 )
 
 var (
@@ -55,7 +57,7 @@ type Mutator struct {
 	Existing           *batchv1.CronJob
 	Plugin             *v1alpha1.Plugin
 	PluginRef          v1alpha1.PluginReference
-	Clusterscan        *v1alpha1.ClusterScan
+	ClusterScan        *v1alpha1.ClusterScan
 	KubeconfigSecret   *corev1.Secret
 	WorkerImage        string
 	ServiceAccountName string
@@ -64,9 +66,14 @@ type Mutator struct {
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
 func (r *Mutator) Mutate() controllerutil.MutateFn {
 	return func() error {
-		r.Existing.Spec.Schedule = firstNonEmptyString(r.PluginRef.Schedule, r.Clusterscan.Spec.Schedule)
+		if r.Existing.ObjectMeta.Labels == nil {
+			r.Existing.ObjectMeta.Labels = make(map[string]string)
+		}
+		r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
+		r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
+		r.Existing.Spec.Schedule = firstNonEmptyString(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
-		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.Clusterscan.Spec.Suspend)
+		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyOnFailure
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
@@ -116,7 +123,7 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 			r.Existing.Spec.JobTemplate.Spec.Template.Spec.Containers = containers
 		}
 
-		return ctrl.SetControllerReference(r.Clusterscan, r.Existing, r.Scheme)
+		return ctrl.SetControllerReference(r.ClusterScan, r.Existing, r.Scheme)
 	}
 }
 
@@ -163,11 +170,11 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 	return append(commonEnv,
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",
-			Value: r.Clusterscan.Name,
+			Value: r.ClusterScan.Name,
 		},
 		corev1.EnvVar{
 			Name:  "CLUSTER_ISSUES_NAMESPACE",
-			Value: r.Clusterscan.Namespace,
+			Value: r.ClusterScan.Namespace,
 		},
 		corev1.EnvVar{
 			Name:  "PLUGIN_NAME",
@@ -183,6 +190,12 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 			Name: "JOB_UID",
 			ValueFrom: &corev1.EnvVarSource{
 				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.labels['controller-uid']", APIVersion: "v1"},
+			},
+		},
+		corev1.EnvVar{
+			Name: "POD_NAME",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.name", APIVersion: "v1"},
 			},
 		},
 	)
