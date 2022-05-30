@@ -34,8 +34,7 @@ lists the parameters that can be configured during installation.
 
 ### Connect to a cluster
 
-#### Before you begin
-
+**Before you begin**
 - You must have a kubeconfig file with an authentication `token` of the target cluster.
 - The api-server of target cluster must be reachable by the management cluster.
 - The target cluster must have Metrics Server deployed. For more information, visit the 
