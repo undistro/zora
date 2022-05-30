@@ -19,6 +19,7 @@ const (
 	LabelSeverity      = "severity"
 	LabelIssueID       = "issueID"
 	LabelIssueCategory = "issueCategory"
+	LabelPlugin        = "plugin"
 )
 
 // ClusterIssueSpec defines the desired state of ClusterIssue

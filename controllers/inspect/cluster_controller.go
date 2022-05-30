@@ -108,7 +108,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	var lastScans []string
 	for _, cs := range clusterScanList.Items {
 		totalIssues += cs.Status.TotalIssues
-		lastScans = append(lastScans, cs.Status.LastScans...)
+		lastScans = append(lastScans, cs.Status.LastScanIDs()...)
 	}
 	if totalIssues != 0 && cluster.Status.TotalIssues != totalIssues {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", fmt.Sprintf("cluster successfully scanned: %d issues reported", totalIssues))
