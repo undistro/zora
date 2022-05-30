@@ -16,7 +16,7 @@ case "$(docker inspect -f '{{.State.Running}}' $LOCAL_REG_NAME 2> /dev/null)" in
 				--restart=always \
 				--publish "$REG_PORT:5000" \
 				--name "$LOCAL_REG_NAME" \
-				registry:2 &> /dev/null
+				registry:2 > /dev/null
 			;;
 esac
 
