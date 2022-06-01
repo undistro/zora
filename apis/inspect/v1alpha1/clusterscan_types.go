@@ -2,6 +2,7 @@ package v1alpha1
 
 import (
 	"strings"
+	"time"
 
 	"github.com/getupio-undistro/inspect/pkg/apis"
 	corev1 "k8s.io/api/core/v1"
@@ -95,7 +96,7 @@ func (in *ClusterScanStatus) SyncStatus() {
 		}
 		if in.NextScheduleTime == nil {
 			in.NextScheduleTime = s.NextScheduleTime
-			in.NextScheduleTimeString = s.NextScheduleTime.String()
+			in.NextScheduleTimeString = s.NextScheduleTime.Format(time.RFC3339)
 		}
 		if s.LastScheduleTime != nil && s.LastScheduleTime.After(in.LastScheduleTime.Time) {
 			in.LastScheduleTime = s.LastScheduleTime
@@ -105,7 +106,7 @@ func (in *ClusterScanStatus) SyncStatus() {
 		}
 		if s.NextScheduleTime != nil && s.NextScheduleTime.Before(in.NextScheduleTime) {
 			in.NextScheduleTime = s.NextScheduleTime
-			in.NextScheduleTimeString = s.NextScheduleTime.String()
+			in.NextScheduleTimeString = s.NextScheduleTime.Format(time.RFC3339)
 		}
 	}
 	in.PluginNames = strings.Join(names, ",")
