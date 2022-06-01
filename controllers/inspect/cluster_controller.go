@@ -104,6 +104,9 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanListError", err.Error())
 		return err
 	}
+	if len(clusterScanList.Items) <= 0 {
+		cluster.SetStatus(v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
+	}
 	var totalIssues int
 	var lastScans []string
 	for _, cs := range clusterScanList.Items {
