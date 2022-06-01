@@ -106,6 +106,11 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		return err
 	}
 
+	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
+		clusterscan.SetReadyStatus(false, "ClusterScanSetOwnerError", err.Error())
+		return err
+	}
+
 	if err := r.applyRBAC(ctx, clusterscan); err != nil {
 		return err
 	}
@@ -181,11 +186,6 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		return err
 	} else {
 		clusterscan.Status.TotalIssues = len(issues)
-	}
-
-	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
-		clusterscan.SetReadyStatus(false, "ClusterScanSetOwnerError", err.Error())
-		return err
 	}
 
 	clusterscan.Status.SyncStatus()
