@@ -134,8 +134,8 @@ func (r *Config) Validate() error {
 func (r *Config) HandleDonePath() error {
 	if len(r.DonePath) == 0 {
 		return errors.New("Empty <DonePath>")
-
 	}
+
 	dir := path.Dir(r.DonePath)
 	if _, err := os.Stat(dir); err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf("Unable to check existance of dir <%s>: %w", dir, err)
