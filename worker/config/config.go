@@ -116,11 +116,11 @@ func (r *Config) Validate() error {
 
 	if len(r.Job) == 0 {
 		return errors.New("Config's <Job> field is empty")
-	} else if i := strings.LastIndex(r.Job, "-"); i == -1 || i == len(r.Job)-1 {
-		return errors.New("Config's <Job> field is invalid")
 	}
 	if len(r.JobUID) == 0 {
 		return errors.New("Config's <JobUID> field is empty")
+	} else if i := strings.LastIndex(r.JobUID, "-"); i == -1 || i == len(r.JobUID)-1 {
+		return errors.New("Config's <JobUID> field is invalid")
 	}
 
 	if _, ok := PluginParsers[r.Plugin]; !ok {
