@@ -62,9 +62,6 @@ type ClusterScanStatus struct {
 	// Comma separated list of plugins
 	PluginNames string `json:"pluginNames,omitempty"`
 
-	// Namespaced name of referenced Cluster
-	ClusterNamespacedName string `json:"clusterName,omitempty"`
-
 	// Suspend field value from ClusterScan spec
 	Suspend bool `json:"suspend"`
 
@@ -143,9 +140,9 @@ type PluginCronJobStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".status.clusterName",priority=0
-//+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
+//+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".spec.clusterRef.name",priority=0
 //+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
+//+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
 //+kubebuilder:printcolumn:name="Plugins",type="string",JSONPath=".status.pluginNames",priority=0
 //+kubebuilder:printcolumn:name="Last Schedule",type="date",JSONPath=".status.lastScheduleTime",priority=0
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0

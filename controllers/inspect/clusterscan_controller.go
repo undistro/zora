@@ -85,9 +85,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
-	clusterKey := clusterscan.ClusterKey()
-	if err := r.Get(ctx, clusterKey, cluster); err != nil {
-		log.Error(err, fmt.Sprintf("failed to fetch Cluster %s", clusterKey.String()))
+	if err := r.Get(ctx, clusterscan.ClusterKey(), cluster); err != nil {
+		log.Error(err, fmt.Sprintf("failed to fetch Cluster %s", clusterscan.Spec.ClusterRef.Name))
 		clusterscan.SetReadyStatus(false, "ClusterFetchError", err.Error())
 		return err
 	}
@@ -190,7 +189,6 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 	clusterscan.Status.SyncStatus()
 	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
-	clusterscan.Status.ClusterNamespacedName = clusterKey.String()
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
 	return nil

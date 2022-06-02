@@ -16,15 +16,15 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.clusterName
+    - jsonPath: .spec.clusterRef.name
       name: Cluster
+      type: string
+    - jsonPath: .spec.schedule
+      name: Schedule
       type: string
     - jsonPath: .status.suspend
       name: Suspend
       type: boolean
-    - jsonPath: .spec.schedule
-      name: Schedule
-      type: string
     - jsonPath: .status.pluginNames
       name: Plugins
       type: string
@@ -231,9 +231,6 @@ spec:
           status:
             description: ClusterScanStatus defines the observed state of ClusterScan
             properties:
-              clusterName:
-                description: Namespaced name of referenced Cluster
-                type: string
               conditions:
                 description: Conditions the latest available observations of a resource's
                   current state.
