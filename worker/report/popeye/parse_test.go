@@ -196,8 +196,8 @@ func TestParse(t *testing.T) {
 		cispecs, err := Parse([]byte(c.testrepname))
 		sfun(c.cispecs)
 		sfun(cispecs)
-		if err != nil && !c.toerr || !reflect.DeepEqual(c.cispecs, cispecs) {
-			t.Errorf("Setup failed on case: %s\n", c.description)
+		if (err != nil) != c.toerr || !reflect.DeepEqual(c.cispecs, cispecs) {
+			t.Errorf("Case: %s\n", c.description)
 			t.Errorf("Mismatch between expected and obtained values: \n%s\n", cmp.Diff(c.cispecs, cispecs))
 		}
 	}

@@ -318,11 +318,11 @@ func TestParse(t *testing.T) {
 		ciarr, err := Parse(c.testrep, c.config)
 		sfun(c.clusterissues)
 		sfun(ciarr)
-		if err != nil && !c.toerr || !reflect.DeepEqual(c.clusterissues, ciarr) {
+		if (err != nil) != c.toerr || !reflect.DeepEqual(c.clusterissues, ciarr) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Setup failed on case: %s\n", c.description)
+			t.Errorf("Case: %s\n", c.description)
 			t.Errorf("Mismatch between expected and obtained values: \n%s\n", cmp.Diff(c.clusterissues, ciarr))
 		}
 	}
