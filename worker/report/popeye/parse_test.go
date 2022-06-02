@@ -88,7 +88,7 @@ func TestParse(t *testing.T) {
 	}{
 		{
 			description: "Single <ClusterIssueSpec> instance with many resources",
-			testrepname: "test_data/test_report_1.json",
+			testrepname: "testdata/test_report_1.json",
 			cispecs: []*inspectv1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
@@ -123,7 +123,7 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Four <ClusterIssueSpec> instance with many resources",
-			testrepname: "test_data/test_report_2.json",
+			testrepname: "testdata/test_report_2.json",
 			cispecs: []*inspectv1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
@@ -171,13 +171,13 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Invalid Popeye report",
-			testrepname: "test_data/test_report_3.json",
+			testrepname: "testdata/test_report_3.json",
 			cispecs:     nil,
 			toerr:       true,
 		},
 		{
 			description: "Empty Popeye report",
-			testrepname: "test_data/test_report_4.json",
+			testrepname: "testdata/test_report_4.json",
 			cispecs:     nil,
 			toerr:       true,
 		},

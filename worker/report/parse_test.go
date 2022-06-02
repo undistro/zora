@@ -23,7 +23,7 @@ func TestParse(t *testing.T) {
 	}{
 		{
 			description: "Single <ClusterIssue> instance with many resources",
-			testrepname: "popeye/test_data/test_report_1.json",
+			testrepname: "popeye/testdata/test_report_1.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -93,7 +93,7 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Four <ClusterIssue> instances with many resources",
-			testrepname: "popeye/test_data/test_report_2.json",
+			testrepname: "popeye/testdata/test_report_2.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -254,7 +254,7 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Invalid Popeye report",
-			testrepname: "popeye/test_data/test_report_3.json",
+			testrepname: "popeye/testdata/test_report_3.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -270,7 +270,7 @@ func TestParse(t *testing.T) {
 		},
 		{
 			description: "Empty Popeye report",
-			testrepname: "popeye/test_data/test_report_4.json",
+			testrepname: "popeye/testdata/test_report_4.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -286,7 +286,7 @@ func TestParse(t *testing.T) {
 		},
 		{
 			description: "Invalid plugin",
-			testrepname: "popeye/test_data/test_report_4.json",
+			testrepname: "popeye/testdata/test_report_4.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
