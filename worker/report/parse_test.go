@@ -94,7 +94,7 @@ func TestParse(t *testing.T) {
 		},
 
 		{
-			description: "Four <ClusterIssue> instance with many resources",
+			description: "Four <ClusterIssue> instances with many resources",
 			testrep:     strings.NewReader(popeye.TestReport2),
 			config: &config.Config{
 				DonePath:        "_",
