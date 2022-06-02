@@ -1,15 +1,13 @@
 package report
 
 import (
-	"io"
+	"os"
 	"reflect"
 	"sort"
-	"strings"
 	"testing"
 
 	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
 	"github.com/getupio-undistro/inspect/worker/config"
-	"github.com/getupio-undistro/inspect/worker/report/popeye"
 	"github.com/google/go-cmp/cmp"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -18,14 +16,14 @@ import (
 func TestParse(t *testing.T) {
 	cases := []struct {
 		description   string
-		testrep       io.Reader
+		testrepname   string
 		config        *config.Config
 		clusterissues []*inspectv1a1.ClusterIssue
 		toerr         bool
 	}{
 		{
 			description: "Single <ClusterIssue> instance with many resources",
-			testrep:     strings.NewReader(popeye.TestReport1),
+			testrepname: "popeye/test_data/test_report_1.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -95,7 +93,7 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Four <ClusterIssue> instances with many resources",
-			testrep:     strings.NewReader(popeye.TestReport2),
+			testrepname: "popeye/test_data/test_report_2.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -256,7 +254,7 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Invalid Popeye report",
-			testrep:     strings.NewReader(popeye.TestReport3),
+			testrepname: "popeye/test_data/test_report_3.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -272,7 +270,7 @@ func TestParse(t *testing.T) {
 		},
 		{
 			description: "Empty Popeye report",
-			testrep:     strings.NewReader(popeye.TestReport4),
+			testrepname: "popeye/test_data/test_report_4.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -288,7 +286,7 @@ func TestParse(t *testing.T) {
 		},
 		{
 			description: "Invalid plugin",
-			testrep:     strings.NewReader(popeye.TestReport4),
+			testrepname: "popeye/test_data/test_report_4.json",
 			config: &config.Config{
 				DonePath:        "_",
 				ErrorPath:       "_",
@@ -315,7 +313,12 @@ func TestParse(t *testing.T) {
 		}
 	}
 	for _, c := range cases {
-		ciarr, err := Parse(c.testrep, c.config)
+		fid, err := os.Open(c.testrepname)
+		if err != nil {
+			t.Errorf("Setup failed on case: %s\n", c.description)
+			t.Fatal(err)
+		}
+		ciarr, err := Parse(fid, c.config)
 		sfun(c.clusterissues)
 		sfun(ciarr)
 		if (err != nil) != c.toerr || !reflect.DeepEqual(c.clusterissues, ciarr) {

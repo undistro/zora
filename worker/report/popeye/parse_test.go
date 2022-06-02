@@ -1,6 +1,7 @@
 package popeye
 
 import (
+	"io/ioutil"
 	"reflect"
 	"sort"
 	"testing"
@@ -87,7 +88,7 @@ func TestParse(t *testing.T) {
 	}{
 		{
 			description: "Single <ClusterIssueSpec> instance with many resources",
-			testrepname: TestReport1,
+			testrepname: "test_data/test_report_1.json",
 			cispecs: []*inspectv1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
@@ -122,7 +123,7 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Four <ClusterIssueSpec> instance with many resources",
-			testrepname: TestReport2,
+			testrepname: "test_data/test_report_2.json",
 			cispecs: []*inspectv1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
@@ -170,13 +171,13 @@ func TestParse(t *testing.T) {
 
 		{
 			description: "Invalid Popeye report",
-			testrepname: TestReport3,
+			testrepname: "test_data/test_report_3.json",
 			cispecs:     nil,
 			toerr:       true,
 		},
 		{
 			description: "Empty Popeye report",
-			testrepname: TestReport4,
+			testrepname: "test_data/test_report_4.json",
 			cispecs:     nil,
 			toerr:       true,
 		},
@@ -193,7 +194,12 @@ func TestParse(t *testing.T) {
 		}
 	}
 	for _, c := range cases {
-		cispecs, err := Parse([]byte(c.testrepname))
+		rep, err := ioutil.ReadFile(c.testrepname)
+		if err != nil {
+			t.Errorf("Setup failed on case: %s\n", c.description)
+			t.Fatal(err)
+		}
+		cispecs, err := Parse(rep)
 		sfun(c.cispecs)
 		sfun(cispecs)
 		if (err != nil) != c.toerr || !reflect.DeepEqual(c.cispecs, cispecs) {
