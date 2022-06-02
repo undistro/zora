@@ -77,7 +77,7 @@ func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
 //+kubebuilder:printcolumn:name="CPU Available",type="string",priority=0,JSONPath=".status.cpuAvailable"
 //+kubebuilder:printcolumn:name="CPU Usage (%)",type="string",priority=0,JSONPath=".status.cpuUsage"
 //+kubebuilder:printcolumn:name="Nodes",type="integer",priority=0,JSONPath=".status.totalNodes"
-//+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",description=""
+//+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status"
 //+kubebuilder:printcolumn:name="Age",type="date",priority=0,JSONPath=".status.creationTimestamp"
 //+kubebuilder:printcolumn:name="Provider",type="string",priority=1,JSONPath=".status.provider"
 //+kubebuilder:printcolumn:name="Region",type="string",priority=1,JSONPath=".status.region"
