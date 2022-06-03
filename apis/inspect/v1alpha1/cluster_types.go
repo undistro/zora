@@ -46,9 +46,9 @@ type ClusterStatus struct {
 	CPUAvailable string `json:"cpuAvailable,omitempty"`
 
 	// Timestamp representing the server time of the last reconciliation
-	LastRun metav1.Time `json:"lastRun,omitempty"`
+	LastReconciliationTime metav1.Time `json:"lastReconciliationTime,omitempty"`
 
-	// Total of ClusterIssues reported by ClusterScan
+	// Total of ClusterIssues reported by the last successful scan
 	TotalIssues int `json:"totalIssues"`
 
 	// List of last scan IDs

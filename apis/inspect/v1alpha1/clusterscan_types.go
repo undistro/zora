@@ -2,7 +2,6 @@ package v1alpha1
 
 import (
 	"strings"
-	"time"
 
 	"github.com/getupio-undistro/inspect/pkg/apis"
 	corev1 "k8s.io/api/core/v1"
@@ -57,7 +56,7 @@ type ClusterScanStatus struct {
 	apis.Status `json:",inline"`
 
 	// Last scan ID, schedule and successful time of plugins
-	PluginStatus map[string]*PluginCronJobStatus `json:"pluginStatus,omitempty"`
+	PluginStatus map[string]*PluginScanStatus `json:"pluginStatus,omitempty"`
 
 	// Comma separated list of plugins
 	PluginNames string `json:"pluginNames,omitempty"`
@@ -65,21 +64,37 @@ type ClusterScanStatus struct {
 	// Suspend field value from ClusterScan spec
 	Suspend bool `json:"suspend"`
 
-	// Information when was the last time the job was successfully scheduled.
+	// Information when was the last time the job was scheduled.
 	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
+
+	// Information when was the last time the job was completed.
+	LastCompletionTime *metav1.Time `json:"lastCompletionTime,omitempty"`
+
+	// Status of the last scan. Active, Complete or Failed
+	LastScanStatus string `json:"lastScanStatus,omitempty"`
 
 	// Information when was the last time the job successfully completed.
 	LastSuccessfulTime *metav1.Time `json:"lastSuccessfulTime,omitempty"`
 
 	// Time when the next job will schedule.
-	NextScheduleTime       *metav1.Time `json:"nextScheduleTime,omitempty"`
-	NextScheduleTimeString string       `json:"nextScheduleTimeString,omitempty"`
+	NextScheduleTime *metav1.Time `json:"nextScheduleTime,omitempty"`
 
-	// Total of ClusterIssues reported by plugins
+	// Total of ClusterIssues reported in the last successful scan
 	TotalIssues int `json:"totalIssues"`
 }
 
-// SyncStatus fills PluginNames, NextScheduleTime, LastScheduleTime and LastSuccessfulTime fields based on Plugins status
+// GetPluginStatus returns a PluginScanStatus of a plugin
+func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
+	if in.PluginStatus == nil {
+		in.PluginStatus = make(map[string]*PluginScanStatus)
+	}
+	if _, ok := in.PluginStatus[name]; !ok {
+		in.PluginStatus[name] = &PluginScanStatus{}
+	}
+	return in.PluginStatus[name]
+}
+
+// SyncStatus fills PluginNames, NextScheduleTime, LastScheduleTime and LastSuccessfulTime fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names []string
 	in.NextScheduleTime = nil
@@ -87,43 +102,58 @@ func (in *ClusterScanStatus) SyncStatus() {
 		names = append(names, n)
 		if in.LastScheduleTime == nil {
 			in.LastScheduleTime = s.LastScheduleTime
+			in.LastScanStatus = s.LastScanStatus
+		}
+		if in.LastCompletionTime == nil {
+			in.LastCompletionTime = s.LastCompletionTime
+			in.LastScanStatus = s.LastScanStatus
 		}
 		if in.LastSuccessfulTime == nil {
 			in.LastSuccessfulTime = s.LastSuccessfulTime
 		}
 		if in.NextScheduleTime == nil {
 			in.NextScheduleTime = s.NextScheduleTime
-			in.NextScheduleTimeString = s.NextScheduleTime.Format(time.RFC3339)
 		}
 		if s.LastScheduleTime != nil && s.LastScheduleTime.After(in.LastScheduleTime.Time) {
 			in.LastScheduleTime = s.LastScheduleTime
+			in.LastScanStatus = s.LastScanStatus
+		}
+		if s.LastCompletionTime != nil && s.LastCompletionTime.After(in.LastScheduleTime.Time) {
+			in.LastCompletionTime = s.LastCompletionTime
+			in.LastScanStatus = s.LastScanStatus
 		}
 		if s.LastSuccessfulTime != nil && s.LastSuccessfulTime.After(in.LastSuccessfulTime.Time) {
 			in.LastSuccessfulTime = s.LastSuccessfulTime
 		}
 		if s.NextScheduleTime != nil && s.NextScheduleTime.Before(in.NextScheduleTime) {
 			in.NextScheduleTime = s.NextScheduleTime
-			in.NextScheduleTimeString = s.NextScheduleTime.Format(time.RFC3339)
 		}
 	}
 	in.PluginNames = strings.Join(names, ",")
 }
 
 // LastScanIDs returns a list of all the last scan IDs
-func (in *ClusterScanStatus) LastScanIDs() []string {
+func (in *ClusterScanStatus) LastScanIDs(successful bool) []string {
 	lastScans := make([]string, 0, len(in.PluginStatus))
 	for _, ps := range in.PluginStatus {
-		if ps.LastScanID != "" {
-			lastScans = append(lastScans, ps.LastScanID)
+		sid := ps.LastScanID
+		if successful {
+			sid = ps.LastSuccessfulScanID
+		}
+		if sid != "" {
+			lastScans = append(lastScans, sid)
 		}
 	}
 	return lastScans
 }
 
 // +k8s:deepcopy-gen=true
-type PluginCronJobStatus struct {
-	// Information when was the last time the job was successfully scheduled.
+type PluginScanStatus struct {
+	// Information when was the last time the job was scheduled.
 	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
+
+	// Information when was the last time the job was completed.
+	LastCompletionTime *metav1.Time `json:"lastCompletionTime,omitempty"`
 
 	// Information when was the last time the job successfully completed.
 	LastSuccessfulTime *metav1.Time `json:"lastSuccessfulTime,omitempty"`
@@ -132,10 +162,13 @@ type PluginCronJobStatus struct {
 	NextScheduleTime *metav1.Time `json:"nextScheduleTime,omitempty"`
 
 	// ID of the last plugin scan
-	LastScanID string `json:"scanID,omitempty"`
+	LastScanID string `json:"lastScanID,omitempty"`
 
-	// Indicates whether this plugin is currently running
-	Active *bool `json:"active,omitempty"`
+	// ID of the last successful plugin scan
+	LastSuccessfulScanID string `json:"lastSuccessfulScanID,omitempty"`
+
+	// Status of the last plugin scan. Active, Complete or Failed
+	LastScanStatus string `json:"lastScanStatus,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -144,12 +177,13 @@ type PluginCronJobStatus struct {
 //+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
 //+kubebuilder:printcolumn:name="Plugins",type="string",JSONPath=".status.pluginNames",priority=0
+//+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastScanStatus",priority=0
 //+kubebuilder:printcolumn:name="Last Schedule",type="date",JSONPath=".status.lastScheduleTime",priority=0
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0
 //+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
-//+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTimeString",priority=1
+//+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
 // ClusterScan is the Schema for the clusterscans API
 type ClusterScan struct {

@@ -43,7 +43,6 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
-		log.Error(err, "failed to fetch Cluster")
 		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
 	}
 	log = log.WithValues("resourceVersion", cluster.ResourceVersion)
@@ -111,7 +110,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	var lastScans []string
 	for _, cs := range clusterScanList.Items {
 		totalIssues += cs.Status.TotalIssues
-		lastScans = append(lastScans, cs.Status.LastScanIDs()...)
+		lastScans = append(lastScans, cs.Status.LastScanIDs(true)...)
 	}
 	if totalIssues != 0 && cluster.Status.TotalIssues != totalIssues {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", fmt.Sprintf("cluster successfully scanned: %d issues reported", totalIssues))
@@ -119,7 +118,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	cluster.Status.TotalIssues = totalIssues
 	cluster.Status.LastScans = lastScans
 	cluster.Status.SetClusterInfo(*info)
-	cluster.Status.LastRun = metav1.NewTime(time.Now().UTC())
+	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
 	cluster.Status.ObservedGeneration = cluster.Generation
 	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
 	return nil

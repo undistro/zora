@@ -171,7 +171,7 @@ spec:
                 description: KubernetesVersion is the server's kubernetes version
                   (git version).
                 type: string
-              lastRun:
+              lastReconciliationTime:
                 description: Timestamp representing the server time of the last reconciliation
                 format: date-time
                 type: string
@@ -222,7 +222,8 @@ spec:
                 description: Average of usage and available resources
                 type: object
               totalIssues:
-                description: Total of ClusterIssues reported by ClusterScan
+                description: Total of ClusterIssues reported by the last successful
+                  scan
                 type: integer
               totalNodes:
                 description: Total of nodes

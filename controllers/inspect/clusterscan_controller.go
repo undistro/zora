@@ -63,7 +63,6 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	clusterscan := &v1alpha1.ClusterScan{}
 	if err := r.Get(ctx, req.NamespacedName, clusterscan); err != nil {
-		log.Error(err, "failed to fetch ClusterIssue")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	log = log.WithValues("resourceVersion", clusterscan.ResourceVersion)
@@ -147,21 +146,12 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "CronJobApplyError", err.Error())
 			return err
 		}
-		msg := fmt.Sprintf("CronJob %s has been %s", cronJob.Name, result)
-		log.Info(msg)
 		if result != controllerutil.OperationResultNone {
+			msg := fmt.Sprintf("CronJob %s has been %s", cronJob.Name, result)
+			log.Info(msg)
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
-		if clusterscan.Status.PluginStatus == nil {
-			clusterscan.Status.PluginStatus = make(map[string]*v1alpha1.PluginCronJobStatus)
-		}
-		_, ok := clusterscan.Status.PluginStatus[plugin.Name]
-		if !ok {
-			clusterscan.Status.PluginStatus[plugin.Name] = &v1alpha1.PluginCronJobStatus{}
-		}
-		pluginStatus := clusterscan.Status.PluginStatus[plugin.Name]
-		active := len(cronJob.Status.Active) > 0
-		pluginStatus.Active = &active
+		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {
@@ -169,18 +159,27 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		}
 		if cronJob.Status.LastScheduleTime != nil {
 			log.Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
-			if j, err := r.getLastFinishedJob(ctx, cronJob); err != nil {
+			if j, err := r.getLastJob(ctx, cronJob); err != nil {
 				clusterscan.SetReadyStatus(false, "JobListError", err.Error())
 				return err
 			} else if j != nil {
-				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
-				pluginStatus.LastSuccessfulTime = j.Status.CompletionTime
+				isFinished, status := getFinishedStatus(j)
+				if !isFinished && len(cronJob.Status.Active) > 0 {
+					status = "Active"
+				}
+				pluginStatus.LastScanStatus = string(status)
 				pluginStatus.LastScanID = string(j.UID)
+				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
+				pluginStatus.LastCompletionTime = j.Status.CompletionTime
+				if status == batchv1.JobComplete {
+					pluginStatus.LastSuccessfulScanID = string(j.UID)
+					pluginStatus.LastSuccessfulTime = j.Status.CompletionTime
+				}
 			}
 		}
 	}
 
-	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs()...); err != nil {
+	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...); err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 		return err
 	} else {
@@ -216,8 +215,8 @@ func (r *ClusterScanReconciler) getClusterIssues(ctx context.Context, scanIDs ..
 	return list.Items, nil
 }
 
-// getLastFinishedJob returns the last finished Job from a CronJob
-func (r *ClusterScanReconciler) getLastFinishedJob(ctx context.Context, cronJob *batchv1.CronJob) (*batchv1.Job, error) {
+// getLastJob returns the last Job from a CronJob
+func (r *ClusterScanReconciler) getLastJob(ctx context.Context, cronJob *batchv1.CronJob) (*batchv1.Job, error) {
 	log := ctrllog.FromContext(ctx, "CronJob", cronJob.Name)
 
 	jobList := &batchv1.JobList{}
@@ -233,13 +232,9 @@ func (r *ClusterScanReconciler) getLastFinishedJob(ctx context.Context, cronJob 
 		return jobList.Items[j].Status.StartTime.Before(jobList.Items[i].Status.StartTime)
 	})
 
-	for _, j := range jobList.Items {
-		if isJobFinished(&j) {
-			log.Info(fmt.Sprintf("%s is the last finished Job", j.Name))
-			return &j, nil
-		}
+	if len(jobList.Items) > 0 {
+		return &jobList.Items[0], nil
 	}
-
 	return nil, nil
 }
 
@@ -293,9 +288,9 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 		clusterscan.SetReadyStatus(false, "ServiceAccountApplyError", err.Error())
 		return err
 	}
-	msg := fmt.Sprintf("ServiceAccount %s has been %s", r.ServiceAccountName, res)
-	log.Info(msg)
 	if res != controllerutil.OperationResultNone {
+		msg := fmt.Sprintf("ServiceAccount %s has been %s", r.ServiceAccountName, res)
+		log.Info(msg)
 		r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "ServiceAccountConfigured", msg)
 	}
 	subject := rbacv1.Subject{
@@ -321,19 +316,19 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 		log.Info(msg)
 		r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "ClusterRoleBindingConfigured", msg)
 	} else {
-		log.Info(fmt.Sprintf("ServiceAccount %s/%s already exists in ClusterRoleBinding %s subjects", sa.Namespace, sa.Name, crb.Name))
+		log.V(1).Info(fmt.Sprintf("ServiceAccount %s/%s already exists in ClusterRoleBinding %s subjects", sa.Namespace, sa.Name, crb.Name))
 	}
 	return nil
 }
 
-// isJobFinished return true if Complete or Failed condition is True
-func isJobFinished(job *batchv1.Job) bool {
+// getFinishedStatus return true if Complete or Failed condition is True
+func getFinishedStatus(job *batchv1.Job) (bool, batchv1.JobConditionType) {
 	for _, c := range job.Status.Conditions {
 		if (c.Type == batchv1.JobComplete || c.Type == batchv1.JobFailed) && c.Status == corev1.ConditionTrue {
-			return true
+			return true, c.Type
 		}
 	}
-	return false
+	return false, ""
 }
 
 // SetupWithManager sets up the controller with the Manager.
