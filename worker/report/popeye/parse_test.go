@@ -93,7 +93,7 @@ func TestParse(t *testing.T) {
 				{
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
-					Severity: LevelToIssueSeverity[1],
+					Severity: "Low",
 					Category: "clusterroles",
 					Resources: map[string][]string{
 						"rbac.authorization.k8s.io/v1/clusterroles": {
@@ -128,7 +128,7 @@ func TestParse(t *testing.T) {
 				{
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
-					Severity: LevelToIssueSeverity[1],
+					Severity: "Low",
 					Category: "clusterroles",
 					Resources: map[string][]string{
 						"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
@@ -138,30 +138,31 @@ func TestParse(t *testing.T) {
 				{
 					ID:       "POP-106",
 					Message:  "No resources requests/limits defined",
-					Severity: LevelToIssueSeverity[2],
+					Severity: "Medium",
 					Category: "daemonsets",
 					Resources: map[string][]string{
-						"containers": {"kube-system/aws-node", "cert-manager/cert-manager"},
+						"apps/v1/daemonsets":  {"kube-system/aws-node"},
+						"apps/v1/deployments": {"cert-manager/cert-manager"},
 					},
 					TotalResources: 2,
 				},
 				{
 					ID:       "POP-107",
 					Message:  "No resource limits defined",
-					Severity: LevelToIssueSeverity[2],
+					Severity: "Medium",
 					Category: "daemonsets",
 					Resources: map[string][]string{
-						"containers": {"kube-system/aws-node", "kube-system/kube-proxy"},
+						"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
 					},
 					TotalResources: 2,
 				},
 				{
 					ID:       "POP-108",
 					Message:  "Unnamed port",
-					Severity: LevelToIssueSeverity[1],
+					Severity: "Low",
 					Category: "deployments",
 					Resources: map[string][]string{
-						"containers": {"cert-manager/cert-manager"},
+						"apps/v1/deployments": {"cert-manager/cert-manager"},
 					},
 					TotalResources: 1,
 				},
