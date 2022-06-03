@@ -115,7 +115,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 	pluginRefs := r.defaultPlugins()
 	if len(clusterscan.Spec.Plugins) > 0 {
-		log.Info("plugin references are provided in ClusterScan")
+		log.V(1).Info("plugin references are provided in ClusterScan")
 		pluginRefs = clusterscan.Spec.Plugins
 	}
 
@@ -158,7 +158,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			pluginStatus.NextScheduleTime = &metav1.Time{Time: sched.Next(time.Now().UTC())}
 		}
 		if cronJob.Status.LastScheduleTime != nil {
-			log.Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
+			log.V(1).Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
 			if j, err := r.getLastJob(ctx, cronJob); err != nil {
 				clusterscan.SetReadyStatus(false, "JobListError", err.Error())
 				return err
@@ -211,7 +211,7 @@ func (r *ClusterScanReconciler) getClusterIssues(ctx context.Context, scanIDs ..
 		log.Error(err, "failed to list ClusterIssues")
 		return nil, err
 	}
-	log.Info(fmt.Sprintf("%d ClusterIssues found", len(list.Items)))
+	log.V(1).Info(fmt.Sprintf("%d ClusterIssues found", len(list.Items)))
 	return list.Items, nil
 }
 
@@ -224,7 +224,7 @@ func (r *ClusterScanReconciler) getLastJob(ctx context.Context, cronJob *batchv1
 		log.Error(err, "failed to list Jobs")
 		return nil, err
 	}
-	log.Info(fmt.Sprintf("found %d Jobs", len(jobList.Items)))
+	log.V(1).Info(fmt.Sprintf("found %d Jobs", len(jobList.Items)))
 	sort.Slice(jobList.Items, func(i, j int) bool {
 		if jobList.Items[i].Status.StartTime == nil {
 			return jobList.Items[j].Status.StartTime != nil
