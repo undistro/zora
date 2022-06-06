@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"time"
 
+	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -104,20 +105,32 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanListError", err.Error())
 		return err
 	}
-	if len(clusterScanList.Items) <= 0 {
-		cluster.SetStatus(v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
-	}
+
 	var totalIssues int
-	var lastScans []string
+	var lastScanIDs []string
+	var failed []string
+	var notFinished []string
 	for _, cs := range clusterScanList.Items {
 		totalIssues += cs.Status.TotalIssues
-		lastScans = append(lastScans, cs.Status.LastScanIDs(true)...)
+		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
+		if cs.Status.LastFinishedScanStatus == string(batchv1.JobFailed) {
+			failed = append(failed, cs.Name)
+		} else if cs.Status.LastFinishedTime == nil {
+			notFinished = append(notFinished, cs.Name)
+		}
 	}
-	if totalIssues != 0 && cluster.Status.TotalIssues != totalIssues {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", fmt.Sprintf("cluster successfully scanned: %d issues reported", totalIssues))
+	if len(clusterScanList.Items) <= 0 {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
+	} else if len(failed) > 0 {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanFailed", "last scan failed")
+	} else if len(notFinished) == len(clusterScanList.Items) {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterNotScanned", "no finished scan yet")
+	} else {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", "cluster successfully scanned")
 	}
+
 	cluster.Status.TotalIssues = totalIssues
-	cluster.Status.LastScans = lastScans
+	cluster.Status.LastScans = lastScanIDs
 	cluster.Status.SetClusterInfo(*info)
 	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
 	cluster.Status.ObservedGeneration = cluster.Generation
