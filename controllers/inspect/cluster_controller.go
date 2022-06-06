@@ -99,6 +99,21 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		return err
 	}
 
+	if err := r.updateScanStatus(ctx, cluster); err != nil {
+		return err
+	}
+
+	cluster.Status.SetClusterInfo(*info)
+	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
+	cluster.Status.ObservedGeneration = cluster.Generation
+	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
+	return nil
+}
+
+// updateScanStatus updates status of the given Cluster based on ClusterScans that reference it
+func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alpha1.Cluster) error {
+	log := ctrllog.FromContext(ctx)
+
 	clusterScanList := &v1alpha1.ClusterScanList{}
 	if err := r.List(ctx, clusterScanList, client.MatchingFields{clusterScanRefKey: cluster.Name}); err != nil {
 		log.Error(err, fmt.Sprintf("failed to list ClusterScan referenced by Cluster %s", cluster.Name))
@@ -119,6 +134,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 			notFinished = append(notFinished, cs.Name)
 		}
 	}
+
 	if len(clusterScanList.Items) <= 0 {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
 	} else if len(failed) > 0 {
@@ -131,13 +147,11 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 
 	cluster.Status.TotalIssues = totalIssues
 	cluster.Status.LastScans = lastScanIDs
-	cluster.Status.SetClusterInfo(*info)
-	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
-	cluster.Status.ObservedGeneration = cluster.Generation
-	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
+
 	return nil
 }
 
+// setStatusAndCreateEvent sets Cluster status and creates an event if the given status type is updated
 func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, statusType string, status bool, reason string, msg string) {
 	before := cluster.Status.GetCondition(statusType).DeepCopy()
 	cluster.SetStatus(statusType, status, reason, msg)
