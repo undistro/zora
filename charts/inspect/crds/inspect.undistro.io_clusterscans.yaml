@@ -304,6 +304,9 @@ spec:
                   - type
                   type: object
                 type: array
+              lastFinishedScanStatus:
+                description: Status of the last finished scan. Complete or Failed
+                type: string
               lastFinishedTime:
                 description: Information when was the last time the job was finished.
                 format: date-time
@@ -335,6 +338,10 @@ spec:
               pluginStatus:
                 additionalProperties:
                   properties:
+                    lastFinishedScanStatus:
+                      description: Status of the last finished plugin scan. Complete
+                        or Failed
+                      type: string
                     lastFinishedTime:
                       description: Information when was the last time the job was
                         finished.
