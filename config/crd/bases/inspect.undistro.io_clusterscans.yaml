@@ -28,7 +28,7 @@ spec:
     - jsonPath: .status.pluginNames
       name: Plugins
       type: string
-    - jsonPath: .status.lastScanStatus
+    - jsonPath: .status.lastStatus
       name: Last Status
       type: string
     - jsonPath: .status.lastScheduleTime

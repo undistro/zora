@@ -185,7 +185,7 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
 //+kubebuilder:printcolumn:name="Plugins",type="string",JSONPath=".status.pluginNames",priority=0
-//+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastScanStatus",priority=0
+//+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastStatus",priority=0
 //+kubebuilder:printcolumn:name="Last Schedule",type="date",JSONPath=".status.lastScheduleTime",priority=0
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0
 //+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
