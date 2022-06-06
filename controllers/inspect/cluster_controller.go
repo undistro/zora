@@ -125,7 +125,11 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 }
 
 func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, statusType string, status bool, reason string, msg string) {
+	before := cluster.Status.GetCondition(statusType).DeepCopy()
 	cluster.SetStatus(statusType, status, reason, msg)
+	if reflect.DeepEqual(before, cluster.Status.GetCondition(statusType)) {
+		return
+	}
 	eventtype := corev1.EventTypeWarning
 	if status {
 		eventtype = corev1.EventTypeNormal
