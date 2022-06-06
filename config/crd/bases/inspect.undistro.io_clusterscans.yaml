@@ -304,19 +304,19 @@ spec:
                   - type
                   type: object
                 type: array
-              lastFinishedScanStatus:
+              lastFinishedStatus:
                 description: Status of the last finished scan. Complete or Failed
                 type: string
               lastFinishedTime:
                 description: Information when was the last time the job was finished.
                 format: date-time
                 type: string
-              lastScanStatus:
-                description: Status of the last scan. Active, Complete or Failed
-                type: string
               lastScheduleTime:
                 description: Information when was the last time the job was scheduled.
                 format: date-time
+                type: string
+              lastStatus:
+                description: Status of the last scan. Active, Complete or Failed
                 type: string
               lastSuccessfulTime:
                 description: Information when was the last time the job successfully
@@ -338,7 +338,7 @@ spec:
               plugins:
                 additionalProperties:
                   properties:
-                    lastFinishedScanStatus:
+                    lastFinishedStatus:
                       description: Status of the last finished plugin scan. Complete
                         or Failed
                       type: string
@@ -350,14 +350,14 @@ spec:
                     lastScanID:
                       description: ID of the last plugin scan
                       type: string
-                    lastScanStatus:
-                      description: Status of the last plugin scan. Active, Complete
-                        or Failed
-                      type: string
                     lastScheduleTime:
                       description: Information when was the last time the job was
                         scheduled.
                       format: date-time
+                      type: string
+                    lastStatus:
+                      description: Status of the last plugin scan. Active, Complete
+                        or Failed
                       type: string
                     lastSuccessfulScanID:
                       description: ID of the last successful plugin scan

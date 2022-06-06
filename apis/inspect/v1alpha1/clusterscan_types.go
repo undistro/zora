@@ -71,10 +71,10 @@ type ClusterScanStatus struct {
 	LastFinishedTime *metav1.Time `json:"lastFinishedTime,omitempty"`
 
 	// Status of the last finished scan. Complete or Failed
-	LastFinishedScanStatus string `json:"lastFinishedScanStatus,omitempty"`
+	LastFinishedStatus string `json:"lastFinishedStatus,omitempty"`
 
 	// Status of the last scan. Active, Complete or Failed
-	LastScanStatus string `json:"lastScanStatus,omitempty"`
+	LastStatus string `json:"lastStatus,omitempty"`
 
 	// Information when was the last time the job successfully completed.
 	LastSuccessfulTime *metav1.Time `json:"lastSuccessfulTime,omitempty"`
@@ -105,12 +105,12 @@ func (in *ClusterScanStatus) SyncStatus() {
 		names = append(names, n)
 		if in.LastScheduleTime == nil {
 			in.LastScheduleTime = s.LastScheduleTime
-			in.LastScanStatus = s.LastScanStatus
+			in.LastStatus = s.LastStatus
 		}
 		if in.LastFinishedTime == nil {
 			in.LastFinishedTime = s.LastFinishedTime
-			in.LastScanStatus = s.LastScanStatus
-			in.LastFinishedScanStatus = s.LastScanStatus
+			in.LastStatus = s.LastStatus
+			in.LastFinishedStatus = s.LastStatus
 		}
 		if in.LastSuccessfulTime == nil {
 			in.LastSuccessfulTime = s.LastSuccessfulTime
@@ -120,12 +120,12 @@ func (in *ClusterScanStatus) SyncStatus() {
 		}
 		if s.LastScheduleTime != nil && s.LastScheduleTime.After(in.LastScheduleTime.Time) {
 			in.LastScheduleTime = s.LastScheduleTime
-			in.LastScanStatus = s.LastScanStatus
+			in.LastStatus = s.LastStatus
 		}
 		if s.LastFinishedTime != nil && s.LastFinishedTime.After(in.LastScheduleTime.Time) {
 			in.LastFinishedTime = s.LastFinishedTime
-			in.LastScanStatus = s.LastScanStatus
-			in.LastFinishedScanStatus = s.LastScanStatus
+			in.LastStatus = s.LastStatus
+			in.LastFinishedStatus = s.LastStatus
 		}
 		if s.LastSuccessfulTime != nil && s.LastSuccessfulTime.After(in.LastSuccessfulTime.Time) {
 			in.LastSuccessfulTime = s.LastSuccessfulTime
@@ -173,10 +173,10 @@ type PluginScanStatus struct {
 	LastSuccessfulScanID string `json:"lastSuccessfulScanID,omitempty"`
 
 	// Status of the last plugin scan. Active, Complete or Failed
-	LastScanStatus string `json:"lastScanStatus,omitempty"`
+	LastStatus string `json:"lastStatus,omitempty"`
 
 	// Status of the last finished plugin scan. Complete or Failed
-	LastFinishedScanStatus string `json:"lastFinishedScanStatus,omitempty"`
+	LastFinishedStatus string `json:"lastFinishedStatus,omitempty"`
 }
 
 //+kubebuilder:object:root=true

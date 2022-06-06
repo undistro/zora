@@ -165,11 +165,11 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			} else if j != nil {
 				isFinished, status, finTime := getFinishedStatus(j)
 				if isFinished {
-					pluginStatus.LastFinishedScanStatus = string(status)
+					pluginStatus.LastFinishedStatus = string(status)
 				} else if len(cronJob.Status.Active) > 0 {
 					status = "Active"
 				}
-				pluginStatus.LastScanStatus = string(status)
+				pluginStatus.LastStatus = string(status)
 				pluginStatus.LastScanID = string(j.UID)
 				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
 				pluginStatus.LastFinishedTime = finTime
