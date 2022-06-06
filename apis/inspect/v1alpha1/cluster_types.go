@@ -13,7 +13,7 @@ const (
 	LabelEnvironment  = "inspect.undistro.io/environment"
 	ClusterReady      = "Ready"
 	ClusterDiscovered = "Discovered"
-	ClusterScanned    = "Scanned"
+	ClusterScanned    = "SuccessfullyScanned"
 )
 
 // ClusterSpec defines the desired state of Cluster
