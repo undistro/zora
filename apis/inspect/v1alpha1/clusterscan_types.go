@@ -55,8 +55,8 @@ func (in *PluginReference) PluginKey(defaultNamespace string) types.NamespacedNa
 type ClusterScanStatus struct {
 	apis.Status `json:",inline"`
 
-	// Last scan ID, schedule and successful time of plugins
-	PluginStatus map[string]*PluginScanStatus `json:"pluginStatus,omitempty"`
+	// Information of the last scans of plugins
+	Plugins map[string]*PluginScanStatus `json:"plugins,omitempty"`
 
 	// Comma separated list of plugins
 	PluginNames string `json:"pluginNames,omitempty"`
@@ -88,20 +88,20 @@ type ClusterScanStatus struct {
 
 // GetPluginStatus returns a PluginScanStatus of a plugin
 func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
-	if in.PluginStatus == nil {
-		in.PluginStatus = make(map[string]*PluginScanStatus)
+	if in.Plugins == nil {
+		in.Plugins = make(map[string]*PluginScanStatus)
 	}
-	if _, ok := in.PluginStatus[name]; !ok {
-		in.PluginStatus[name] = &PluginScanStatus{}
+	if _, ok := in.Plugins[name]; !ok {
+		in.Plugins[name] = &PluginScanStatus{}
 	}
-	return in.PluginStatus[name]
+	return in.Plugins[name]
 }
 
 // SyncStatus fills PluginNames, NextScheduleTime, LastScheduleTime and LastSuccessfulTime fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names []string
 	in.NextScheduleTime = nil
-	for n, s := range in.PluginStatus {
+	for n, s := range in.Plugins {
 		names = append(names, n)
 		if in.LastScheduleTime == nil {
 			in.LastScheduleTime = s.LastScheduleTime
@@ -139,8 +139,8 @@ func (in *ClusterScanStatus) SyncStatus() {
 
 // LastScanIDs returns a list of all the last scan IDs
 func (in *ClusterScanStatus) LastScanIDs(successful bool) []string {
-	lastScans := make([]string, 0, len(in.PluginStatus))
-	for _, ps := range in.PluginStatus {
+	lastScans := make([]string, 0, len(in.Plugins))
+	for _, ps := range in.Plugins {
 		sid := ps.LastScanID
 		if successful {
 			sid = ps.LastSuccessfulScanID

@@ -335,7 +335,7 @@ spec:
               pluginNames:
                 description: Comma separated list of plugins
                 type: string
-              pluginStatus:
+              plugins:
                 additionalProperties:
                   properties:
                     lastFinishedScanStatus:
@@ -372,7 +372,7 @@ spec:
                       format: date-time
                       type: string
                   type: object
-                description: Last scan ID, schedule and successful time of plugins
+                description: Information of the last scans of plugins
                 type: object
               suspend:
                 description: Suspend field value from ClusterScan spec

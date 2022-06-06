@@ -264,8 +264,8 @@ func (in *ClusterScanSpec) DeepCopy() *ClusterScanSpec {
 func (in *ClusterScanStatus) DeepCopyInto(out *ClusterScanStatus) {
 	*out = *in
 	in.Status.DeepCopyInto(&out.Status)
-	if in.PluginStatus != nil {
-		in, out := &in.PluginStatus, &out.PluginStatus
+	if in.Plugins != nil {
+		in, out := &in.Plugins, &out.Plugins
 		*out = make(map[string]*PluginScanStatus, len(*in))
 		for key, val := range *in {
 			var outVal *PluginScanStatus
