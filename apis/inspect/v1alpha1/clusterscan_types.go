@@ -67,8 +67,8 @@ type ClusterScanStatus struct {
 	// Information when was the last time the job was scheduled.
 	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
 
-	// Information when was the last time the job was completed.
-	LastCompletionTime *metav1.Time `json:"lastCompletionTime,omitempty"`
+	// Information when was the last time the job was finished.
+	LastFinishedTime *metav1.Time `json:"lastFinishedTime,omitempty"`
 
 	// Status of the last scan. Active, Complete or Failed
 	LastScanStatus string `json:"lastScanStatus,omitempty"`
@@ -104,8 +104,8 @@ func (in *ClusterScanStatus) SyncStatus() {
 			in.LastScheduleTime = s.LastScheduleTime
 			in.LastScanStatus = s.LastScanStatus
 		}
-		if in.LastCompletionTime == nil {
-			in.LastCompletionTime = s.LastCompletionTime
+		if in.LastFinishedTime == nil {
+			in.LastFinishedTime = s.LastFinishedTime
 			in.LastScanStatus = s.LastScanStatus
 		}
 		if in.LastSuccessfulTime == nil {
@@ -118,8 +118,8 @@ func (in *ClusterScanStatus) SyncStatus() {
 			in.LastScheduleTime = s.LastScheduleTime
 			in.LastScanStatus = s.LastScanStatus
 		}
-		if s.LastCompletionTime != nil && s.LastCompletionTime.After(in.LastScheduleTime.Time) {
-			in.LastCompletionTime = s.LastCompletionTime
+		if s.LastFinishedTime != nil && s.LastFinishedTime.After(in.LastScheduleTime.Time) {
+			in.LastFinishedTime = s.LastFinishedTime
 			in.LastScanStatus = s.LastScanStatus
 		}
 		if s.LastSuccessfulTime != nil && s.LastSuccessfulTime.After(in.LastSuccessfulTime.Time) {
@@ -152,8 +152,8 @@ type PluginScanStatus struct {
 	// Information when was the last time the job was scheduled.
 	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
 
-	// Information when was the last time the job was completed.
-	LastCompletionTime *metav1.Time `json:"lastCompletionTime,omitempty"`
+	// Information when was the last time the job was finished.
+	LastFinishedTime *metav1.Time `json:"lastFinishedTime,omitempty"`
 
 	// Information when was the last time the job successfully completed.
 	LastSuccessfulTime *metav1.Time `json:"lastSuccessfulTime,omitempty"`

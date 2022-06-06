@@ -283,8 +283,8 @@ func (in *ClusterScanStatus) DeepCopyInto(out *ClusterScanStatus) {
 		in, out := &in.LastScheduleTime, &out.LastScheduleTime
 		*out = (*in).DeepCopy()
 	}
-	if in.LastCompletionTime != nil {
-		in, out := &in.LastCompletionTime, &out.LastCompletionTime
+	if in.LastFinishedTime != nil {
+		in, out := &in.LastFinishedTime, &out.LastFinishedTime
 		*out = (*in).DeepCopy()
 	}
 	if in.LastSuccessfulTime != nil {
@@ -443,8 +443,8 @@ func (in *PluginScanStatus) DeepCopyInto(out *PluginScanStatus) {
 		in, out := &in.LastScheduleTime, &out.LastScheduleTime
 		*out = (*in).DeepCopy()
 	}
-	if in.LastCompletionTime != nil {
-		in, out := &in.LastCompletionTime, &out.LastCompletionTime
+	if in.LastFinishedTime != nil {
+		in, out := &in.LastFinishedTime, &out.LastFinishedTime
 		*out = (*in).DeepCopy()
 	}
 	if in.LastSuccessfulTime != nil {

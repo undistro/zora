@@ -163,17 +163,17 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 				clusterscan.SetReadyStatus(false, "JobListError", err.Error())
 				return err
 			} else if j != nil {
-				isFinished, status := getFinishedStatus(j)
+				isFinished, status, finTime := getFinishedStatus(j)
 				if !isFinished && len(cronJob.Status.Active) > 0 {
 					status = "Active"
 				}
 				pluginStatus.LastScanStatus = string(status)
 				pluginStatus.LastScanID = string(j.UID)
 				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
-				pluginStatus.LastCompletionTime = j.Status.CompletionTime
+				pluginStatus.LastFinishedTime = finTime
 				if status == batchv1.JobComplete {
 					pluginStatus.LastSuccessfulScanID = string(j.UID)
-					pluginStatus.LastSuccessfulTime = j.Status.CompletionTime
+					pluginStatus.LastSuccessfulTime = finTime
 				}
 			}
 		}
@@ -322,13 +322,13 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 }
 
 // getFinishedStatus return true if Complete or Failed condition is True
-func getFinishedStatus(job *batchv1.Job) (bool, batchv1.JobConditionType) {
+func getFinishedStatus(job *batchv1.Job) (bool, batchv1.JobConditionType, *metav1.Time) {
 	for _, c := range job.Status.Conditions {
 		if (c.Type == batchv1.JobComplete || c.Type == batchv1.JobFailed) && c.Status == corev1.ConditionTrue {
-			return true, c.Type
+			return true, c.Type, &c.LastTransitionTime
 		}
 	}
-	return false, ""
+	return false, "", nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
