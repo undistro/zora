@@ -170,7 +170,8 @@ func TestParse(t *testing.T) {
 						Severity: inspectv1a1.ClusterIssueSeverity("Medium"),
 						Category: "daemonsets",
 						Resources: map[string][]string{
-							"containers": {"kube-system/aws-node", "cert-manager/cert-manager"},
+							"apps/v1/daemonsets":  {"kube-system/aws-node"},
+							"apps/v1/deployments": {"cert-manager/cert-manager"},
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
@@ -206,7 +207,7 @@ func TestParse(t *testing.T) {
 						Severity: inspectv1a1.ClusterIssueSeverity("Medium"),
 						Category: "daemonsets",
 						Resources: map[string][]string{
-							"containers": {"kube-system/aws-node", "kube-system/kube-proxy"},
+							"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
@@ -242,7 +243,7 @@ func TestParse(t *testing.T) {
 						Severity: inspectv1a1.ClusterIssueSeverity("Low"),
 						Category: "deployments",
 						Resources: map[string][]string{
-							"containers": {"cert-manager/cert-manager"},
+							"apps/v1/deployments": {"cert-manager/cert-manager"},
 						},
 						TotalResources: 1,
 						Cluster:        "super_fake_cluster",

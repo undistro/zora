@@ -18,7 +18,6 @@ const (
 
 // Issue represents a Popeye sanitizer issue.
 type Issue struct {
-	GVR     string `json:"gvr"`
 	Level   Level  `json:"level"`
 	Message string `json:"message"`
 }
@@ -26,6 +25,7 @@ type Issue struct {
 // Sanitizer represents a Popeye sanitizer.
 type Sanitizer struct {
 	Sanitizer string              `json:"sanitizer"`
+	GVR       string              `json:"gvr"`
 	Issues    map[string][]*Issue `json:"issues"`
 }
 
