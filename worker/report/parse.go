@@ -15,7 +15,7 @@ import (
 // NewClusterIssue creates and returns a pointer to a <ClusterIssue> instance
 // carrying issue metadata on its labels. The instance is set as a child of the
 // Job whereby the plugin executed.
-func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, orefs []metav1.OwnerReference, jid *string) *inspectv1a1.ClusterIssue {
+func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, orefs []metav1.OwnerReference, juid *string) *inspectv1a1.ClusterIssue {
 	cispec.Cluster = c.Cluster
 	return &inspectv1a1.ClusterIssue{
 		TypeMeta: metav1.TypeMeta{
@@ -23,7 +23,7 @@ func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, ore
 			APIVersion: inspectv1a1.SchemeGroupVersion.String(),
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispec.ID), *jid),
+			Name:            fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispec.ID), *juid),
 			Namespace:       c.ClusterIssuesNs,
 			OwnerReferences: orefs,
 			Labels: map[string]string{

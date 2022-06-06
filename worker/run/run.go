@@ -34,9 +34,9 @@ func CreateClusterIssues(c *config.Config, ciarr []*inspectv1a1.ClusterIssue) er
 	return nil
 }
 
-// Done checks whether the "done" file has been created or not.
+// Done is used to check whether the "done" or "error" file have been created.
 func Done(dpath string) bool {
-	if _, err := os.Stat(dpath); errors.Is(err, os.ErrNotExist) {
+	if finf, err := os.Stat(dpath); errors.Is(err, os.ErrNotExist) || finf.IsDir() {
 		return false
 	}
 	return true
@@ -52,7 +52,13 @@ func Run() error {
 		return fmt.Errorf("Unable to ensure done path exists: %w", err)
 	}
 
-	for !Done(c.DonePath) {
+	for {
+		if Done(c.ErrorPath) {
+			return errors.New("Plugin crashed")
+		}
+		if Done(c.DonePath) {
+			break
+		}
 		time.Sleep(500 * time.Millisecond)
 	}
 

@@ -33,6 +33,7 @@ var PluginParsers = map[string]func([]byte) ([]*inspectv1a1.ClusterIssueSpec, er
 // <ClusterIssue> instances, and to specify the "done" file path.
 type Config struct {
 	DonePath        string
+	ErrorPath       string
 	Plugin          string
 	Cluster         string
 	ClusterIssuesNs string
@@ -44,7 +45,10 @@ type Config struct {
 // New instantiates a new <Config> struct, with the default path for the
 // "done" file.
 func New() *Config {
-	return &Config{DonePath: fmt.Sprintf("%s/done", DefaultDoneDir)}
+	return &Config{
+		DonePath:  fmt.Sprintf("%s/done", DefaultDoneDir),
+		ErrorPath: fmt.Sprintf("%s/error", DefaultDoneDir),
+	}
 }
 
 // FromEnv instantiates a new <Config> struct, with values taken from the
@@ -86,6 +90,7 @@ func FromEnv() (*Config, error) {
 
 	if e := os.Getenv(DoneDirEnvVar); len(e) != 0 {
 		c.DonePath = fmt.Sprintf("%s/done", e)
+		c.ErrorPath = fmt.Sprintf("%s/error", e)
 	}
 	return c, nil
 }
@@ -95,6 +100,9 @@ func FromEnv() (*Config, error) {
 func (r *Config) Validate() error {
 	if len(r.DonePath) == 0 {
 		return errors.New("Config's <DonePath> field is empty")
+	}
+	if len(r.ErrorPath) == 0 {
+		return errors.New("Config's <ErrorPath> field is empty")
 	}
 	if len(r.Cluster) == 0 {
 		return errors.New("Config's <Cluster> field is empty")
@@ -108,11 +116,11 @@ func (r *Config) Validate() error {
 
 	if len(r.Job) == 0 {
 		return errors.New("Config's <Job> field is empty")
-	} else if i := strings.LastIndex(r.Job, "-"); i == -1 || i == len(r.Job)-1 {
-		return errors.New("Config's <Job> field is invalid")
 	}
 	if len(r.JobUID) == 0 {
 		return errors.New("Config's <JobUID> field is empty")
+	} else if i := strings.LastIndex(r.JobUID, "-"); i == -1 || i == len(r.JobUID)-1 {
+		return errors.New("Config's <JobUID> field is invalid")
 	}
 
 	if _, ok := PluginParsers[r.Plugin]; !ok {
@@ -126,8 +134,8 @@ func (r *Config) Validate() error {
 func (r *Config) HandleDonePath() error {
 	if len(r.DonePath) == 0 {
 		return errors.New("Empty <DonePath>")
-
 	}
+
 	dir := path.Dir(r.DonePath)
 	if _, err := os.Stat(dir); err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf("Unable to check existance of dir <%s>: %w", dir, err)
