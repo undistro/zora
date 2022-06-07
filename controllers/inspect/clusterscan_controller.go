@@ -63,7 +63,6 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	clusterscan := &v1alpha1.ClusterScan{}
 	if err := r.Get(ctx, req.NamespacedName, clusterscan); err != nil {
-		log.Error(err, "failed to fetch ClusterIssue")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	log = log.WithValues("resourceVersion", clusterscan.ResourceVersion)
@@ -85,9 +84,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
-	clusterKey := clusterscan.ClusterKey()
-	if err := r.Get(ctx, clusterKey, cluster); err != nil {
-		log.Error(err, fmt.Sprintf("failed to fetch Cluster %s", clusterKey.String()))
+	if err := r.Get(ctx, clusterscan.ClusterKey(), cluster); err != nil {
+		log.Error(err, fmt.Sprintf("failed to fetch Cluster %s", clusterscan.Spec.ClusterRef.Name))
 		clusterscan.SetReadyStatus(false, "ClusterFetchError", err.Error())
 		return err
 	}
@@ -106,13 +104,18 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		return err
 	}
 
+	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
+		clusterscan.SetReadyStatus(false, "ClusterScanSetOwnerError", err.Error())
+		return err
+	}
+
 	if err := r.applyRBAC(ctx, clusterscan); err != nil {
 		return err
 	}
 
 	pluginRefs := r.defaultPlugins()
 	if len(clusterscan.Spec.Plugins) > 0 {
-		log.Info("plugin references are provided in ClusterScan")
+		log.V(1).Info("plugin references are provided in ClusterScan")
 		pluginRefs = clusterscan.Spec.Plugins
 	}
 
@@ -143,54 +146,50 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "CronJobApplyError", err.Error())
 			return err
 		}
-		msg := fmt.Sprintf("CronJob %s has been %s", cronJob.Name, result)
-		log.Info(msg)
 		if result != controllerutil.OperationResultNone {
+			msg := fmt.Sprintf("CronJob %s has been %s", cronJob.Name, result)
+			log.Info(msg)
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
-		if clusterscan.Status.PluginStatus == nil {
-			clusterscan.Status.PluginStatus = make(map[string]*v1alpha1.PluginCronJobStatus)
-		}
-		_, ok := clusterscan.Status.PluginStatus[plugin.Name]
-		if !ok {
-			clusterscan.Status.PluginStatus[plugin.Name] = &v1alpha1.PluginCronJobStatus{}
-		}
-		pluginStatus := clusterscan.Status.PluginStatus[plugin.Name]
-		active := len(cronJob.Status.Active) > 0
-		pluginStatus.Active = &active
+		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {
 			pluginStatus.NextScheduleTime = &metav1.Time{Time: sched.Next(time.Now().UTC())}
 		}
 		if cronJob.Status.LastScheduleTime != nil {
-			log.Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
-			if j, err := r.getLastFinishedJob(ctx, cronJob); err != nil {
+			log.V(1).Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
+			if j, err := r.getLastJob(ctx, cronJob); err != nil {
 				clusterscan.SetReadyStatus(false, "JobListError", err.Error())
 				return err
 			} else if j != nil {
-				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
-				pluginStatus.LastSuccessfulTime = j.Status.CompletionTime
+				isFinished, status, finTime := getFinishedStatus(j)
+				if isFinished {
+					pluginStatus.LastFinishedStatus = string(status)
+				} else if len(cronJob.Status.Active) > 0 {
+					status = "Active"
+				}
+				pluginStatus.LastStatus = string(status)
 				pluginStatus.LastScanID = string(j.UID)
+				pluginStatus.LastScheduleTime = cronJob.Status.LastScheduleTime
+				pluginStatus.LastFinishedTime = finTime
+				if status == batchv1.JobComplete {
+					pluginStatus.LastSuccessfulScanID = string(j.UID)
+					pluginStatus.LastSuccessfulTime = finTime
+				}
 			}
 		}
 	}
 
-	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs()...); err != nil {
+	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...); err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 		return err
 	} else {
 		clusterscan.Status.TotalIssues = len(issues)
 	}
 
-	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
-		clusterscan.SetReadyStatus(false, "ClusterScanSetOwnerError", err.Error())
-		return err
-	}
-
 	clusterscan.Status.SyncStatus()
 	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
-	clusterscan.Status.ClusterNamespacedName = clusterKey.String()
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
 	return nil
@@ -214,12 +213,12 @@ func (r *ClusterScanReconciler) getClusterIssues(ctx context.Context, scanIDs ..
 		log.Error(err, "failed to list ClusterIssues")
 		return nil, err
 	}
-	log.Info(fmt.Sprintf("%d ClusterIssues found", len(list.Items)))
+	log.V(1).Info(fmt.Sprintf("%d ClusterIssues found", len(list.Items)))
 	return list.Items, nil
 }
 
-// getLastFinishedJob returns the last finished Job from a CronJob
-func (r *ClusterScanReconciler) getLastFinishedJob(ctx context.Context, cronJob *batchv1.CronJob) (*batchv1.Job, error) {
+// getLastJob returns the last Job from a CronJob
+func (r *ClusterScanReconciler) getLastJob(ctx context.Context, cronJob *batchv1.CronJob) (*batchv1.Job, error) {
 	log := ctrllog.FromContext(ctx, "CronJob", cronJob.Name)
 
 	jobList := &batchv1.JobList{}
@@ -227,7 +226,7 @@ func (r *ClusterScanReconciler) getLastFinishedJob(ctx context.Context, cronJob 
 		log.Error(err, "failed to list Jobs")
 		return nil, err
 	}
-	log.Info(fmt.Sprintf("found %d Jobs", len(jobList.Items)))
+	log.V(1).Info(fmt.Sprintf("found %d Jobs", len(jobList.Items)))
 	sort.Slice(jobList.Items, func(i, j int) bool {
 		if jobList.Items[i].Status.StartTime == nil {
 			return jobList.Items[j].Status.StartTime != nil
@@ -235,13 +234,9 @@ func (r *ClusterScanReconciler) getLastFinishedJob(ctx context.Context, cronJob 
 		return jobList.Items[j].Status.StartTime.Before(jobList.Items[i].Status.StartTime)
 	})
 
-	for _, j := range jobList.Items {
-		if isJobFinished(&j) {
-			log.Info(fmt.Sprintf("%s is the last finished Job", j.Name))
-			return &j, nil
-		}
+	if len(jobList.Items) > 0 {
+		return &jobList.Items[0], nil
 	}
-
 	return nil, nil
 }
 
@@ -295,9 +290,9 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 		clusterscan.SetReadyStatus(false, "ServiceAccountApplyError", err.Error())
 		return err
 	}
-	msg := fmt.Sprintf("ServiceAccount %s has been %s", r.ServiceAccountName, res)
-	log.Info(msg)
 	if res != controllerutil.OperationResultNone {
+		msg := fmt.Sprintf("ServiceAccount %s has been %s", r.ServiceAccountName, res)
+		log.Info(msg)
 		r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "ServiceAccountConfigured", msg)
 	}
 	subject := rbacv1.Subject{
@@ -323,19 +318,19 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 		log.Info(msg)
 		r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "ClusterRoleBindingConfigured", msg)
 	} else {
-		log.Info(fmt.Sprintf("ServiceAccount %s/%s already exists in ClusterRoleBinding %s subjects", sa.Namespace, sa.Name, crb.Name))
+		log.V(1).Info(fmt.Sprintf("ServiceAccount %s/%s already exists in ClusterRoleBinding %s subjects", sa.Namespace, sa.Name, crb.Name))
 	}
 	return nil
 }
 
-// isJobFinished return true if Complete or Failed condition is True
-func isJobFinished(job *batchv1.Job) bool {
+// getFinishedStatus return true if Complete or Failed condition is True
+func getFinishedStatus(job *batchv1.Job) (bool, batchv1.JobConditionType, *metav1.Time) {
 	for _, c := range job.Status.Conditions {
 		if (c.Type == batchv1.JobComplete || c.Type == batchv1.JobFailed) && c.Status == corev1.ConditionTrue {
-			return true
+			return true, c.Type, &c.LastTransitionTime
 		}
 	}
-	return false
+	return false, "", nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
