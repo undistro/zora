@@ -80,6 +80,6 @@ var (
 		"1201": "No namespaces match namespace selector",
 
 		// RBAC
-		"1300": "Inexistent reference",
+		"1300": "References a role which does not exist",
 	}
 )
