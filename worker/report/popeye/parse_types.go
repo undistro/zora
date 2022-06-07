@@ -69,6 +69,7 @@ var (
 		"901": "MinAvailable is greater than the number of pods currently running",
 
 		// Service
+		"1101": "Skip ports check. No explicit ports detected on pod",
 		"1102": "Unnamed service port in use",
 		"1106": "No target ports match service port",
 
