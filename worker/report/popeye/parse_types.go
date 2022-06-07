@@ -19,10 +19,10 @@ var (
 		// Container
 		"105": "Unnamed probe port in use",
 		"108": "Unnamed port",
-		"109": "CPU request reached user's request threshold",
-		"110": "Memory request reached user's request threshold",
-		"111": "CPU reached user's limit threshold",
-		"112": "Memory reached user's limit threshold",
+		"109": "CPU reached request threshold",
+		"110": "Memory reached request threshold",
+		"111": "CPU reached user threshold",
+		"112": "Memory reached user threshold",
 		"113": "Container image not hosted on an allowed docker registry",
 
 		// Pod
