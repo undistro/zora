@@ -47,7 +47,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 	if err := c.Validate(); err != nil {
 		return nil, fmt.Errorf("Invalid configuration: %w", err)
 	}
-	repby, err := os.ReadAll(r)
+	repby, err := io.ReadAll(r)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read results of plugin <%s> from cluster <%s>: %w", c.Plugin, c.Cluster, err)
 	}
