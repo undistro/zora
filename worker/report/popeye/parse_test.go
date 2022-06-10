@@ -1,7 +1,7 @@
 package popeye
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"sort"
 	"testing"
@@ -195,7 +195,7 @@ func TestParse(t *testing.T) {
 		}
 	}
 	for _, c := range cases {
-		rep, err := ioutil.ReadFile(c.testrepname)
+		rep, err := os.ReadFile(c.testrepname)
 		if err != nil {
 			t.Errorf("Setup failed on case: %s\n", c.description)
 			t.Fatal(err)
