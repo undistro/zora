@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -149,7 +148,7 @@ func (r *Config) HandleDonePath() error {
 // HandleResultsPath returns an <io.Reader> pointing to the path inside the
 // "done" file.
 func (r *Config) HandleResultsPath() (io.Reader, error) {
-	fiby, err := ioutil.ReadFile(r.DonePath)
+	fiby, err := os.ReadFile(r.DonePath)
 	if err != nil {
 		return nil, errors.New("Unable to read 'done' file")
 	}
