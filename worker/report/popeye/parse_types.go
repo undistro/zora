@@ -19,10 +19,10 @@ var (
 		// Container
 		"105": "Unnamed probe port in use",
 		"108": "Unnamed port",
-		"109": "CPU request reached user's request threshold",
-		"110": "Memory request reached user's request threshold",
-		"111": "CPU reached user's limit threshold",
-		"112": "Memory reached user's limit threshold",
+		"109": "CPU reached request threshold",
+		"110": "Memory reached request threshold",
+		"111": "CPU reached user threshold",
+		"112": "Memory reached user threshold",
 		"113": "Container image not hosted on an allowed docker registry",
 
 		// Pod
@@ -69,6 +69,7 @@ var (
 		"901": "MinAvailable is greater than the number of pods currently running",
 
 		// Service
+		"1101": "Skip ports check. No explicit ports detected on pod",
 		"1102": "Unnamed service port in use",
 		"1106": "No target ports match service port",
 
@@ -80,6 +81,6 @@ var (
 		"1201": "No namespaces match namespace selector",
 
 		// RBAC
-		"1300": "Inexistent reference",
+		"1300": "References a role which does not exist",
 	}
 )

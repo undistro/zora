@@ -74,7 +74,8 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 		r.Existing.Spec.Schedule = firstNonEmptyString(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
-		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyOnFailure
+		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
+		r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
 			{

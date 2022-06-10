@@ -3,8 +3,10 @@ package inspect
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"time"
 
+	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -43,7 +45,6 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
-		log.Error(err, "failed to fetch Cluster")
 		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
 	}
 	log = log.WithValues("resourceVersion", cluster.ResourceVersion)
@@ -98,32 +99,65 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		return err
 	}
 
+	if err := r.updateScanStatus(ctx, cluster); err != nil {
+		return err
+	}
+
+	cluster.Status.SetClusterInfo(*info)
+	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
+	cluster.Status.ObservedGeneration = cluster.Generation
+	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
+	return nil
+}
+
+// updateScanStatus updates status of the given Cluster based on ClusterScans that reference it
+func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alpha1.Cluster) error {
+	log := ctrllog.FromContext(ctx)
+
 	clusterScanList := &v1alpha1.ClusterScanList{}
 	if err := r.List(ctx, clusterScanList, client.MatchingFields{clusterScanRefKey: cluster.Name}); err != nil {
 		log.Error(err, fmt.Sprintf("failed to list ClusterScan referenced by Cluster %s", cluster.Name))
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanListError", err.Error())
 		return err
 	}
+
 	var totalIssues int
-	var lastScans []string
+	var lastScanIDs []string
+	var failed []string
+	var notFinished []string
 	for _, cs := range clusterScanList.Items {
 		totalIssues += cs.Status.TotalIssues
-		lastScans = append(lastScans, cs.Status.LastScanIDs()...)
+		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
+		if cs.Status.LastFinishedStatus == string(batchv1.JobFailed) {
+			failed = append(failed, cs.Name)
+		} else if cs.Status.LastFinishedTime == nil {
+			notFinished = append(notFinished, cs.Name)
+		}
 	}
-	if totalIssues != 0 && cluster.Status.TotalIssues != totalIssues {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", fmt.Sprintf("cluster successfully scanned: %d issues reported", totalIssues))
+
+	if len(clusterScanList.Items) <= 0 {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
+	} else if len(failed) > 0 {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanFailed", "last scan failed")
+	} else if len(notFinished) == len(clusterScanList.Items) {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterNotScanned", "no finished scan yet")
+	} else {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", "cluster successfully scanned")
 	}
+
 	cluster.Status.TotalIssues = totalIssues
-	cluster.Status.LastScans = lastScans
-	cluster.Status.SetClusterInfo(*info)
-	cluster.Status.LastRun = metav1.NewTime(time.Now().UTC())
-	cluster.Status.ObservedGeneration = cluster.Generation
-	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
+	cluster.Status.LastScans = lastScanIDs
+
 	return nil
 }
 
+// setStatusAndCreateEvent sets Cluster status and creates an event if the given status type is updated
 func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, statusType string, status bool, reason string, msg string) {
+	before := cluster.Status.GetCondition(statusType).DeepCopy()
 	cluster.SetStatus(statusType, status, reason, msg)
+	if reflect.DeepEqual(before, cluster.Status.GetCondition(statusType)) {
+		return
+	}
 	eventtype := corev1.EventTypeWarning
 	if status {
 		eventtype = corev1.EventTypeNormal

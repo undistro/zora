@@ -287,7 +287,7 @@ It's possible filter issues by cluster, issue ID, severity and category:
 kubectl get clusterissues -l cluster=mycluster
 
 # clusters with issue POP-106
-kubectl get clusterissues -l issueID=POP-106
+kubectl get clusterissues -l id=POP-106
 
 # issues from mycluster with high severity
 kubectl get clusterissues -l cluster=mycluster,severity=high
