@@ -35,6 +35,7 @@ lists the parameters that can be configured during installation.
 ### Connect to a cluster
 
 **Before you begin**
+
 - You must have a kubeconfig file with an authentication `token` of the target cluster.
 - The api-server of target cluster must be reachable by the management cluster.
 - The target cluster must have Metrics Server deployed. For more information, visit the 
@@ -51,6 +52,7 @@ Undistro Inspect needs a _ServiceAccount_ token.
 
 > **Important:**
 > Ensure you are in the context of the cluster that you want to connect.
+>
 > - Display list of contexts: `kubectl config get-contexts`
 > - Display the current-context: `kubectl config current-context`
 > - Set the default context to my-cluster-name: `kubectl config use-context my-cluster-name`
@@ -222,6 +224,7 @@ mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m         
 ```
 
 > **Tips:**
+>
 > - Get clusters from all namespaces using `--all-namespaces` flag
 > - Get clusters with additional information using `-o=wide` flag
 > - Get the documentation for `clusters` manifests using `kubectl explain clusters`
@@ -242,6 +245,7 @@ The cluster list output has the following columns:
 - `ISSUES`: Total of issues reported in this Cluster (with `-o=wide` flag)
 
 > **Info:**
+>
 > - The quantity of available and in use resources, is an average of all Nodes.
 > - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
 > - Show detailed description of a cluster, including **events**, running `kubectl describe cluster mycluster`.

@@ -22,6 +22,7 @@ These commands deploy Undistro Inspect on the Kubernetes cluster in the default 
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tips:**
+>
 > - List all charts available in `undistro` repo using `helm search repo undistro`
 > - Update `undistro` chart repository using `helm repo update undistro`
 > - List all versions available of `undistro/inspect` chart using `helm search repo undistro/inspect --versions`
