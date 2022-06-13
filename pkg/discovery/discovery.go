@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -53,10 +52,15 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		return nil, err
 	}
 
+	ns, err := r.kubernetes.CoreV1().Namespaces().Get(ctx, "kube-system", metav1.GetOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("unable to get <kube-system> namespace: %w", err)
+	}
+
 	return &ClusterInfo{
 		Nodes:             nodes,
 		Resources:         avgNodeResources(nodes),
-		CreationTimestamp: oldestNodeTimestamp(nodes),
+		CreationTimestamp: ns.CreationTimestamp,
 		Provider:          prov,
 		Region:            reg,
 	}, nil
@@ -200,14 +204,4 @@ func nodeIsReady(node corev1.Node) bool {
 		}
 	}
 	return false
-}
-
-func oldestNodeTimestamp(nodes []NodeInfo) metav1.Time {
-	oldest := metav1.NewTime(time.Now().UTC())
-	for _, node := range nodes {
-		if node.CreationTimestamp.Before(&oldest) {
-			oldest = node.CreationTimestamp
-		}
-	}
-	return oldest
 }
