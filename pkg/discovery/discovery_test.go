@@ -3,7 +3,6 @@ package discovery
 import (
 	"reflect"
 	"testing"
-	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -446,37 +445,4 @@ func TestRegion(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestOldestNodeTimestamp(t *testing.T) {
-	type args struct {
-		nodes []NodeInfo
-	}
-	tests := []struct {
-		name string
-		args args
-		want metav1.Time
-	}{
-		{
-			name: "OK",
-			args: args{nodes: []NodeInfo{
-				{CreationTimestamp: parseTime("2022-05-05T11:03:23Z")},
-				{CreationTimestamp: parseTime("2022-05-02T18:41:51Z")},
-				{CreationTimestamp: parseTime("2022-05-02T18:41:50Z")},
-			}},
-			want: parseTime("2022-05-02T18:41:50Z"),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := oldestNodeTimestamp(tt.args.nodes); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("oldestNodeTimestamp() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func parseTime(value string) metav1.Time {
-	tt, _ := time.Parse(time.RFC3339, value)
-	return metav1.NewTime(tt)
 }
