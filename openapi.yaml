@@ -110,9 +110,16 @@ components:
           type: integer
           minimum: 0
           example: 178
-        ready:
-          type: boolean
-          example: true
+        status:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [failed, unknown, scanned]
+              example: failed
+            message:
+              type: string
+              example: 'metrics API not available'
         version:
           type: string
           example: v1.21.5-eks-bc4871b
@@ -124,6 +131,14 @@ components:
           type: string
           format: date-time
           example: "2022-03-17T19:45:07Z"
+        lastSuccessfulScanTime:
+          type: string
+          format: date-time
+          example: "2022-06-14T17:30:11Z"
+        nextScheduleScanTime:
+          type: string
+          format: date-time
+          example: "2022-06-14T17:33:00Z"
         resources:
           $ref: '#/components/schemas/Resources'
     Resources:
