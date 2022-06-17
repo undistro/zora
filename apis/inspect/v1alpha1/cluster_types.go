@@ -14,6 +14,9 @@ const (
 	ClusterReady      = "Ready"
 	ClusterDiscovered = "Discovered"
 	ClusterScanned    = "SuccessfullyScanned"
+
+	ClusterNotScanned        = "ClusterNotScanned"
+	ClusterScanNotConfigured = "ClusterScanNotConfigured"
 )
 
 // ClusterSpec defines the desired state of Cluster
@@ -53,6 +56,12 @@ type ClusterStatus struct {
 
 	// List of last scan IDs
 	LastScans []string `json:"lastScans,omitempty"`
+
+	// Datetime of last successful scan.
+	LastSuccessfulScanTime metav1.Time `json:"lastSuccessfulScanTime,omitempty"`
+
+	// Datetime of next scan.
+	NextScheduleScanTime metav1.Time `json:"nextScheduleScanTime,omitempty"`
 }
 
 // SetClusterInfo fill ClusterInfo and temporary fields (TotalNodes, MemoryUsage and CPUUsage)

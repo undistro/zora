@@ -125,6 +125,11 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 	var lastScanIDs []string
 	var failed []string
 	var notFinished []string
+	hascs := len(clusterScanList.Items) != 0
+	neweststat := &v1alpha1.ClusterScanStatus{}
+	if hascs {
+		neweststat = &clusterScanList.Items[0].Status
+	}
 	for _, cs := range clusterScanList.Items {
 		totalIssues += cs.Status.TotalIssues
 		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
@@ -133,20 +138,32 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		} else if cs.Status.LastFinishedTime == nil {
 			notFinished = append(notFinished, cs.Name)
 		}
+
+		if neweststat.LastScheduleTime.Before(cs.Status.LastScheduleTime) {
+			neweststat = &cs.Status
+		}
 	}
 
 	if len(clusterScanList.Items) <= 0 {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanNotConfigured, "no scan configured")
 	} else if len(failed) > 0 {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanFailed", "last scan failed")
 	} else if len(notFinished) == len(clusterScanList.Items) {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterNotScanned", "no finished scan yet")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterNotScanned, "no finished scan yet")
 	} else {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", "cluster successfully scanned")
 	}
 
 	cluster.Status.TotalIssues = totalIssues
 	cluster.Status.LastScans = lastScanIDs
+	if hascs {
+		if neweststat.LastSuccessfulTime != nil {
+			cluster.Status.LastSuccessfulScanTime = *neweststat.LastSuccessfulTime
+		}
+		if neweststat.NextScheduleTime != nil {
+			cluster.Status.NextScheduleScanTime = *neweststat.NextScheduleTime
+		}
+	}
 
 	return nil
 }
