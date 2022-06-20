@@ -23,7 +23,6 @@ type Cluster struct {
 	Region                 string      `json:"region"`
 	TotalNodes             int         `json:"totalNodes"`
 	Version                string      `json:"version"`
-	Ready                  bool        `json:"ready"`
 	Status                 ScanStatus  `json:"status"`
 	TotalIssues            int         `json:"totalIssues"`
 	Resources              *Resources  `json:"resources"`
@@ -50,52 +49,39 @@ type ScanStatus struct {
 }
 
 func deriveStatus(conds []metav1.Condition) ScanStatus {
-	var cready, cdisc, cscanned *metav1.Condition
-	unknownr := false
 	for _, c := range conds {
-		if cready == nil && c.Type == v1alpha1.ClusterReady && c.Status == metav1.ConditionFalse {
-			cready = &c
+		if c.Type == v1alpha1.ClusterReady && c.Status == metav1.ConditionFalse ||
+			c.Type == v1alpha1.ClusterDiscovered && c.Status == metav1.ConditionFalse {
+			return ScanStatus{Type: Failed, Message: c.Message}
 		}
-		if cdisc == nil && c.Type == v1alpha1.ClusterDiscovered && c.Status == metav1.ConditionFalse {
-			cdisc = &c
-		}
-		if cscanned == nil && c.Type == v1alpha1.ClusterScanned && c.Status == metav1.ConditionFalse {
-			cscanned = &c
+		if c.Type == v1alpha1.ClusterScanned && c.Status == metav1.ConditionFalse {
 			if c.Reason == v1alpha1.ClusterNotScanned || c.Reason == v1alpha1.ClusterScanNotConfigured {
-				unknownr = true
+				return ScanStatus{Type: Unknown, Message: c.Message}
 			}
+			return ScanStatus{Type: Failed, Message: c.Message}
 		}
-	}
-	if cready != nil {
-		return ScanStatus{Type: Failed, Message: cready.Message}
-	}
-	if cdisc != nil {
-		return ScanStatus{Type: Failed, Message: cdisc.Message}
-	}
-	if unknownr {
-		return ScanStatus{Type: Unknown, Message: cscanned.Message}
-	}
-	if cscanned != nil {
-		return ScanStatus{Type: Failed, Message: cscanned.Message}
 	}
 	return ScanStatus{Type: Scanned}
 }
 
 func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	cl := Cluster{
-		Name:                   cluster.Name,
-		Namespace:              cluster.Namespace,
-		Environment:            cluster.Labels[v1alpha1.LabelEnvironment],
-		Provider:               cluster.Status.Provider,
-		Region:                 cluster.Status.Region,
-		TotalNodes:             cluster.Status.TotalNodes,
-		Ready:                  cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady),
-		Version:                cluster.Status.KubernetesVersion,
-		CreationTimestamp:      cluster.Status.CreationTimestamp,
-		TotalIssues:            cluster.Status.TotalIssues,
-		Resources:              &Resources{},
-		LastSuccessfulScanTime: cluster.Status.LastSuccessfulScanTime,
-		NextScheduleScanTime:   cluster.Status.NextScheduleScanTime,
+		Name:              cluster.Name,
+		Namespace:         cluster.Namespace,
+		Environment:       cluster.Labels[v1alpha1.LabelEnvironment],
+		Provider:          cluster.Status.Provider,
+		Region:            cluster.Status.Region,
+		TotalNodes:        cluster.Status.TotalNodes,
+		Version:           cluster.Status.KubernetesVersion,
+		CreationTimestamp: cluster.Status.CreationTimestamp,
+		TotalIssues:       cluster.Status.TotalIssues,
+		Resources:         &Resources{},
+	}
+	if cluster.Status.LastSuccessfulScanTime != nil {
+		cl.LastSuccessfulScanTime = *cluster.Status.LastSuccessfulScanTime
+	}
+	if cluster.Status.NextScheduleScanTime != nil {
+		cl.NextScheduleScanTime = *cluster.Status.NextScheduleScanTime
 	}
 
 	if cpu, ok := cluster.Status.Resources[corev1.ResourceCPU]; ok {

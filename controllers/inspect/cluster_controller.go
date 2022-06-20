@@ -158,10 +158,10 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 	cluster.Status.LastScans = lastScanIDs
 	if hascs {
 		if neweststat.LastSuccessfulTime != nil {
-			cluster.Status.LastSuccessfulScanTime = *neweststat.LastSuccessfulTime
+			cluster.Status.LastSuccessfulScanTime = &metav1.Time{Time: neweststat.LastSuccessfulTime.Time}
 		}
 		if neweststat.NextScheduleTime != nil {
-			cluster.Status.NextScheduleScanTime = *neweststat.NextScheduleTime
+			cluster.Status.NextScheduleScanTime = &metav1.Time{Time: neweststat.NextScheduleTime.Time}
 		}
 	}
 

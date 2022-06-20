@@ -58,10 +58,10 @@ type ClusterStatus struct {
 	LastScans []string `json:"lastScans,omitempty"`
 
 	// Datetime of last successful scan.
-	LastSuccessfulScanTime metav1.Time `json:"lastSuccessfulScanTime,omitempty"`
+	LastSuccessfulScanTime *metav1.Time `json:"lastSuccessfulScanTime,omitempty"`
 
 	// Datetime of next scan.
-	NextScheduleScanTime metav1.Time `json:"nextScheduleScanTime,omitempty"`
+	NextScheduleScanTime *metav1.Time `json:"nextScheduleScanTime,omitempty"`
 }
 
 // SetClusterInfo fill ClusterInfo and temporary fields (TotalNodes, MemoryUsage and CPUUsage)
