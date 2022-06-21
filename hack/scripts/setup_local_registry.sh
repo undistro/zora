@@ -14,7 +14,7 @@ case "$(docker inspect -f '{{.State.Running}}' $LOCAL_REG_NAME 2> /dev/null)" in
 			docker run \
 				--detach=true \
 				--restart=always \
-				--publish "$REG_PORT:5000" \
+				--publish "127.0.0.1:$REG_PORT:5000" \
 				--name "$LOCAL_REG_NAME" \
 				registry:2 > /dev/null
 			;;
