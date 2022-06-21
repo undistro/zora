@@ -86,8 +86,10 @@ build: generate fmt vet ## Build manager binary.
 	go build -o bin/worker worker/main.go
 
 .PHONY: run
-run: install manifests generate fmt vet ## Run a controller from your host.
+run: install manifests generate ## Run a controller from your host.
 	go run ./main.go
+run-server: install manifests generate ## Run Inpect's server locally.
+	go run ./cmd/server/main.go
 
 .PHONY: docker-build
 docker-build: test ## Build manager docker image.
