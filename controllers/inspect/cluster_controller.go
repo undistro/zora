@@ -121,15 +121,21 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		return err
 	}
 
+	if cluster.Status.LastSuccessfulScanTime == nil && len(clusterScanList.Items) != 0 {
+		cluster.Status.LastSuccessfulScanTime = &metav1.Time{
+			Time: clusterScanList.Items[0].Status.LastSuccessfulTime.Time,
+		}
+	}
+	if cluster.Status.NextScheduleScanTime == nil && len(clusterScanList.Items) != 0 {
+		cluster.Status.NextScheduleScanTime = &metav1.Time{
+			Time: clusterScanList.Items[0].Status.NextScheduleTime.Time,
+		}
+	}
+
 	var totalIssues int
 	var lastScanIDs []string
 	var failed []string
 	var notFinished []string
-	hascs := len(clusterScanList.Items) != 0
-	neweststat := &v1alpha1.ClusterScanStatus{}
-	if hascs {
-		neweststat = &clusterScanList.Items[0].Status
-	}
 	for _, cs := range clusterScanList.Items {
 		totalIssues += cs.Status.TotalIssues
 		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
@@ -139,8 +145,11 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 			notFinished = append(notFinished, cs.Name)
 		}
 
-		if neweststat.LastScheduleTime.Before(cs.Status.LastScheduleTime) {
-			neweststat = &cs.Status
+		if cluster.Status.LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
+			cluster.Status.LastSuccessfulScanTime = &metav1.Time{Time: cs.Status.LastSuccessfulTime.Time}
+		}
+		if cluster.Status.NextScheduleScanTime.Before(cs.Status.NextScheduleTime) {
+			cluster.Status.NextScheduleScanTime = &metav1.Time{Time: cs.Status.NextScheduleTime.Time}
 		}
 	}
 
@@ -156,14 +165,6 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 
 	cluster.Status.TotalIssues = totalIssues
 	cluster.Status.LastScans = lastScanIDs
-	if hascs {
-		if neweststat.LastSuccessfulTime != nil {
-			cluster.Status.LastSuccessfulScanTime = &metav1.Time{Time: neweststat.LastSuccessfulTime.Time}
-		}
-		if neweststat.NextScheduleTime != nil {
-			cluster.Status.NextScheduleScanTime = &metav1.Time{Time: neweststat.NextScheduleTime.Time}
-		}
-	}
 
 	return nil
 }
