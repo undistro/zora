@@ -171,7 +171,7 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 	return append(commonEnv,
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",
-			Value: r.ClusterScan.Name,
+			Value: r.ClusterScan.Spec.ClusterRef.Name,
 		},
 		corev1.EnvVar{
 			Name:  "CLUSTER_ISSUES_NAMESPACE",
