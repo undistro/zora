@@ -121,6 +121,17 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		return err
 	}
 
+	if cluster.Status.LastSuccessfulScanTime == nil && len(clusterScanList.Items) != 0 {
+		cluster.Status.LastSuccessfulScanTime = &metav1.Time{
+			Time: clusterScanList.Items[0].Status.LastSuccessfulTime.Time,
+		}
+	}
+	if cluster.Status.NextScheduleScanTime == nil && len(clusterScanList.Items) != 0 {
+		cluster.Status.NextScheduleScanTime = &metav1.Time{
+			Time: clusterScanList.Items[0].Status.NextScheduleTime.Time,
+		}
+	}
+
 	var totalIssues int
 	var lastScanIDs []string
 	var failed []string
@@ -133,14 +144,21 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		} else if cs.Status.LastFinishedTime == nil {
 			notFinished = append(notFinished, cs.Name)
 		}
+
+		if cluster.Status.LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
+			cluster.Status.LastSuccessfulScanTime = &metav1.Time{Time: cs.Status.LastSuccessfulTime.Time}
+		}
+		if cluster.Status.NextScheduleScanTime.Before(cs.Status.NextScheduleTime) {
+			cluster.Status.NextScheduleScanTime = &metav1.Time{Time: cs.Status.NextScheduleTime.Time}
+		}
 	}
 
 	if len(clusterScanList.Items) <= 0 {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanNotConfigured", "no scan configured")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanNotConfigured, "no scan configured")
 	} else if len(failed) > 0 {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanFailed", "last scan failed")
 	} else if len(notFinished) == len(clusterScanList.Items) {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterNotScanned", "no finished scan yet")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterNotScanned, "no finished scan yet")
 	} else {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", "cluster successfully scanned")
 	}

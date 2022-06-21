@@ -180,11 +180,19 @@ spec:
                 items:
                   type: string
                 type: array
+              lastSuccessfulScanTime:
+                description: Datetime of last successful scan.
+                format: date-time
+                type: string
               memoryAvailable:
                 description: Quantity of memory available in Mi
                 type: string
               memoryUsage:
                 description: Usage of memory in quantity and percentage
+                type: string
+              nextScheduleScanTime:
+                description: Datetime of next scan.
+                format: date-time
                 type: string
               observedGeneration:
                 description: ObservedGeneration is the 'Generation' of the resource
