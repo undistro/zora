@@ -16,20 +16,25 @@ const (
 )
 
 type Cluster struct {
-	Name                   string      `json:"name"`
-	Namespace              string      `json:"namespace"`
-	Environment            string      `json:"environment"`
-	Provider               string      `json:"provider"`
-	Region                 string      `json:"region"`
-	TotalNodes             int         `json:"totalNodes"`
-	Version                string      `json:"version"`
-	Status                 ScanStatus  `json:"status"`
-	TotalIssues            int         `json:"totalIssues"`
-	Resources              *Resources  `json:"resources"`
-	CreationTimestamp      metav1.Time `json:"creationTimestamp"`
-	Issues                 []Issue     `json:"issues"`
-	LastSuccessfulScanTime metav1.Time `json:"lastSuccessfulScanTime"`
-	NextScheduleScanTime   metav1.Time `json:"nextScheduleScanTime"`
+	Name                   string           `json:"name"`
+	Namespace              string           `json:"namespace"`
+	Environment            string           `json:"environment"`
+	Provider               string           `json:"provider"`
+	Region                 string           `json:"region"`
+	TotalNodes             int              `json:"totalNodes"`
+	Version                string           `json:"version"`
+	Status                 ScanStatus       `json:"status"`
+	TotalIssues            int              `json:"totalIssues"`
+	Resources              *Resources       `json:"resources"`
+	CreationTimestamp      metav1.Time      `json:"creationTimestamp"`
+	Issues                 []ResourcedIssue `json:"issues"`
+	LastSuccessfulScanTime metav1.Time      `json:"lastSuccessfulScanTime"`
+	NextScheduleScanTime   metav1.Time      `json:"nextScheduleScanTime"`
+}
+
+type ResourcedIssue struct {
+	Issue     `json:",inline"`
+	Resources map[string][]string `json:"resources"`
 }
 
 type Resources struct {
@@ -103,10 +108,17 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	return cl
 }
 
+func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
+	ri := ResourcedIssue{}
+	ri.Issue = NewIssue(i)
+	ri.Resources = i.Spec.Resources
+	return ri
+}
+
 func NewClusterWithIssues(cluster v1alpha1.Cluster, issues []v1alpha1.ClusterIssue) Cluster {
 	c := NewCluster(cluster)
 	for _, i := range issues {
-		c.Issues = append(c.Issues, NewIssue(i))
+		c.Issues = append(c.Issues, NewResourcedIssue(i))
 	}
 	c.TotalIssues = len(issues)
 	return c
