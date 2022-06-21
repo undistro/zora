@@ -5,6 +5,7 @@ CLUSTER_NAME=${CLUSTER_NAME:-"inspected"}
 CLUSTER_NS=${CLUSTER_NS:-"undistro-inspect"}
 KCONFIG_PATH=${KCONFIG_PATH:-"inspect_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
+ENABLE_CLUSTER_SCAN=${ENABLE_CLUSTER_SCAN:-0}
 
 setup_namespaces() {
 	if ! kubectl get namespace $CLUSTER_NS > /dev/null 2>&1; then
@@ -53,5 +54,7 @@ EOF
 setup_namespaces
 setup_kubeconfig_secret
 apply_cluster_crd
-apply_plugin_crd
-apply_clusterscan_crd
+if test $ENABLE_CLUSTER_SCAN -eq 1; then
+	apply_plugin_crd
+	apply_clusterscan_crd
+fi
