@@ -127,7 +127,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
-		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", cluster.Name, plugin.Name), kubeconfigSecret.Namespace)
+		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
 
 		cronJobMutator := &cronjobs.Mutator{
 			Scheme:             r.Scheme,
