@@ -121,12 +121,14 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		return err
 	}
 
-	if cluster.Status.LastSuccessfulScanTime == nil && len(clusterScanList.Items) != 0 {
+	if cluster.Status.LastSuccessfulScanTime == nil && len(clusterScanList.Items) != 0 &&
+		clusterScanList.Items[0].Status.LastSuccessfulTime != nil {
 		cluster.Status.LastSuccessfulScanTime = &metav1.Time{
 			Time: clusterScanList.Items[0].Status.LastSuccessfulTime.Time,
 		}
 	}
-	if cluster.Status.NextScheduleScanTime == nil && len(clusterScanList.Items) != 0 {
+	if cluster.Status.NextScheduleScanTime == nil && len(clusterScanList.Items) != 0 &&
+		clusterScanList.Items[0].Status.NextScheduleTime != nil {
 		cluster.Status.NextScheduleScanTime = &metav1.Time{
 			Time: clusterScanList.Items[0].Status.NextScheduleTime.Time,
 		}
