@@ -52,8 +52,8 @@ func main() {
 	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
 	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.2.2", "Docker image name of Worker container")
-	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "undistro-inspect-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
-	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "undistro-inspect-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
+	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	opts := zap.Options{
 		Development: true,
 		TimeEncoder: zapcore.TimeEncoderOfLayout(time.RFC3339),

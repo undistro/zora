@@ -17,10 +17,10 @@ import (
 const (
 	workerContainerName  = "worker"
 	kubeconfigVolumeName = "kubeconfig"
-	kubeconfigMountPath  = "/etc/undistro-inspect"
+	kubeconfigMountPath  = "/etc/zora"
 	kubeconfigFile       = "kubeconfig.yml"
 	resultsVolumeName    = "results"
-	resultsDir           = "/tmp/undistro-inspect/results"
+	resultsDir           = "/tmp/zora/results"
 	LabelClusterScan     = "inspect.undistro.io/cluster-scan"
 	LabelPlugin          = "inspect.undistro.io/plugin"
 )

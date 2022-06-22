@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	DefaultDoneDir        = "/tmp/undistro-inspect/results"
+	DefaultDoneDir        = "/tmp/zora/results"
 	DoneDirEnvVar         = "DONE_DIR"
 	PluginEnvVar          = "PLUGIN_NAME"
 	ClusterEnvVar         = "CLUSTER_NAME"

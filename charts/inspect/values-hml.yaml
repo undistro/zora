@@ -4,4 +4,4 @@ ingress:
   className: nginx
   enabled: true
   host: inspect-hml.undistro.io
-  tlsSecretName: undistro-inspect-cert
+  tlsSecretName: zora-cert

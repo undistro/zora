@@ -19,7 +19,7 @@ provides multi cluster visibility.
 1. Install Zora using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install undistro-inspect undistro/inspect \
+helm install zora undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n zora-system \
@@ -303,7 +303,7 @@ kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-59
 ## Uninstall
 
 ```shell
-helm delete undistro-inspect -n zora-system
+helm delete zora -n zora-system
 kubectl delete namespace zora-system
 ```
 

@@ -6,11 +6,11 @@ Zora denounces potential issues in your Kubernetes cluster and provides multi cl
 
 ## Installing the Chart
 
-To install the chart with the release name `undistro-inspect`:
+To install the chart with the release name `zora`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install undistro-inspect undistro/inspect \
+helm install zora undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n zora-system \
@@ -30,10 +30,10 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `undistro-inspect` release:
+To uninstall/delete the `zora` release:
 
 ```console
-$ helm delete undistro-inspect
+$ helm delete zora
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -160,14 +160,14 @@ The following table lists the configurable parameters of the Zora chart and thei
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm install undistro-inspect \
+$ helm install zora \
   --set server.service.port=8080 undistro/inspect
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install undistro-inspect -f values.yaml undistro/inspect
+$ helm install zora -f values.yaml undistro/inspect
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

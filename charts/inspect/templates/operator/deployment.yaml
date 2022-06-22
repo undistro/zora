@@ -55,8 +55,8 @@ spec:
             - --zap-time-encoding={{ .Values.operator.log.timeEncoding }}
             - --default-plugins-namespace={{ .Release.Namespace }}
             - --worker-image={{ printf "%s:%s" .Values.scan.worker.image.repository (.Values.scan.worker.image.tag | default .Chart.AppVersion) }}
-            - --cronjob-clusterrolebinding-name=undistro-inspect-plugins
-            - --cronjob-serviceaccount-name=undistro-inspect-plugins
+            - --cronjob-clusterrolebinding-name=zora-plugins
+            - --cronjob-serviceaccount-name=zora-plugins
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           livenessProbe:

@@ -41,12 +41,12 @@ jobs:
       - name: Get UI image tag
         run: |
           echo "UI_IMAGE_TAG=$(
-            helm get values undistro-inspect -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
+            helm get values zora -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
           )" >> $GITHUB_ENV
 
       - name: Dry run
         run: |
-          helm upgrade --install undistro-inspect undistro/inspect \
+          helm upgrade --install zora undistro/inspect \
             -f charts/inspect/values-hml.yaml \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upgrade Helm release
         run: |
-          helm upgrade --install undistro-inspect undistro/inspect \
+          helm upgrade --install zora undistro/inspect \
             -f charts/inspect/values-hml.yaml \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
