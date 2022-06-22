@@ -4,7 +4,7 @@ metadata:
   name: clusterissues-editor
 rules:
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusterissues
     verbs:
@@ -16,7 +16,7 @@ rules:
       - update
       - watch
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusterissues/status
     verbs:

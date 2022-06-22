@@ -64,7 +64,7 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusters
   verbs:
@@ -76,13 +76,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusters/finalizers
   verbs:
   - update
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusters/status
   verbs:
@@ -90,7 +90,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterscans
   verbs:
@@ -102,13 +102,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterscans/finalizers
   verbs:
   - update
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterscans/status
   verbs:
@@ -116,7 +116,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - plugins
   verbs:

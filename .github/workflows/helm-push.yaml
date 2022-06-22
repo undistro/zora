@@ -29,4 +29,4 @@ jobs:
         env:
           HELM_REPO_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           HELM_REPO_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        run: helm cm-push inspect/ https://registry.undistro.io/chartrepo/library
+        run: helm cm-push zora/ https://registry.undistro.io/chartrepo/library

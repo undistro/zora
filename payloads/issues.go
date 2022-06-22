@@ -1,6 +1,6 @@
 package payloads
 
-import "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+import "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 
 type Issue struct {
 	ID       string             `json:"id"`

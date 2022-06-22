@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 )
 
 var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
@@ -28,12 +28,12 @@ func prepareIdAndMsg(msg string) (string, string, error) {
 
 // Parse transforms a Popeye report into a slice of <ClusterIssueSpec>. This
 // function is called by the <report> package when a Popeye plugin is used.
-func Parse(popr []byte) ([]*inspectv1a1.ClusterIssueSpec, error) {
+func Parse(popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 	r := &Report{}
 	if err := json.Unmarshal(popr, r); err != nil {
 		return nil, err
 	}
-	issuesmap := map[string]*inspectv1a1.ClusterIssueSpec{}
+	issuesmap := map[string]*zorav1a1.ClusterIssueSpec{}
 	for _, san := range r.Popeye.Sanitizers {
 		for typ, issues := range san.Issues {
 			for _, iss := range issues {
@@ -45,7 +45,7 @@ func Parse(popr []byte) ([]*inspectv1a1.ClusterIssueSpec, error) {
 					ci.Resources[san.GVR] = append(ci.Resources[san.GVR], typ)
 					ci.TotalResources++
 				} else {
-					issuesmap[id] = &inspectv1a1.ClusterIssueSpec{
+					issuesmap[id] = &zorav1a1.ClusterIssueSpec{
 						ID:       id,
 						Message:  msg,
 						Severity: LevelToIssueSeverity[iss.Level],
@@ -60,7 +60,7 @@ func Parse(popr []byte) ([]*inspectv1a1.ClusterIssueSpec, error) {
 		}
 	}
 
-	res := []*inspectv1a1.ClusterIssueSpec{}
+	res := []*zorav1a1.ClusterIssueSpec{}
 	for _, ci := range issuesmap {
 		res = append(res, ci)
 	}

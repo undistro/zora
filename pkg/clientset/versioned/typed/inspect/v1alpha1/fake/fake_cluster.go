@@ -5,7 +5,7 @@ package fake
 import (
 	"context"
 
-	v1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	v1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -18,9 +18,9 @@ type FakeClusters struct {
 	ns   string
 }
 
-var clustersResource = schema.GroupVersionResource{Group: "inspect", Version: "v1alpha1", Resource: "clusters"}
+var clustersResource = schema.GroupVersionResource{Group: "zora", Version: "v1alpha1", Resource: "clusters"}
 
-var clustersKind = schema.GroupVersionKind{Group: "inspect", Version: "v1alpha1", Kind: "Cluster"}
+var clustersKind = schema.GroupVersionKind{Group: "zora", Version: "v1alpha1", Kind: "Cluster"}
 
 // Get takes name of the cluster, and returns the corresponding cluster object, and an error if there is any.
 func (c *FakeClusters) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Cluster, err error) {

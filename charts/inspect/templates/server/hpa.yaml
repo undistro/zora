@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "inspect.fullname" . }}-server
+  name: {{ include "zora.fullname" . }}-server
   labels:
-    {{- include "inspect.serverLabels" . | nindent 4 }}
+    {{- include "zora.serverLabels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "inspect.fullname" . }}-server
+    name: {{ include "zora.fullname" . }}-server
   minReplicas: {{ .Values.server.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
   metrics:

@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "inspect.fullname" . }}-nginx
+  name: {{ include "zora.fullname" . }}-nginx
   labels:
-    {{- include "inspect.nginxLabels" . | nindent 4 }}
+    {{- include "zora.nginxLabels" . | nindent 4 }}
 spec:
   {{- if not .Values.nginx.autoscaling.enabled }}
   replicas: {{ .Values.nginx.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "inspect.nginxSelectorLabels" . | nindent 6 }}
+      {{- include "zora.nginxSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.nginx.podAnnotations }}
@@ -19,18 +19,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "inspect.nginxSelectorLabels" . | nindent 8 }}
+        {{- include "zora.nginxSelectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.imageCredentials.create  }}
       imagePullSecrets:
-        - name: {{ include "inspect.fullname" . }}-registry-cred
+        - name: {{ include "zora.fullname" . }}-registry-cred
       {{- else }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- end }}
-      serviceAccountName: {{ include "inspect.nginxServiceAccountName" . }}
+      serviceAccountName: {{ include "zora.nginxServiceAccountName" . }}
       securityContext:
         {{- toYaml .Values.nginx.podSecurityContext | nindent 8 }}
       containers:
@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "inspect.fullname" . }}-nginx
+            name: {{ include "zora.fullname" . }}-nginx
       {{- with .Values.nginx.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	v1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	scheme "github.com/getupio-undistro/inspect/pkg/clientset/versioned/scheme"
+	v1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	scheme "github.com/getupio-undistro/zora/pkg/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"

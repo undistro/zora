@@ -1,9 +1,9 @@
 #!/bin/sh
 set -o errexit
 
-CLUSTER_NAME=${CLUSTER_NAME:-"inspected"}
+CLUSTER_NAME=${CLUSTER_NAME:-"zoraed"}
 CLUSTER_NS=${CLUSTER_NS:-"zora-system"}
-KCONFIG_PATH=${KCONFIG_PATH:-"inspect_view_kubeconfig.yaml"}
+KCONFIG_PATH=${KCONFIG_PATH:-"zora_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
 ENABLE_CLUSTER_SCAN=${ENABLE_CLUSTER_SCAN:-0}
 
@@ -22,7 +22,7 @@ setup_kubeconfig_secret() {
 
 apply_cluster_crd() {
 cat << EOF | kubectl apply -f -
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: $CLUSTER_NAME
@@ -34,12 +34,12 @@ EOF
 }
 
 apply_plugin_crd(){
-	kubectl -n $CLUSTER_NS apply -f config/samples/inspect_v1alpha1_plugin.yaml
+	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin.yaml
 }
 
 apply_clusterscan_crd(){
 cat << EOF | kubectl apply -f -
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   name: $CLUSTER_NAME-scan

@@ -1,16 +1,16 @@
 package v1alpha1
 
 import (
-	"github.com/getupio-undistro/inspect/pkg/apis"
-	"github.com/getupio-undistro/inspect/pkg/discovery"
-	"github.com/getupio-undistro/inspect/pkg/formats"
+	"github.com/getupio-undistro/zora/pkg/apis"
+	"github.com/getupio-undistro/zora/pkg/discovery"
+	"github.com/getupio-undistro/zora/pkg/formats"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
 
 const (
-	LabelEnvironment  = "inspect.undistro.io/environment"
+	LabelEnvironment  = "zora.undistro.io/environment"
 	ClusterReady      = "Ready"
 	ClusterDiscovered = "Discovered"
 	ClusterScanned    = "SuccessfullyScanned"

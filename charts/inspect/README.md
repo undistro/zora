@@ -10,7 +10,7 @@ To install the chart with the release name `zora`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install zora undistro/inspect \
+helm install zora undistro/zora \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n zora-system \
@@ -25,7 +25,7 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 >
 > - List all charts available in `undistro` repo using `helm search repo undistro`
 > - Update `undistro` chart repository using `helm repo update undistro`
-> - List all versions available of `undistro/inspect` chart using `helm search repo undistro/inspect --versions`
+> - List all versions available of `undistro/zora` chart using `helm search repo undistro/zora --versions`
 > - List all releases using `helm list`
 
 ## Uninstalling the Chart
@@ -54,12 +54,12 @@ The following table lists the configurable parameters of the Zora chart and thei
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to ingress |
-| ingress.host | string | `"inspect.domain"` | The host of Zora in ingress rule |
+| ingress.host | string | `"zora.domain"` | The host of Zora in ingress rule |
 | ingress.server | object | `{"path":"/api","pathType":"ImplementationSpecific"}` | `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP) |
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Zora operator |
-| operator.image.repository | string | `"registry.undistro.io/inspect/operator"` | Zora operator image repository |
+| operator.image.repository | string | `"registry.undistro.io/zora/operator"` | Zora operator image repository |
 | operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
@@ -85,7 +85,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | server.replicaCount | int | `1` | Number of replicas desired of Zora server |
-| server.image.repository | string | `"registry.undistro.io/inspect/server"` | Zora server image repository |
+| server.image.repository | string | `"registry.undistro.io/zora/server"` | Zora server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
@@ -111,7 +111,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | server.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | server.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | ui.replicaCount | int | `1` | Number of replicas desired of Zora UI |
-| ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Zora UI image repository |
+| ui.image.repository | string | `"registry.undistro.io/zora/ui"` | Zora UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -161,13 +161,13 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install zora \
-  --set server.service.port=8080 undistro/inspect
+  --set server.service.port=8080 undistro/zora
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install zora -f values.yaml undistro/inspect
+$ helm install zora -f values.yaml undistro/zora
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

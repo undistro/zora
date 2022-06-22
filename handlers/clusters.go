@@ -7,8 +7,8 @@ import (
 	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/getupio-undistro/inspect/payloads"
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/payloads"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 )
 
 func ClusterListHandler(client versioned.Interface, logger logr.Logger) func(http.ResponseWriter, *http.Request) {

@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}
+  name: {{ include "zora.operatorServiceAccountName" . }}
   labels:
-    {{- include "inspect.operatorLabels" . | nindent 4 }}
+    {{- include "zora.operatorLabels" . | nindent 4 }}
   {{- with .Values.operator.rbac.serviceAccount.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -15,7 +15,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}-leader-election
+  name: {{ include "zora.operatorServiceAccountName" . }}-leader-election
 rules:
   - apiGroups:
       - ""
@@ -52,7 +52,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}
+  name: {{ include "zora.operatorServiceAccountName" . }}
 rules:
   - apiGroups:
       - ""
@@ -129,7 +129,7 @@ rules:
     verbs:
       - get
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusters
       - clusterissues
@@ -144,14 +144,14 @@ rules:
       - update
       - watch
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusters/finalizers
       - clusterscans/finalizers
     verbs:
       - update
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusters/status
       - clusterissues/status
@@ -165,7 +165,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}-metrics-reader
+  name: {{ include "zora.operatorServiceAccountName" . }}-metrics-reader
 rules:
   - nonResourceURLs:
       - /metrics
@@ -175,7 +175,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}-proxy
+  name: {{ include "zora.operatorServiceAccountName" . }}-proxy
 rules:
   - apiGroups:
       - authentication.k8s.io
@@ -193,39 +193,39 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}-leader-election
+  name: {{ include "zora.operatorServiceAccountName" . }}-leader-election
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "inspect.operatorServiceAccountName" . }}-leader-election
+  name: {{ include "zora.operatorServiceAccountName" . }}-leader-election
 subjects:
   - kind: ServiceAccount
-    name: {{ include "inspect.operatorServiceAccountName" . }}
+    name: {{ include "zora.operatorServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}
+  name: {{ include "zora.operatorServiceAccountName" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "inspect.operatorServiceAccountName" . }}
+  name: {{ include "zora.operatorServiceAccountName" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "inspect.operatorServiceAccountName" . }}
+    name: {{ include "zora.operatorServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "inspect.operatorServiceAccountName" . }}-proxy
+  name: {{ include "zora.operatorServiceAccountName" . }}-proxy
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "inspect.operatorServiceAccountName" . }}-proxy
+  name: {{ include "zora.operatorServiceAccountName" . }}-proxy
 subjects:
   - kind: ServiceAccount
-    name: {{ include "inspect.operatorServiceAccountName" . }}
+    name: {{ include "zora.operatorServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 {{- end }}

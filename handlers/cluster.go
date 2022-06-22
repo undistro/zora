@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/payloads"
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/payloads"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-logr/logr"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

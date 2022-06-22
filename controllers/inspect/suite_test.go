@@ -1,4 +1,4 @@
-package inspect
+package zora
 
 import (
 	"path/filepath"
@@ -14,7 +14,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	inspectv1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	zorav1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -46,7 +46,7 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
 
-	err = inspectv1alpha1.AddToScheme(scheme.Scheme)
+	err = zorav1alpha1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	//+kubebuilder:scaffold:scheme

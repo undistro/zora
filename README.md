@@ -19,7 +19,7 @@ provides multi cluster visibility.
 1. Install Zora using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install zora undistro/inspect \
+helm install zora undistro/zora \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
   -n zora-system \
@@ -27,7 +27,7 @@ helm install zora undistro/inspect \
 ```
 
 These commands deploy Zora to the Kubernetes cluster. [This
-section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect)
+section](https://github.com/getupio-undistro/zora/tree/main/charts/zora)
 lists the parameters that can be configured during installation.
 
 ## Usage
@@ -59,12 +59,12 @@ Zora needs a _ServiceAccount_ token.
 
 1. Create the service account with `view` permissions:
 ```shell
-kubectl -n zora-system create serviceaccount inspect-view
+kubectl -n zora-system create serviceaccount zora-view
 cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: inspect-view
+  name: zora-view
 rules:
   - apiGroups: [ "" ]
     resources:
@@ -114,7 +114,7 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=zora-system:inspect-view
+kubectl create clusterrolebinding zora-view --clusterrole=zora-view --serviceaccount=zora-system:zora-view
 ```
 
 2. Check which version of Kubernetes your cluster is running, then proceed to section 2.2 for version 1.24.0 or later, otherwise, follow up on section 2.1.
@@ -122,13 +122,13 @@ kubectl create clusterrolebinding inspect-view --clusterrole=inspect-view --serv
 2.1. For versions prior to 1.24.0, set the `TOKEN_NAME` variable as follows:
 
 ```shell
-export TOKEN_NAME=$(kubectl -n zora-system get serviceaccount inspect-view -o=jsonpath='{.secrets[0].name}')
+export TOKEN_NAME=$(kubectl -n zora-system get serviceaccount zora-view -o=jsonpath='{.secrets[0].name}')
 ```
 
 2.2. For clusters running Kubernetes 1.24.0 or later, create a Secret to generate a ServiceAccount token and set the `TOKEN_NAME` variable with the Secret name as follows:
 
 ```shell
-export TOKEN_NAME="inspect-view-token"
+export TOKEN_NAME="zora-view-token"
 
 cat << EOF | kubectl apply -f - 
 apiVersion: v1
@@ -137,7 +137,7 @@ metadata:
   name: "$TOKEN_NAME"
   namespace: "zora-system"
   annotations:
-    kubernetes.io/service-account.name: "inspect-view"
+    kubernetes.io/service-account.name: "zora-view"
 type: kubernetes.io/service-account-token
 EOF
 ```
@@ -155,7 +155,7 @@ export CLUSTER_SERVER=$(kubectl config view --raw -o=go-template='{{range .clust
 
 4. Generate a kubeconfig file:
 ```shell
-cat << EOF > inspect-view-kubeconfig.yml
+cat << EOF > zora-view-kubeconfig.yml
 apiVersion: v1
 kind: Config
 current-context: ${CURRENT_CONTEXT}
@@ -163,7 +163,7 @@ contexts:
 - name: ${CURRENT_CONTEXT}
   context:
     cluster: ${CURRENT_CONTEXT}
-    user: inspect-view
+    user: zora-view
     namespace: zora-system
 clusters:
 - name: ${CURRENT_CONTEXT}
@@ -171,7 +171,7 @@ clusters:
     certificate-authority-data: ${CLUSTER_CA}
     server: ${CLUSTER_SERVER}
 users:
-- name: inspect-view
+- name: zora-view
   user:
     token: ${TOKEN_VALUE}
 EOF
@@ -185,7 +185,7 @@ EOF
 ```shell
 kubectl create secret generic mycluster-kubeconfig \
   -n zora-system \
-  --from-file=value=inspect-view-kubeconfig.yml
+  --from-file=value=zora-view-kubeconfig.yml
 ```
 
 #### Create a Cluster resource
@@ -194,13 +194,13 @@ Create a `Cluster` resource referencing the kubeconfig Secret in the same namesp
 
 ```shell
 cat << EOF | kubectl apply -f -
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: mycluster
   namespace: zora-system
   labels:
-    inspect.undistro.io/environment: prod
+    zora.undistro.io/environment: prod
 spec:
   kubeconfigRef:
     name: mycluster-kubeconfig
@@ -209,9 +209,9 @@ EOF
 
 > **Tip:**
 > 
-> Clusters can be grouped by environment with the `inspect.undistro.io/environment` label.
+> Clusters can be grouped by environment with the `zora.undistro.io/environment` label.
 > 
-> You can list all clusters from `prod` environment using: `kubectl get clusters -l inspect.undistro.io/environment=prod`
+> You can list all clusters from `prod` environment using: `kubectl get clusters -l zora.undistro.io/environment=prod`
 
 ### List clusters
 
@@ -260,7 +260,7 @@ You can modify per your needs/wants.
 
 ```shell
 cat << EOF | kubectl apply -f -
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   name: mycluster

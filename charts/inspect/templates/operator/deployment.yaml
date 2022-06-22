@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "inspect.fullname" . }}-operator
+  name: {{ include "zora.fullname" . }}-operator
   labels:
-    {{- include "inspect.operatorLabels" . | nindent 4 }}
+    {{- include "zora.operatorLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.operator.replicaCount }}
   selector:
     matchLabels:
-      {{- include "inspect.operatorSelectorLabels" . | nindent 6 }}
+      {{- include "zora.operatorSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.operator.podAnnotations }}
@@ -16,11 +16,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "inspect.operatorSelectorLabels" . | nindent 8 }}
+        {{- include "zora.operatorSelectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.imageCredentials.create  }}
       imagePullSecrets:
-        - name: {{ include "inspect.fullname" . }}-registry-cred
+        - name: {{ include "zora.fullname" . }}-registry-cred
       {{- else }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -77,7 +77,7 @@ spec:
             {{- toYaml .Values.operator.securityContext | nindent 12 }}
       securityContext:
         {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
-      serviceAccountName: {{ include "inspect.operatorServiceAccountName" . }}
+      serviceAccountName: {{ include "zora.operatorServiceAccountName" . }}
       terminationGracePeriodSeconds: 10
       {{- with .Values.operator.nodeSelector }}
       nodeSelector:

@@ -1,4 +1,4 @@
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   name: mycluster

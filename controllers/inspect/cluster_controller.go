@@ -1,4 +1,4 @@
-package inspect
+package zora
 
 import (
 	"context"
@@ -18,9 +18,9 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/pkg/discovery"
-	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/pkg/discovery"
+	"github.com/getupio-undistro/zora/pkg/kubeconfig"
 )
 
 const clusterScanRefKey = ".metadata.cluster"
@@ -33,9 +33,9 @@ type ClusterReconciler struct {
 	Config   *rest.Config
 }
 
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusters/finalizers,verbs=update
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to

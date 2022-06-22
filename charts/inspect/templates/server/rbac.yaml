@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "inspect.serverServiceAccountName" . }}
+  name: {{ include "zora.serverServiceAccountName" . }}
   labels:
-    {{- include "inspect.serverLabels" . | nindent 4 }}
+    {{- include "zora.serverLabels" . | nindent 4 }}
   {{- with .Values.server.rbac.serviceAccount.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -15,10 +15,10 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "inspect.serverServiceAccountName" . }}
+  name: {{ include "zora.serverServiceAccountName" . }}
 rules:
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusters
       - clusterissues
@@ -29,7 +29,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - inspect.undistro.io
+      - zora.undistro.io
     resources:
       - clusters/status
       - clusterscans/status
@@ -39,13 +39,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "inspect.serverServiceAccountName" . }}
+  name: {{ include "zora.serverServiceAccountName" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "inspect.serverServiceAccountName" . }}
+  name: {{ include "zora.serverServiceAccountName" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "inspect.serverServiceAccountName" . }}
+    name: {{ include "zora.serverServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 {{- end }}

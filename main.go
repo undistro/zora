@@ -18,8 +18,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	inspectv1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	inspectcontrollers "github.com/getupio-undistro/inspect/controllers/inspect"
+	zorav1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	zoracontrollers "github.com/getupio-undistro/zora/controllers/zora"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -31,7 +31,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(inspectv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(zorav1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -69,14 +69,14 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "e0f4eef4.inspect.undistro.io",
+		LeaderElectionID:       "e0f4eef4.zora.undistro.io",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
 
-	if err = (&inspectcontrollers.ClusterReconciler{
+	if err = (&zoracontrollers.ClusterReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
@@ -85,7 +85,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
 		os.Exit(1)
 	}
-	if err = (&inspectcontrollers.ClusterScanReconciler{
+	if err = (&zoracontrollers.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
 		Scheme:                  mgr.GetScheme(),
 		Recorder:                mgr.GetEventRecorderFor("clusterscan-controller"),

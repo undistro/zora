@@ -2,9 +2,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "inspect.fullname" . }}-metrics-monitor
+  name: {{ include "zora.fullname" . }}-metrics-monitor
   labels:
-    {{- include "inspect.operatorLabels" . | nindent 4 }}
+    {{- include "zora.operatorLabels" . | nindent 4 }}
 spec:
   endpoints:
     - path: /metrics
@@ -15,5 +15,5 @@ spec:
         insecureSkipVerify: true
   selector:
     matchLabels:
-      {{- include "inspect.operatorSelectorLabels" . | nindent 4 }}
+      {{- include "zora.operatorSelectorLabels" . | nindent 4 }}
 {{- end }}

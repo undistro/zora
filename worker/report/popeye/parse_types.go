@@ -1,15 +1,15 @@
 package popeye
 
-import inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+import zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 
 var (
 	// LevelToIssueSeverity maps Popeye's <Level> type to Inspect's
 	// <ClusterIssueSeverity>.
-	LevelToIssueSeverity = [4]inspectv1a1.ClusterIssueSeverity{
-		inspectv1a1.SeverityNone,
-		inspectv1a1.SeverityLow,
-		inspectv1a1.SeverityMedium,
-		inspectv1a1.SeverityHigh,
+	LevelToIssueSeverity = [4]zorav1a1.ClusterIssueSeverity{
+		zorav1a1.SeverityNone,
+		zorav1a1.SeverityLow,
+		zorav1a1.SeverityMedium,
+		zorav1a1.SeverityHigh,
 	}
 
 	// IssueIDtoGenericMsg maps Popeye's issue codes to generic versions of the

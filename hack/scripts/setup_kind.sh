@@ -15,6 +15,6 @@ containerdConfigPatches:
     endpoint = ["http://$LOCAL_REG_NAME:$REG_PORT"]
 EOF
 
-if ! docker inspect -f='{{json .NetworkSettings.Networks.kind}}' $LOCAL_REG_NAME > /dev/null; then
+if ! docker zora -f='{{json .NetworkSettings.Networks.kind}}' $LOCAL_REG_NAME > /dev/null; then
 	docker network connect "kind" $LOCAL_REG_NAME
 fi

@@ -6,8 +6,8 @@ import (
 	"sort"
 	"testing"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/worker/config"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/worker/config"
 	"github.com/google/go-cmp/cmp"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -18,7 +18,7 @@ func TestParse(t *testing.T) {
 		description   string
 		testrepname   string
 		config        *config.Config
-		clusterissues []*inspectv1a1.ClusterIssue
+		clusterissues []*zorav1a1.ClusterIssue
 		toerr         bool
 	}{
 		{
@@ -34,11 +34,11 @@ func TestParse(t *testing.T) {
 				JobUID:          "fake_job_uid-666-666",
 				Pod:             "_",
 			},
-			clusterissues: []*inspectv1a1.ClusterIssue{
+			clusterissues: []*zorav1a1.ClusterIssue{
 				{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       "ClusterIssue",
-						APIVersion: inspectv1a1.SchemeGroupVersion.String(),
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "fake_cluster-pop-400-666",
@@ -50,18 +50,18 @@ func TestParse(t *testing.T) {
 							UID:        types.UID("fake_job_uid-666-666"),
 						}},
 						Labels: map[string]string{
-							inspectv1a1.LabelScanID:   "fake_job_uid-666-666",
-							inspectv1a1.LabelCluster:  "fake_cluster",
-							inspectv1a1.LabelSeverity: "Low",
-							inspectv1a1.LabelIssueID:  "POP-400",
-							inspectv1a1.LabelCategory: "clusterroles",
-							inspectv1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelScanID:   "fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "fake_cluster",
+							zorav1a1.LabelSeverity: "Low",
+							zorav1a1.LabelIssueID:  "POP-400",
+							zorav1a1.LabelCategory: "clusterroles",
+							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
-					Spec: inspectv1a1.ClusterIssueSpec{
+					Spec: zorav1a1.ClusterIssueSpec{
 						ID:       "POP-400",
 						Message:  "Used? Unable to locate resource reference",
-						Severity: inspectv1a1.ClusterIssueSeverity("Low"),
+						Severity: zorav1a1.ClusterIssueSeverity("Low"),
 						Category: "clusterroles",
 						Resources: map[string][]string{
 							"rbac.authorization.k8s.io/v1/clusterroles": {
@@ -104,11 +104,11 @@ func TestParse(t *testing.T) {
 				JobUID:          "super_fake_job_uid-666-666",
 				Pod:             "_",
 			},
-			clusterissues: []*inspectv1a1.ClusterIssue{
+			clusterissues: []*zorav1a1.ClusterIssue{
 				{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       "ClusterIssue",
-						APIVersion: inspectv1a1.SchemeGroupVersion.String(),
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "super_fake_cluster-pop-400-666",
@@ -120,18 +120,18 @@ func TestParse(t *testing.T) {
 							UID:        types.UID("super_fake_job_uid-666-666"),
 						}},
 						Labels: map[string]string{
-							inspectv1a1.LabelScanID:   "super_fake_job_uid-666-666",
-							inspectv1a1.LabelCluster:  "super_fake_cluster",
-							inspectv1a1.LabelSeverity: "Low",
-							inspectv1a1.LabelIssueID:  "POP-400",
-							inspectv1a1.LabelCategory: "clusterroles",
-							inspectv1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Low",
+							zorav1a1.LabelIssueID:  "POP-400",
+							zorav1a1.LabelCategory: "clusterroles",
+							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
-					Spec: inspectv1a1.ClusterIssueSpec{
+					Spec: zorav1a1.ClusterIssueSpec{
 						ID:       "POP-400",
 						Message:  "Used? Unable to locate resource reference",
-						Severity: inspectv1a1.ClusterIssueSeverity("Low"),
+						Severity: zorav1a1.ClusterIssueSeverity("Low"),
 						Category: "clusterroles",
 						Resources: map[string][]string{
 							"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
@@ -144,7 +144,7 @@ func TestParse(t *testing.T) {
 				{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       "ClusterIssue",
-						APIVersion: inspectv1a1.SchemeGroupVersion.String(),
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "super_fake_cluster-pop-106-666",
@@ -156,18 +156,18 @@ func TestParse(t *testing.T) {
 							UID:        types.UID("super_fake_job_uid-666-666"),
 						}},
 						Labels: map[string]string{
-							inspectv1a1.LabelScanID:   "super_fake_job_uid-666-666",
-							inspectv1a1.LabelCluster:  "super_fake_cluster",
-							inspectv1a1.LabelSeverity: "Medium",
-							inspectv1a1.LabelIssueID:  "POP-106",
-							inspectv1a1.LabelCategory: "daemonsets",
-							inspectv1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Medium",
+							zorav1a1.LabelIssueID:  "POP-106",
+							zorav1a1.LabelCategory: "daemonsets",
+							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
-					Spec: inspectv1a1.ClusterIssueSpec{
+					Spec: zorav1a1.ClusterIssueSpec{
 						ID:       "POP-106",
 						Message:  "No resources requests/limits defined",
-						Severity: inspectv1a1.ClusterIssueSeverity("Medium"),
+						Severity: zorav1a1.ClusterIssueSeverity("Medium"),
 						Category: "daemonsets",
 						Resources: map[string][]string{
 							"apps/v1/daemonsets":  {"kube-system/aws-node"},
@@ -181,7 +181,7 @@ func TestParse(t *testing.T) {
 				{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       "ClusterIssue",
-						APIVersion: inspectv1a1.SchemeGroupVersion.String(),
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "super_fake_cluster-pop-107-666",
@@ -193,18 +193,18 @@ func TestParse(t *testing.T) {
 							UID:        types.UID("super_fake_job_uid-666-666"),
 						}},
 						Labels: map[string]string{
-							inspectv1a1.LabelScanID:   "super_fake_job_uid-666-666",
-							inspectv1a1.LabelCluster:  "super_fake_cluster",
-							inspectv1a1.LabelSeverity: "Medium",
-							inspectv1a1.LabelIssueID:  "POP-107",
-							inspectv1a1.LabelCategory: "daemonsets",
-							inspectv1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Medium",
+							zorav1a1.LabelIssueID:  "POP-107",
+							zorav1a1.LabelCategory: "daemonsets",
+							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
-					Spec: inspectv1a1.ClusterIssueSpec{
+					Spec: zorav1a1.ClusterIssueSpec{
 						ID:       "POP-107",
 						Message:  "No resource limits defined",
-						Severity: inspectv1a1.ClusterIssueSeverity("Medium"),
+						Severity: zorav1a1.ClusterIssueSeverity("Medium"),
 						Category: "daemonsets",
 						Resources: map[string][]string{
 							"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
@@ -217,7 +217,7 @@ func TestParse(t *testing.T) {
 				{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       "ClusterIssue",
-						APIVersion: inspectv1a1.SchemeGroupVersion.String(),
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "super_fake_cluster-pop-108-666",
@@ -229,18 +229,18 @@ func TestParse(t *testing.T) {
 							UID:        types.UID("super_fake_job_uid-666-666"),
 						}},
 						Labels: map[string]string{
-							inspectv1a1.LabelScanID:   "super_fake_job_uid-666-666",
-							inspectv1a1.LabelCluster:  "super_fake_cluster",
-							inspectv1a1.LabelSeverity: "Low",
-							inspectv1a1.LabelIssueID:  "POP-108",
-							inspectv1a1.LabelCategory: "deployments",
-							inspectv1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Low",
+							zorav1a1.LabelIssueID:  "POP-108",
+							zorav1a1.LabelCategory: "deployments",
+							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
-					Spec: inspectv1a1.ClusterIssueSpec{
+					Spec: zorav1a1.ClusterIssueSpec{
 						ID:       "POP-108",
 						Message:  "Unnamed port",
-						Severity: inspectv1a1.ClusterIssueSeverity("Low"),
+						Severity: zorav1a1.ClusterIssueSeverity("Low"),
 						Category: "deployments",
 						Resources: map[string][]string{
 							"apps/v1/deployments": {"cert-manager/cert-manager"},
@@ -303,7 +303,7 @@ func TestParse(t *testing.T) {
 		},
 	}
 
-	sfun := func(ciarr []*inspectv1a1.ClusterIssue) {
+	sfun := func(ciarr []*zorav1a1.ClusterIssue) {
 		sort.Slice(ciarr, func(i, j int) bool {
 			return ciarr[i].Spec.ID > ciarr[j].Spec.ID
 		})

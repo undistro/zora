@@ -5,8 +5,8 @@ import (
 	"io"
 	"strings"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/worker/config"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/worker/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -14,24 +14,24 @@ import (
 // NewClusterIssue creates and returns a pointer to a <ClusterIssue> instance
 // carrying issue metadata on its labels. The instance is set as a child of the
 // Job whereby the plugin executed.
-func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, orefs []metav1.OwnerReference, juid *string) *inspectv1a1.ClusterIssue {
+func NewClusterIssue(c *config.Config, cispec *zorav1a1.ClusterIssueSpec, orefs []metav1.OwnerReference, juid *string) *zorav1a1.ClusterIssue {
 	cispec.Cluster = c.Cluster
-	return &inspectv1a1.ClusterIssue{
+	return &zorav1a1.ClusterIssue{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ClusterIssue",
-			APIVersion: inspectv1a1.SchemeGroupVersion.String(),
+			APIVersion: zorav1a1.SchemeGroupVersion.String(),
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispec.ID), *juid),
 			Namespace:       c.ClusterIssuesNs,
 			OwnerReferences: orefs,
 			Labels: map[string]string{
-				inspectv1a1.LabelScanID:   c.JobUID,
-				inspectv1a1.LabelCluster:  c.Cluster,
-				inspectv1a1.LabelSeverity: string(cispec.Severity),
-				inspectv1a1.LabelIssueID:  cispec.ID,
-				inspectv1a1.LabelCategory: cispec.Category,
-				inspectv1a1.LabelPlugin:   c.Plugin,
+				zorav1a1.LabelScanID:   c.JobUID,
+				zorav1a1.LabelCluster:  c.Cluster,
+				zorav1a1.LabelSeverity: string(cispec.Severity),
+				zorav1a1.LabelIssueID:  cispec.ID,
+				zorav1a1.LabelCategory: cispec.Category,
+				zorav1a1.LabelPlugin:   c.Plugin,
 			},
 		},
 		Spec: *cispec,
@@ -43,7 +43,7 @@ func NewClusterIssue(c *config.Config, cispec *inspectv1a1.ClusterIssueSpec, ore
 // cluster name and issues namespace specified on the <Config> struct. The
 // parsing for each plugin is left to dedicated functions which are called
 // according to the plugin type.
-func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
+func Parse(r io.Reader, c *config.Config) ([]*zorav1a1.ClusterIssue, error) {
 	if err := c.Validate(); err != nil {
 		return nil, fmt.Errorf("Invalid configuration: %w", err)
 	}
@@ -63,7 +63,7 @@ func Parse(r io.Reader, c *config.Config) ([]*inspectv1a1.ClusterIssue, error) {
 		Name:       c.Job,
 		UID:        types.UID(c.JobUID),
 	}}
-	ciarr := make([]*inspectv1a1.ClusterIssue, len(cispecs))
+	ciarr := make([]*zorav1a1.ClusterIssue, len(cispecs))
 	for i := 0; i < len(cispecs); i++ {
 		ciarr[i] = NewClusterIssue(c, cispecs[i], orefs, &juid)
 	}

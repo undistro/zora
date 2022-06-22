@@ -3,9 +3,9 @@
 package fake
 
 import (
-	clientset "github.com/getupio-undistro/inspect/pkg/clientset/versioned"
-	inspectv1alpha1 "github.com/getupio-undistro/inspect/pkg/clientset/versioned/typed/inspect/v1alpha1"
-	fakeinspectv1alpha1 "github.com/getupio-undistro/inspect/pkg/clientset/versioned/typed/inspect/v1alpha1/fake"
+	clientset "github.com/getupio-undistro/zora/pkg/clientset/versioned"
+	zorav1alpha1 "github.com/getupio-undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
+	fakezorav1alpha1 "github.com/getupio-undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -64,6 +64,6 @@ var (
 )
 
 // InspectV1alpha1 retrieves the InspectV1alpha1Client
-func (c *Clientset) InspectV1alpha1() inspectv1alpha1.InspectV1alpha1Interface {
-	return &fakeinspectv1alpha1.FakeInspectV1alpha1{Fake: &c.Fake}
+func (c *Clientset) InspectV1alpha1() zorav1alpha1.InspectV1alpha1Interface {
+	return &fakezorav1alpha1.FakeInspectV1alpha1{Fake: &c.Fake}
 }

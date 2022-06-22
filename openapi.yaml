@@ -4,7 +4,7 @@ info:
   description: 'Zora server'
   version: 1.0.0
 servers:
-  - url: https://inspect-hml.undistro.io/api/v1
+  - url: https://zora-hml.undistro.io/api/v1
 tags:
   - name: cluster
     description: Everything about Clusters

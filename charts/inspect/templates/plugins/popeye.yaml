@@ -1,9 +1,9 @@
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: Plugin
 metadata:
   name: popeye
   labels:
-    {{- include "inspect.labels" . | nindent 4 }}
+    {{- include "zora.labels" . | nindent 4 }}
 spec:
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
   command:

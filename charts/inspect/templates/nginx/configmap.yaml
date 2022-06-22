@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "inspect.fullname" . }}-nginx
+  name: {{ include "zora.fullname" . }}-nginx
   labels:
-    {{- include "inspect.nginxLabels" . | nindent 4 }}
+    {{- include "zora.nginxLabels" . | nindent 4 }}
 data:
   nginx.conf: |+
     worker_processes  auto;
@@ -28,11 +28,11 @@ data:
       proxy_http_version 1.1;
 
       upstream ui {
-        server "{{ include "inspect.fullname" . }}-ui:{{ .Values.ui.service.port }}";
+        server "{{ include "zora.fullname" . }}-ui:{{ .Values.ui.service.port }}";
       }
 
       upstream server {
-        server "{{ include "inspect.fullname" . }}-server:{{ .Values.server.service.port }}";
+        server "{{ include "zora.fullname" . }}-server:{{ .Values.server.service.port }}";
       }
 
       log_format timed_combined '[$time_local]:$remote_addr - '

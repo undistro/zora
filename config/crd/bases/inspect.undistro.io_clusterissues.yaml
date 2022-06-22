@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: clusterissues.inspect.undistro.io
+  name: clusterissues.zora.undistro.io
 spec:
-  group: inspect.undistro.io
+  group: zora.undistro.io
   names:
     kind: ClusterIssue
     listKind: ClusterIssueList

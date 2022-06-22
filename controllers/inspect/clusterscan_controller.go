@@ -1,4 +1,4 @@
-package inspect
+package zora
 
 import (
 	"context"
@@ -24,9 +24,9 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
-	"github.com/getupio-undistro/inspect/pkg/plugins/cronjobs"
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/pkg/kubeconfig"
+	"github.com/getupio-undistro/zora/pkg/plugins/cronjobs"
 )
 
 const jobOwnerKey = ".metadata.controller"
@@ -43,10 +43,10 @@ type ClusterScanReconciler struct {
 	ServiceAccountName      string
 }
 
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusterscans,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusterscans/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=clusterscans/finalizers,verbs=update
-//+kubebuilder:rbac:groups=inspect.undistro.io,resources=plugins,verbs=get;list;watch
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans/finalizers,verbs=update
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=plugins,verbs=get;list;watch
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch

@@ -7,19 +7,19 @@ import (
 	"os"
 	"time"
 
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
-	"github.com/getupio-undistro/inspect/worker/config"
-	"github.com/getupio-undistro/inspect/worker/report"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/worker/config"
+	"github.com/getupio-undistro/zora/worker/report"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 )
 
 // CreateClusterIssues creates instances of <ClusterIssue> on the Kubernetes
 // cluster which the client set points to.
-func CreateClusterIssues(c *config.Config, ciarr []*inspectv1a1.ClusterIssue) error {
+func CreateClusterIssues(c *config.Config, ciarr []*zorav1a1.ClusterIssue) error {
 	rconfig := ctrl.GetConfigOrDie()
 	cset, err := versioned.NewForConfig(rconfig)
 	if err != nil {

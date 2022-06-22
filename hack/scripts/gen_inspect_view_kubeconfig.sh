@@ -1,10 +1,10 @@
 #!/bin/sh
 set -o errexit
 
-KCONFIG_NAME=${KCONFIG_NAME:-"inspect_view_kubeconfig.yaml"}
-CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"inspect-view"}
+KCONFIG_NAME=${KCONFIG_NAME:-"zora_view_kubeconfig.yaml"}
+CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"zora-view"}
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"zora-system"}
-SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"inspect-view"}
+SVC_ACCOUNT_NAME=${SVC_ACCOUNT_NAME:-"zora-view"}
 SVC_ACCOUNT_SECRET_NS=${SVC_ACCOUNT_SECRET_NS:-$SVC_ACCOUNT_NS}
 SVC_ACCOUNT_SECRET_NAME=${SVC_ACCOUNT_SECRET_NAME:-"$SVC_ACCOUNT_NAME-token"}
 METRICS_SERVER_VERSION=${METRICS_SERVER_VERSION:-"latest"}
@@ -138,7 +138,7 @@ EOF
 
 create_cluster_role_binding() {
 	kubectl create clusterrolebinding $SVC_ACCOUNT_NAME \
-		--clusterrole=inspect-view \
+		--clusterrole=zora-view \
 		--serviceaccount=$SVC_ACCOUNT_NS:$SVC_ACCOUNT_NAME
 }
 

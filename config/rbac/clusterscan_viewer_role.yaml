@@ -5,7 +5,7 @@ metadata:
   name: clusterscan-viewer-role
 rules:
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterscans
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterscans/status
   verbs:

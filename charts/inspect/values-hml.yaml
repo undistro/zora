@@ -3,5 +3,5 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   className: nginx
   enabled: true
-  host: inspect-hml.undistro.io
+  host: zora-hml.undistro.io
   tlsSecretName: zora-cert

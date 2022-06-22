@@ -32,7 +32,7 @@ jobs:
       - name: Get Chart version
         run: |
           echo "CHART_VERSION=$(
-            helm search repo undistro/inspect | awk '/inspect/{print $2}'
+            helm search repo undistro/zora | awk '/zora/{print $2}'
           )" >> $GITHUB_ENV
 
       - name: Create kubeconfig file
@@ -46,8 +46,8 @@ jobs:
 
       - name: Dry run
         run: |
-          helm upgrade --install zora undistro/inspect \
-            -f charts/inspect/values-hml.yaml \
+          helm upgrade --install zora undistro/zora \
+            -f charts/zora/values-hml.yaml \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
             --set operator.image.tag=$GITHUB_REF_NAME \
@@ -61,12 +61,12 @@ jobs:
             --dry-run
 
       - name: Apply CRDs
-        run: kubectl --kubeconfig=/tmp/hml_kubeconfig.yaml apply --recursive -f charts/inspect/crds/
+        run: kubectl --kubeconfig=/tmp/hml_kubeconfig.yaml apply --recursive -f charts/zora/crds/
 
       - name: Upgrade Helm release
         run: |
-          helm upgrade --install zora undistro/inspect \
-            -f charts/inspect/values-hml.yaml \
+          helm upgrade --install zora undistro/zora \
+            -f charts/zora/values-hml.yaml \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
             --set operator.image.tag=$GITHUB_REF_NAME \

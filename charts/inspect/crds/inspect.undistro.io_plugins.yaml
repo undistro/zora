@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: plugins.inspect.undistro.io
+  name: plugins.zora.undistro.io
 spec:
-  group: inspect.undistro.io
+  group: zora.undistro.io
   names:
     kind: Plugin
     listKind: PluginList

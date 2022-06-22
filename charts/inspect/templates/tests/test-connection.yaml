@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "inspect.fullname" . }}-test-connection"
+  name: "{{ include "zora.fullname" . }}-test-connection"
   labels:
-    {{- include "inspect.labels" . | nindent 4 }}
+    {{- include "zora.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "inspect.fullname" . }}-server:{{ .Values.server.service.port }}']
+      args: ['{{ include "zora.fullname" . }}-server:{{ .Values.server.service.port }}']
   restartPolicy: Never
