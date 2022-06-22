@@ -49,7 +49,7 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
-	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "undistro-inspect", "The namespace of default plugins")
+	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
 	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.2.2", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "undistro-inspect-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")

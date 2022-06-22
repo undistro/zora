@@ -55,7 +55,7 @@ jobs:
             --set scan.worker.image.tag=$GITHUB_REF_NAME \
             --set ui.image.tag=$UI_IMAGE_TAG \
             --version $CHART_VERSION \
-            --namespace undistro-inspect \
+            --namespace zora-system \
             --create-namespace \
             --kubeconfig /tmp/hml_kubeconfig.yaml \
             --dry-run
@@ -74,6 +74,6 @@ jobs:
             --set scan.worker.image.tag=$GITHUB_REF_NAME \
             --set ui.image.tag=$UI_IMAGE_TAG \
             --version $CHART_VERSION \
-            --namespace undistro-inspect \
+            --namespace zora-system \
             --create-namespace \
             --kubeconfig /tmp/hml_kubeconfig.yaml

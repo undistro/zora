@@ -13,7 +13,7 @@ helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm install undistro-inspect undistro/inspect \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
-  -n undistro-inspect \
+  -n zora-system \
   --create-namespace
 ```
 

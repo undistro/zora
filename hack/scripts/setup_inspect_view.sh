@@ -2,7 +2,7 @@
 set -o errexit
 
 CLUSTER_NAME=${CLUSTER_NAME:-"inspected"}
-CLUSTER_NS=${CLUSTER_NS:-"undistro-inspect"}
+CLUSTER_NS=${CLUSTER_NS:-"zora-system"}
 KCONFIG_PATH=${KCONFIG_PATH:-"inspect_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
 ENABLE_CLUSTER_SCAN=${ENABLE_CLUSTER_SCAN:-0}
