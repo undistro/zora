@@ -26,7 +26,7 @@ func CreateClusterIssues(c *config.Config, ciarr []*zorav1a1.ClusterIssue) error
 		return fmt.Errorf("Unable to instantiate REST config: %w", err)
 	}
 	for _, ci := range ciarr {
-		_, err = cset.InspectV1alpha1().ClusterIssues(c.ClusterIssuesNs).Create(context.Background(), ci, metav1.CreateOptions{})
+		_, err = cset.ZoraV1alpha1().ClusterIssues(c.ClusterIssuesNs).Create(context.Background(), ci, metav1.CreateOptions{})
 		if err != nil {
 			return fmt.Errorf("Failed to create <ClusterIssue> instance on cluster <%s>: %w", c.Cluster, err)
 		}

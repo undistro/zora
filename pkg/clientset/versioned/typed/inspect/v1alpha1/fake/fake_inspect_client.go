@@ -8,21 +8,21 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeInspectV1alpha1 struct {
+type FakeZoraV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeInspectV1alpha1) Clusters(namespace string) v1alpha1.ClusterInterface {
+func (c *FakeZoraV1alpha1) Clusters(namespace string) v1alpha1.ClusterInterface {
 	return &FakeClusters{c, namespace}
 }
 
-func (c *FakeInspectV1alpha1) ClusterIssues(namespace string) v1alpha1.ClusterIssueInterface {
+func (c *FakeZoraV1alpha1) ClusterIssues(namespace string) v1alpha1.ClusterIssueInterface {
 	return &FakeClusterIssues{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeInspectV1alpha1) RESTClient() rest.Interface {
+func (c *FakeZoraV1alpha1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

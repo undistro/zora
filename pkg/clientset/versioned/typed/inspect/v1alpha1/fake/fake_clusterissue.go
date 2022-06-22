@@ -16,7 +16,7 @@ import (
 
 // FakeClusterIssues implements ClusterIssueInterface
 type FakeClusterIssues struct {
-	Fake *FakeInspectV1alpha1
+	Fake *FakeZoraV1alpha1
 	ns   string
 }
 

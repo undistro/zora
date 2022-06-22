@@ -14,18 +14,18 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	InspectV1alpha1() zorav1alpha1.InspectV1alpha1Interface
+	ZoraV1alpha1() zorav1alpha1.ZoraV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	zoraV1alpha1 *zorav1alpha1.InspectV1alpha1Client
+	zoraV1alpha1 *zorav1alpha1.ZoraV1alpha1Client
 }
 
-// InspectV1alpha1 retrieves the InspectV1alpha1Client
-func (c *Clientset) InspectV1alpha1() zorav1alpha1.InspectV1alpha1Interface {
+// ZoraV1alpha1 retrieves the ZoraV1alpha1Client
+func (c *Clientset) ZoraV1alpha1() zorav1alpha1.ZoraV1alpha1Interface {
 	return c.zoraV1alpha1
 }
 

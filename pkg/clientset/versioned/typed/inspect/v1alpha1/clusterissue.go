@@ -40,7 +40,7 @@ type clusterIssues struct {
 }
 
 // newClusterIssues returns a ClusterIssues
-func newClusterIssues(c *InspectV1alpha1Client, namespace string) *clusterIssues {
+func newClusterIssues(c *ZoraV1alpha1Client, namespace string) *clusterIssues {
 	return &clusterIssues{
 		client: c.RESTClient(),
 		ns:     namespace,

@@ -63,7 +63,7 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// InspectV1alpha1 retrieves the InspectV1alpha1Client
-func (c *Clientset) InspectV1alpha1() zorav1alpha1.InspectV1alpha1Interface {
-	return &fakezorav1alpha1.FakeInspectV1alpha1{Fake: &c.Fake}
+// ZoraV1alpha1 retrieves the ZoraV1alpha1Client
+func (c *Clientset) ZoraV1alpha1() zorav1alpha1.ZoraV1alpha1Interface {
+	return &fakezorav1alpha1.FakeZoraV1alpha1{Fake: &c.Fake}
 }

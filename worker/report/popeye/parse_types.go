@@ -3,7 +3,7 @@ package popeye
 import zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 
 var (
-	// LevelToIssueSeverity maps Popeye's <Level> type to Inspect's
+	// LevelToIssueSeverity maps Popeye's <Level> type to Zora's
 	// <ClusterIssueSeverity>.
 	LevelToIssueSeverity = [4]zorav1a1.ClusterIssueSeverity{
 		zorav1a1.SeverityNone,

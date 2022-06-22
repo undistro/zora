@@ -10,29 +10,29 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-type InspectV1alpha1Interface interface {
+type ZoraV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClustersGetter
 	ClusterIssuesGetter
 }
 
-// InspectV1alpha1Client is used to interact with features provided by the zora group.
-type InspectV1alpha1Client struct {
+// ZoraV1alpha1Client is used to interact with features provided by the zora group.
+type ZoraV1alpha1Client struct {
 	restClient rest.Interface
 }
 
-func (c *InspectV1alpha1Client) Clusters(namespace string) ClusterInterface {
+func (c *ZoraV1alpha1Client) Clusters(namespace string) ClusterInterface {
 	return newClusters(c, namespace)
 }
 
-func (c *InspectV1alpha1Client) ClusterIssues(namespace string) ClusterIssueInterface {
+func (c *ZoraV1alpha1Client) ClusterIssues(namespace string) ClusterIssueInterface {
 	return newClusterIssues(c, namespace)
 }
 
-// NewForConfig creates a new InspectV1alpha1Client for the given config.
+// NewForConfig creates a new ZoraV1alpha1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
-func NewForConfig(c *rest.Config) (*InspectV1alpha1Client, error) {
+func NewForConfig(c *rest.Config) (*ZoraV1alpha1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -44,9 +44,9 @@ func NewForConfig(c *rest.Config) (*InspectV1alpha1Client, error) {
 	return NewForConfigAndClient(&config, httpClient)
 }
 
-// NewForConfigAndClient creates a new InspectV1alpha1Client for the given config and http client.
+// NewForConfigAndClient creates a new ZoraV1alpha1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
-func NewForConfigAndClient(c *rest.Config, h *http.Client) (*InspectV1alpha1Client, error) {
+func NewForConfigAndClient(c *rest.Config, h *http.Client) (*ZoraV1alpha1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -55,12 +55,12 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*InspectV1alpha1Clie
 	if err != nil {
 		return nil, err
 	}
-	return &InspectV1alpha1Client{client}, nil
+	return &ZoraV1alpha1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new InspectV1alpha1Client for the given config and
+// NewForConfigOrDie creates a new ZoraV1alpha1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *InspectV1alpha1Client {
+func NewForConfigOrDie(c *rest.Config) *ZoraV1alpha1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -68,9 +68,9 @@ func NewForConfigOrDie(c *rest.Config) *InspectV1alpha1Client {
 	return client
 }
 
-// New creates a new InspectV1alpha1Client for the given RESTClient.
-func New(c rest.Interface) *InspectV1alpha1Client {
-	return &InspectV1alpha1Client{c}
+// New creates a new ZoraV1alpha1Client for the given RESTClient.
+func New(c rest.Interface) *ZoraV1alpha1Client {
+	return &ZoraV1alpha1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
@@ -88,7 +88,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *InspectV1alpha1Client) RESTClient() rest.Interface {
+func (c *ZoraV1alpha1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}

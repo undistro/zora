@@ -14,7 +14,7 @@ import (
 
 // FakeClusters implements ClusterInterface
 type FakeClusters struct {
-	Fake *FakeInspectV1alpha1
+	Fake *FakeZoraV1alpha1
 	ns   string
 }
 
