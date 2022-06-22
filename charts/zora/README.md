@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.2.2](https://img.shields.io/badge/AppVersion-v0.2.2-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.3.0](https://img.shields.io/badge/AppVersion-v0.3.0-informational?style=flat-square)
 
 Zora denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
@@ -22,7 +22,6 @@ These commands deploy Zora on the Kubernetes cluster in the default configuratio
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tips:**
->
 > - List all charts available in `undistro` repo using `helm search repo undistro`
 > - Update `undistro` chart repository using `helm repo update undistro`
 > - List all versions available of `undistro/zora` chart using `helm search repo undistro/zora --versions`
