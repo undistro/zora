@@ -1,6 +1,6 @@
-# Undistro Inspect
+# Zora
 
-Undistro Inspect denounces potential issues in your Kubernetes cluster and
+Zora denounces potential issues in your Kubernetes cluster and
 provides multi cluster visibility.
 
 - [Installation](#installation)
@@ -16,7 +16,7 @@ provides multi cluster visibility.
 
 ## Installation
 
-1. Install Undistro Inspect using [Helm](https://helm.sh/docs/):
+1. Install Zora using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm install undistro-inspect undistro/inspect \
@@ -26,7 +26,7 @@ helm install undistro-inspect undistro/inspect \
   --create-namespace
 ```
 
-These commands deploy Undistro Inspect to the Kubernetes cluster. [This
+These commands deploy Zora to the Kubernetes cluster. [This
 section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect)
 lists the parameters that can be configured during installation.
 
@@ -48,7 +48,7 @@ skip to the [Create a Secret with your kubeconfig](#create-a-secret-with-your-ku
 
 Most cloud providers have CLI tools, such as `aws` and `gcloud`, which can be used to obtain an authentication token.
 
-Undistro Inspect needs a _ServiceAccount_ token.
+Zora needs a _ServiceAccount_ token.
 
 > **Important:**
 > Ensure you are in the context of the cluster that you want to connect.
@@ -309,5 +309,5 @@ kubectl delete namespace undistro-inspect
 
 ## Glossary
 
-- **Management Cluster**: The only Kubernetes cluster where Undistro Inspect is installed.
-- **Target Cluster**: The Kubernetes cluster that you connect to Undistro Inspect (which is running on management cluster).
+- **Management Cluster**: The only Kubernetes cluster where Zora is installed.
+- **Target Cluster**: The Kubernetes cluster that you connect to Zora (which is running on management cluster).

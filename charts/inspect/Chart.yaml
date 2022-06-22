@@ -1,6 +1,6 @@
 apiVersion: v2
 name: inspect
-description: Undistro Inspect denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
+description: Zora denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
 type: application
 

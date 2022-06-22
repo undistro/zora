@@ -1,8 +1,8 @@
-# Undistro Inspect Helm Chart
+# Zora Helm Chart
 
 ![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.2.2](https://img.shields.io/badge/AppVersion-v0.2.2-informational?style=flat-square)
 
-Undistro Inspect denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
+Zora denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
 
 ## Installing the Chart
 
@@ -17,7 +17,7 @@ helm install undistro-inspect undistro/inspect \
   --create-namespace
 ```
 
-These commands deploy Undistro Inspect on the Kubernetes cluster in the default configuration.
+These commands deploy Zora on the Kubernetes cluster in the default configuration.
 
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -40,7 +40,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Parameters
 
-The following table lists the configurable parameters of the Undistro Inspect chart and their default values.
+The following table lists the configurable parameters of the Zora chart and their default values.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -54,12 +54,12 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | ingress.enabled | bool | `false` | Specifies whether the ingress should be created |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Annotations to be added to ingress |
-| ingress.host | string | `"inspect.domain"` | The host of Undistro Inspect in ingress rule |
+| ingress.host | string | `"inspect.domain"` | The host of Zora in ingress rule |
 | ingress.server | object | `{"path":"/api","pathType":"ImplementationSpecific"}` | `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP) |
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
-| operator.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect operator |
-| operator.image.repository | string | `"registry.undistro.io/inspect/operator"` | Undistro Inspect operator image repository |
+| operator.replicaCount | int | `1` | Number of replicas desired of Zora operator |
+| operator.image.repository | string | `"registry.undistro.io/inspect/operator"` | Zora operator image repository |
 | operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
@@ -84,8 +84,8 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | operator.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
 | operator.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
-| server.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect server |
-| server.image.repository | string | `"registry.undistro.io/inspect/server"` | Undistro Inspect server image repository |
+| server.replicaCount | int | `1` | Number of replicas desired of Zora server |
+| server.image.repository | string | `"registry.undistro.io/inspect/server"` | Zora server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
@@ -110,8 +110,8 @@ The following table lists the configurable parameters of the Undistro Inspect ch
 | server.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
 | server.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | server.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
-| ui.replicaCount | int | `1` | Number of replicas desired of Undistro Inspect UI |
-| ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Undistro Inspect UI image repository |
+| ui.replicaCount | int | `1` | Number of replicas desired of Zora UI |
+| ui.image.repository | string | `"registry.undistro.io/inspect/ui"` | Zora UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |

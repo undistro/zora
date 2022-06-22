@@ -24,7 +24,7 @@ ingress:
   # -- Annotations to be added to ingress
   annotations: {}
   # kubernetes.io/tls-acme: "true"
-  # -- The host of Undistro Inspect in ingress rule
+  # -- The host of Zora in ingress rule
   host: inspect.domain
   # -- `path` and `pathType` of API in ingress rule. `path` pattern may vary according ingress controller (`/api/*` for GCE, `/api/.*` for NCP)
   server:
@@ -38,10 +38,10 @@ ingress:
   tlsSecretName: ""
 
 operator:
-  # -- Number of replicas desired of Undistro Inspect operator
+  # -- Number of replicas desired of Zora operator
   replicaCount: 1
   image:
-    # -- Undistro Inspect operator image repository
+    # -- Zora operator image repository
     repository: registry.undistro.io/inspect/operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
@@ -116,10 +116,10 @@ operator:
     timeEncoding: rfc3339
 
 server:
-  # -- Number of replicas desired of Undistro Inspect server
+  # -- Number of replicas desired of Zora server
   replicaCount: 1
   image:
-    # -- Undistro Inspect server image repository
+    # -- Zora server image repository
     repository: registry.undistro.io/inspect/server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
@@ -177,10 +177,10 @@ server:
     timeEncoding: rfc3339
 
 ui:
-  # -- Number of replicas desired of Undistro Inspect UI
+  # -- Number of replicas desired of Zora UI
   replicaCount: 1
   image:
-    # -- Undistro Inspect UI image repository
+    # -- Zora UI image repository
     repository: registry.undistro.io/inspect/ui
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
