@@ -267,7 +267,7 @@ metadata:
 spec:
   clusterRef:
     name: mycluster
-  schedule: "* */1 * * *"
+  schedule: "0 */1 * * *"
 EOF
 ```
 
