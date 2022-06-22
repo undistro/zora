@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	inspectv1alpha1 "github.com/getupio-undistro/inspect/pkg/clientset/versioned/typed/inspect/v1alpha1"
+	zorav1alpha1 "github.com/getupio-undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -14,19 +14,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	InspectV1alpha1() inspectv1alpha1.InspectV1alpha1Interface
+	ZoraV1alpha1() zorav1alpha1.ZoraV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	inspectV1alpha1 *inspectv1alpha1.InspectV1alpha1Client
+	zoraV1alpha1 *zorav1alpha1.ZoraV1alpha1Client
 }
 
-// InspectV1alpha1 retrieves the InspectV1alpha1Client
-func (c *Clientset) InspectV1alpha1() inspectv1alpha1.InspectV1alpha1Interface {
-	return c.inspectV1alpha1
+// ZoraV1alpha1 retrieves the ZoraV1alpha1Client
+func (c *Clientset) ZoraV1alpha1() zorav1alpha1.ZoraV1alpha1Interface {
+	return c.zoraV1alpha1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -69,7 +69,7 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.inspectV1alpha1, err = inspectv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.zoraV1alpha1, err = zorav1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.inspectV1alpha1 = inspectv1alpha1.New(c)
+	cs.zoraV1alpha1 = zorav1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/getupio-undistro/inspect/worker/run"
+	"github.com/getupio-undistro/zora/worker/run"
 	"go.uber.org/zap/zapcore"
 
 	ctrl "sigs.k8s.io/controller-runtime"

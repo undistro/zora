@@ -7,14 +7,14 @@ import (
 	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/getupio-undistro/inspect/payloads"
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/payloads"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 )
 
 func ClusterListHandler(client versioned.Interface, logger logr.Logger) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log := logger.WithName("handlers.clusters").WithValues("method", r.Method, "path", r.URL.Path)
-		clusterList, err := client.InspectV1alpha1().Clusters("").List(r.Context(), metav1.ListOptions{})
+		clusterList, err := client.ZoraV1alpha1().Clusters("").List(r.Context(), metav1.ListOptions{})
 		if err != nil {
 			log.Error(err, "failed to list clusters")
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing Clusters", err.Error())

@@ -1,0 +1,30 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterIssue
+metadata:
+  name: mycluster-pop-106
+  labels:
+    cluster: mycluster
+    id: POP-106
+    severity: Medium
+    category: Container
+spec:
+  cluster: mycluster
+  id: POP-106
+  message: No resources requests/limits defined
+  severity: Medium
+  category: Container
+  totalResources: 10
+  resources:
+    apps/v1/daemonsets:
+      - kube-system/aws-node
+    apps/v1/deployments:
+      - kube-system/cluster-autoscaler-aws-cluster-autoscaler
+      - cert-manager/cert-manager
+      - cert-manager/cert-manager-cainjector
+      - cert-manager/cert-manager-webhook
+      - kube-system/metrics-server
+    v1/pods:
+      - kube-system/aws-node-xls4r
+      - kube-system/cluster-autoscaler-aws-cluster-autoscaler-6549789d78-bfjdp
+      - kube-system/metrics-server-694d47d564-zxpwb
+      - kube-system/aws-node-5qb87

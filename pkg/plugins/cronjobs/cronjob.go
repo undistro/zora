@@ -3,8 +3,8 @@ package cronjobs
 import (
 	"path/filepath"
 
-	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/pkg/kubeconfig"
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/pkg/kubeconfig"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -17,12 +17,12 @@ import (
 const (
 	workerContainerName  = "worker"
 	kubeconfigVolumeName = "kubeconfig"
-	kubeconfigMountPath  = "/etc/undistro-inspect"
+	kubeconfigMountPath  = "/etc/zora"
 	kubeconfigFile       = "kubeconfig.yml"
 	resultsVolumeName    = "results"
-	resultsDir           = "/tmp/undistro-inspect/results"
-	LabelClusterScan     = "inspect.undistro.io/cluster-scan"
-	LabelPlugin          = "inspect.undistro.io/plugin"
+	resultsDir           = "/tmp/zora/results"
+	LabelClusterScan     = "zora.undistro.io/cluster-scan"
+	LabelPlugin          = "zora.undistro.io/plugin"
 )
 
 var (

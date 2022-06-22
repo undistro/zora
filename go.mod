@@ -1,4 +1,4 @@
-module github.com/getupio-undistro/inspect
+module github.com/getupio-undistro/zora
 
 go 1.17
 

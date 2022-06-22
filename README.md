@@ -1,6 +1,6 @@
-# Undistro Inspect
+# Zora
 
-Undistro Inspect denounces potential issues in your Kubernetes cluster and
+Zora denounces potential issues in your Kubernetes cluster and
 provides multi cluster visibility.
 
 - [Installation](#installation)
@@ -16,18 +16,18 @@ provides multi cluster visibility.
 
 ## Installation
 
-1. Install Undistro Inspect using [Helm](https://helm.sh/docs/):
+1. Install Zora using [Helm](https://helm.sh/docs/):
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install undistro-inspect undistro/inspect \
+helm install zora undistro/zora \
   --set imageCredentials.username=<USERNAME> \
   --set imageCredentials.password=<PASSWORD> \
-  -n undistro-inspect \
+  -n zora-system \
   --create-namespace
 ```
 
-These commands deploy Undistro Inspect to the Kubernetes cluster. [This
-section](https://github.com/getupio-undistro/inspect/tree/main/charts/inspect)
+These commands deploy Zora to the Kubernetes cluster. [This
+section](https://github.com/getupio-undistro/zora/tree/main/charts/zora)
 lists the parameters that can be configured during installation.
 
 ## Usage
@@ -48,7 +48,7 @@ skip to the [Create a Secret with your kubeconfig](#create-a-secret-with-your-ku
 
 Most cloud providers have CLI tools, such as `aws` and `gcloud`, which can be used to obtain an authentication token.
 
-Undistro Inspect needs a _ServiceAccount_ token.
+Zora needs a _ServiceAccount_ token.
 
 > **Important:**
 > Ensure you are in the context of the cluster that you want to connect.
@@ -59,12 +59,12 @@ Undistro Inspect needs a _ServiceAccount_ token.
 
 1. Create the service account with `view` permissions:
 ```shell
-kubectl -n undistro-inspect create serviceaccount inspect-view
+kubectl -n zora-system create serviceaccount zora-view
 cat << EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: inspect-view
+  name: zora-view
 rules:
   - apiGroups: [ "" ]
     resources:
@@ -114,7 +114,7 @@ rules:
       - nodes
     verbs: [ "get", "list" ]
 EOF
-kubectl create clusterrolebinding inspect-view --clusterrole=inspect-view --serviceaccount=undistro-inspect:inspect-view
+kubectl create clusterrolebinding zora-view --clusterrole=zora-view --serviceaccount=zora-system:zora-view
 ```
 
 2. Check which version of Kubernetes your cluster is running, then proceed to section 2.2 for version 1.24.0 or later, otherwise, follow up on section 2.1.
@@ -122,22 +122,22 @@ kubectl create clusterrolebinding inspect-view --clusterrole=inspect-view --serv
 2.1. For versions prior to 1.24.0, set the `TOKEN_NAME` variable as follows:
 
 ```shell
-export TOKEN_NAME=$(kubectl -n undistro-inspect get serviceaccount inspect-view -o=jsonpath='{.secrets[0].name}')
+export TOKEN_NAME=$(kubectl -n zora-system get serviceaccount zora-view -o=jsonpath='{.secrets[0].name}')
 ```
 
 2.2. For clusters running Kubernetes 1.24.0 or later, create a Secret to generate a ServiceAccount token and set the `TOKEN_NAME` variable with the Secret name as follows:
 
 ```shell
-export TOKEN_NAME="inspect-view-token"
+export TOKEN_NAME="zora-view-token"
 
 cat << EOF | kubectl apply -f - 
 apiVersion: v1
 kind: Secret
 metadata:
   name: "$TOKEN_NAME"
-  namespace: "undistro-inspect"
+  namespace: "zora-system"
   annotations:
-    kubernetes.io/service-account.name: "inspect-view"
+    kubernetes.io/service-account.name: "zora-view"
 type: kubernetes.io/service-account-token
 EOF
 ```
@@ -146,7 +146,7 @@ EOF
 3. Set up the remaining environment variables:
 
 ```shell
-export TOKEN_VALUE=$(kubectl -n undistro-inspect get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
+export TOKEN_VALUE=$(kubectl -n zora-system get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
 export CURRENT_CONTEXT=$(kubectl config current-context)
 export CURRENT_CLUSTER=$(kubectl config view --raw -o=go-template='{{range .contexts}}{{if eq .name "'''${CURRENT_CONTEXT}'''"}}{{ index .context "cluster" }}{{end}}{{end}}')
 export CLUSTER_CA=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}"{{with index .cluster "certificate-authority-data" }}{{.}}{{end}}"{{ end }}{{ end }}')
@@ -155,7 +155,7 @@ export CLUSTER_SERVER=$(kubectl config view --raw -o=go-template='{{range .clust
 
 4. Generate a kubeconfig file:
 ```shell
-cat << EOF > inspect-view-kubeconfig.yml
+cat << EOF > zora-view-kubeconfig.yml
 apiVersion: v1
 kind: Config
 current-context: ${CURRENT_CONTEXT}
@@ -163,15 +163,15 @@ contexts:
 - name: ${CURRENT_CONTEXT}
   context:
     cluster: ${CURRENT_CONTEXT}
-    user: inspect-view
-    namespace: undistro-inspect
+    user: zora-view
+    namespace: zora-system
 clusters:
 - name: ${CURRENT_CONTEXT}
   cluster:
     certificate-authority-data: ${CLUSTER_CA}
     server: ${CLUSTER_SERVER}
 users:
-- name: inspect-view
+- name: zora-view
   user:
     token: ${TOKEN_VALUE}
 EOF
@@ -184,8 +184,8 @@ EOF
 
 ```shell
 kubectl create secret generic mycluster-kubeconfig \
-  -n undistro-inspect \
-  --from-file=value=inspect-view-kubeconfig.yml
+  -n zora-system \
+  --from-file=value=zora-view-kubeconfig.yml
 ```
 
 #### Create a Cluster resource
@@ -194,13 +194,13 @@ Create a `Cluster` resource referencing the kubeconfig Secret in the same namesp
 
 ```shell
 cat << EOF | kubectl apply -f -
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   name: mycluster
-  namespace: undistro-inspect
+  namespace: zora-system
   labels:
-    inspect.undistro.io/environment: prod
+    zora.undistro.io/environment: prod
 spec:
   kubeconfigRef:
     name: mycluster-kubeconfig
@@ -209,9 +209,9 @@ EOF
 
 > **Tip:**
 > 
-> Clusters can be grouped by environment with the `inspect.undistro.io/environment` label.
+> Clusters can be grouped by environment with the `zora.undistro.io/environment` label.
 > 
-> You can list all clusters from `prod` environment using: `kubectl get clusters -l inspect.undistro.io/environment=prod`
+> You can list all clusters from `prod` environment using: `kubectl get clusters -l zora.undistro.io/environment=prod`
 
 ### List clusters
 
@@ -260,7 +260,7 @@ You can modify per your needs/wants.
 
 ```shell
 cat << EOF | kubectl apply -f -
-apiVersion: inspect.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   name: mycluster
@@ -303,11 +303,11 @@ kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-59
 ## Uninstall
 
 ```shell
-helm delete undistro-inspect -n undistro-inspect
-kubectl delete namespace undistro-inspect
+helm delete zora -n zora-system
+kubectl delete namespace zora-system
 ```
 
 ## Glossary
 
-- **Management Cluster**: The only Kubernetes cluster where Undistro Inspect is installed.
-- **Target Cluster**: The Kubernetes cluster that you connect to Undistro Inspect (which is running on management cluster).
+- **Management Cluster**: The only Kubernetes cluster where Zora is installed.
+- **Target Cluster**: The Kubernetes cluster that you connect to Zora (which is running on management cluster).

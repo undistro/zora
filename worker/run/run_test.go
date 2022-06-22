@@ -6,7 +6,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/getupio-undistro/inspect/worker/config"
+	"github.com/getupio-undistro/zora/worker/config"
 )
 
 func TestDone(t *testing.T) {

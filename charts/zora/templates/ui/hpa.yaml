@@ -1,0 +1,28 @@
+{{- if .Values.ui.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "zora.fullname" . }}
+  labels:
+    {{- include "zora.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "zora.fullname" . }}
+  minReplicas: {{ .Values.ui.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.ui.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.ui.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.ui.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.ui.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.ui.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

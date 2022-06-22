@@ -5,7 +5,7 @@ metadata:
   name: clusterissue-viewer-role
 rules:
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterissues
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - inspect.undistro.io
+  - zora.undistro.io
   resources:
   - clusterissues/status
   verbs:

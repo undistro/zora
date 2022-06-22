@@ -6,7 +6,7 @@ import (
 	"sort"
 	"testing"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -83,13 +83,13 @@ func TestParse(t *testing.T) {
 	cases := []struct {
 		description string
 		testrepname string
-		cispecs     []*inspectv1a1.ClusterIssueSpec
+		cispecs     []*zorav1a1.ClusterIssueSpec
 		toerr       bool
 	}{
 		{
 			description: "Single <ClusterIssueSpec> instance with many resources",
 			testrepname: "testdata/test_report_1.json",
-			cispecs: []*inspectv1a1.ClusterIssueSpec{
+			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
@@ -124,7 +124,7 @@ func TestParse(t *testing.T) {
 		{
 			description: "Four <ClusterIssueSpec> instance with many resources",
 			testrepname: "testdata/test_report_2.json",
-			cispecs: []*inspectv1a1.ClusterIssueSpec{
+			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
@@ -184,7 +184,7 @@ func TestParse(t *testing.T) {
 		},
 	}
 
-	sfun := func(cis []*inspectv1a1.ClusterIssueSpec) {
+	sfun := func(cis []*zorav1a1.ClusterIssueSpec) {
 		sort.Slice(cis, func(i, j int) bool {
 			return cis[i].ID > cis[j].ID
 		})

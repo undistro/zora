@@ -18,8 +18,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	inspectv1alpha1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	inspectcontrollers "github.com/getupio-undistro/inspect/controllers/inspect"
+	zorav1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	zoracontrollers "github.com/getupio-undistro/zora/controllers/zora"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -31,7 +31,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(inspectv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(zorav1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -49,11 +49,11 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
-	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "undistro-inspect", "The namespace of default plugins")
+	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
 	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.2.2", "Docker image name of Worker container")
-	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "undistro-inspect-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
-	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "undistro-inspect-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
+	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	opts := zap.Options{
 		Development: true,
 		TimeEncoder: zapcore.TimeEncoderOfLayout(time.RFC3339),
@@ -69,14 +69,14 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "e0f4eef4.inspect.undistro.io",
+		LeaderElectionID:       "e0f4eef4.zora.undistro.io",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
 
-	if err = (&inspectcontrollers.ClusterReconciler{
+	if err = (&zoracontrollers.ClusterReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
@@ -85,7 +85,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
 		os.Exit(1)
 	}
-	if err = (&inspectcontrollers.ClusterScanReconciler{
+	if err = (&zoracontrollers.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
 		Scheme:                  mgr.GetScheme(),
 		Recorder:                mgr.GetEventRecorderFor("clusterscan-controller"),

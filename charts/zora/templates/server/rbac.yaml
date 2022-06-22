@@ -1,0 +1,51 @@
+{{- if .Values.server.rbac.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "zora.serverServiceAccountName" . }}
+  labels:
+    {{- include "zora.serverLabels" . | nindent 4 }}
+  {{- with .Values.server.rbac.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{ end }}
+{{- if .Values.server.rbac.create -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "zora.serverServiceAccountName" . }}
+rules:
+  - apiGroups:
+      - zora.undistro.io
+    resources:
+      - clusters
+      - clusterissues
+      - clusterscans
+      - plugins
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - zora.undistro.io
+    resources:
+      - clusters/status
+      - clusterscans/status
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "zora.serverServiceAccountName" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "zora.serverServiceAccountName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "zora.serverServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

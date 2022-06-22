@@ -64,66 +64,6 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - inspect.undistro.io
-  resources:
-  - clusters
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - inspect.undistro.io
-  resources:
-  - clusters/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - inspect.undistro.io
-  resources:
-  - clusters/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - inspect.undistro.io
-  resources:
-  - clusterscans
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - inspect.undistro.io
-  resources:
-  - clusterscans/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - inspect.undistro.io
-  resources:
-  - clusterscans/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - inspect.undistro.io
-  resources:
-  - plugins
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
   - rbac.authorization.k8s.io
   resources:
   - clusterrolebindings
@@ -139,3 +79,63 @@ rules:
   - clusterrolebindings/status
   verbs:
   - get
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusters/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusters/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusterscans
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusterscans/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusterscans/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - plugins
+  verbs:
+  - get
+  - list
+  - watch

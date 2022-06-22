@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/payloads"
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/payloads"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-logr/logr"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -21,7 +21,7 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 		namespace := chi.URLParam(r, "namespace")
 		clusterName := chi.URLParam(r, "clusterName")
 
-		cluster, err := client.InspectV1alpha1().Clusters(namespace).Get(r.Context(), clusterName, metav1.GetOptions{})
+		cluster, err := client.ZoraV1alpha1().Clusters(namespace).Get(r.Context(), clusterName, metav1.GetOptions{})
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				RespondWithCode(w, http.StatusNotFound)
@@ -36,7 +36,7 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 		if len(cluster.Status.LastScans) > 0 {
 			ls = fmt.Sprintf("%s,%s in (%s)", ls, v1alpha1.LabelScanID, strings.Join(cluster.Status.LastScans, ","))
 		}
-		issueList, err := client.InspectV1alpha1().ClusterIssues(namespace).List(r.Context(), metav1.ListOptions{LabelSelector: ls})
+		issueList, err := client.ZoraV1alpha1().ClusterIssues(namespace).List(r.Context(), metav1.ListOptions{LabelSelector: ls})
 		if err != nil {
 			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by label selector %s", ls))
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterIssues", err.Error())

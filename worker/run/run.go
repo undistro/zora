@@ -7,26 +7,26 @@ import (
 	"os"
 	"time"
 
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
-	"github.com/getupio-undistro/inspect/worker/config"
-	"github.com/getupio-undistro/inspect/worker/report"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/worker/config"
+	"github.com/getupio-undistro/zora/worker/report"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 )
 
 // CreateClusterIssues creates instances of <ClusterIssue> on the Kubernetes
 // cluster which the client set points to.
-func CreateClusterIssues(c *config.Config, ciarr []*inspectv1a1.ClusterIssue) error {
+func CreateClusterIssues(c *config.Config, ciarr []*zorav1a1.ClusterIssue) error {
 	rconfig := ctrl.GetConfigOrDie()
 	cset, err := versioned.NewForConfig(rconfig)
 	if err != nil {
 		return fmt.Errorf("Unable to instantiate REST config: %w", err)
 	}
 	for _, ci := range ciarr {
-		_, err = cset.InspectV1alpha1().ClusterIssues(c.ClusterIssuesNs).Create(context.Background(), ci, metav1.CreateOptions{})
+		_, err = cset.ZoraV1alpha1().ClusterIssues(c.ClusterIssuesNs).Create(context.Background(), ci, metav1.CreateOptions{})
 		if err != nil {
 			return fmt.Errorf("Failed to create <ClusterIssue> instance on cluster <%s>: %w", c.Cluster, err)
 		}

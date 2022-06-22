@@ -8,12 +8,12 @@ import (
 	"path"
 	"strings"
 
-	inspectv1a1 "github.com/getupio-undistro/inspect/apis/inspect/v1alpha1"
-	"github.com/getupio-undistro/inspect/worker/report/popeye"
+	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/worker/report/popeye"
 )
 
 const (
-	DefaultDoneDir        = "/tmp/undistro-inspect/results"
+	DefaultDoneDir        = "/tmp/zora/results"
 	DoneDirEnvVar         = "DONE_DIR"
 	PluginEnvVar          = "PLUGIN_NAME"
 	ClusterEnvVar         = "CLUSTER_NAME"
@@ -24,7 +24,7 @@ const (
 )
 
 // PluginParsers correlates plugins with their respective parsing functions.
-var PluginParsers = map[string]func([]byte) ([]*inspectv1a1.ClusterIssueSpec, error){
+var PluginParsers = map[string]func([]byte) ([]*zorav1a1.ClusterIssueSpec, error){
 	"popeye": popeye.Parse,
 }
 

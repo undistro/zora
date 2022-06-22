@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getupio-undistro/inspect/payloads"
-	"github.com/getupio-undistro/inspect/pkg/clientset/versioned"
+	"github.com/getupio-undistro/zora/payloads"
+	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -14,7 +14,7 @@ func IssueListHandler(client versioned.Interface, logger logr.Logger) func(http.
 	return func(w http.ResponseWriter, r *http.Request) {
 		log := logger.WithName("handlers.issues").WithValues("method", r.Method, "path", r.URL.Path)
 
-		issueList, err := client.InspectV1alpha1().ClusterIssues("").List(r.Context(), metav1.ListOptions{})
+		issueList, err := client.ZoraV1alpha1().ClusterIssues("").List(r.Context(), metav1.ListOptions{})
 		if err != nil {
 			log.Error(err, "failed to list ClusterIssues")
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterIssues", err.Error())
