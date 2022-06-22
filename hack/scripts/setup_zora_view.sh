@@ -1,7 +1,7 @@
 #!/bin/sh
 set -o errexit
 
-CLUSTER_NAME=${CLUSTER_NAME:-"zoraed"}
+CLUSTER_NAME=${CLUSTER_NAME:-"zored"}
 CLUSTER_NS=${CLUSTER_NS:-"zora-system"}
 KCONFIG_PATH=${KCONFIG_PATH:-"zora_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
