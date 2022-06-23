@@ -67,7 +67,7 @@ func (r *clusterDiscovery) Resources(ctx context.Context) (ClusterResources, err
 
 // Provider finds the cluster source by matching against provider specific
 // labels on a node, returning the provider if the match succeeds and
-// "unknown" if it fails.
+// empty if it fails.
 func (r *clusterDiscovery) provider(nodes []corev1.Node) string {
 	for _, node := range nodes {
 		for l := range node.Labels {
