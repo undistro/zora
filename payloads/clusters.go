@@ -49,7 +49,7 @@ type Resource struct {
 }
 
 type ScanStatus struct {
-	Type    ScanStatusType `json:"scanStatusType"`
+	Type    ScanStatusType `json:"type"`
 	Message string         `json:"message"`
 }
 
