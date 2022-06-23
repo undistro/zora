@@ -246,7 +246,7 @@ The cluster list output has the following columns:
 
 > **Info:**
 >
-> - The quantity of available and in use resources, is an average of all Nodes.
+> - The quantity of available and in use resources, is a sum of all Nodes.
 > - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
 > - Show detailed description of a cluster, including **events**, running `kubectl describe cluster mycluster`.
 

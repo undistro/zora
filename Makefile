@@ -195,7 +195,7 @@ setup-zora-view: ## Create and apply view secret.
 
 ##@ Documentation
 helm-docs: ## Generate documentation for helm charts
-	@ docker run -it --rm \
+	@docker run -it --rm \
 		-v $(PWD):/helm-docs \
 		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
 		helm-docs -s=file

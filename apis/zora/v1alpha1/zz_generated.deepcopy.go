@@ -6,6 +6,7 @@
 package v1alpha1
 
 import (
+	"github.com/getupio-undistro/zora/pkg/discovery"
 	"k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -332,6 +333,13 @@ func (in *ClusterStatus) DeepCopyInto(out *ClusterStatus) {
 	*out = *in
 	in.Status.DeepCopyInto(&out.Status)
 	in.ClusterInfo.DeepCopyInto(&out.ClusterInfo)
+	if in.Resources != nil {
+		in, out := &in.Resources, &out.Resources
+		*out = make(discovery.ClusterResources, len(*in))
+		for key, val := range *in {
+			(*out)[key] = *val.DeepCopy()
+		}
+	}
 	in.LastReconciliationTime.DeepCopyInto(&out.LastReconciliationTime)
 	if in.LastScans != nil {
 		in, out := &in.LastScans, &out.LastScans

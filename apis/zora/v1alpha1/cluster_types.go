@@ -33,8 +33,8 @@ type ClusterStatus struct {
 	// KubernetesVersion is the server's kubernetes version (git version).
 	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
 
-	// Total of nodes
-	TotalNodes int `json:"totalNodes,omitempty"`
+	// Usage and available resources
+	Resources discovery.ClusterResources `json:"resources,omitempty"`
 
 	// Usage of memory in quantity and percentage
 	MemoryUsage string `json:"memoryUsage,omitempty"`
@@ -64,15 +64,13 @@ type ClusterStatus struct {
 	NextScheduleScanTime *metav1.Time `json:"nextScheduleScanTime,omitempty"`
 }
 
-// SetClusterInfo fill ClusterInfo and temporary fields (TotalNodes, MemoryUsage and CPUUsage)
-func (in *ClusterStatus) SetClusterInfo(c discovery.ClusterInfo) {
-	in.ClusterInfo = c
-	in.TotalNodes = len(c.Nodes)
-	if m, found := in.ClusterInfo.Resources[corev1.ResourceMemory]; found {
+// SetResources format and fill temporary fields about resources
+func (in *ClusterStatus) SetResources(res discovery.ClusterResources) {
+	if m, found := res[corev1.ResourceMemory]; found {
 		in.MemoryAvailable = formats.Memory(m.Available)
 		in.MemoryUsage = formats.MemoryUsage(m.Usage, m.UsagePercentage)
 	}
-	if c, found := in.ClusterInfo.Resources[corev1.ResourceCPU]; found {
+	if c, found := res[corev1.ResourceCPU]; found {
 		in.CPUAvailable = formats.CPU(c.Available)
 		in.CPUUsage = formats.CPUUsage(c.Usage, c.UsagePercentage)
 	}

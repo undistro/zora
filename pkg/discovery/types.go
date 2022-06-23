@@ -11,22 +11,17 @@ import (
 var MeasuredResources = []corev1.ResourceName{corev1.ResourceCPU, corev1.ResourceMemory}
 
 type ClusterDiscoverer interface {
-	Discover(context.Context) (*ClusterInfo, error)
+	Info(context.Context) (*ClusterInfo, error)
+	Resources(ctx context.Context) (ClusterResources, error)
 	Version() (string, error)
-	Nodes(context.Context) ([]NodeInfo, error)
-	Provider(NodeInfo) string
-	Region([]NodeInfo) (string, error)
 }
 
 // +k8s:deepcopy-gen=true
 type ClusterInfo struct {
-	// Info from cluster nodes
-	Nodes []NodeInfo `json:"-"`
+	// total of Nodes
+	TotalNodes *int `json:"totalNodes,omitempty"`
 
-	// Average of usage and available resources
-	Resources map[corev1.ResourceName]Resources `json:"resources,omitempty"`
-
-	// CreationTimestamp is a timestamp representing the server time when the oldest Node was created.
+	// CreationTimestamp is a timestamp representing the server time when the kube-system namespace was created.
 	// It is represented in RFC3339 form and is in UTC.
 	CreationTimestamp metav1.Time `json:"creationTimestamp,omitempty"`
 
@@ -37,7 +32,6 @@ type ClusterInfo struct {
 	Region string `json:"region,omitempty"`
 }
 
-// +k8s:deepcopy-gen=true
 type NodeInfo struct {
 	// Node name
 	Name string `json:"name,omitempty"`
@@ -67,3 +61,6 @@ type Resources struct {
 	// Percentage of resources in use
 	UsagePercentage int32 `json:"usagePercentage,omitempty"`
 }
+
+// +k8s:deepcopy-gen=true
+type ClusterResources map[corev1.ResourceName]Resources

@@ -37,19 +37,10 @@ type clusterDiscovery struct {
 	metrics    *versioned.Clientset
 }
 
-func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
-	nodes, err := r.Nodes(ctx)
+func (r *clusterDiscovery) Info(ctx context.Context) (*ClusterInfo, error) {
+	nodeList, err := r.kubernetes.CoreV1().Nodes().List(ctx, metav1.ListOptions{})
 	if err != nil {
-		return nil, err
-	}
-	if len(nodes) == 0 {
-		return nil, errors.New("cluster has no nodes")
-	}
-
-	prov := r.Provider(nodes[0])
-	reg, err := r.Region(nodes)
-	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list Nodes: %w", err)
 	}
 
 	ns, err := r.kubernetes.CoreV1().Namespaces().Get(ctx, "kube-system", metav1.GetOptions{})
@@ -57,55 +48,58 @@ func (r *clusterDiscovery) Discover(ctx context.Context) (*ClusterInfo, error) {
 		return nil, fmt.Errorf("unable to get <kube-system> namespace: %w", err)
 	}
 
+	totalNodes := len(nodeList.Items)
 	return &ClusterInfo{
-		Nodes:             nodes,
-		Resources:         avgNodeResources(nodes),
+		TotalNodes:        &totalNodes,
 		CreationTimestamp: ns.CreationTimestamp,
-		Provider:          prov,
-		Region:            reg,
+		Provider:          r.provider(nodeList.Items),
+		Region:            r.region(nodeList.Items),
 	}, nil
+}
+
+func (r *clusterDiscovery) Resources(ctx context.Context) (ClusterResources, error) {
+	nodes, err := r.nodes(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return sumNodeResources(nodes), nil
 }
 
 // Provider finds the cluster source by matching against provider specific
 // labels on a node, returning the provider if the match succeeds and
 // "unknown" if it fails.
-func (r *clusterDiscovery) Provider(node NodeInfo) string {
-	for l := range node.Labels {
-		for pref, p := range ClusterSourcePrefixes {
-			if strings.HasPrefix(l, pref) {
-				return p
-			}
-		}
-	}
-	return "unknown"
-}
-
-// Region returns "multi-region" if the cluster nodes belong to distinct
-// locations, otherwise it returns the region itself.
-func (r *clusterDiscovery) Region(nodes []NodeInfo) (string, error) {
-	regs := map[string]bool{}
-	haslabel := false
-	for c := 0; c < len(nodes); c++ {
-		for l, v := range nodes[c].Labels {
-			if l == RegionLabel {
-				regs[v] = true
-				if haslabel && len(regs) > 1 {
-					return "multi-region", nil
-				} else {
-					haslabel = true
+func (r *clusterDiscovery) provider(nodes []corev1.Node) string {
+	for _, node := range nodes {
+		for l := range node.Labels {
+			for pref, p := range ClusterSourcePrefixes {
+				if strings.HasPrefix(l, pref) {
+					return p
 				}
 			}
 		}
 	}
-	if !haslabel {
-		return "", fmt.Errorf("unable to discover region: %w",
-			fmt.Errorf("no node has the label <%s>", RegionLabel))
+	return ""
+}
+
+// region returns "multi-region" if the cluster nodes belong to distinct
+// locations, otherwise it returns the region itself.
+func (r *clusterDiscovery) region(nodes []corev1.Node) string {
+	regs := map[string]bool{}
+	for _, n := range nodes {
+		for l, v := range n.Labels {
+			if l == RegionLabel {
+				regs[v] = true
+				if len(regs) > 1 {
+					return "multi-region"
+				}
+			}
+		}
 	}
 	reg := ""
 	for reg = range regs {
 		continue
 	}
-	return reg, nil
+	return reg
 }
 
 func (r *clusterDiscovery) Version() (string, error) {
@@ -116,7 +110,7 @@ func (r *clusterDiscovery) Version() (string, error) {
 	return v.String(), nil
 }
 
-func (r *clusterDiscovery) Nodes(ctx context.Context) ([]NodeInfo, error) {
+func (r *clusterDiscovery) nodes(ctx context.Context) ([]NodeInfo, error) {
 	if err := r.checkMetricsAPI(); err != nil {
 		return nil, err
 	}
@@ -173,7 +167,7 @@ func nodeResources(nodes []corev1.Node, nodeMetrics []v1beta1.NodeMetrics) []Nod
 	return infos
 }
 
-func avgNodeResources(nodes []NodeInfo) map[corev1.ResourceName]Resources {
+func sumNodeResources(nodes []NodeInfo) map[corev1.ResourceName]Resources {
 	totalAvailable := make(map[corev1.ResourceName]*resource.Quantity)
 	totalUsage := make(map[corev1.ResourceName]*resource.Quantity)
 
