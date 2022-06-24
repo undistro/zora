@@ -239,7 +239,7 @@ The cluster list output has the following columns:
 - `CPU USAGE (%)`: Usage of CPU in quantity and percentage
 - `NODES`: Total of nodes
 - `READY`: Indicates whether the cluster is connected
-- `AGE`: Age of the oldest Node in cluster
+- `AGE`: Age of the kube-system namespace in cluster
 - `PROVIDER`: Cluster provider (with `-o=wide` flag)
 - `REGION`: Cluster region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (with `-o=wide` flag)
 - `ISSUES`: Total of issues reported in this Cluster (with `-o=wide` flag)
