@@ -163,8 +163,8 @@ spec:
                 type: string
               creationTimestamp:
                 description: CreationTimestamp is a timestamp representing the server
-                  time when the oldest Node was created. It is represented in RFC3339
-                  form and is in UTC.
+                  time when the kube-system namespace was created. It is represented
+                  in RFC3339 form and is in UTC.
                 format: date-time
                 type: string
               kubernetesVersion:
@@ -227,14 +227,14 @@ spec:
                       format: int32
                       type: integer
                   type: object
-                description: Average of usage and available resources
+                description: Usage and available resources
                 type: object
               totalIssues:
                 description: Total of ClusterIssues reported by the last successful
                   scan
                 type: integer
               totalNodes:
-                description: Total of nodes
+                description: total of Nodes
                 type: integer
             required:
             - totalIssues

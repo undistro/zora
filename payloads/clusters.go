@@ -21,7 +21,7 @@ type Cluster struct {
 	Environment            string           `json:"environment"`
 	Provider               string           `json:"provider"`
 	Region                 string           `json:"region"`
-	TotalNodes             int              `json:"totalNodes"`
+	TotalNodes             *int             `json:"totalNodes"`
 	Version                string           `json:"version"`
 	Status                 ScanStatus       `json:"status"`
 	TotalIssues            int              `json:"totalIssues"`
@@ -49,7 +49,7 @@ type Resource struct {
 }
 
 type ScanStatus struct {
-	Type    ScanStatusType `json:"scanStatusType"`
+	Type    ScanStatusType `json:"type"`
 	Message string         `json:"message"`
 }
 

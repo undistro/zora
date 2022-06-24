@@ -92,21 +92,28 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	cluster.Status.KubernetesVersion = version
 	cluster.SetStatus(v1alpha1.ClusterReady, true, "ClusterConnected", fmt.Sprintf("cluster successfully connected, version %s", version))
 
-	info, err := discoverer.Discover(ctx)
-	if err != nil {
+	if info, err := discoverer.Info(ctx); err != nil {
 		log.Error(err, "failed to discovery cluster info")
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterNotDiscovered", err.Error())
-		return err
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterInfoNotDiscovered", err.Error())
+	} else {
+		cluster.Status.ClusterInfo = *info
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterInfoDiscovered", "cluster info successfully discovered")
+	}
+
+	if res, err := discoverer.Resources(ctx); err != nil {
+		log.Error(err, "failed to discovery cluster resources")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterResourcesNotDiscovered", err.Error())
+	} else {
+		cluster.Status.SetResources(res)
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterResourcesDiscovered", "cluster resources successfully discovered")
 	}
 
 	if err := r.updateScanStatus(ctx, cluster); err != nil {
 		return err
 	}
 
-	cluster.Status.SetClusterInfo(*info)
 	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
 	cluster.Status.ObservedGeneration = cluster.Generation
-	r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterDiscovered", "cluster info successfully discovered")
 	return nil
 }
 
