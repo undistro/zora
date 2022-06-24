@@ -2,7 +2,7 @@
 
 ![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.3.0](https://img.shields.io/badge/AppVersion-v0.3.0-informational?style=flat-square)
 
-Zora denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
+Zora denounces potential issues in your Kubernetes clusters and provides multi cluster visibility.
 
 ## Installing the Chart
 
@@ -11,8 +11,8 @@ To install the chart with the release name `zora`:
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm install zora undistro/zora \
-  --set imageCredentials.username=<USERNAME> \
-  --set imageCredentials.password=<PASSWORD> \
+  --set imageCredentials.username='USERNAME' \
+  --set imageCredentials.password='PASSWORD' \
   -n zora-system \
   --create-namespace
 ```
@@ -26,6 +26,7 @@ The [Parameters](#parameters) section lists the parameters that can be configure
 > - Update `undistro` chart repository using `helm repo update undistro`
 > - List all versions available of `undistro/zora` chart using `helm search repo undistro/zora --versions`
 > - List all releases using `helm list`
+> - Get the notes provided by `zora` release using `helm get notes zora -n zora-system`
 
 ## Uninstalling the Chart
 
