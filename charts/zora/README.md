@@ -10,7 +10,7 @@ To install the chart with the release name `zora`:
 
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install zora undistro/zora \
+helm upgrade --install zora undistro/zora \
   --set imageCredentials.username='USERNAME' \
   --set imageCredentials.password='PASSWORD' \
   -n zora-system \
