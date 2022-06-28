@@ -1,6 +1,6 @@
 # Prepare the target cluster
 
-Follow this guide to create a service account and generate a kubeconfig file from a [target cluster](/4-glossary#target-cluster).
+Follow this guide to create a service account and generate a kubeconfig file from a [target cluster](/glossary#target-cluster).
 These are the only steps required to be performed in the target cluster.
 
 A separate service account of a target cluster is needed because
@@ -10,7 +10,7 @@ Zora just needs a service account token.
 
 ## Generate a kubeconfig
 
-### 1. Connect to the [target cluster](/4-glossary#target-cluster)
+### 1. Connect to the [target cluster](/glossary#target-cluster)
 
 Ensure you are in the context of the target cluster.
 
@@ -158,7 +158,7 @@ EOF
 ## Verify the generated kubeconfig
 
 These steps create a file in your current working directory called `zora-view-kubeconfig.yml`.
-The contents of this file are used in [the next guide](2-connect-cluster) to connect this target cluster into Zora.
+The contents of this file are used in [the next guide](connect-cluster) to connect this target cluster into Zora.
 
 Before using this kubeconfig, you can verify that is functional by running:
 

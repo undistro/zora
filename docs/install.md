@@ -1,7 +1,7 @@
-# Install Zora
+# Install
 
 Zora requires an existing Kubernetes cluster accessible via `kubectl`.
-During the installation process the Kubernetes cluster will be your [management cluster](/4-glossary#management-cluster)
+During the installation process the Kubernetes cluster will be your [management cluster](/glossary#management-cluster)
 by installing the Zora components, so it is recommended to keep it separated from any application workload.
 
 ## Install with Helm
@@ -21,7 +21,7 @@ helm upgrade --install zora undistro/zora \
     `<USERNAME>` and `<PASSWORD>` must be replaced with your credentials.
 
 These commands deploy Zora to the Kubernetes cluster.
-[This section](https://github.com/getupio-undistro/zora/tree/main/charts/zora) lists the parameters
+[This section](helm-chart.md) lists the parameters
 that can be configured during installation.
 
 ## Access to the UI

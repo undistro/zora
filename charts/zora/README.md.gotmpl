@@ -29,10 +29,15 @@ These commands deploy {{ $title }} on the Kubernetes cluster in the default conf
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tips:**
+>
 > - List all charts available in `{{ $repoName }}` repo using `helm search repo {{ $repoName }}`
+>
 > - Update `{{ $repoName }}` chart repository using `helm repo update {{ $repoName }}`
+>
 > - List all versions available of `{{ $repoName }}/{{ $release }}` chart using `helm search repo {{ $repoName }}/{{ $release }} --versions`
+>
 > - List all releases using `helm list`
+>
 > - Get the notes provided by `{{ $release }}` release using `helm get notes {{ $release }} -n {{ $namespace }}`
 
 ## Uninstalling the Chart

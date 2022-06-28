@@ -5,9 +5,9 @@ Follow this guide to connect a [target cluster](/4-glossary#target-cluster) dire
 ## Prerequisites
 
 1. A kubeconfig file with an authentication `token` of the target cluster. 
-   Follow [these instructions](/1-target-cluster) to generate it.
+   Follow [these instructions](/target-cluster) to generate it.
 2. The [api-server](https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver) 
-   of [target cluster](/4-glossary#target-cluster) must be reachable by the [management cluster](/4-glossary#management-cluster). 
+   of [target cluster](/glossary#target-cluster) must be reachable by the [management cluster](/glossary#management-cluster). 
 3. The target cluster should have Metrics Server deployed. For more information, visit the
    [official documentation](https://github.com/kubernetes-sigs/metrics-server/#readme).
 
