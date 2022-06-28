@@ -1,0 +1,36 @@
+name: Update documentation
+on:
+  workflow_dispatch:
+    push:
+      tags:
+        - "docs*"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install mkdocs-material
+        run: pip install mkdocs-material
+
+      - name: Build the documentation
+        run: |
+          cp charts/zora/README.md docs/helm-chart.md
+          cp charts/zora/values.yaml docs/values.yaml
+          mkdocs build
+
+      - name: Deploy to s3
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 rm s3://zora.undistro.io --recursive
+          aws s3 sync site/ s3://zora.undistro.io --acl public-read
+          aws cloudfront create-invalidation --distribution-id EF02PUDZJ7REX --paths '/*'
