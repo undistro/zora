@@ -66,6 +66,7 @@ type ClusterStatus struct {
 
 // SetResources format and fill temporary fields about resources
 func (in *ClusterStatus) SetResources(res discovery.ClusterResources) {
+	in.Resources = res.DeepCopy()
 	if m, found := res[corev1.ResourceMemory]; found {
 		in.MemoryAvailable = formats.Memory(m.Available)
 		in.MemoryUsage = formats.MemoryUsage(m.Usage, m.UsagePercentage)
