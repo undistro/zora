@@ -208,12 +208,3 @@ preview-docs: helm-docs ## Run a server to preview the documentation
 		-v $(PWD)/charts/zora/README.md:/docs/docs/helm-chart.md \
 		-v $(PWD)/charts/zora/values.yaml:/docs/docs/values.yaml \
 		squidfunk/mkdocs-material:8.3.8
-
-docs: helm-docs ## Build static documentation from Markdown files in 'docs/' directory
-	@docker run --name zora-docs-build --rm -it \
-		-v $(PWD)/mkdocs.yml:/docs/mkdocs.yml \
-		-v $(PWD)/docs:/docs/docs \
-		-v $(PWD)/charts/zora/README.md:/docs/docs/helm-chart.md \
-		-v $(PWD)/charts/zora/values.yaml:/docs/docs/values.yaml \
-		-v $(PWD)/site:/docs/site \
-		squidfunk/mkdocs-material:8.3.8 build
