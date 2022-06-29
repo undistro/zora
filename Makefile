@@ -199,3 +199,12 @@ helm-docs: ## Generate documentation for helm charts
 		-v $(PWD):/helm-docs \
 		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
 		helm-docs -s=file
+
+preview-docs: helm-docs ## Run a server to preview the documentation
+	@docker run --name zora-docs-preview --rm -it \
+		-p 8000:8000 \
+		-v $(PWD)/mkdocs.yml:/docs/mkdocs.yml \
+		-v $(PWD)/docs:/docs/docs \
+		-v $(PWD)/charts/zora/README.md:/docs/docs/helm-chart.md \
+		-v $(PWD)/charts/zora/values.yaml:/docs/docs/values.yaml \
+		squidfunk/mkdocs-material:8.3.8

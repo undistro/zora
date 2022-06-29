@@ -1,0 +1,167 @@
+# Prepare the target cluster
+
+Follow this guide to create a service account and generate a kubeconfig file from a [target cluster](/glossary#target-cluster).
+These are the only steps required to be performed in the target cluster.
+
+A separate service account of a target cluster is needed because
+the default kubeconfig of most cloud providers, call CLI tools locally, such as `aws` or `gcloud`,
+to obtain authentication tokens.
+Zora just needs a service account token.
+
+## Generate a kubeconfig
+
+### 1. Connect to the [target cluster](/glossary#target-cluster)
+
+Ensure you are in the context of the target cluster.
+
+!!! tip
+    - Display list of contexts: `kubectl config get-contexts`
+    - Display the current-context: `kubectl config current-context`
+    - Set the default context to my-cluster-name: `kubectl config use-context my-cluster-name`
+
+### 2. Create the RBAC resources
+
+Create the service account in a separate namespace and configure `view` permissions:
+
+```yaml
+kubectl create namespace zora-system
+kubectl -n zora-system create serviceaccount zora-view
+cat << EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: zora-view
+rules:
+  - apiGroups: [ "" ]
+    resources:
+      - configmaps
+      - endpoints
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumes
+      - persistentvolumeclaims
+      - pods
+      - secrets
+      - serviceaccounts
+      - services
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "apps" ]
+    resources:
+      - daemonsets
+      - deployments
+      - statefulsets
+      - replicasets
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "autoscaling" ]
+    resources:
+      - horizontalpodautoscalers
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "networking.k8s.io" ]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "policy" ]
+    resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "rbac.authorization.k8s.io" ]
+    resources:
+      - clusterroles
+      - clusterrolebindings
+      - roles
+      - rolebindings
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "metrics.k8s.io" ]
+    resources:
+      - pods
+      - nodes
+    verbs: [ "get", "list" ]
+EOF
+kubectl create clusterrolebinding zora-view --clusterrole=zora-view --serviceaccount=zora-system:zora-view
+```
+
+!!! info
+    Zora just requires view permissions of your target cluster.
+
+### 3. Set up the environment variables
+
+Set up the following environment variables based on the Kubernetes version of the target cluster.
+
+You can verify the version of your cluster by running:
+```shell
+kubectl version
+```
+
+The _Server Version_ is the version of Kubernetes your target cluster is running.
+
+=== "Kubernetes prior to 1.24.0"
+
+    ```shell
+    export TOKEN_NAME=$(kubectl -n zora-system get serviceaccount zora-view -o=jsonpath='{.secrets[0].name}')
+    export TOKEN_VALUE=$(kubectl -n zora-system get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
+    export CURRENT_CONTEXT=$(kubectl config current-context)
+    export CURRENT_CLUSTER=$(kubectl config view --raw -o=go-template='{{range .contexts}}{{if eq .name "'''${CURRENT_CONTEXT}'''"}}{{ index .context "cluster" }}{{end}}{{end}}')
+    export CLUSTER_CA=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}"{{with index .cluster "certificate-authority-data" }}{{.}}{{end}}"{{ end }}{{ end }}')
+    export CLUSTER_SERVER=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}{{ .cluster.server }}{{end}}{{ end }}')
+    ```
+
+=== "Kubernetes 1.24.0 or later"
+
+    ```shell
+    export TOKEN_NAME="zora-view-token"
+    cat << EOF | kubectl apply -f - 
+    apiVersion: v1
+    kind: Secret
+    metadata:
+        name: "$TOKEN_NAME"
+        namespace: "zora-system"
+        annotations:
+            kubernetes.io/service-account.name: "zora-view"
+    type: kubernetes.io/service-account-token
+    EOF
+    export TOKEN_VALUE=$(kubectl -n zora-system get secret ${TOKEN_NAME} -o=jsonpath='{.data.token}' | base64 --decode)
+    export CURRENT_CONTEXT=$(kubectl config current-context)
+    export CURRENT_CLUSTER=$(kubectl config view --raw -o=go-template='{{range .contexts}}{{if eq .name "'''${CURRENT_CONTEXT}'''"}}{{ index .context "cluster" }}{{end}}{{end}}')
+    export CLUSTER_CA=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}"{{with index .cluster "certificate-authority-data" }}{{.}}{{end}}"{{ end }}{{ end }}')
+    export CLUSTER_SERVER=$(kubectl config view --raw -o=go-template='{{range .clusters}}{{if eq .name "'''${CURRENT_CLUSTER}'''"}}{{ .cluster.server }}{{end}}{{ end }}')
+    ```
+
+### 4. Generate a kubeconfig file
+
+Generate a file with kubeconfig data, based on the environment variables defined before:
+
+```yaml
+cat << EOF > zora-view-kubeconfig.yml
+apiVersion: v1
+kind: Config
+current-context: ${CURRENT_CONTEXT}
+contexts:
+- name: ${CURRENT_CONTEXT}
+  context:
+    cluster: ${CURRENT_CONTEXT}
+    user: zora-view
+clusters:
+- name: ${CURRENT_CONTEXT}
+  cluster:
+    certificate-authority-data: ${CLUSTER_CA}
+    server: ${CLUSTER_SERVER}
+users:
+- name: zora-view
+  user:
+    token: ${TOKEN_VALUE}
+EOF
+```
+
+## Verify the generated kubeconfig
+
+These steps create a file in your current working directory called `zora-view-kubeconfig.yml`.
+The contents of this file are used in [the next guide](connect-cluster) to connect this target cluster into Zora.
+
+Before using this kubeconfig, you can verify that is functional by running:
+
+```shell
+kubectl --kubeconfig zora-view-kubeconfig.yml get all --all-namespaces
+```

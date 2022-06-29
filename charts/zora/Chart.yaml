@@ -1,6 +1,6 @@
 apiVersion: v2
 name: zora
-description: Zora denounces potential issues in your Kubernetes cluster and provides multi cluster visibility.
+description: Zora scans multiple Kubernetes clusters and reports potential issues.
 
 type: application
 

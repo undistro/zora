@@ -1,4 +1,9 @@
-# Zora Helm Chart
+{{- $release := "zora" -}}
+{{- $namespace := "zora-system" -}}
+{{- $repoURL := "https://registry.undistro.io/chartrepo/library" -}}
+{{- $repoName := "undistro" -}}
+{{- $title := .Name | title -}}
+# {{ $title }} Helm Chart
 
 {{ template "chart.deprecationWarning" . }}
 
@@ -8,54 +13,60 @@
 
 ## Installing the Chart
 
-To install the chart with the release name `zora`:
+To install the chart with the release name `{{ $release }}`:
 
 ```console
-helm repo add undistro https://registry.undistro.io/chartrepo/library
-helm install zora undistro/{{ template "chart.name" . }} \
-  --set imageCredentials.username=<USERNAME> \
-  --set imageCredentials.password=<PASSWORD> \
-  -n zora-system \
+helm repo add {{ $repoName }} {{ $repoURL }}
+helm upgrade --install {{ $release }} {{ $repoName }}/{{ template "chart.name" . }} \
+  --set imageCredentials.username='<USERNAME>' \
+  --set imageCredentials.password='<PASSWORD>' \
+  -n {{ $namespace }} \
   --create-namespace
 ```
 
-These commands deploy Zora on the Kubernetes cluster in the default configuration.
+These commands deploy {{ $title }} on the Kubernetes cluster in the default configuration.
 
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tips:**
-> - List all charts available in `undistro` repo using `helm search repo undistro`
-> - Update `undistro` chart repository using `helm repo update undistro`
-> - List all versions available of `undistro/zora` chart using `helm search repo undistro/zora --versions`
+>
+> - List all charts available in `{{ $repoName }}` repo using `helm search repo {{ $repoName }}`
+>
+> - Update `{{ $repoName }}` chart repository using `helm repo update {{ $repoName }}`
+>
+> - List all versions available of `{{ $repoName }}/{{ $release }}` chart using `helm search repo {{ $repoName }}/{{ $release }} --versions`
+>
 > - List all releases using `helm list`
+>
+> - Get the notes provided by `{{ $release }}` release using `helm get notes {{ $release }} -n {{ $namespace }}`
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `zora` release:
+To uninstall/delete the `{{ $release }}` release:
 
 ```console
-$ helm delete zora
+$ helm delete {{ $release }}
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Parameters
 
-The following table lists the configurable parameters of the Zora chart and their default values.
+The following table lists the configurable parameters of the {{ $title }} chart and their default values.
 
 {{ template "chart.valuesTable" . }}
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm install zora \
-  --set server.service.port=8080 undistro/{{ template "chart.name" . }}
+$ helm install {{ $release }} \
+  --set server.service.port=8080 {{ $repoName }}/{{ template "chart.name" . }}
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install zora -f values.yaml undistro/{{ template "chart.name" . }}
+$ helm install {{ $release }} -f values.yaml {{ $repoName }}/{{ template "chart.name" . }}
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

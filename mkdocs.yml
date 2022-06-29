@@ -1,0 +1,40 @@
+site_name: Zora
+site_url: https://zora.undistro.io/
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.tabs.link
+    - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.instant
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Documentation:
+      - Introduction: index.md
+      - Install: install.md
+      - Prepare the target cluster: target-cluster.md
+      - Connect a cluster to Zora: connect-cluster.md
+      - Configure a cluster scan: cluster-scan.md
+      - Glossary: glossary.md
+  - Helm Chart:
+      - Zora Helm Chart: helm-chart.md
