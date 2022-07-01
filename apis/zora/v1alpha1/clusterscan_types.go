@@ -83,7 +83,7 @@ type ClusterScanStatus struct {
 	NextScheduleTime *metav1.Time `json:"nextScheduleTime,omitempty"`
 
 	// Total of ClusterIssues reported in the last successful scan
-	TotalIssues int `json:"totalIssues"`
+	TotalIssues *int `json:"totalIssues,omitempty"`
 }
 
 // GetPluginStatus returns a PluginScanStatus of a plugin

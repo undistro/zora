@@ -52,7 +52,7 @@ type ClusterStatus struct {
 	LastReconciliationTime metav1.Time `json:"lastReconciliationTime,omitempty"`
 
 	// Total of ClusterIssues reported by the last successful scan
-	TotalIssues int `json:"totalIssues"`
+	TotalIssues *int `json:"totalIssues,omitempty"`
 
 	// List of last scan IDs
 	LastScans []string `json:"lastScans,omitempty"`

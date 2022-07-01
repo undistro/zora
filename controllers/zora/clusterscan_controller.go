@@ -77,7 +77,7 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "failed to update ClusterScan status")
 	}
 
-	return ctrl.Result{RequeueAfter: 10 * time.Minute}, err
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }
 
 func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
@@ -184,8 +184,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...); err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 		return err
-	} else {
-		clusterscan.Status.TotalIssues = len(issues)
+	} else if issues != nil {
+		clusterscan.Status.TotalIssues = pointer.Int(len(issues))
 	}
 
 	clusterscan.Status.SyncStatus()
