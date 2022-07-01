@@ -141,12 +141,19 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		}
 	}
 
-	var totalIssues int
+	var totalIssues *int
 	var lastScanIDs []string
 	var failed []string
 	var notFinished []string
 	for _, cs := range clusterScanList.Items {
-		totalIssues += cs.Status.TotalIssues
+		if cs.Status.TotalIssues != nil {
+			if totalIssues == nil {
+				totalIssues = cs.Status.TotalIssues
+			} else {
+				sum := *totalIssues + *cs.Status.TotalIssues
+				totalIssues = &sum
+			}
+		}
 		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
 		if cs.Status.LastFinishedStatus == string(batchv1.JobFailed) {
 			failed = append(failed, cs.Name)

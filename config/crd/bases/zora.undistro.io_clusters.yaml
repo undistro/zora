@@ -236,8 +236,6 @@ spec:
               totalNodes:
                 description: total of Nodes
                 type: integer
-            required:
-            - totalIssues
             type: object
         type: object
     served: true

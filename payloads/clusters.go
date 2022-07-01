@@ -24,7 +24,7 @@ type Cluster struct {
 	TotalNodes             *int             `json:"totalNodes"`
 	Version                string           `json:"version"`
 	Status                 ScanStatus       `json:"status"`
-	TotalIssues            int              `json:"totalIssues"`
+	TotalIssues            *int             `json:"totalIssues"`
 	Resources              *Resources       `json:"resources"`
 	CreationTimestamp      metav1.Time      `json:"creationTimestamp"`
 	Issues                 []ResourcedIssue `json:"issues"`
@@ -120,6 +120,5 @@ func NewClusterWithIssues(cluster v1alpha1.Cluster, issues []v1alpha1.ClusterIss
 	for _, i := range issues {
 		c.Issues = append(c.Issues, NewResourcedIssue(i))
 	}
-	c.TotalIssues = len(issues)
 	return c
 }

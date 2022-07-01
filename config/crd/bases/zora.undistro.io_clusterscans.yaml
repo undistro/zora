@@ -383,7 +383,6 @@ spec:
                 type: integer
             required:
             - suspend
-            - totalIssues
             type: object
         type: object
     served: true
