@@ -41,7 +41,7 @@ jobs:
       - name: Get UI image tag
         run: |
           echo "UI_IMAGE_TAG=$(
-            helm get values zora -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
+            helm -n zora-system get values zora -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
           )" >> $GITHUB_ENV
 
       - name: Dry run
