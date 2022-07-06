@@ -1,6 +1,6 @@
 # Connect a cluster to Zora
 
-Follow this guide to connect a [target cluster](/4-glossary#target-cluster) directly to Zora.
+Follow this guide to connect a [target cluster](/glossary#target-cluster) directly to Zora.
 
 ## Prerequisites
 
