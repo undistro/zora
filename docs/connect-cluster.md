@@ -1,4 +1,4 @@
-# Connect a cluster to Zora
+# Connect the target cluster to Zora
 
 Follow this guide to connect a [target cluster](/glossary#target-cluster) directly to Zora.
 
@@ -7,16 +7,28 @@ Follow this guide to connect a [target cluster](/glossary#target-cluster) direct
 1. A kubeconfig file with an authentication `token` of the target cluster. 
    Follow [these instructions](/target-cluster) to generate it.
 2. The [api-server](https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver) 
-   of [target cluster](/glossary#target-cluster) must be reachable by the [management cluster](/glossary#management-cluster). 
-3. The target cluster should have Metrics Server deployed. For more information, visit the
-   [official documentation](https://github.com/kubernetes-sigs/metrics-server/#readme).
+   of the [target cluster](/glossary#target-cluster) 
+   must be reachable by the [management cluster](/glossary#management-cluster). 
+
+
+!!! warning "Metrics Server"
+    If the target cluster has Metrics Server deployed, 
+    information about the resource usage is collected
+    and issues about potential resources over/under allocations can be reported.
+
+    For more information about Metrics Server, visit the
+    [official documentation](https://github.com/kubernetes-sigs/metrics-server/#readme).
 
 !!! warning "Important"
-    Ensure you are in the context of the management cluster.
+    Ensure you are in the context of the **management cluster**.
 
-## Create a Secret with your kubeconfig
+    - Display list of contexts: `kubectl config get-contexts`
+    - Display the current-context: `kubectl config current-context`
+    - Set the default context to **my-management-cluster**: `kubectl config use-context my-management-cluster`
 
-Create a `Secret` with the content of the kubeconfig:
+## Create a `Cluster` resource
+
+First, create a `Secret` with the content of the kubeconfig file:
 
 ```shell
 kubectl create secret generic mycluster-kubeconfig \
@@ -24,9 +36,7 @@ kubectl create secret generic mycluster-kubeconfig \
   --from-file=value=zora-view-kubeconfig.yml
 ```
 
-## Create a Cluster resource
-
-Create a `Cluster` resource referencing the kubeconfig Secret in the same namespace:
+Now, you are able to create a `Cluster` resource referencing the kubeconfig Secret in the same namespace:
 
 ```yaml
 cat << EOF | kubectl apply -f -
@@ -68,17 +78,17 @@ The cluster list output has the following columns:
 
 - `NAME`: Cluster name
 - `VERSION`: Kubernetes version
-- `MEM AVAILABLE`: Quantity of memory available
-- `MEM USAGE (%)`: Usage of memory in quantity and percentage
-- `CPU AVAILABLE`: Quantity of CPU available
-- `CPU USAGE (%)`: Usage of CPU in quantity and percentage
+- `MEM AVAILABLE`: Quantity of memory available (requires Metrics Server)
+- `MEM USAGE (%)`: Usage of memory in quantity and percentage (requires Metrics Server)
+- `CPU AVAILABLE`: Quantity of CPU available (requires Metrics Server)
+- `CPU USAGE (%)`: Usage of CPU in quantity and percentage (requires Metrics Server)
 - `NODES`: Total of nodes
 - `READY`: Indicates whether the cluster is connected
 - `AGE`: Age of the kube-system namespace in cluster
 - `PROVIDER`: Cluster provider (with `-o=wide` flag)
-- `REGION`: Cluster region (`multi-region` if nodes have different `topology.kubernetes.io/region` label) (
-  with `-o=wide` flag)
-- `ISSUES`: Total of issues reported in this Cluster (with `-o=wide` flag)
+- `REGION`: Cluster region (`multi-region` if nodes have different `topology.kubernetes.io/region` label)
+  (with `-o=wide` flag)
+- `ISSUES`: Total of issues reported in the last successful scan of this Cluster (with `-o=wide` flag)
 
 !!! info
     - The quantity of available and in use resources, is a sum of all Nodes.

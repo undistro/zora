@@ -5,10 +5,13 @@ creating a `ClusterScan` resource in the same namespace as `Cluster`.
 
 ## Create a `ClusterScan`
 
+The `ClusterScan` scans the `Cluster` referenced in `clusterRef.name` field periodically on a given schedule, 
+written in [Cron](https://en.wikipedia.org/wiki/Cron) format.
+
 Here is a sample configuration that scan `mycluster` once an hour.
 You can modify per your needs/wants.
 
-```shell
+```yaml
 cat << EOF | kubectl apply -f -
 apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
@@ -20,6 +23,28 @@ spec:
   schedule: "0 */1 * * *"
 EOF
 ```
+
+### Cron schedule syntax
+
+```
+┌───────────── minute (0 - 59)
+│ ┌───────────── hour (0 - 23)
+│ │ ┌───────────── day of the month (1 - 31)
+│ │ │ ┌───────────── month (1 - 12)
+│ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+│ │ │ │ │                                   7 is also Sunday on some systems)
+│ │ │ │ │                                   OR sun, mon, tue, wed, thu, fri, sat
+│ │ │ │ │
+* * * * *
+```
+
+| Operator | Descriptor           | Example                                                                                            |
+|----------|----------------------|----------------------------------------------------------------------------------------------------|
+| *        | Any value            | `15 * * * *` runs at every minute 15 of every hour of every day.                                   |
+| ,        | Value list separator | `2,10 4,5 * * *` runs at minute 2 and 10 of the 4th and 5th hour of every day.                     |
+| -        | Range of values      | `30 4-6 * * *` runs at minute 30 of the 4th, 5th, and 6th hour.                                    |
+| /        | Step values          | `20/15 * * * *` runs every 15 minutes starting from minute 20 through 59 (minutes 20, 35, and 50). |
+
 
 ## List cluster scans
 
@@ -50,7 +75,8 @@ mycluster-pop-306-27557035    mycluster    POP-306    Container could be running
 mycluster-pop-500-27557035    mycluster    POP-500    Zero scale detected                                                            Medium     deployments       4m8s
 ```
 
-It's possible filter issues by cluster, issue ID, severity and category:
+It's possible filter issues by cluster, issue ID, severity and category 
+using [label selector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/):
 
 ```shell
 # issues from mycluster

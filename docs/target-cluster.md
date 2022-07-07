@@ -10,14 +10,14 @@ Zora just needs a service account token.
 
 ## Generate a kubeconfig
 
-### 1. Connect to the [target cluster](/glossary#target-cluster)
+### 1. Access the [target cluster](/glossary#target-cluster)
 
-Ensure you are in the context of the target cluster.
+Ensure you are in the context of the **target cluster**.
 
 !!! tip
     - Display list of contexts: `kubectl config get-contexts`
     - Display the current-context: `kubectl config current-context`
-    - Set the default context to my-cluster-name: `kubectl config use-context my-cluster-name`
+    - Set the default context to **my-target-cluster**: `kubectl config use-context my-target-cluster`
 
 ### 2. Create the RBAC resources
 
@@ -84,7 +84,7 @@ kubectl create clusterrolebinding zora-view --clusterrole=zora-view --serviceacc
 ```
 
 !!! info
-    Zora just requires view permissions of your target cluster.
+    Zora requires just view permissions of your target clusters.
 
 ### 3. Set up the environment variables
 
@@ -160,7 +160,7 @@ EOF
 These steps create a file in your current working directory called `zora-view-kubeconfig.yml`.
 The contents of this file are used in [the next guide](connect-cluster) to connect this target cluster into Zora.
 
-Before using this kubeconfig, you can verify that is functional by running:
+Before using this kubeconfig, you can verify that it is functional by running:
 
 ```shell
 kubectl --kubeconfig zora-view-kubeconfig.yml get all --all-namespaces
