@@ -1,7 +1,7 @@
 # Install
 
 Zora requires an existing Kubernetes cluster accessible via `kubectl`.
-After the installation process the Kubernetes cluster will be your [management cluster](/glossary#management-cluster)
+After the installation process this cluster will be your [management cluster](/glossary#management-cluster)
 with the Zora components installed. 
 So it is recommended to keep it separated from any application workload.
 
