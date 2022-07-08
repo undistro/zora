@@ -2,6 +2,8 @@
 
 ## What is Zora?
 
+Welcome to Zora.
+
 Zora is a multi-cluster scan that helps you identify potential issues and vulnerabilities 
 in your kubernetes clusters in a centralized way, ensuring that the recommended best practices are in place.
 
