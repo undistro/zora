@@ -1,7 +1,12 @@
 # Configure a cluster scan
 
-Since your clusters are connected it's possible configure a scan for them
-creating a `ClusterScan` resource in the same namespace as `Cluster`.
+Since your clusters are connected the next and last step is configure a scan for them
+by creating a `ClusterScan` in the same namespace as `Cluster` resource.
+
+The `ClusterScan` will be responsible for reporting issues and vulnerabilities of your clusters.
+
+Failure to perform this step implies that the scan will not be performed, and therefore the health of your cluster will be unknown.
+
 
 ## Create a `ClusterScan`
 
@@ -9,7 +14,7 @@ The `ClusterScan` scans the `Cluster` referenced in `clusterRef.name` field peri
 written in [Cron](https://en.wikipedia.org/wiki/Cron) format.
 
 Here is a sample configuration that scan `mycluster` once an hour.
-You can modify per your needs/wants.
+You can modify putting your desired periodicity.
 
 ```yaml
 cat << EOF | kubectl apply -f -
@@ -25,6 +30,9 @@ EOF
 ```
 
 ### Cron schedule syntax
+
+Cron expression has five fields separated by a space, and each field represents a time unit.
+
 
 ```
 ┌───────────── minute (0 - 59)
@@ -45,6 +53,10 @@ EOF
 | -        | Range of values      | `30 4-6 * * *` runs at minute 30 of the 4th, 5th, and 6th hour.                                    |
 | /        | Step values          | `20/15 * * * *` runs every 15 minutes starting from minute 20 through 59 (minutes 20, 35, and 50). |
 
+
+Now Zora is ready to help you to identify potential issues and vulnerabilities in your kubernetes clusters.
+
+You can check the scans status and the reported issues by the following steps:
 
 ## List cluster scans
 
