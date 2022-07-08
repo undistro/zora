@@ -1,9 +1,9 @@
 name: Update documentation
 on:
   workflow_dispatch:
-    push:
-      tags:
-        - "docs*"
+  push:
+    tags:
+      - "docs*"
 jobs:
   deploy:
     runs-on: ubuntu-latest
