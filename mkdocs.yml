@@ -1,8 +1,12 @@
-site_name: Zora
-site_url: https://zora.undistro.io/
+site_name: "Zora"
+site_url: https://zora.undistro.io
+extra_css:
+  - stylesheets/extra.css
 theme:
   name: material
   language: en
+  logo: assets/logo.png
+  favicon: assets/favicon.png
   palette:
     - scheme: default
       toggle:
