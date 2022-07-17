@@ -9,10 +9,10 @@ import (
 type ClusterIssueSeverity string
 
 const (
-	SeverityNone   ClusterIssueSeverity = "None"
-	SeverityLow    ClusterIssueSeverity = "Low"
-	SeverityMedium ClusterIssueSeverity = "Medium"
-	SeverityHigh   ClusterIssueSeverity = "High"
+	SeverityUnknown ClusterIssueSeverity = "Unknown"
+	SeverityLow     ClusterIssueSeverity = "Low"
+	SeverityMedium  ClusterIssueSeverity = "Medium"
+	SeverityHigh    ClusterIssueSeverity = "High"
 
 	LabelScanID   = "scanID"
 	LabelCluster  = "cluster"
