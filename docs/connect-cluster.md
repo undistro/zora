@@ -22,7 +22,7 @@ and will set a failure status.
     For more information about Metrics Server, visit the
     [official documentation](https://github.com/kubernetes-sigs/metrics-server/#readme).
 
-### 1. Access the [management cluster](/glossary#management-cluster)
+## 1. Access the [management cluster](/glossary#management-cluster)
 
 First, make sure you are in the context of the **management cluster**.
 You can do this by the following commands:
