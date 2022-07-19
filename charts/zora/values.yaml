@@ -288,3 +288,9 @@ scan:
         repository: registry.undistro.io/dockerhub/derailed/popeye
         # -- popeye plugin image tag
         tag: v0.10.0
+    kubescape:
+      image:
+        # -- kubescape plugin image repository
+        repository: registry.undistro.io/quay/armosec/kubescape
+        # -- kubescape plugin image tag
+        tag: v2.0.163

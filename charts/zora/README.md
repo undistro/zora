@@ -161,6 +161,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.plugins.popeye.image.repository | string | `"registry.undistro.io/dockerhub/derailed/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"v0.10.0"` | popeye plugin image tag |
+| scan.plugins.kubescape.image.repository | string | `"registry.undistro.io/quay/armosec/kubescape"` | kubescape plugin image repository |
+| scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
