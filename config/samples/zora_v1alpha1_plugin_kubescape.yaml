@@ -1,0 +1,32 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: Plugin
+metadata:
+  name: kubescape
+spec:
+  image: registry.undistro.io/quay/armosec/kubescape:v2.0.163
+  env:
+    - name: KUBESCAPE_ARTIFACTS
+      value: /home/armo/.kubescape/
+    - name: KS_SKIP_UPDATE_CHECK
+      value: 'true'
+  command:
+    - /bin/sh
+    - -c
+    - |
+      start=$(date +%s)
+      /usr/bin/kubescape scan \
+        --use-artifacts-from=$(KUBESCAPE_ARTIFACTS) \
+        --keep-local \
+        --format=json \
+        --output=$(DONE_DIR)/results.json \
+        --format-version=v2
+      exitcode=$(echo $?)
+      if [ $exitcode -ne 0 ]; then
+        echo "ERROR" > $(DONE_DIR)/error
+      else
+        echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
+      fi
+      ls -lh $(DONE_DIR)/
+      end=$(date +%s)
+      echo "Scan has finished in $(($end-$start)) seconds with exit code $exitcode"
+      exit $exitcode
