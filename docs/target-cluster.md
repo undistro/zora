@@ -80,6 +80,16 @@ rules:
       - pods
       - nodes
     verbs: [ "get", "list" ]
+  - apiGroups: [ batch ]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: [ "get", "list" ]
+  - apiGroups: [ admissionregistration.k8s.io ]
+    resources:
+      - validatingwebhookconfigurations
+      - mutatingwebhookconfigurations
+    verbs: [ "get", "list" ]
 EOF
 kubectl create clusterrolebinding zora-view --clusterrole=zora-view --serviceaccount=zora-system:zora-view
 ```
