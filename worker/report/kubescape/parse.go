@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/go-logr/logr"
 )
 
 // ScoreFactorSeverity converts a Kubescape Control <ScoreFactor> to Zora's
@@ -68,7 +69,7 @@ func ExtractGvrAndResourceName(rid string, r *PostureReport) (string, string, er
 
 			rname := ""
 			if v, ok := obj["name"]; ok {
-				strv, ok := v.(string)
+				strv, _ := v.(string)
 				// To error on missing resource instance name?
 				// if !ok {
 				// return "", "", errors.New("Unknown type of <name> from Kubescape resource's <object>")
@@ -83,7 +84,7 @@ func ExtractGvrAndResourceName(rid string, r *PostureReport) (string, string, er
 
 // Parse transforms a Kubescape report into a slice of <ClusterIssueSpec>. This
 // function is called by the <report> package when a Kubescape plugin is used.
-func Parse(fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
+func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 	r := &PostureReport{}
 	if err := json.Unmarshal(fcont, r); err != nil {
 		return nil, err
@@ -92,14 +93,14 @@ func Parse(fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 	for _, res := range r.Results {
 		gvr, rname, err := ExtractGvrAndResourceName(res.ResourceID, r)
 		if err != nil {
-			return fmt.Errorf("Failed to extract GVR: %w", err)
+			return nil, fmt.Errorf("Failed to extract GVR: %w", err)
 		}
 
 		for _, c := range res.AssociatedControls {
 			sev, st := ExtractSeverityAndState(c.ControlID, r)
 			switch st {
 			case StatusUnknown, StatusIrrelevant, StatusError:
-				// Log
+				log.Info(fmt.Sprintf("Kubescape Control <%s> with status <%s> on instance <%s>", c.ControlID, st, rname))
 				continue
 			case StatusFailed:
 				if ci, ok := issuesmap[c.ControlID]; ok {

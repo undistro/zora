@@ -8,6 +8,7 @@ import (
 
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/getupio-undistro/zora/worker/config"
+	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -314,7 +315,7 @@ func TestParse(t *testing.T) {
 			t.Errorf("Setup failed on case: %s\n", c.description)
 			t.Fatal(err)
 		}
-		ciarr, err := Parse(fid, c.config)
+		ciarr, err := Parse(logr.Discard(), fid, c.config)
 		sfun(c.clusterissues)
 		sfun(ciarr)
 		if (err != nil) != c.toerr || !reflect.DeepEqual(c.clusterissues, ciarr) {

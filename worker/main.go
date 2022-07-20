@@ -20,7 +20,7 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	log.Info("Starting worker")
-	if err := run.Run(); err != nil {
+	if err := run.Run(log); err != nil {
 		log.Info("Worker crashed")
 		panic(err)
 	}

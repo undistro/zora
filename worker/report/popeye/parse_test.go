@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -200,7 +201,7 @@ func TestParse(t *testing.T) {
 			t.Errorf("Setup failed on case: %s\n", c.description)
 			t.Fatal(err)
 		}
-		cispecs, err := Parse(rep)
+		cispecs, err := Parse(logr.Discard(), rep)
 		sfun(c.cispecs)
 		sfun(cispecs)
 		if (err != nil) != c.toerr || !reflect.DeepEqual(c.cispecs, cispecs) {

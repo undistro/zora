@@ -11,6 +11,7 @@ import (
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/getupio-undistro/zora/worker/report/kubescape"
 	"github.com/getupio-undistro/zora/worker/report/popeye"
+	"github.com/go-logr/logr"
 )
 
 const (
@@ -24,7 +25,7 @@ const (
 )
 
 // PluginParsers correlates plugins with their respective parsing functions.
-var PluginParsers = map[string]func([]byte) ([]*zorav1a1.ClusterIssueSpec, error){
+var PluginParsers = map[string]func(logr.Logger, []byte) ([]*zorav1a1.ClusterIssueSpec, error){
 	"popeye":    popeye.Parse,
 	"kubescape": kubescape.Parse,
 }

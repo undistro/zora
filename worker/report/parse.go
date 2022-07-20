@@ -7,6 +7,7 @@ import (
 
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/getupio-undistro/zora/worker/config"
+	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -43,7 +44,7 @@ func NewClusterIssue(c *config.Config, cispec *zorav1a1.ClusterIssueSpec, orefs 
 // cluster name and issues namespace specified on the <Config> struct. The
 // parsing for each plugin is left to dedicated functions which are called
 // according to the plugin type.
-func Parse(r io.Reader, c *config.Config) ([]*zorav1a1.ClusterIssue, error) {
+func Parse(log logr.Logger, r io.Reader, c *config.Config) ([]*zorav1a1.ClusterIssue, error) {
 	if err := c.Validate(); err != nil {
 		return nil, fmt.Errorf("Invalid configuration: %w", err)
 	}
@@ -51,7 +52,7 @@ func Parse(r io.Reader, c *config.Config) ([]*zorav1a1.ClusterIssue, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read results of plugin <%s> from cluster <%s>: %w", c.Plugin, c.Cluster, err)
 	}
-	cispecs, err := config.PluginParsers[c.Plugin](repby)
+	cispecs, err := config.PluginParsers[c.Plugin](log, repby)
 	if err != nil {
 		return nil, err
 	}
