@@ -56,11 +56,11 @@ func ExtractGvrAndResourceName(rid string, r *PostureReport) (string, string, er
 
 			for _, f := range [...]string{"apiGroup", "apiVersion", "kind"} {
 				if v, ok := obj[f]; ok {
-					strv, ok := v.(string)
+					vstr, ok := v.(string)
 					if !ok {
 						return "", "", fmt.Errorf("Unknown type of <%s> from Kubescape resource's <object>", f)
 					}
-					gvr = append(gvr, strings.ToLower(strv))
+					gvr = append(gvr, strings.ToLower(vstr))
 				}
 			}
 			if len(gvr) == 0 {
@@ -69,12 +69,20 @@ func ExtractGvrAndResourceName(rid string, r *PostureReport) (string, string, er
 
 			rname := ""
 			if v, ok := obj["name"]; ok {
-				strv, _ := v.(string)
-				// To error on missing resource instance name?
-				// if !ok {
-				// return "", "", errors.New("Unknown type of <name> from Kubescape resource's <object>")
-				// }
-				rname = strv
+				vstr, ok := v.(string)
+				if !ok {
+					log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object>")
+				}
+				rname = vstr
+			} else if m, ok := obj["metadata"]; ok {
+				mmap, _ := m.(map[string]interface{})
+				if n, ok := mmap["name"]; ok {
+					nstr, ok := n.(string)
+					if !ok {
+						log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object.metadata>")
+					}
+					rname = nstr
+				}
 			}
 			return strings.Join(gvr, "/"), rname, nil
 		}
