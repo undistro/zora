@@ -29,13 +29,13 @@ func ScoreFactorSeverity(s float32) zorav1a1.ClusterIssueSeverity {
 // then returns its <ScoreFactor> as Zora's <ClusterIssueSeverity>, together
 // with the Control's scan status. If the Control is not found, the function
 // returns unknown types for both types.
-func ExtractSeverityAndState(cid string, r *PostureReport) (zorav1a1.ClusterIssueSeverity, ScanningStatus) {
+func ExtractSeverity(cid string, r *PostureReport) zorav1a1.ClusterIssueSeverity {
 	for k, c := range r.SummaryDetails.Controls {
 		if k == cid {
-			return ScoreFactorSeverity(c.ScoreFactor), c.Status
+			return ScoreFactorSeverity(c.ScoreFactor)
 		}
 	}
-	return zorav1a1.SeverityUnknown, StatusUnknown
+	return zorav1a1.SeverityUnknown
 }
 
 // ExtractGvrAndResourceName returns the GVR and the resource name from a
@@ -45,7 +45,7 @@ func ExtractSeverityAndState(cid string, r *PostureReport) (zorav1a1.ClusterIssu
 // This function uses the lowercased instance kind as k8s resource, given that
 // Kubescape's <object> record doesn't store the resource type of the scanned
 // components.
-func ExtractGvrAndResourceName(rid string, r *PostureReport) (string, string, error) {
+func ExtractGvrAndResourceName(log logr.Logger, rid string, r *PostureReport) (string, string, error) {
 	for _, res := range r.Resources {
 		if res.ResourceID == rid {
 			obj, ok := res.Object.(map[string]interface{})
@@ -90,6 +90,35 @@ func ExtractGvrAndResourceName(rid string, r *PostureReport) (string, string, er
 	return "", "", errors.New("Unable to extract GVR")
 }
 
+// ExtractStatus derives the scan status of a given Kubescape Control. The
+// status Error, Unknown, Irrelevant and Failed have a higher priority over the
+// others, given that these signal some caveat in the scan. In case no higher
+// priority status is present, the most frequent is returned.
+//
+// The high priority status follow the hierarchy:
+// 		Error > Unknown > Irrelevant > Failed
+func ExtractStatus(con *ResourceAssociatedControl) ScanningStatus {
+	stc := map[ScanningStatus]int{}
+	for _, r := range con.ResourceAssociatedRules {
+		stc[r.Status]++
+	}
+
+	for _, s := range [...]ScanningStatus{StatusError, StatusUnknown, StatusIrrelevant, StatusFailed} {
+		if c, ok := stc[s]; ok && c > 0 {
+			return s
+		}
+	}
+	bigc := -1
+	bigs := StatusUnknown
+	for s, c := range stc {
+		if c > bigc {
+			bigc = c
+			bigs = s
+		}
+	}
+	return bigs
+}
+
 // Parse transforms a Kubescape report into a slice of <ClusterIssueSpec>. This
 // function is called by the <report> package when a Kubescape plugin is used.
 func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
@@ -99,13 +128,13 @@ func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) 
 	}
 	issuesmap := map[string]*zorav1a1.ClusterIssueSpec{}
 	for _, res := range r.Results {
-		gvr, rname, err := ExtractGvrAndResourceName(res.ResourceID, r)
+		gvr, rname, err := ExtractGvrAndResourceName(log, res.ResourceID, r)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to extract GVR: %w", err)
 		}
 
 		for _, c := range res.AssociatedControls {
-			sev, st := ExtractSeverityAndState(c.ControlID, r)
+			st := ExtractStatus(&c)
 			switch st {
 			case StatusUnknown, StatusIrrelevant, StatusError:
 				log.Info(fmt.Sprintf("Kubescape Control <%s> with status <%s> on instance <%s>", c.ControlID, st, rname))
@@ -118,7 +147,7 @@ func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) 
 					issuesmap[c.ControlID] = &zorav1a1.ClusterIssueSpec{
 						ID:       c.ControlID,
 						Message:  c.Name,
-						Severity: sev,
+						Severity: ExtractSeverity(c.ControlID, r),
 						Category: gvr[strings.LastIndex(gvr, "/")+1:],
 						Resources: map[string][]string{
 							gvr: {rname},
