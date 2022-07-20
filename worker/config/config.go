@@ -21,7 +21,6 @@ const (
 	ClusterIssuesNsEnvVar = "CLUSTER_ISSUES_NAMESPACE"
 	JobEnvVar             = "JOB_NAME"
 	JobUIDEnvVar          = "JOB_UID"
-	// PodEnvVar             = "POD_NAME"
 )
 
 // PluginParsers correlates plugins with their respective parsing functions.
@@ -40,7 +39,6 @@ type Config struct {
 	ClusterIssuesNs string
 	Job             string
 	JobUID          string
-	Pod             string
 }
 
 // New instantiates a new <Config> struct, with the default path for the
@@ -83,11 +81,6 @@ func FromEnv() (*Config, error) {
 	} else {
 		return nil, fmt.Errorf("Empty environment variable <%s>", JobUIDEnvVar)
 	}
-	// if e := os.Getenv(PodEnvVar); len(e) != 0 {
-		// c.Pod = e
-	// } else {
-		// return nil, fmt.Errorf("Empty environment variable <%s>", PodEnvVar)
-	// }
 
 	if e := os.Getenv(DoneDirEnvVar); len(e) != 0 {
 		c.DonePath = fmt.Sprintf("%s/done", e)

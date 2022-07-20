@@ -32,7 +32,6 @@ func TestParse(t *testing.T) {
 				ClusterIssuesNs: "fake_ns",
 				Job:             "fake_job_id",
 				JobUID:          "fake_job_uid-666-666",
-				Pod:             "_",
 			},
 			clusterissues: []*zorav1a1.ClusterIssue{
 				{
@@ -102,7 +101,6 @@ func TestParse(t *testing.T) {
 				ClusterIssuesNs: "super_fake_ns",
 				Job:             "super_fake_job_id",
 				JobUID:          "super_fake_job_uid-666-666",
-				Pod:             "_",
 			},
 			clusterissues: []*zorav1a1.ClusterIssue{
 				{
@@ -264,7 +262,6 @@ func TestParse(t *testing.T) {
 				ClusterIssuesNs: "_",
 				Job:             "_",
 				JobUID:          "fake_job_uid-666-666",
-				Pod:             "_",
 			},
 			clusterissues: nil,
 			toerr:         true,
@@ -280,7 +277,6 @@ func TestParse(t *testing.T) {
 				ClusterIssuesNs: "_",
 				Job:             "_",
 				JobUID:          "fake_job_uid-666-666",
-				Pod:             "_",
 			},
 			clusterissues: nil,
 			toerr:         true,
@@ -296,7 +292,6 @@ func TestParse(t *testing.T) {
 				ClusterIssuesNs: "_",
 				Job:             "_",
 				JobUID:          "fake_job_uid-666-666",
-				Pod:             "_",
 			},
 			clusterissues: nil,
 			toerr:         true,
