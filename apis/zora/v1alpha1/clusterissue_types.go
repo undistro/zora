@@ -39,6 +39,7 @@ type ClusterIssueStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName="ci"
 //+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".spec.cluster",priority=0
 //+kubebuilder:printcolumn:name="ID",type="string",JSONPath=".spec.id",priority=0
 //+kubebuilder:printcolumn:name="Message",type="string",JSONPath=".spec.message",priority=0
