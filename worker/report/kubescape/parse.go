@@ -38,22 +38,31 @@ func ExtractSeverity(cid string, r *PostureReport) zorav1a1.ClusterIssueSeverity
 	return zorav1a1.SeverityUnknown
 }
 
-// ExtractGvrAndResourceName returns the GVR and the resource name from a
+// ExtractGvrAndInstanceName returns the GVR and the instance name from a
 // Kubescape <object> record. The record may lack some of the GVR fields, in
-// such a case, it'll return only the ones present.
+// such a case, it'll return only the ones present. For <object> records which
+// have the <relatedObjects> field populated, data from the first element of
+// the later will be returned instead.
 //
 // This function uses the lowercased instance kind as k8s resource, given that
 // Kubescape's <object> record doesn't store the resource type of the scanned
 // components.
-func ExtractGvrAndResourceName(log logr.Logger, rid string, r *PostureReport) (string, string, error) {
+func ExtractGvrAndInstanceName(log logr.Logger, rid string, r *PostureReport) (string, string, error) {
 	for _, res := range r.Resources {
 		if res.ResourceID == rid {
 			obj, ok := res.Object.(map[string]interface{})
 			if !ok {
 				return "", "", errors.New("Unknown type of Kubescape resource's <object>")
 			}
-			gvr := []string{}
+			if robj, ok := obj["relatedObjects"].([]interface{}); ok && len(robj) != 0 {
+				if robj0, ok := robj[0].(map[string]interface{}); ok {
+					obj = robj0
+				} else {
+					return "", "", errors.New("Unknown type of 1st Kubescape resource's <object.relatedObject>")
+				}
+			}
 
+			gvr := []string{}
 			for _, f := range [...]string{"apiGroup", "apiVersion", "kind"} {
 				if v, ok := obj[f]; ok {
 					vstr, ok := v.(string)
@@ -128,7 +137,7 @@ func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) 
 	}
 	issuesmap := map[string]*zorav1a1.ClusterIssueSpec{}
 	for _, res := range r.Results {
-		gvr, rname, err := ExtractGvrAndResourceName(log, res.ResourceID, r)
+		gvr, rname, err := ExtractGvrAndInstanceName(log, res.ResourceID, r)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to extract GVR: %w", err)
 		}
