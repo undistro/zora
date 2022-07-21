@@ -47,56 +47,53 @@ func ExtractSeverity(cid string, r *PostureReport) zorav1a1.ClusterIssueSeverity
 // This function uses the lowercased instance kind as k8s resource, given that
 // Kubescape's <object> record doesn't store the resource type of the scanned
 // components.
-func ExtractGvrAndInstanceName(log logr.Logger, rid string, r *PostureReport) (string, string, error) {
-	for _, res := range r.Resources {
-		if res.ResourceID == rid {
-			obj, ok := res.Object.(map[string]interface{})
-			if !ok {
-				return "", "", errors.New("Unknown type of Kubescape resource's <object>")
-			}
-			if robj, ok := obj["relatedObjects"].([]interface{}); ok && len(robj) != 0 {
-				if robj0, ok := robj[0].(map[string]interface{}); ok {
-					obj = robj0
-				} else {
-					return "", "", errors.New("Unknown type of 1st Kubescape resource's <object.relatedObject>")
-				}
-			}
-
-			gvr := []string{}
-			for _, f := range [...]string{"apiGroup", "apiVersion", "kind"} {
-				if v, ok := obj[f]; ok {
-					vstr, ok := v.(string)
-					if !ok {
-						return "", "", fmt.Errorf("Unknown type of <%s> from Kubescape resource's <object>", f)
-					}
-					gvr = append(gvr, strings.ToLower(vstr))
-				}
-			}
-			if len(gvr) == 0 {
-				return "", "", errors.New("No GVK information within Kubescape resource's <object>")
-			}
-
-			rname := ""
-			if v, ok := obj["name"]; ok {
-				vstr, ok := v.(string)
-				if !ok {
-					log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object>")
-				}
-				rname = vstr
-			} else if m, ok := obj["metadata"]; ok {
-				mmap, _ := m.(map[string]interface{})
-				if n, ok := mmap["name"]; ok {
-					nstr, ok := n.(string)
-					if !ok {
-						log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object.metadata>")
-					}
-					rname = nstr
-				}
-			}
-			return strings.Join(gvr, "/"), rname, nil
+func ExtractGvrAndInstanceName(log logr.Logger, obj map[string]interface{}) (string, string, error) {
+	if robj, ok := obj["relatedObjects"].([]interface{}); ok && len(robj) != 0 {
+		if robj0, ok := robj[0].(map[string]interface{}); ok {
+			obj = robj0
+		} else {
+			return "", "", errors.New("Unknown type of 1st Kubescape resource's <object.relatedObject>")
 		}
 	}
-	return "", "", errors.New("Unable to extract GVR")
+
+	gvr := []string{}
+	for _, f := range [...]string{"apiGroup", "apiVersion", "kind"} {
+		if v, ok := obj[f]; ok {
+			vstr, ok := v.(string)
+			if !ok {
+				return "", "", fmt.Errorf("Unknown type of <%s> from Kubescape resource's <object>", f)
+			}
+			if f == "kind" {
+				vstr = strings.ToLower(vstr)
+			}
+			gvr = append(gvr, vstr)
+		}
+	}
+	if len(gvr) == 0 {
+		return "", "", errors.New("No GVK information within Kubescape resource's <object>")
+	}
+
+	name := ""
+	if v, ok := obj["name"]; ok {
+		vstr, ok := v.(string)
+		if !ok {
+			log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object>")
+		}
+		name = vstr
+	} else if m, ok := obj["metadata"]; ok {
+		mmap, ok := m.(map[string]interface{})
+		if !ok {
+			log.Error(errors.New("Unknown field type"), "Unknown type of <metadata> from Kubescape resource's <object>")
+		}
+		if n, ok := mmap["name"]; ok {
+			nstr, ok := n.(string)
+			if !ok {
+				log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object.metadata>")
+			}
+			name = nstr
+		}
+	}
+	return strings.Join(gvr, "/"), name, nil
 }
 
 // ExtractStatus derives the scan status of a given Kubescape Control. The
@@ -128,6 +125,18 @@ func ExtractStatus(con *ResourceAssociatedControl) ScanningStatus {
 	return bigs
 }
 
+func PreprocessResources(r *PostureReport) (map[string]map[string]interface{}, error) {
+	objmap := map[string]map[string]interface{}{}
+	for _, res := range r.Resources {
+		obj, ok := res.Object.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("Unknown type of Kubescape resource's <object> with <resourceID>: <%s>", res.ResourceID)
+		}
+		objmap[res.ResourceID] = obj
+	}
+	return objmap, nil
+}
+
 // Parse transforms a Kubescape report into a slice of <ClusterIssueSpec>. This
 // function is called by the <report> package when a Kubescape plugin is used.
 func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
@@ -136,8 +145,12 @@ func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) 
 		return nil, err
 	}
 	issuesmap := map[string]*zorav1a1.ClusterIssueSpec{}
+	objmap, err := PreprocessResources(r)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to preprocess Kubescape resources: %w", err)
+	}
 	for _, res := range r.Results {
-		gvr, rname, err := ExtractGvrAndInstanceName(log, res.ResourceID, r)
+		gvr, rname, err := ExtractGvrAndInstanceName(log, objmap[res.ResourceID])
 		if err != nil {
 			return nil, fmt.Errorf("Failed to extract GVR: %w", err)
 		}
