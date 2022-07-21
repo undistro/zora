@@ -96,14 +96,14 @@ func ExtractGvrAndResourceName(log logr.Logger, rid string, r *PostureReport) (s
 // priority status is present, the most frequent is returned.
 //
 // The high priority status follow the hierarchy:
-// 		Error > Unknown > Irrelevant > Failed
+// 		Failed > Error > Unknown > Irrelevant
 func ExtractStatus(con *ResourceAssociatedControl) ScanningStatus {
 	stc := map[ScanningStatus]int{}
 	for _, r := range con.ResourceAssociatedRules {
 		stc[r.Status]++
 	}
 
-	for _, s := range [...]ScanningStatus{StatusError, StatusUnknown, StatusIrrelevant, StatusFailed} {
+	for _, s := range [...]ScanningStatus{StatusFailed, StatusError, StatusUnknown, StatusIrrelevant} {
 		if c, ok := stc[s]; ok && c > 0 {
 			return s
 		}
