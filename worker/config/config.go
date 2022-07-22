@@ -9,7 +9,9 @@ import (
 	"strings"
 
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/worker/report/kubescape"
 	"github.com/getupio-undistro/zora/worker/report/popeye"
+	"github.com/go-logr/logr"
 )
 
 const (
@@ -20,12 +22,12 @@ const (
 	ClusterIssuesNsEnvVar = "CLUSTER_ISSUES_NAMESPACE"
 	JobEnvVar             = "JOB_NAME"
 	JobUIDEnvVar          = "JOB_UID"
-	PodEnvVar             = "POD_NAME"
 )
 
 // PluginParsers correlates plugins with their respective parsing functions.
-var PluginParsers = map[string]func([]byte) ([]*zorav1a1.ClusterIssueSpec, error){
-	"popeye": popeye.Parse,
+var PluginParsers = map[string]func(logr.Logger, []byte) ([]*zorav1a1.ClusterIssueSpec, error){
+	"popeye":    popeye.Parse,
+	"kubescape": kubescape.Parse,
 }
 
 // Config stores information used by the worker to create a list of
@@ -38,7 +40,6 @@ type Config struct {
 	ClusterIssuesNs string
 	Job             string
 	JobUID          string
-	Pod             string
 }
 
 // New instantiates a new <Config> struct, with the default path for the
@@ -80,11 +81,6 @@ func FromEnv() (*Config, error) {
 		c.JobUID = e
 	} else {
 		return nil, fmt.Errorf("Empty environment variable <%s>", JobUIDEnvVar)
-	}
-	if e := os.Getenv(PodEnvVar); len(e) != 0 {
-		c.Pod = e
-	} else {
-		return nil, fmt.Errorf("Empty environment variable <%s>", PodEnvVar)
 	}
 
 	if e := os.Getenv(DoneDirEnvVar); len(e) != 0 {

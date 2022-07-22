@@ -10,6 +10,7 @@ import (
 	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 	"github.com/getupio-undistro/zora/worker/config"
 	"github.com/getupio-undistro/zora/worker/report"
+	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -43,7 +44,7 @@ func Done(dpath string) bool {
 }
 
 // Run performs a worker run, being the main point of entry for the component.
-func Run() error {
+func Run(log logr.Logger) error {
 	c, err := config.FromEnv()
 	if err != nil {
 		return fmt.Errorf("Unable to create config from environment: %w", err)
@@ -67,7 +68,7 @@ func Run() error {
 		return fmt.Errorf("Failed checking results path: %w", err)
 	}
 
-	ciarr, err := report.Parse(fid, c)
+	ciarr, err := report.Parse(log, fid, c)
 	if err != nil {
 		return fmt.Errorf("Failed to parse results: %w", err)
 	}

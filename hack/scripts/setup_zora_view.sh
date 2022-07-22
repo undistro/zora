@@ -34,8 +34,9 @@ spec:
 EOF
 }
 
-apply_plugin_crd(){
-	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin.yaml
+apply_plugin_crds(){
+	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
+	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin_kubescape.yaml
 }
 
 apply_clusterscan_crd(){
@@ -56,6 +57,6 @@ setup_namespaces
 setup_kubeconfig_secret
 apply_cluster_crd
 if test $ENABLE_CLUSTER_SCAN -eq 1; then
-	apply_plugin_crd
+	apply_plugin_crds
 	apply_clusterscan_crd
 fi

@@ -12,6 +12,8 @@ spec:
     kind: ClusterIssue
     listKind: ClusterIssueList
     plural: clusterissues
+    shortNames:
+    - ci
     singular: clusterissue
   scope: Namespaced
   versions:

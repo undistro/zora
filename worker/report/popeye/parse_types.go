@@ -6,7 +6,7 @@ var (
 	// LevelToIssueSeverity maps Popeye's <Level> type to Zora's
 	// <ClusterIssueSeverity>.
 	LevelToIssueSeverity = [4]zorav1a1.ClusterIssueSeverity{
-		zorav1a1.SeverityNone,
+		zorav1a1.SeverityUnknown,
 		zorav1a1.SeverityLow,
 		zorav1a1.SeverityMedium,
 		zorav1a1.SeverityHigh,

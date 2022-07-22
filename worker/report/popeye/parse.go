@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/go-logr/logr"
 )
 
 var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
@@ -28,7 +29,7 @@ func prepareIdAndMsg(msg string) (string, string, error) {
 
 // Parse transforms a Popeye report into a slice of <ClusterIssueSpec>. This
 // function is called by the <report> package when a Popeye plugin is used.
-func Parse(popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
+func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 	r := &Report{}
 	if err := json.Unmarshal(popr, r); err != nil {
 		return nil, err
