@@ -25,19 +25,6 @@ func ScoreFactorSeverity(s float32) zorav1a1.ClusterIssueSeverity {
 	}
 }
 
-// ExtractSeverity finds the Control record which contains a given <ControlID>
-// then returns its <ScoreFactor> as Zora's <ClusterIssueSeverity>, together
-// with the Control's scan status. If the Control is not found, the function
-// returns unknown types for both types.
-func ExtractSeverity(cid string, r *PostureReport) zorav1a1.ClusterIssueSeverity {
-	for k, c := range r.SummaryDetails.Controls {
-		if k == cid {
-			return ScoreFactorSeverity(c.ScoreFactor)
-		}
-	}
-	return zorav1a1.SeverityUnknown
-}
-
 // ExtractGvrAndInstanceName returns the GVR and the instance name from a
 // Kubescape <object> record. The record may lack some of the GVR fields, in
 // such a case, it'll return only the ones present. For <object> records which
@@ -125,6 +112,10 @@ func ExtractStatus(con *ResourceAssociatedControl) ScanningStatus {
 	return bigs
 }
 
+// PreprocessResources transforms a Kubescape report resource list into a map
+// of type:
+// 		<resource_id>: <resource_object>
+// This is useful to prevent quadratic loops when iterating over results.
 func PreprocessResources(r *PostureReport) (map[string]map[string]interface{}, error) {
 	objmap := map[string]map[string]interface{}{}
 	for _, res := range r.Resources {
@@ -162,14 +153,19 @@ func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) 
 				log.Info(fmt.Sprintf("Kubescape Control <%s> with status <%s> on instance <%s>", c.ControlID, st, rname))
 				continue
 			case StatusFailed:
+
 				if ci, ok := issuesmap[c.ControlID]; ok {
 					ci.Resources[gvr] = append(ci.Resources[gvr], rname)
 					ci.TotalResources++
 				} else {
+					sev := zorav1a1.SeverityUnknown
+					if sc, ok := r.SummaryDetails.Controls[c.ControlID]; ok {
+						sev = ScoreFactorSeverity(sc.ScoreFactor)
+					}
 					issuesmap[c.ControlID] = &zorav1a1.ClusterIssueSpec{
 						ID:       c.ControlID,
 						Message:  c.Name,
-						Severity: ExtractSeverity(c.ControlID, r),
+						Severity: sev,
 						Category: gvr[strings.LastIndex(gvr, "/")+1:],
 						Resources: map[string][]string{
 							gvr: {rname},

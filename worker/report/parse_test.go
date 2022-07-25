@@ -22,8 +22,10 @@ func TestParse(t *testing.T) {
 		clusterissues []*zorav1a1.ClusterIssue
 		toerr         bool
 	}{
+
+		// Popeye specific.
 		{
-			description: "Single <ClusterIssue> instance with many resources",
+			description: "Single Popeye <ClusterIssue> instance with many resources",
 			testrepname: "popeye/testdata/test_report_1.json",
 			config: &config.Config{
 				DonePath:        "_",
@@ -92,7 +94,7 @@ func TestParse(t *testing.T) {
 		},
 
 		{
-			description: "Four <ClusterIssue> instances with many resources",
+			description: "Four Popeye <ClusterIssue> instances with many resources",
 			testrepname: "popeye/testdata/test_report_2.json",
 			config: &config.Config{
 				DonePath:        "_",
@@ -282,6 +284,290 @@ func TestParse(t *testing.T) {
 			clusterissues: nil,
 			toerr:         true,
 		},
+
+		// Kubescape specific.
+		{
+			description: "Single Kubescape <ClusterIssue> instance with many resources",
+			testrepname: "kubescape/testdata/test_report_1.json",
+			config: &config.Config{
+				DonePath:        "_",
+				ErrorPath:       "_",
+				Plugin:          "kubescape",
+				Cluster:         "fake_cluster",
+				ClusterIssuesNs: "fake_ns",
+				Job:             "fake_job_id",
+				JobUID:          "fake_job_uid-666-666",
+			},
+			clusterissues: []*zorav1a1.ClusterIssue{
+				{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "ClusterIssue",
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "fake_cluster-c-0001-666",
+						Namespace: "fake_ns",
+						OwnerReferences: []metav1.OwnerReference{{
+							APIVersion: "batch/v1",
+							Kind:       "Job",
+							Name:       "fake_job_id",
+							UID:        types.UID("fake_job_uid-666-666"),
+						}},
+						Labels: map[string]string{
+							zorav1a1.LabelScanID:   "fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "fake_cluster",
+							zorav1a1.LabelSeverity: "Medium",
+							zorav1a1.LabelIssueID:  "C-0001",
+							zorav1a1.LabelCategory: "deployment",
+							zorav1a1.LabelPlugin:   "kubescape",
+						},
+					},
+					Spec: zorav1a1.ClusterIssueSpec{
+						ID:       "C-0001",
+						Message:  "Forbidden Container Registries",
+						Severity: "Medium",
+						Category: "deployment",
+						Resources: map[string][]string{
+							"apps/v1/daemonset": []string{
+								"gke-metrics-agent",
+								"gke-metrics-agent-scaling-20",
+								"fluentbit-gke",
+								"kube-proxy",
+								"metadata-proxy-v0.1",
+								"nvidia-gpu-device-plugin",
+								"pdcsi-node-windows",
+								"gke-metrics-agent-scaling-10",
+								"gke-metrics-agent-windows",
+								"pdcsi-node",
+							},
+							"apps/v1/deployment": []string{
+								"konnectivity-agent",
+								"metrics-server-v0.4.5",
+								"kube-dns",
+								"event-exporter-gke",
+								"kube-dns-autoscaler",
+								"konnectivity-agent-autoscaler",
+							},
+							"v1/pod": []string{
+								"kube-proxy-gke-zora-jzapzzpr-default-pool-b0f7ab4a-sg6t",
+							},
+						},
+						TotalResources: 17,
+						Cluster:        "fake_cluster",
+					},
+				},
+			},
+			toerr: false,
+		},
+
+		{
+			description: "Four Kubescape <ClusterIssue> instances with many resources",
+			testrepname: "kubescape/testdata/test_report_2.json",
+			config: &config.Config{
+				DonePath:        "_",
+				ErrorPath:       "_",
+				Plugin:          "kubescape",
+				Cluster:         "super_fake_cluster",
+				ClusterIssuesNs: "super_fake_ns",
+				Job:             "super_fake_job_id",
+				JobUID:          "super_fake_job_uid-666-666",
+			},
+			clusterissues: []*zorav1a1.ClusterIssue{
+				{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "ClusterIssue",
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "super_fake_cluster-c-0004-666",
+						Namespace: "super_fake_ns",
+						OwnerReferences: []metav1.OwnerReference{{
+							APIVersion: "batch/v1",
+							Kind:       "Job",
+							Name:       "super_fake_job_id",
+							UID:        types.UID("super_fake_job_uid-666-666"),
+						}},
+						Labels: map[string]string{
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "High",
+							zorav1a1.LabelIssueID:  "C-0004",
+							zorav1a1.LabelCategory: "daemonset",
+							zorav1a1.LabelPlugin:   "kubescape",
+						},
+					},
+					Spec: zorav1a1.ClusterIssueSpec{
+						ID:       "C-0004",
+						Message:  "Resources memory limit and request",
+						Severity: "High",
+						Category: "daemonset",
+						Resources: map[string][]string{
+							"apps/v1/daemonset": []string{
+								"kube-proxy",
+							},
+							"apps/v1/deployment": []string{
+								"kube-dns",
+							},
+						},
+						TotalResources: 2,
+						Cluster:        "super_fake_cluster",
+					},
+				},
+
+				{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "ClusterIssue",
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "super_fake_cluster-c-0006-666",
+						Namespace: "super_fake_ns",
+						OwnerReferences: []metav1.OwnerReference{{
+							APIVersion: "batch/v1",
+							Kind:       "Job",
+							Name:       "super_fake_job_id",
+							UID:        types.UID("super_fake_job_uid-666-666"),
+						}},
+						Labels: map[string]string{
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Medium",
+							zorav1a1.LabelIssueID:  "C-0006",
+							zorav1a1.LabelCategory: "daemonset",
+							zorav1a1.LabelPlugin:   "kubescape",
+						},
+					},
+					Spec: zorav1a1.ClusterIssueSpec{
+						ID:       "C-0006",
+						Message:  "Allowed hostPath",
+						Severity: "Medium",
+						Category: "daemonset",
+						Resources: map[string][]string{
+							"apps/v1/daemonset": []string{
+								"fluentbit-gke",
+								"kube-proxy",
+							},
+						},
+						TotalResources: 2,
+						Cluster:        "super_fake_cluster",
+					},
+				},
+
+				{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "ClusterIssue",
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "super_fake_cluster-c-0013-666",
+						Namespace: "super_fake_ns",
+						OwnerReferences: []metav1.OwnerReference{{
+							APIVersion: "batch/v1",
+							Kind:       "Job",
+							Name:       "super_fake_job_id",
+							UID:        types.UID("super_fake_job_uid-666-666"),
+						}},
+						Labels: map[string]string{
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Medium",
+							zorav1a1.LabelIssueID:  "C-0013",
+							zorav1a1.LabelCategory: "daemonset",
+							zorav1a1.LabelPlugin:   "kubescape",
+						},
+					},
+					Spec: zorav1a1.ClusterIssueSpec{
+						ID:       "C-0013",
+						Message:  "Non-root containers",
+						Severity: "Medium",
+						Category: "daemonset",
+						Resources: map[string][]string{
+							"apps/v1/daemonset": []string{
+								"fluentbit-gke",
+								"kube-proxy",
+							},
+						},
+						TotalResources: 2,
+						Cluster:        "super_fake_cluster",
+					},
+				},
+
+				{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "ClusterIssue",
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "super_fake_cluster-c-0017-666",
+						Namespace: "super_fake_ns",
+						OwnerReferences: []metav1.OwnerReference{{
+							APIVersion: "batch/v1",
+							Kind:       "Job",
+							Name:       "super_fake_job_id",
+							UID:        types.UID("super_fake_job_uid-666-666"),
+						}},
+						Labels: map[string]string{
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Low",
+							zorav1a1.LabelIssueID:  "C-0017",
+							zorav1a1.LabelCategory: "deployment",
+							zorav1a1.LabelPlugin:   "kubescape",
+						},
+					},
+					Spec: zorav1a1.ClusterIssueSpec{
+						ID:       "C-0017",
+						Message:  "Immutable container filesystem",
+						Severity: "Low",
+						Category: "deployment",
+						Resources: map[string][]string{
+							"apps/v1/daemonset": []string{
+								"gke-metrics-agent",
+							},
+							"apps/v1/deployment": []string{
+								"konnectivity-agent",
+							},
+						},
+						TotalResources: 2,
+						Cluster:        "super_fake_cluster",
+					},
+				},
+			},
+			toerr: false,
+		},
+
+		{
+			description: "Invalid Kubescape report",
+			testrepname: "kubescape/testdata/test_report_3.json",
+			config: &config.Config{
+				DonePath:        "_",
+				ErrorPath:       "_",
+				Plugin:          "kubescape",
+				Cluster:         "_",
+				ClusterIssuesNs: "_",
+				Job:             "_",
+				JobUID:          "fake_job_uid-666-666",
+			},
+			clusterissues: nil,
+			toerr:         true,
+		},
+		{
+			description: "Empty Kubescape report",
+			testrepname: "kubescape/testdata/test_report_4.json",
+			config: &config.Config{
+				DonePath:        "_",
+				ErrorPath:       "_",
+				Plugin:          "kubescape",
+				Cluster:         "_",
+				ClusterIssuesNs: "_",
+				Job:             "_",
+				JobUID:          "fake_job_uid-666-666",
+			},
+			clusterissues: nil,
+			toerr:         true,
+		},
+
+		// Generic.
 		{
 			description: "Invalid plugin",
 			testrepname: "popeye/testdata/test_report_4.json",
@@ -326,5 +612,4 @@ func TestParse(t *testing.T) {
 			t.Errorf("Mismatch between expected and obtained values: \n%s\n", cmp.Diff(c.clusterissues, ciarr))
 		}
 	}
-
 }

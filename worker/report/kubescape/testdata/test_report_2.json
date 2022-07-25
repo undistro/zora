@@ -1,0 +1,2551 @@
+{
+  "attributes": null,
+  "customerGUID": "",
+  "clusterName": "",
+  "clusterCloudProvider": "",
+  "reportGUID": "",
+  "jobID": "",
+  "paginationInfo": {
+    "chunkNumber": 0,
+    "isLastChunk": false
+  },
+  "clusterAPIServerInfo": {
+    "major": "1",
+    "minor": "21",
+    "gitVersion": "v1.21.12-gke.1500",
+    "gitCommit": "6c11aec6ce32cf0d66a2631eed2eb49dd65c89f8",
+    "gitTreeState": "clean",
+    "buildDate": "2022-05-11T09:25:37Z",
+    "goVersion": "go1.16.15b7",
+    "compiler": "gc",
+    "platform": "linux/amd64"
+  },
+  "generationTime": "2022-07-12T20:03:12.490378309Z",
+  "summaryDetails": {
+    "score": 21.080774,
+    "status": "failed",
+    "controls": {
+      "C-0001": {
+        "controlID": "C-0001",
+        "name": "Forbidden Container Registries",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0002": {
+        "controlID": "C-0002",
+        "name": "Exec into container",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 0.98039216,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 101,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0004": {
+        "controlID": "C-0004",
+        "name": "Resources memory limit and request",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 35.294117,
+        "scoreFactor": 7,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 11,
+          "failedResources": 6,
+          "excludedResources": 0
+        }
+      },
+      "C-0005": {
+        "controlID": "C-0005",
+        "name": "Control plane hardening",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0006": {
+        "controlID": "C-0006",
+        "name": "Allowed hostPath",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 35.294117,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 11,
+          "failedResources": 6,
+          "excludedResources": 0
+        }
+      },
+      "C-0007": {
+        "controlID": "C-0007",
+        "name": "Data Destruction",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 17.647058,
+        "scoreFactor": 10,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 84,
+          "failedResources": 18,
+          "excludedResources": 0
+        }
+      },
+      "C-0009": {
+        "controlID": "C-0009",
+        "name": "Resource policies",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 88.23529,
+        "scoreFactor": 2,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 2,
+          "failedResources": 15,
+          "excludedResources": 0
+        }
+      },
+      "C-0012": {
+        "controlID": "C-0012",
+        "name": "Applications credentials in configuration files",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 35,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0013": {
+        "controlID": "C-0013",
+        "name": "Non-root containers",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 64.70588,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 6,
+          "failedResources": 11,
+          "excludedResources": 0
+        }
+      },
+      "C-0014": {
+        "controlID": "C-0014",
+        "name": "Access Kubernetes dashboard",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 2,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 119,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0015": {
+        "controlID": "C-0015",
+        "name": "List Kubernetes secrets",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 11.764706,
+        "scoreFactor": 7,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 90,
+          "failedResources": 12,
+          "excludedResources": 0
+        }
+      },
+      "C-0016": {
+        "controlID": "C-0016",
+        "name": "Allow privilege escalation",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 18,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0017": {
+        "controlID": "C-0017",
+        "name": "Immutable container filesystem",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 17,
+          "excludedResources": 0
+        }
+      },
+      "C-0018": {
+        "controlID": "C-0018",
+        "name": "Configured readiness probe",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 17,
+          "excludedResources": 0
+        }
+      },
+      "C-0020": {
+        "controlID": "C-0020",
+        "name": "Mount service principal",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 52.941177,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 8,
+          "failedResources": 9,
+          "excludedResources": 0
+        }
+      },
+      "C-0021": {
+        "controlID": "C-0021",
+        "name": "Exposed sensitive interfaces",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0026": {
+        "controlID": "C-0026",
+        "name": "Kubernetes CronJob",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0030": {
+        "controlID": "C-0030",
+        "name": "Ingress and Egress blocked",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 17,
+          "excludedResources": 0
+        }
+      },
+      "C-0031": {
+        "controlID": "C-0031",
+        "name": "Delete Kubernetes events",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 3.9215686,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 98,
+          "failedResources": 4,
+          "excludedResources": 0
+        }
+      },
+      "C-0033": {
+        "controlID": "C-0033",
+        "name": "Access tiller endpoint",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0034": {
+        "controlID": "C-0034",
+        "name": "Automatic mapping of service account",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 65,
+          "excludedResources": 0
+        }
+      },
+      "C-0035": {
+        "controlID": "C-0035",
+        "name": "Cluster-admin binding",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 0.98039216,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 101,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0036": {
+        "controlID": "C-0036",
+        "name": "Malicious admission controller (validating)",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 7,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 3,
+          "excludedResources": 0
+        }
+      },
+      "C-0037": {
+        "controlID": "C-0037",
+        "name": "CoreDNS poisoning",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 9.803922,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 92,
+          "failedResources": 10,
+          "excludedResources": 0
+        }
+      },
+      "C-0038": {
+        "controlID": "C-0038",
+        "name": "Host PID/IPC privileges",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0039": {
+        "controlID": "C-0039",
+        "name": "Malicious admission controller (mutating)",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 10,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0041": {
+        "controlID": "C-0041",
+        "name": "HostNetwork access",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 47.058823,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 9,
+          "failedResources": 8,
+          "excludedResources": 0
+        }
+      },
+      "C-0042": {
+        "controlID": "C-0042",
+        "name": "SSH server running inside container",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 1,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0044": {
+        "controlID": "C-0044",
+        "name": "Container hostPort",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 5.882353,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 16,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0045": {
+        "controlID": "C-0045",
+        "name": "Writable hostPath mount",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 35.294117,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 11,
+          "failedResources": 6,
+          "excludedResources": 0
+        }
+      },
+      "C-0046": {
+        "controlID": "C-0046",
+        "name": "Insecure capabilities",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0047": {
+        "controlID": "C-0047",
+        "name": "Exposed dashboard",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0048": {
+        "controlID": "C-0048",
+        "name": "HostPath mount",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 52.941177,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 8,
+          "failedResources": 9,
+          "excludedResources": 0
+        }
+      },
+      "C-0049": {
+        "controlID": "C-0049",
+        "name": "Network mapping",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 5,
+          "excludedResources": 0
+        }
+      },
+      "C-0050": {
+        "controlID": "C-0050",
+        "name": "Resources CPU limit and request",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 88.23529,
+        "scoreFactor": 7,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 2,
+          "failedResources": 15,
+          "excludedResources": 0
+        }
+      },
+      "C-0053": {
+        "controlID": "C-0053",
+        "name": "Access container service account",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 46,
+          "excludedResources": 0
+        }
+      },
+      "C-0054": {
+        "controlID": "C-0054",
+        "name": "Cluster internal networking",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 5,
+          "excludedResources": 0
+        }
+      },
+      "C-0055": {
+        "controlID": "C-0055",
+        "name": "Linux hardening",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 52.941177,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 8,
+          "failedResources": 9,
+          "excludedResources": 0
+        }
+      },
+      "C-0056": {
+        "controlID": "C-0056",
+        "name": "Configured liveness probe",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 70.588234,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 5,
+          "failedResources": 12,
+          "excludedResources": 0
+        }
+      },
+      "C-0057": {
+        "controlID": "C-0057",
+        "name": "Privileged container",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 29.411764,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 12,
+          "failedResources": 5,
+          "excludedResources": 0
+        }
+      },
+      "C-0058": {
+        "controlID": "C-0058",
+        "name": "CVE-2021-25741 - Using symlink for arbitrary host file system access.",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 6,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 16,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0059": {
+        "controlID": "C-0059",
+        "name": "CVE-2021-25742-nginx-ingress-snippet-annotation-vulnerability",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0060": {
+        "controlID": "C-0060",
+        "name": "Namespace without service accounts",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 5.6603775,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 50,
+          "failedResources": 3,
+          "excludedResources": 0
+        }
+      },
+      "C-0061": {
+        "controlID": "C-0061",
+        "name": "Pods in default namespace",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0062": {
+        "controlID": "C-0062",
+        "name": "Sudo in container entrypoint",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 7,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0063": {
+        "controlID": "C-0063",
+        "name": "Portforwarding privileges",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 1.9607843,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 100,
+          "failedResources": 2,
+          "excludedResources": 0
+        }
+      },
+      "C-0065": {
+        "controlID": "C-0065",
+        "name": "No impersonation",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 0.98039216,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 101,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0066": {
+        "controlID": "C-0066",
+        "name": "Secret/ETCD encryption enabled",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0067": {
+        "controlID": "C-0067",
+        "name": "Audit logs enabled",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 1,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0068": {
+        "controlID": "C-0068",
+        "name": "PSP enabled",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0069": {
+        "controlID": "C-0069",
+        "name": "Disable anonymous access to Kubelet service",
+        "status": "skipped",
+        "statusInfo": {
+          "status": "skipped",
+          "info": "enable-host-scan flag not used. For more information:  https://hub.armo.cloud/docs/host-sensor"
+        },
+        "score": 0,
+        "scoreFactor": 10,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0070": {
+        "controlID": "C-0070",
+        "name": "Enforce Kubelet client TLS authentication",
+        "status": "skipped",
+        "statusInfo": {
+          "status": "skipped",
+          "info": "enable-host-scan flag not used. For more information:  https://hub.armo.cloud/docs/host-sensor"
+        },
+        "score": 0,
+        "scoreFactor": 10,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0073": {
+        "controlID": "C-0073",
+        "name": "Naked PODs",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 3,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 10,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0074": {
+        "controlID": "C-0074",
+        "name": "Containers mounting Docker socket",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0075": {
+        "controlID": "C-0075",
+        "name": "Image pull policy on latest tag",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 2,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 17,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0076": {
+        "controlID": "C-0076",
+        "name": "Label usage for resources",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 76.47059,
+        "scoreFactor": 2,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 4,
+          "failedResources": 13,
+          "excludedResources": 0
+        }
+      },
+      "C-0077": {
+        "controlID": "C-0077",
+        "name": "K8s common labels usage",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 100,
+        "scoreFactor": 1,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 17,
+          "excludedResources": 0
+        }
+      },
+      "C-0078": {
+        "controlID": "C-0078",
+        "name": "Images from allowed registry",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 5.882353,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 16,
+          "failedResources": 1,
+          "excludedResources": 0
+        }
+      },
+      "C-0079": {
+        "controlID": "C-0079",
+        "name": "CVE-2022-0185-linux-kernel-container-escape",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 1,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0081": {
+        "controlID": "C-0081",
+        "name": "CVE-2022-24348-argocddirtraversal",
+        "status": "irrelevant",
+        "statusInfo": {
+          "status": "irrelevant"
+        },
+        "score": 0,
+        "scoreFactor": 5,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0083": {
+        "controlID": "C-0083",
+        "name": "Workloads with Critical vulnerabilities exposed to external traffic",
+        "status": "skipped",
+        "statusInfo": {
+          "status": "skipped",
+          "info": "image scanning is not configured. for more information: https://hub.armo.cloud/docs/cluster-vulnerability-scanning"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0084": {
+        "controlID": "C-0084",
+        "name": "Workloads with RCE vulnerabilities exposed to external traffic",
+        "status": "skipped",
+        "statusInfo": {
+          "status": "skipped",
+          "info": "image scanning is not configured. for more information: https://hub.armo.cloud/docs/cluster-vulnerability-scanning"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0085": {
+        "controlID": "C-0085",
+        "name": "Workloads with excessive amount of vulnerabilities",
+        "status": "skipped",
+        "statusInfo": {
+          "status": "skipped",
+          "info": "image scanning is not configured. for more information: https://hub.armo.cloud/docs/cluster-vulnerability-scanning"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 0,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0086": {
+        "controlID": "C-0086",
+        "name": "CVE-2022-0492-cgroups-container-escape",
+        "status": "failed",
+        "statusInfo": {
+          "status": "failed"
+        },
+        "score": 35.294117,
+        "scoreFactor": 4,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 11,
+          "failedResources": 6,
+          "excludedResources": 0
+        }
+      },
+      "C-0087": {
+        "controlID": "C-0087",
+        "name": "CVE-2022-23648-containerd-fs-escape",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 7,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 1,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      },
+      "C-0088": {
+        "controlID": "C-0088",
+        "name": "RBAC enabled",
+        "status": "passed",
+        "statusInfo": {
+          "status": "passed"
+        },
+        "score": 0,
+        "scoreFactor": 8,
+        "resourceIDs": {},
+        "ResourceCounters": {
+          "passedResources": 1,
+          "failedResources": 0,
+          "excludedResources": 0
+        }
+      }
+    },
+    "ResourceCounters": {
+      "passedResources": 77,
+      "failedResources": 132,
+      "excludedResources": 0
+    }
+  },
+  "results": [
+    {
+      "resourceID": "apps/v1/kube-system/Deployment/konnectivity-agent",
+      "controls": [
+        {
+          "controlID": "C-0017",
+          "name": "Immutable container filesystem",
+          "rules": [
+            {
+              "name": "immutable-container-filesystem",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem",
+                    "value": "true"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "resourceID": "apps/v1/kube-system/DaemonSet/gke-metrics-agent",
+      "controls": [
+        {
+          "controlID": "C-0017",
+          "name": "Immutable container filesystem",
+          "rules": [
+            {
+              "name": "immutable-container-filesystem",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem",
+                    "value": "true"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "resourceID": "apps/v1/kube-system/DaemonSet/fluentbit-gke",
+      "controls": [
+        {
+          "controlID": "C-0006",
+          "name": "Allowed hostPath",
+          "rules": [
+            {
+              "name": "alert-rw-hostpath",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].volumeMounts[2].readOnly",
+                    "value": "true"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].volumeMounts[1].readOnly",
+                    "value": "true"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].volumeMounts[0].readOnly",
+                    "value": "true"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "controlID": "C-0013",
+          "name": "Non-root containers",
+          "rules": [
+            {
+              "name": "non-root-containers",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.securityContext.runAsNonRoot",
+                    "value": "true"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.securityContext.allowPrivilegeEscalation",
+                    "value": "false"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "resourceID": "apps/v1/kube-system/DaemonSet/kube-proxy",
+      "controls": [
+        {
+          "controlID": "C-0004",
+          "name": "Resources memory limit and request",
+          "rules": [
+            {
+              "name": "resources-memory-limit-and-request",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.containers[0].resources.limits.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.containers[0].resources.requests.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                }
+              ],
+              "controlConfigurations": {
+                "memory_limit_max": [],
+                "memory_limit_min": [],
+                "memory_request_max": [],
+                "memory_request_min": []
+              }
+            }
+          ]
+        },
+        {
+          "controlID": "C-0006",
+          "name": "Allowed hostPath",
+          "rules": [
+            {
+              "name": "alert-rw-hostpath",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].volumeMounts[0].readOnly",
+                    "value": "true"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.containers[0].volumeMounts[1].readOnly",
+                    "value": "true"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "controlID": "C-0013",
+          "name": "Non-root containers",
+          "rules": [
+            {
+              "name": "non-root-containers",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.securityContext.runAsNonRoot",
+                    "value": "true"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.template.spec.securityContext.allowPrivilegeEscalation",
+                    "value": "false"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "resourceID": "apps/v1/kube-system/Deployment/kube-dns",
+      "controls": [
+        {
+          "controlID": "C-0004",
+          "name": "Resources memory limit and request",
+          "rules": [
+            {
+              "name": "resources-memory-limit-and-request",
+              "status": "failed",
+              "paths": [
+                {
+                  "fixPath": {
+                    "path": "spec.containers[1].resources.limits.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.containers[1].resources.requests.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.containers[3].resources.limits.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.containers[3].resources.requests.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.containers[2].resources.limits.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                },
+                {
+                  "fixPath": {
+                    "path": "spec.containers[2].resources.requests.memory",
+                    "value": "YOUR_VALUE"
+                  }
+                }
+              ],
+              "controlConfigurations": {
+                "memory_limit_max": [],
+                "memory_limit_min": [],
+                "memory_request_max": [],
+                "memory_request_min": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "resourceID": "apps/v1/kube-system/Deployment/konnectivity-agent",
+      "object": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "annotations": {
+            "components.gke.io/layer": "addon",
+            "credential-normal-mode": "true",
+            "deployment.kubernetes.io/revision": "1"
+          },
+          "creationTimestamp": "2022-07-12T14:03:21Z",
+          "generation": 1,
+          "labels": {
+            "addonmanager.kubernetes.io/mode": "Reconcile",
+            "k8s-app": "konnectivity-agent"
+          },
+          "name": "konnectivity-agent",
+          "namespace": "kube-system",
+          "resourceVersion": "994",
+          "uid": "d5aa17b7-846f-49a8-bab9-769c58afe011"
+        },
+        "spec": {
+          "progressDeadlineSeconds": 600,
+          "replicas": 1,
+          "revisionHistoryLimit": 10,
+          "selector": {
+            "matchLabels": {
+              "k8s-app": "konnectivity-agent"
+            }
+          },
+          "strategy": {
+            "rollingUpdate": {
+              "maxSurge": "25%",
+              "maxUnavailable": "25%"
+            },
+            "type": "RollingUpdate"
+          },
+          "template": {
+            "metadata": {
+              "annotations": {
+                "cluster-autoscaler.kubernetes.io/safe-to-evict": "true",
+                "components.gke.io/component-name": "konnectivitynetworkproxy-combined",
+                "components.gke.io/component-version": "1.3.7"
+              },
+              "creationTimestamp": null,
+              "labels": {
+                "k8s-app": "konnectivity-agent"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "name": "konnectivity-agent",
+                  "image": "gke.gcr.io/proxy-agent:v0.0.24-gke.0",
+                  "command": [
+                    "/proxy-agent"
+                  ],
+                  "args": [
+                    "--logtostderr=true",
+                    "--ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                    "--proxy-server-host=35.196.130.251",
+                    "--proxy-server-port=8132",
+                    "--health-server-port=8093",
+                    "--admin-server-port=8094",
+                    "--sync-interval=5s",
+                    "--probe-interval=5s",
+                    "--service-account-token-path=/var/run/secrets/tokens/konnectivity-agent-token",
+                    "--v=3"
+                  ],
+                  "ports": [
+                    {
+                      "name": "metrics",
+                      "containerPort": 8093,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "POD_NAME",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.name"
+                        }
+                      }
+                    },
+                    {
+                      "name": "POD_NAMESPACE",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        }
+                      }
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "memory": "30Mi"
+                    },
+                    "requests": {
+                      "cpu": "10m",
+                      "memory": "30Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "konnectivity-agent-token",
+                      "mountPath": "/var/run/secrets/tokens"
+                    }
+                  ],
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/healthz",
+                      "port": 8093,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 15,
+                    "timeoutSeconds": 15,
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "capabilities": {
+                      "drop": [
+                        "all"
+                      ]
+                    },
+                    "allowPrivilegeEscalation": false
+                  }
+                }
+              ],
+              "dnsPolicy": "ClusterFirst",
+              "nodeSelector": {
+                "beta.kubernetes.io/os": "linux"
+              },
+              "priorityClassName": "system-cluster-critical",
+              "restartPolicy": "Always",
+              "schedulerName": "default-scheduler",
+              "securityContext": {
+                "fsGroup": 1000,
+                "runAsGroup": 1000,
+                "runAsUser": 1000
+              },
+              "serviceAccount": "konnectivity-agent",
+              "serviceAccountName": "konnectivity-agent",
+              "terminationGracePeriodSeconds": 30,
+              "tolerations": [
+                {
+                  "key": "CriticalAddonsOnly",
+                  "operator": "Exists"
+                },
+                {
+                  "effect": "NoSchedule",
+                  "key": "sandbox.gke.io/runtime",
+                  "operator": "Equal",
+                  "value": "gvisor"
+                },
+                {
+                  "key": "components.gke.io/gke-managed-components",
+                  "operator": "Exists"
+                }
+              ],
+              "topologySpreadConstraints": [
+                {
+                  "labelSelector": {
+                    "matchLabels": {
+                      "k8s-app": "konnectivity-agent"
+                    }
+                  },
+                  "maxSkew": 1,
+                  "topologyKey": "topology.kubernetes.io/zone",
+                  "whenUnsatisfiable": "ScheduleAnyway"
+                },
+                {
+                  "labelSelector": {
+                    "matchLabels": {
+                      "k8s-app": "konnectivity-agent"
+                    }
+                  },
+                  "maxSkew": 1,
+                  "topologyKey": "kubernetes.io/hostname",
+                  "whenUnsatisfiable": "ScheduleAnyway"
+                }
+              ],
+              "volumes": [
+                {
+                  "name": "konnectivity-agent-token",
+                  "projected": {
+                    "defaultMode": 420,
+                    "sources": [
+                      {
+                        "serviceAccountToken": {
+                          "audience": "system:konnectivity-server",
+                          "expirationSeconds": 3600,
+                          "path": "konnectivity-agent-token"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "resourceID": "apps/v1/kube-system/DaemonSet/gke-metrics-agent",
+      "object": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "metadata": {
+          "annotations": {
+            "deprecated.daemonset.template.generation": "1"
+          },
+          "creationTimestamp": "2022-07-12T14:03:21Z",
+          "generation": 1,
+          "labels": {
+            "addonmanager.kubernetes.io/mode": "Reconcile",
+            "component": "gke-metrics-agent",
+            "k8s-app": "gke-metrics-agent"
+          },
+          "name": "gke-metrics-agent",
+          "namespace": "kube-system",
+          "resourceVersion": "821",
+          "uid": "8ddcc89a-aca0-4b25-b87f-ed8a4961c554"
+        },
+        "spec": {
+          "revisionHistoryLimit": 10,
+          "selector": {
+            "matchLabels": {
+              "component": "gke-metrics-agent",
+              "k8s-app": "gke-metrics-agent"
+            }
+          },
+          "template": {
+            "metadata": {
+              "annotations": {
+                "components.gke.io/component-name": "gke-metrics-agent",
+                "components.gke.io/component-version": "0.71.2",
+                "configHash": "1ZvBMcubMyuyLj2pGmip4GEA1ZES6kUCQemxQHB9ECI="
+              },
+              "creationTimestamp": null,
+              "labels": {
+                "component": "gke-metrics-agent",
+                "k8s-app": "gke-metrics-agent"
+              }
+            },
+            "spec": {
+              "affinity": {
+                "nodeAffinity": {
+                  "requiredDuringSchedulingIgnoredDuringExecution": {
+                    "nodeSelectorTerms": [
+                      {
+                        "matchExpressions": [
+                          {
+                            "key": "kubernetes.io/os",
+                            "operator": "In",
+                            "values": [
+                              "linux"
+                            ]
+                          },
+                          {
+                            "key": "cloud.google.com/gke-metrics-agent-scaling-level",
+                            "operator": "DoesNotExist"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "containers": [
+                {
+                  "name": "gke-metrics-agent",
+                  "image": "gke.gcr.io/gke-metrics-agent:1.8.3-gke.0",
+                  "command": [
+                    "/otelsvc",
+                    "--config=/conf/gke-metrics-agent-config.yaml",
+                    "--metrics-prefix=",
+                    "--log-profile=prod",
+                    "--log-format=json",
+                    "--metrics-addr=localhost:8200"
+                  ],
+                  "env": [
+                    {
+                      "name": "NODE_NAME",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "spec.nodeName"
+                        }
+                      }
+                    },
+                    {
+                      "name": "POD_NAME",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.name"
+                        }
+                      }
+                    },
+                    {
+                      "name": "POD_NAMESPACE",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        }
+                      }
+                    },
+                    {
+                      "name": "KUBELET_HOST",
+                      "value": "XXXXXX"
+                    },
+                    {
+                      "name": "GKE_COMPONENT_VERSION",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.annotations['components.gke.io/component-version']"
+                        }
+                      }
+                    },
+                    {
+                      "name": "GKE_COMPONENT_NAME",
+                      "value": "XXXXXX"
+                    },
+                    {
+                      "name": "GOMAXPROCS",
+                      "value": "XXXXXX"
+                    },
+                    {
+                      "name": "GODEBUG",
+                      "value": "XXXXXX"
+                    },
+                    {
+                      "name": "ARG1",
+                      "value": "XXXXXX"
+                    },
+                    {
+                      "name": "ARG2",
+                      "value": "XXXXXX"
+                    },
+                    {
+                      "name": "WINDOWS_JOB_ACTION",
+                      "value": "XXXXXX"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "memory": "50Mi"
+                    },
+                    "requests": {
+                      "cpu": "3m",
+                      "memory": "50Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "gke-metrics-agent-config-vol",
+                      "mountPath": "/conf"
+                    },
+                    {
+                      "name": "ssl-certs",
+                      "readOnly": true,
+                      "mountPath": "/etc/ssl/certs"
+                    }
+                  ],
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/",
+                      "port": 8201,
+                      "host": "127.0.0.1",
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 50,
+                    "timeoutSeconds": 3,
+                    "periodSeconds": 50,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "capabilities": {
+                      "drop": [
+                        "all"
+                      ]
+                    },
+                    "runAsUser": 1000,
+                    "runAsGroup": 1000,
+                    "runAsNonRoot": true,
+                    "allowPrivilegeEscalation": false
+                  }
+                }
+              ],
+              "dnsPolicy": "ClusterFirst",
+              "hostNetwork": true,
+              "priorityClassName": "system-node-critical",
+              "restartPolicy": "Always",
+              "schedulerName": "default-scheduler",
+              "securityContext": {},
+              "serviceAccount": "gke-metrics-agent",
+              "serviceAccountName": "gke-metrics-agent",
+              "terminationGracePeriodSeconds": 30,
+              "tolerations": [
+                {
+                  "effect": "NoExecute",
+                  "operator": "Exists"
+                },
+                {
+                  "effect": "NoSchedule",
+                  "operator": "Exists"
+                },
+                {
+                  "key": "components.gke.io/gke-managed-components",
+                  "operator": "Exists"
+                }
+              ],
+              "volumes": [
+                {
+                  "configMap": {
+                    "defaultMode": 420,
+                    "items": [
+                      {
+                        "key": "gke-metrics-agent-config",
+                        "path": "gke-metrics-agent-config.yaml"
+                      }
+                    ],
+                    "name": "gke-metrics-agent-conf"
+                  },
+                  "name": "gke-metrics-agent-config-vol"
+                },
+                {
+                  "hostPath": {
+                    "path": "/etc/ssl/certs",
+                    "type": "Directory"
+                  },
+                  "name": "ssl-certs"
+                }
+              ]
+            }
+          },
+          "updateStrategy": {
+            "rollingUpdate": {
+              "maxSurge": 0,
+              "maxUnavailable": 1
+            },
+            "type": "RollingUpdate"
+          }
+        }
+      }
+    },
+    {
+      "resourceID": "apps/v1/kube-system/DaemonSet/fluentbit-gke",
+      "object": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "metadata": {
+          "annotations": {
+            "deprecated.daemonset.template.generation": "1"
+          },
+          "creationTimestamp": "2022-07-12T14:03:15Z",
+          "generation": 1,
+          "labels": {
+            "addonmanager.kubernetes.io/mode": "Reconcile",
+            "k8s-app": "fluentbit-gke",
+            "kubernetes.io/cluster-service": "true"
+          },
+          "name": "fluentbit-gke",
+          "namespace": "kube-system",
+          "resourceVersion": "838",
+          "uid": "dbf31d55-999a-4853-b9f9-a1c87ab2c32e"
+        },
+        "spec": {
+          "revisionHistoryLimit": 10,
+          "selector": {
+            "matchLabels": {
+              "component": "fluentbit-gke",
+              "k8s-app": "fluentbit-gke"
+            }
+          },
+          "template": {
+            "metadata": {
+              "annotations": {
+                "EnableNodeJournal": "false",
+                "EnablePodSecurityPolicy": "false",
+                "SystemOnlyLogging": "false",
+                "components.gke.io/component-name": "fluentbit",
+                "components.gke.io/component-version": "1.5.2",
+                "monitoring.gke.io/path": "/api/v1/metrics/prometheus"
+              },
+              "creationTimestamp": null,
+              "labels": {
+                "component": "fluentbit-gke",
+                "k8s-app": "fluentbit-gke",
+                "kubernetes.io/cluster-service": "true"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "name": "fluentbit",
+                  "image": "gke.gcr.io/fluent-bit:v1.5.7-gke.2",
+                  "ports": [
+                    {
+                      "name": "metrics",
+                      "hostPort": 2020,
+                      "containerPort": 2020,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "memory": "250Mi"
+                    },
+                    "requests": {
+                      "cpu": "50m",
+                      "memory": "100Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "varrun",
+                      "mountPath": "/var/run/google-fluentbit/pos-files"
+                    },
+                    {
+                      "name": "varlog",
+                      "mountPath": "/var/log"
+                    },
+                    {
+                      "name": "varlibkubeletpods",
+                      "mountPath": "/var/lib/kubelet/pods"
+                    },
+                    {
+                      "name": "varlibdockercontainers",
+                      "readOnly": true,
+                      "mountPath": "/var/lib/docker/containers"
+                    },
+                    {
+                      "name": "config-volume",
+                      "mountPath": "/fluent-bit/etc/"
+                    }
+                  ],
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/",
+                      "port": 2020,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 120,
+                    "timeoutSeconds": 1,
+                    "periodSeconds": 60,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent"
+                },
+                {
+                  "name": "fluentbit-gke",
+                  "image": "gke.gcr.io/fluent-bit-gke-exporter:v0.17.1-gke.0",
+                  "command": [
+                    "/fluent-bit-gke-exporter",
+                    "--kubernetes-separator=_",
+                    "--stackdriver-resource-model=k8s",
+                    "--enable-pod-label-discovery",
+                    "--pod-label-dot-replacement=_",
+                    "--split-stdout-stderr",
+                    "--logtostderr"
+                  ],
+                  "ports": [
+                    {
+                      "name": "metrics",
+                      "hostPort": 2021,
+                      "containerPort": 2021,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "memory": "250Mi"
+                    },
+                    "requests": {
+                      "cpu": "50m",
+                      "memory": "100Mi"
+                    }
+                  },
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/healthz",
+                      "port": 2021,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 120,
+                    "timeoutSeconds": 1,
+                    "periodSeconds": 60,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "capabilities": {
+                      "drop": [
+                        "all"
+                      ]
+                    },
+                    "runAsUser": 1000,
+                    "runAsGroup": 1000,
+                    "allowPrivilegeEscalation": false
+                  }
+                }
+              ],
+              "dnsPolicy": "Default",
+              "hostNetwork": true,
+              "nodeSelector": {
+                "kubernetes.io/os": "linux"
+              },
+              "priorityClassName": "system-node-critical",
+              "restartPolicy": "Always",
+              "schedulerName": "default-scheduler",
+              "securityContext": {},
+              "serviceAccount": "fluentbit-gke",
+              "serviceAccountName": "fluentbit-gke",
+              "terminationGracePeriodSeconds": 120,
+              "tolerations": [
+                {
+                  "effect": "NoExecute",
+                  "operator": "Exists"
+                },
+                {
+                  "effect": "NoSchedule",
+                  "operator": "Exists"
+                },
+                {
+                  "key": "components.gke.io/gke-managed-components",
+                  "operator": "Exists"
+                }
+              ],
+              "volumes": [
+                {
+                  "hostPath": {
+                    "path": "/var/run/google-fluentbit/pos-files",
+                    "type": ""
+                  },
+                  "name": "varrun"
+                },
+                {
+                  "hostPath": {
+                    "path": "/var/log",
+                    "type": ""
+                  },
+                  "name": "varlog"
+                },
+                {
+                  "hostPath": {
+                    "path": "/var/lib/kubelet/pods",
+                    "type": ""
+                  },
+                  "name": "varlibkubeletpods"
+                },
+                {
+                  "hostPath": {
+                    "path": "/var/lib/docker/containers",
+                    "type": ""
+                  },
+                  "name": "varlibdockercontainers"
+                },
+                {
+                  "configMap": {
+                    "defaultMode": 420,
+                    "name": "fluentbit-gke-config-v1.1.0"
+                  },
+                  "name": "config-volume"
+                }
+              ]
+            }
+          },
+          "updateStrategy": {
+            "rollingUpdate": {
+              "maxSurge": 0,
+              "maxUnavailable": 1
+            },
+            "type": "RollingUpdate"
+          }
+        }
+      }
+    },
+    {
+      "resourceID": "apps/v1/kube-system/DaemonSet/kube-proxy",
+      "object": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "metadata": {
+          "annotations": {
+            "deprecated.daemonset.template.generation": "1"
+          },
+          "creationTimestamp": "2022-07-12T14:03:22Z",
+          "generation": 1,
+          "labels": {
+            "addonmanager.kubernetes.io/mode": "Reconcile",
+            "k8s-app": "kube-proxy"
+          },
+          "name": "kube-proxy",
+          "namespace": "kube-system",
+          "resourceVersion": "627",
+          "uid": "2b1158bf-4c32-4fbb-b1c1-934c05ff3aa1"
+        },
+        "spec": {
+          "revisionHistoryLimit": 10,
+          "selector": {
+            "matchLabels": {
+              "k8s-app": "kube-proxy"
+            }
+          },
+          "template": {
+            "metadata": {
+              "creationTimestamp": null,
+              "labels": {
+                "k8s-app": "kube-proxy"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "name": "kube-proxy",
+                  "image": "gke.gcr.io/kube-proxy-amd64:v1.21.12-gke.1500",
+                  "command": [
+                    "/bin/sh",
+                    "-c",
+                    "kube-proxy --cluster-cidr=10.0.0.0/14 --oom-score-adj=-998 --v=2 --feature-gates=DynamicKubeletConfig=false,InTreePluginAWSUnregister=true,InTreePluginAzureDiskUnregister=true,InTreePluginOpenStackUnregister=true,InTreePluginvSphereUnregister=true,PodDeletionCost=true --iptables-sync-period=1m --iptables-min-sync-period=10s --ipvs-sync-period=1m --ipvs-min-sync-period=10s --detect-local-mode=NodeCIDR 1>>/var/log/kube-proxy.log 2>&1"
+                  ],
+                  "env": [
+                    {
+                      "name": "KUBERNETES_SERVICE_HOST",
+                      "value": "XXXXXX"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "100m"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "varlog",
+                      "mountPath": "/var/log"
+                    },
+                    {
+                      "name": "xtables-lock",
+                      "mountPath": "/run/xtables.lock"
+                    },
+                    {
+                      "name": "lib-modules",
+                      "readOnly": true,
+                      "mountPath": "/lib/modules"
+                    }
+                  ],
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "privileged": true
+                  }
+                }
+              ],
+              "dnsPolicy": "ClusterFirst",
+              "hostNetwork": true,
+              "nodeSelector": {
+                "kubernetes.io/os": "linux",
+                "node.kubernetes.io/kube-proxy-ds-ready": "true"
+              },
+              "priorityClassName": "system-node-critical",
+              "restartPolicy": "Always",
+              "schedulerName": "default-scheduler",
+              "securityContext": {},
+              "serviceAccount": "kube-proxy",
+              "serviceAccountName": "kube-proxy",
+              "terminationGracePeriodSeconds": 30,
+              "tolerations": [
+                {
+                  "effect": "NoExecute",
+                  "operator": "Exists"
+                },
+                {
+                  "effect": "NoSchedule",
+                  "operator": "Exists"
+                }
+              ],
+              "volumes": [
+                {
+                  "hostPath": {
+                    "path": "/var/log",
+                    "type": ""
+                  },
+                  "name": "varlog"
+                },
+                {
+                  "hostPath": {
+                    "path": "/run/xtables.lock",
+                    "type": "FileOrCreate"
+                  },
+                  "name": "xtables-lock"
+                },
+                {
+                  "hostPath": {
+                    "path": "/lib/modules",
+                    "type": ""
+                  },
+                  "name": "lib-modules"
+                }
+              ]
+            }
+          },
+          "updateStrategy": {
+            "rollingUpdate": {
+              "maxSurge": 0,
+              "maxUnavailable": "10%"
+            },
+            "type": "RollingUpdate"
+          }
+        }
+      }
+    },
+    {
+      "resourceID": "apps/v1/kube-system/Deployment/kube-dns",
+      "object": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "annotations": {
+            "deployment.kubernetes.io/revision": "1"
+          },
+          "creationTimestamp": "2022-07-12T14:03:14Z",
+          "generation": 1,
+          "labels": {
+            "addonmanager.kubernetes.io/mode": "Reconcile",
+            "k8s-app": "kube-dns",
+            "kubernetes.io/cluster-service": "true"
+          },
+          "name": "kube-dns",
+          "namespace": "kube-system",
+          "resourceVersion": "1097",
+          "uid": "a0652163-6253-4158-b1ef-5ea8d43ecab3"
+        },
+        "spec": {
+          "progressDeadlineSeconds": 600,
+          "replicas": 1,
+          "revisionHistoryLimit": 10,
+          "selector": {
+            "matchLabels": {
+              "k8s-app": "kube-dns"
+            }
+          },
+          "strategy": {
+            "rollingUpdate": {
+              "maxSurge": "10%",
+              "maxUnavailable": 0
+            },
+            "type": "RollingUpdate"
+          },
+          "template": {
+            "metadata": {
+              "annotations": {
+                "components.gke.io/component-name": "kubedns",
+                "prometheus.io/port": "10054",
+                "prometheus.io/scrape": "true",
+                "scheduler.alpha.kubernetes.io/critical-pod": "",
+                "seccomp.security.alpha.kubernetes.io/pod": "runtime/default"
+              },
+              "creationTimestamp": null,
+              "labels": {
+                "k8s-app": "kube-dns"
+              }
+            },
+            "spec": {
+              "affinity": {
+                "podAntiAffinity": {
+                  "preferredDuringSchedulingIgnoredDuringExecution": [
+                    {
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [
+                            {
+                              "key": "k8s-app",
+                              "operator": "In",
+                              "values": [
+                                "kube-dns"
+                              ]
+                            }
+                          ]
+                        },
+                        "topologyKey": "kubernetes.io/hostname"
+                      },
+                      "weight": 100
+                    }
+                  ]
+                }
+              },
+              "containers": [
+                {
+                  "name": "kubedns",
+                  "image": "gke.gcr.io/k8s-dns-kube-dns:1.21.0-gke.0",
+                  "args": [
+                    "--domain=cluster.local.",
+                    "--dns-port=10053",
+                    "--config-dir=/kube-dns-config",
+                    "--v=2"
+                  ],
+                  "ports": [
+                    {
+                      "name": "dns-local",
+                      "containerPort": 10053,
+                      "protocol": "UDP"
+                    },
+                    {
+                      "name": "dns-tcp-local",
+                      "containerPort": 10053,
+                      "protocol": "TCP"
+                    },
+                    {
+                      "name": "metrics",
+                      "containerPort": 10055,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "PROMETHEUS_PORT",
+                      "value": "XXXXXX"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "memory": "210Mi"
+                    },
+                    "requests": {
+                      "cpu": "100m",
+                      "memory": "70Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "kube-dns-config",
+                      "mountPath": "/kube-dns-config"
+                    }
+                  ],
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/healthcheck/kubedns",
+                      "port": 10054,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 60,
+                    "timeoutSeconds": 5,
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "failureThreshold": 5
+                  },
+                  "readinessProbe": {
+                    "httpGet": {
+                      "path": "/readiness",
+                      "port": 8081,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 3,
+                    "timeoutSeconds": 5,
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "runAsUser": 1001,
+                    "runAsGroup": 1001,
+                    "readOnlyRootFilesystem": true,
+                    "allowPrivilegeEscalation": false
+                  }
+                },
+                {
+                  "name": "dnsmasq",
+                  "image": "gke.gcr.io/k8s-dns-dnsmasq-nanny:1.21.0-gke.0",
+                  "args": [
+                    "-v=2",
+                    "-logtostderr",
+                    "-configDir=/etc/k8s/dns/dnsmasq-nanny",
+                    "-restartDnsmasq=true",
+                    "--",
+                    "-k",
+                    "--cache-size=1000",
+                    "--no-negcache",
+                    "--dns-forward-max=1500",
+                    "--log-facility=-",
+                    "--server=/cluster.local/127.0.0.1#10053",
+                    "--server=/in-addr.arpa/127.0.0.1#10053",
+                    "--server=/ip6.arpa/127.0.0.1#10053"
+                  ],
+                  "ports": [
+                    {
+                      "name": "dns",
+                      "containerPort": 53,
+                      "protocol": "UDP"
+                    },
+                    {
+                      "name": "dns-tcp",
+                      "containerPort": 53,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "150m",
+                      "memory": "20Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "kube-dns-config",
+                      "mountPath": "/etc/k8s/dns/dnsmasq-nanny"
+                    }
+                  ],
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/healthcheck/dnsmasq",
+                      "port": 10054,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 60,
+                    "timeoutSeconds": 5,
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "failureThreshold": 5
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "capabilities": {
+                      "add": [
+                        "NET_BIND_SERVICE",
+                        "SETGID"
+                      ],
+                      "drop": [
+                        "all"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "sidecar",
+                  "image": "gke.gcr.io/k8s-dns-sidecar:1.21.0-gke.0",
+                  "args": [
+                    "--v=2",
+                    "--logtostderr",
+                    "--probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,SRV",
+                    "--probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,SRV"
+                  ],
+                  "ports": [
+                    {
+                      "name": "metrics",
+                      "containerPort": 10054,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "10m",
+                      "memory": "20Mi"
+                    }
+                  },
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "/metrics",
+                      "port": 10054,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 60,
+                    "timeoutSeconds": 5,
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "failureThreshold": 5
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "runAsUser": 1001,
+                    "runAsGroup": 1001,
+                    "readOnlyRootFilesystem": true,
+                    "allowPrivilegeEscalation": false
+                  }
+                },
+                {
+                  "name": "prometheus-to-sd",
+                  "image": "gke.gcr.io/prometheus-to-sd:v0.4.2",
+                  "command": [
+                    "/monitor",
+                    "--source=kubedns:http://localhost:10054?whitelisted=probe_kubedns_latency_ms,probe_kubedns_errors,dnsmasq_misses,dnsmasq_hits",
+                    "--stackdriver-prefix=container.googleapis.com/internal/addons",
+                    "--api-override=https://monitoring.googleapis.com/",
+                    "--pod-id=$(POD_NAME)",
+                    "--namespace-id=$(POD_NAMESPACE)",
+                    "--v=2"
+                  ],
+                  "env": [
+                    {
+                      "name": "POD_NAME",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.name"
+                        }
+                      }
+                    },
+                    {
+                      "name": "POD_NAMESPACE",
+                      "value": "XXXXXX",
+                      "valueFrom": {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        }
+                      }
+                    }
+                  ],
+                  "resources": {},
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "IfNotPresent",
+                  "securityContext": {
+                    "runAsUser": 1001,
+                    "runAsGroup": 1001,
+                    "readOnlyRootFilesystem": true,
+                    "allowPrivilegeEscalation": false
+                  }
+                }
+              ],
+              "dnsPolicy": "Default",
+              "nodeSelector": {
+                "kubernetes.io/os": "linux"
+              },
+              "priorityClassName": "system-cluster-critical",
+              "restartPolicy": "Always",
+              "schedulerName": "default-scheduler",
+              "securityContext": {
+                "fsGroup": 65534,
+                "supplementalGroups": [
+                  65534
+                ]
+              },
+              "serviceAccount": "kube-dns",
+              "serviceAccountName": "kube-dns",
+              "terminationGracePeriodSeconds": 30,
+              "tolerations": [
+                {
+                  "key": "CriticalAddonsOnly",
+                  "operator": "Exists"
+                },
+                {
+                  "key": "components.gke.io/gke-managed-components",
+                  "operator": "Exists"
+                }
+              ],
+              "volumes": [
+                {
+                  "configMap": {
+                    "defaultMode": 420,
+                    "name": "kube-dns",
+                    "optional": true
+                  },
+                  "name": "kube-dns-config"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "scanMetadata": {},
+    "targetMetadata": {},
+    "clusterMetadata": {}
+  }
+}

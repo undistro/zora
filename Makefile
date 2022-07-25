@@ -12,7 +12,7 @@ IMG_TAG ?= latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.23
 # Image URL to use for building and pushing.
-IMG ?= ${REG_ADDR}/zora:${IMG_TAG}
+IMG ?= ${REG_ADDR}/operator:${IMG_TAG}
 # Name of dockerfile to use in the image.
 DOCKERFILE ?= Dockerfile
 
@@ -169,6 +169,11 @@ endef
 
 
 ##@ Local Deployment
+docker-build-operator-worker: docker-build
+	IMG=${REG_ADDR}/worker:${IMG_TAG} DOCKERFILE=Dockerfile.worker $(MAKE) docker-build
+docker-push-operator-worker: docker-push
+	IMG=${REG_ADDR}/worker:${IMG_TAG} DOCKERFILE=Dockerfile.worker $(MAKE) docker-build
+
 setup-region-label: ## Add label used by Zora to detect the cluster region.
 	./hack/scripts/setup_region_label.sh
 setup-local-registry: ## Create a local Docker registry.
@@ -191,7 +196,7 @@ delete-minikube: ## Delete Minikube node.
 
 gen-zora-view-kubeconfig: ## Create a service account and config RBAC for it.
 	./hack/scripts/gen_zora_view_kubeconfig.sh
-setup-zora-view: ## Create and apply view secret.
+setup-zora-view: install ## Create and apply view secret.
 	./hack/scripts/setup_zora_view.sh
 
 ##@ Documentation
