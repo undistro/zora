@@ -112,6 +112,10 @@ func ExtractStatus(con *ResourceAssociatedControl) ScanningStatus {
 	return bigs
 }
 
+// PreprocessResources transforms a Kubescape report resource list into a map
+// of type:
+// 		<resource_id>: <resource_object>
+// This is useful to prevent quadratic loops when iterating over results.
 func PreprocessResources(r *PostureReport) (map[string]map[string]interface{}, error) {
 	objmap := map[string]map[string]interface{}{}
 	for _, res := range r.Resources {
