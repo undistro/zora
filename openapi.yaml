@@ -110,13 +110,22 @@ components:
           type: integer
           minimum: 0
           example: 178
-        status:
+        scan:
           type: object
           properties:
-            type:
+            status:
               type: string
               enum: [failed, unknown, scanned]
-              example: failed
+              example: unknown
+            message:
+              type: string
+              example: 'no finished scan yet'
+        connection:
+          type: object
+          properties:
+            connected:
+              type: bool
+              example: false
             message:
               type: string
               example: 'metrics API not available'

@@ -23,7 +23,8 @@ type Cluster struct {
 	Region                 string           `json:"region"`
 	TotalNodes             *int             `json:"totalNodes"`
 	Version                string           `json:"version"`
-	Status                 ScanStatus       `json:"status"`
+	Scan                   ScanStatus       `json:"scan"`
+	Connection             ConnectionStatus `json:"connection"`
 	TotalIssues            *int             `json:"totalIssues"`
 	Resources              *Resources       `json:"resources"`
 	CreationTimestamp      metav1.Time      `json:"creationTimestamp"`
@@ -49,24 +50,41 @@ type Resource struct {
 }
 
 type ScanStatus struct {
-	Type    ScanStatusType `json:"type"`
+	Status  ScanStatusType `json:"status"`
 	Message string         `json:"message"`
 }
 
-func deriveStatus(conds []metav1.Condition) ScanStatus {
+type ConnectionStatus struct {
+	Connected bool   `json:"connected"`
+	Message   string `json:"message"`
+}
+
+func deriveStatus(conds []metav1.Condition, cl *Cluster) {
 	for _, c := range conds {
-		if c.Type == v1alpha1.ClusterReady && c.Status == metav1.ConditionFalse ||
-			c.Type == v1alpha1.ClusterDiscovered && c.Status == metav1.ConditionFalse {
-			return ScanStatus{Type: Failed, Message: c.Message}
-		}
-		if c.Type == v1alpha1.ClusterScanned && c.Status == metav1.ConditionFalse {
-			if c.Reason == v1alpha1.ClusterNotScanned || c.Reason == v1alpha1.ClusterScanNotConfigured {
-				return ScanStatus{Type: Unknown, Message: c.Message}
+		if c.Type == v1alpha1.ClusterReady {
+			if c.Status == metav1.ConditionTrue {
+				cl.Connection.Connected = true
+			} else {
+				cl.Connection.Message = c.Message
 			}
-			return ScanStatus{Type: Failed, Message: c.Message}
+		}
+		if c.Type == v1alpha1.ClusterDiscovered && c.Status == metav1.ConditionFalse {
+			cl.Connection.Message = c.Message
+		}
+
+		if c.Type == v1alpha1.ClusterScanned {
+			if c.Status == metav1.ConditionTrue {
+				cl.Scan.Status = Scanned
+			} else {
+				cl.Scan.Message = c.Message
+				if c.Reason == v1alpha1.ClusterNotScanned || c.Reason == v1alpha1.ClusterScanNotConfigured {
+					cl.Scan.Status = Unknown
+				} else {
+					cl.Scan.Status = Failed
+				}
+			}
 		}
 	}
-	return ScanStatus{Type: Scanned}
 }
 
 func NewCluster(cluster v1alpha1.Cluster) Cluster {
@@ -103,7 +121,7 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 			UsagePercentage: mem.UsagePercentage,
 		}
 	}
-	cl.Status = deriveStatus(cluster.Status.Conditions)
+	deriveStatus(cluster.Status.Conditions, &cl)
 
 	return cl
 }
