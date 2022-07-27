@@ -59,7 +59,15 @@ type ConnectionStatus struct {
 	Message   string `json:"message"`
 }
 
+// Derives Zora's connection and scan status based on Kubernetes status
+// Conditions. The function assumes the Conditions are unique by type, as is
+// the case when using the <SetStatusCondition> function from API Machinery's
+// <meta> package.
+//
+// In case no Conditions are provided, the connection and scan status will
+// default to <false> and <Unkown>, respectively.
 func deriveStatus(conds []metav1.Condition, cl *Cluster) {
+	cl.Scan.Status = Unknown
 	for _, c := range conds {
 		if c.Type == v1alpha1.ClusterReady {
 			if c.Status == metav1.ConditionTrue {
