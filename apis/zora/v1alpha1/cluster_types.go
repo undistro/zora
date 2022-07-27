@@ -10,13 +10,21 @@ import (
 )
 
 const (
-	LabelEnvironment  = "zora.undistro.io/environment"
+	LabelEnvironment = "zora.undistro.io/environment"
+
 	ClusterReady      = "Ready"
 	ClusterDiscovered = "Discovered"
 	ClusterScanned    = "SuccessfullyScanned"
 
+	ClusterConnected         = "ClusterConnected"
+	KubeconfigError          = "KubeconfigError"
+	ClusterNotConnected      = "ClusterNotConnected"
+	ClusterInfoDiscovered    = "ClusterInfoDiscovered"
+	ClusterInfoNotDiscovered = "ClusterInfoNotDiscovered"
 	ClusterNotScanned        = "ClusterNotScanned"
 	ClusterScanNotConfigured = "ClusterScanNotConfigured"
+	ClusterScanListError     = "ClusterScanListError"
+	ClusterScanFailed        = "ClusterScanFailed"
 )
 
 // ClusterSpec defines the desired state of Cluster

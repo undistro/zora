@@ -70,7 +70,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		clusterConfig, err := kubeconfig.ConfigFromSecretName(ctx, r.Client, *key)
 		if err != nil {
 			log.Error(err, "failed to get config from kubeconfigRef")
-			r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "KubeconfigError", err.Error())
+			r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, v1alpha1.KubeconfigError, err.Error())
 			return err
 		}
 		config = clusterConfig
@@ -79,7 +79,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	discoverer, err := discovery.NewForConfig(config)
 	if err != nil {
 		log.Error(err, "failed to get new discovery client from config")
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "ClusterNotConnected", err.Error())
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, v1alpha1.ClusterNotConnected, err.Error())
 		return err
 	}
 
@@ -90,14 +90,14 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		return err
 	}
 	cluster.Status.KubernetesVersion = version
-	cluster.SetStatus(v1alpha1.ClusterReady, true, "ClusterConnected", fmt.Sprintf("cluster successfully connected, version %s", version))
+	cluster.SetStatus(v1alpha1.ClusterReady, true, v1alpha1.ClusterConnected, fmt.Sprintf("cluster successfully connected, version %s", version))
 
 	if info, err := discoverer.Info(ctx); err != nil {
 		log.Error(err, "failed to discovery cluster info")
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterInfoNotDiscovered", err.Error())
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, v1alpha1.ClusterInfoNotDiscovered, err.Error())
 	} else {
 		cluster.Status.ClusterInfo = *info
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterInfoDiscovered", "cluster info successfully discovered")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, v1alpha1.ClusterInfoDiscovered, "cluster info successfully discovered")
 	}
 
 	if res, err := discoverer.Resources(ctx); err != nil {
@@ -124,7 +124,7 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 	clusterScanList := &v1alpha1.ClusterScanList{}
 	if err := r.List(ctx, clusterScanList, client.MatchingFields{clusterScanRefKey: cluster.Name}); err != nil {
 		log.Error(err, fmt.Sprintf("failed to list ClusterScan referenced by Cluster %s", cluster.Name))
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanListError", err.Error())
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanListError, err.Error())
 		return err
 	}
 
@@ -172,11 +172,11 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 	if len(clusterScanList.Items) <= 0 {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanNotConfigured, "no scan configured")
 	} else if len(failed) > 0 {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, "ClusterScanFailed", "last scan failed")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanFailed, "last scan failed")
 	} else if len(notFinished) == len(clusterScanList.Items) {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterNotScanned, "no finished scan yet")
 	} else {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, "ClusterScanned", "cluster successfully scanned")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, v1alpha1.ClusterScanned, "cluster successfully scanned")
 	}
 
 	cluster.Status.TotalIssues = totalIssues
