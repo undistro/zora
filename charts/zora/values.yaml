@@ -281,6 +281,9 @@ scan:
       repository: registry.undistro.io/library/worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
+  # -- Names of the default plugins
+  defaultPlugins:
+    - popeye
   plugins:
     popeye:
       image:
