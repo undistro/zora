@@ -5,3 +5,7 @@ ingress:
   enabled: true
   host: zora-hml.undistro.io
   tlsSecretName: zora-cert
+scan:
+  defaultPlugins:
+    - popeye
+    - kubescape

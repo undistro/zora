@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.3.1](https://img.shields.io/badge/AppVersion-v0.3.1-informational?style=flat-square&color=38C794)
+![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.3.2](https://img.shields.io/badge/AppVersion-v0.3.2-informational?style=flat-square&color=38C794)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -159,6 +159,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nginx.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.worker.image.repository | string | `"registry.undistro.io/library/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
+| scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
 | scan.plugins.popeye.image.repository | string | `"registry.undistro.io/dockerhub/derailed/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"v0.10.0"` | popeye plugin image tag |
 | scan.plugins.kubescape.image.repository | string | `"registry.undistro.io/quay/armosec/kubescape"` | kubescape plugin image repository |
