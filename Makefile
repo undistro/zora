@@ -169,9 +169,9 @@ endef
 
 
 ##@ Local Deployment
-docker-build-operator-worker: docker-build
+docker-build-operator-worker: docker-build ## Build Docker images for the operator and worker components.
 	IMG=${REG_ADDR}/worker:${IMG_TAG} DOCKERFILE=Dockerfile.worker $(MAKE) docker-build
-docker-push-operator-worker: docker-push
+docker-push-operator-worker: docker-push ## Push Docker images for the operator and worker components.
 	IMG=${REG_ADDR}/worker:${IMG_TAG} DOCKERFILE=Dockerfile.worker $(MAKE) docker-build
 
 setup-region-label: ## Add label used by Zora to detect the cluster region.
