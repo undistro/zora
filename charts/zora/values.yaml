@@ -146,7 +146,9 @@ server:
     runAsUser: 65533
     runAsGroup: 65533
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem : true
   service:
     # -- Service type
     type: ClusterIP
