@@ -217,7 +217,7 @@ ui:
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
   securityContext:
     allowPrivilegeEscalation: false
-    readOnlyRootFilesystem : false
+    readOnlyRootFilesystem: true
   service:
     # -- Service type
     type: ClusterIP
