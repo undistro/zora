@@ -68,6 +68,7 @@ operator:
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
   securityContext:
     allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
   metricsService:
     # -- Type of metrics service
     type: ClusterIP
