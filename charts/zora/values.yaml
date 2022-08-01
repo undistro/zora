@@ -273,7 +273,9 @@ nginx:
     runAsUser: 10000
     fsGroup: 10000
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem : true
   service:
     # -- Service type
     type: ClusterIP
