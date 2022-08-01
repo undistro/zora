@@ -201,7 +201,10 @@ ui:
   # -- Annotations to be added to pods
   podAnnotations: {}
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
-  podSecurityContext: {}
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
   securityContext: {}
   service:
