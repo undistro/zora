@@ -329,27 +329,27 @@ func TestParse(t *testing.T) {
 						Category: "deployment",
 						Resources: map[string][]string{
 							"apps/v1/daemonset": []string{
-								"gke-metrics-agent",
-								"gke-metrics-agent-scaling-20",
-								"fluentbit-gke",
-								"kube-proxy",
-								"metadata-proxy-v0.1",
-								"nvidia-gpu-device-plugin",
-								"pdcsi-node-windows",
-								"gke-metrics-agent-scaling-10",
-								"gke-metrics-agent-windows",
-								"pdcsi-node",
+								"kube-system/gke-metrics-agent",
+								"kube-system/gke-metrics-agent-scaling-20",
+								"kube-system/fluentbit-gke",
+								"kube-system/kube-proxy",
+								"kube-system/metadata-proxy-v0.1",
+								"kube-system/nvidia-gpu-device-plugin",
+								"kube-system/pdcsi-node-windows",
+								"kube-system/gke-metrics-agent-scaling-10",
+								"kube-system/gke-metrics-agent-windows",
+								"kube-system/pdcsi-node",
 							},
 							"apps/v1/deployment": []string{
-								"konnectivity-agent",
-								"metrics-server-v0.4.5",
-								"kube-dns",
-								"event-exporter-gke",
-								"kube-dns-autoscaler",
-								"konnectivity-agent-autoscaler",
+								"kube-system/konnectivity-agent",
+								"kube-system/metrics-server-v0.4.5",
+								"kube-system/kube-dns",
+								"kube-system/event-exporter-gke",
+								"kube-system/kube-dns-autoscaler",
+								"kube-system/konnectivity-agent-autoscaler",
 							},
 							"v1/pod": []string{
-								"kube-proxy-gke-zora-jzapzzpr-default-pool-b0f7ab4a-sg6t",
+								"kube-system/kube-proxy-gke-zora-jzapzzpr-default-pool-b0f7ab4a-sg6t",
 							},
 						},
 						TotalResources: 17,
@@ -403,10 +403,10 @@ func TestParse(t *testing.T) {
 						Category: "daemonset",
 						Resources: map[string][]string{
 							"apps/v1/daemonset": []string{
-								"kube-proxy",
+								"kube-system/kube-proxy",
 							},
 							"apps/v1/deployment": []string{
-								"kube-dns",
+								"kube-system/kube-dns",
 							},
 						},
 						TotalResources: 2,
@@ -444,8 +444,8 @@ func TestParse(t *testing.T) {
 						Category: "daemonset",
 						Resources: map[string][]string{
 							"apps/v1/daemonset": []string{
-								"fluentbit-gke",
-								"kube-proxy",
+								"kube-system/fluentbit-gke",
+								"kube-system/kube-proxy",
 							},
 						},
 						TotalResources: 2,
@@ -483,8 +483,8 @@ func TestParse(t *testing.T) {
 						Category: "daemonset",
 						Resources: map[string][]string{
 							"apps/v1/daemonset": []string{
-								"fluentbit-gke",
-								"kube-proxy",
+								"kube-system/fluentbit-gke",
+								"kube-system/kube-proxy",
 							},
 						},
 						TotalResources: 2,
@@ -522,10 +522,10 @@ func TestParse(t *testing.T) {
 						Category: "deployment",
 						Resources: map[string][]string{
 							"apps/v1/daemonset": []string{
-								"gke-metrics-agent",
+								"kube-system/gke-metrics-agent",
 							},
 							"apps/v1/deployment": []string{
-								"konnectivity-agent",
+								"kube-system/konnectivity-agent",
 							},
 						},
 						TotalResources: 2,

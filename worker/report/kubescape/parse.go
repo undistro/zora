@@ -25,11 +25,11 @@ func ScoreFactorSeverity(s float32) zorav1a1.ClusterIssueSeverity {
 	}
 }
 
-// ExtractGvrAndInstanceName returns the GVR and the instance name from a
-// Kubescape <object> record. The record may lack some of the GVR fields, in
-// such a case, it'll return only the ones present. For <object> records which
-// have the <relatedObjects> field populated, data from the first element of
-// the later will be returned instead.
+// ExtractGvrAndInstanceName returns the GVR and the instance namespaced name
+// from a Kubescape <object> record. The record may lack some of the GVR
+// fields, in such a case, it'll return only the ones present. For <object>
+// records which have the <relatedObjects> field populated, data from the first
+// element of the later will be returned instead.
 //
 // This function uses the lowercased instance kind as k8s resource, given that
 // Kubescape's <object> record doesn't store the resource type of the scanned
@@ -60,13 +60,34 @@ func ExtractGvrAndInstanceName(log logr.Logger, obj map[string]interface{}) (str
 		return "", "", errors.New("No GVK information within Kubescape resource's <object>")
 	}
 
+	ns := ""
+	if v, ok := obj["namespace"]; ok {
+		nstr, ok := v.(string)
+		if !ok {
+			log.Error(errors.New("Unknown field type"), "Unknown type of <namespace> from Kubescape resource's <object>")
+		}
+		ns = nstr
+	} else if m, ok := obj["metadata"]; ok {
+		mmap, ok := m.(map[string]interface{})
+		if !ok {
+			log.Error(errors.New("Unknown field type"), "Unknown type of <metadata> from Kubescape resource's <object>")
+		}
+		if n, ok := mmap["namespace"]; ok {
+			nstr, ok := n.(string)
+			if !ok {
+				log.Error(errors.New("Unknown field type"), "Unknown type of <namespace> from Kubescape resource's <object.metadata>")
+			}
+			ns = nstr
+		}
+	}
+
 	name := ""
 	if v, ok := obj["name"]; ok {
-		vstr, ok := v.(string)
+		nstr, ok := v.(string)
 		if !ok {
 			log.Error(errors.New("Unknown field type"), "Unknown type of <name> from Kubescape resource's <object>")
 		}
-		name = vstr
+		name = nstr
 	} else if m, ok := obj["metadata"]; ok {
 		mmap, ok := m.(map[string]interface{})
 		if !ok {
@@ -80,7 +101,15 @@ func ExtractGvrAndInstanceName(log logr.Logger, obj map[string]interface{}) (str
 			name = nstr
 		}
 	}
-	return strings.Join(gvr, "/"), name, nil
+
+	nspacedname := ""
+	if len(ns) != 0 {
+		nspacedname = fmt.Sprintf("%s/%s", ns, name)
+	} else {
+		nspacedname = name
+	}
+
+	return strings.Join(gvr, "/"), nspacedname, nil
 }
 
 // ExtractStatus derives the scan status of a given Kubescape Control. The
