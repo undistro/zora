@@ -270,6 +270,8 @@ nginx:
   podAnnotations: {}
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
   podSecurityContext:
+    runAsNonRoot: true
+    runAsGroup: 10000
     runAsUser: 10000
     fsGroup: 10000
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
