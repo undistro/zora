@@ -15,7 +15,7 @@ helm upgrade --install zora undistro/zora \
   --set imageCredentials.username='<USERNAME>' \
   --set imageCredentials.password='<PASSWORD>' \
   -n zora-system \
-  --create-namespace
+  --create-namespace --wait
 ```
 
 !!! warning

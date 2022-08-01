@@ -14,7 +14,7 @@ helm upgrade --install zora undistro/zora \
   --set imageCredentials.username='<USERNAME>' \
   --set imageCredentials.password='<PASSWORD>' \
   -n zora-system \
-  --create-namespace
+  --create-namespace --wait
 ```
 
 These commands deploy Zora on the Kubernetes cluster in the default configuration.
