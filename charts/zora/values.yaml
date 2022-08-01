@@ -152,7 +152,13 @@ server:
     # -- Service port
     port: 8080
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   autoscaling:
     # -- Enable replica autoscaling settings
     enabled: false
@@ -213,7 +219,13 @@ ui:
     # -- Service port
     port: 8080
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   autoscaling:
     # -- Enable replica autoscaling settings
     enabled: false
@@ -263,7 +275,13 @@ nginx:
     # -- Service port
     port: 80
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   autoscaling:
     # -- Enable replica autoscaling settings
     enabled: false
