@@ -121,7 +121,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 func buildFailedStatusMsg(p []string) string {
 	plen := len(p)
 	if plen == 1 {
-		return fmt.Sprintf("plugin %s failed", p[0])
+		return fmt.Sprintf("plugin <%s> failed", p[0])
 	}
 	bu := &strings.Builder{}
 	bu.WriteString("plugins ")
@@ -189,9 +189,11 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 	}
 
 	failedps := []string{}
-	for n, p := range clusterScanList.Items[0].Status.Plugins {
-		if p.LastStatus == string(batchv1.JobFailed) {
-			failedps = append(failedps, n)
+	if len(clusterScanList.Items) != 0 {
+		for n, p := range clusterScanList.Items[0].Status.Plugins {
+			if p.LastStatus == string(batchv1.JobFailed) {
+				failedps = append(failedps, n)
+			}
 		}
 	}
 
