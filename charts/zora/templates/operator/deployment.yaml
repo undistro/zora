@@ -40,8 +40,6 @@ spec:
             - containerPort: 8443
               name: https
               protocol: TCP
-          # TODO readinessProbe:
-          # TODO livenessProbe:
           resources:
             {{- toYaml .Values.operator.rbacProxy.resources | nindent 12 }}
           securityContext:
