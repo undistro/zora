@@ -30,6 +30,7 @@ spec:
       {{- end }}
       {{- end }}
       serviceAccountName: {{ include "zora.uiServiceAccountName" . }}
+      automountServiceAccountToken: false
       securityContext:
         {{- toYaml .Values.ui.podSecurityContext | nindent 8 }}
       containers:

@@ -68,7 +68,6 @@ rules:
       - serviceaccounts
     verbs:
       - create
-      - delete
       - get
       - list
       - patch

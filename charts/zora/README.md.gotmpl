@@ -21,7 +21,7 @@ helm upgrade --install {{ $release }} {{ $repoName }}/{{ template "chart.name" .
   --set imageCredentials.username='<USERNAME>' \
   --set imageCredentials.password='<PASSWORD>' \
   -n {{ $namespace }} \
-  --create-namespace
+  --create-namespace --wait
 ```
 
 These commands deploy {{ $title }} on the Kubernetes cluster in the default configuration.

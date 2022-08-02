@@ -63,9 +63,12 @@ operator:
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
   podSecurityContext:
     runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
   securityContext:
     allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
   metricsService:
     # -- Type of metrics service
     type: ClusterIP
@@ -90,6 +93,10 @@ operator:
       tag: v0.8.0
       # -- Image pull policy
       pullPolicy: IfNotPresent
+    # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
     # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
     resources:
       limits:
@@ -138,16 +145,27 @@ server:
   # -- Annotations to be added to pods
   podAnnotations: {}
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
-  podSecurityContext: {}
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65533
+    runAsGroup: 65533
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem : true
   service:
     # -- Service type
     type: ClusterIP
     # -- Service port
     port: 8080
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   autoscaling:
     # -- Enable replica autoscaling settings
     enabled: false
@@ -196,16 +214,27 @@ ui:
   # -- Annotations to be added to pods
   podAnnotations: {}
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
-  podSecurityContext: {}
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
   service:
     # -- Service type
     type: ClusterIP
     # -- Service port
     port: 8080
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   autoscaling:
     # -- Enable replica autoscaling settings
     enabled: false
@@ -245,17 +274,27 @@ nginx:
   podAnnotations: {}
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
   podSecurityContext:
+    runAsNonRoot: true
+    runAsGroup: 10000
     runAsUser: 10000
     fsGroup: 10000
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem : false
   service:
     # -- Service type
     type: ClusterIP
     # -- Service port
     port: 80
   # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   autoscaling:
     # -- Enable replica autoscaling settings
     enabled: false
