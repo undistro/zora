@@ -76,4 +76,5 @@ jobs:
             --version $CHART_VERSION \
             --namespace zora-system \
             --create-namespace \
-            --kubeconfig /tmp/hml_kubeconfig.yaml
+            --kubeconfig /tmp/hml_kubeconfig.yaml \
+            --wait
