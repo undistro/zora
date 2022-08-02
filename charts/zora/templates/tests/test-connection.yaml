@@ -14,7 +14,7 @@ spec:
     runAsGroup: 1000
   containers:
     - name: wget
-      image: registry.undistro.io/dockerhub/library/busybox
+      image: registry.undistro.io/dockerhub/library/busybox:stable
       command: ['wget']
       args: [
         '{{ include "zora.fullname" . }}-server:{{ .Values.server.service.port }}/api/v1/clusters',
