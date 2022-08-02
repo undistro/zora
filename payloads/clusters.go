@@ -89,6 +89,9 @@ func deriveStatus(conds []metav1.Condition, cl *Cluster) {
 					cl.Scan.Status = Unknown
 				} else {
 					cl.Scan.Status = Failed
+					if cl.TotalIssues != nil {
+						*cl.TotalIssues = 0
+					}
 				}
 			}
 		}
@@ -143,8 +146,10 @@ func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 
 func NewClusterWithIssues(cluster v1alpha1.Cluster, issues []v1alpha1.ClusterIssue) Cluster {
 	c := NewCluster(cluster)
-	for _, i := range issues {
-		c.Issues = append(c.Issues, NewResourcedIssue(i))
+	if c.Scan.Status != Failed {
+		for _, i := range issues {
+			c.Issues = append(c.Issues, NewResourcedIssue(i))
+		}
 	}
 	return c
 }
