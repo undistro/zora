@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/getupio-undistro/zora/pkg/apis"
+	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -100,6 +101,7 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 // SyncStatus fills PluginNames, NextScheduleTime, LastScheduleTime and LastSuccessfulTime fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names []string
+	failed := false
 	in.NextScheduleTime = nil
 	for n, s := range in.Plugins {
 		names = append(names, n)
@@ -118,15 +120,23 @@ func (in *ClusterScanStatus) SyncStatus() {
 		if in.NextScheduleTime == nil {
 			in.NextScheduleTime = s.NextScheduleTime
 		}
+
+		if !failed && s.LastStatus == string(batchv1.JobFailed) {
+			failed = true
+			in.LastStatus = string(batchv1.JobFailed)
+		}
 		if s.LastScheduleTime != nil && s.LastScheduleTime.After(in.LastScheduleTime.Time) {
 			in.LastScheduleTime = s.LastScheduleTime
-			in.LastStatus = s.LastStatus
+			if !failed {
+				in.LastStatus = s.LastStatus
+			}
 		}
-		if s.LastFinishedTime != nil && s.LastFinishedTime.After(in.LastScheduleTime.Time) {
+		if !failed && s.LastFinishedTime != nil && s.LastFinishedTime.After(in.LastScheduleTime.Time) {
 			in.LastFinishedTime = s.LastFinishedTime
 			in.LastStatus = s.LastStatus
 			in.LastFinishedStatus = s.LastStatus
 		}
+
 		if s.LastSuccessfulTime != nil && s.LastSuccessfulTime.After(in.LastSuccessfulTime.Time) {
 			in.LastSuccessfulTime = s.LastSuccessfulTime
 		}

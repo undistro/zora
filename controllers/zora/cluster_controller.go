@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -117,6 +118,27 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	return nil
 }
 
+func buildFailedStatusMsg(p []string) string {
+	plen := len(p)
+	if plen == 1 {
+		return fmt.Sprintf("plugin <%s> failed", p[0])
+	}
+	bu := &strings.Builder{}
+	bu.WriteString("plugins ")
+	for c := 0; c < plen; c++ {
+		bu.WriteString("<")
+		bu.WriteString(p[c])
+		bu.WriteString(">")
+		if c == plen-2 {
+			bu.WriteString(" and ")
+		} else if c != plen-1 {
+			bu.WriteString(", ")
+		}
+	}
+	bu.WriteString("failed")
+	return bu.String()
+}
+
 // updateScanStatus updates status of the given Cluster based on ClusterScans that reference it
 func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alpha1.Cluster) error {
 	log := ctrllog.FromContext(ctx)
@@ -143,7 +165,6 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 
 	var totalIssues *int
 	var lastScanIDs []string
-	var failed []string
 	var notFinished []string
 	for _, cs := range clusterScanList.Items {
 		if cs.Status.TotalIssues != nil {
@@ -155,9 +176,7 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 			}
 		}
 		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
-		if cs.Status.LastFinishedStatus == string(batchv1.JobFailed) {
-			failed = append(failed, cs.Name)
-		} else if cs.Status.LastFinishedTime == nil {
+		if cs.Status.LastFinishedTime == nil {
 			notFinished = append(notFinished, cs.Name)
 		}
 
@@ -169,10 +188,19 @@ func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alp
 		}
 	}
 
-	if len(clusterScanList.Items) <= 0 {
+	failedps := []string{}
+	if len(clusterScanList.Items) != 0 {
+		for n, p := range clusterScanList.Items[0].Status.Plugins {
+			if p.LastStatus == string(batchv1.JobFailed) {
+				failedps = append(failedps, n)
+			}
+		}
+	}
+
+	if len(clusterScanList.Items) == 0 {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanNotConfigured, "no scan configured")
-	} else if len(failed) > 0 {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanFailed, "last scan failed")
+	} else if len(failedps) > 0 {
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanFailed, buildFailedStatusMsg(failedps))
 	} else if len(notFinished) == len(clusterScanList.Items) {
 		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterNotScanned, "no finished scan yet")
 	} else {
