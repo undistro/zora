@@ -44,6 +44,8 @@ spec:
           # TODO livenessProbe:
           resources:
             {{- toYaml .Values.operator.rbacProxy.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.operator.rbacProxy.securityContext | nindent 12 }}
         - name: manager
           command:
             - /manager

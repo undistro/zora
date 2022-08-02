@@ -93,6 +93,10 @@ operator:
       tag: v0.8.0
       # -- Image pull policy
       pullPolicy: IfNotPresent
+    # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
     # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
     resources:
       limits:
