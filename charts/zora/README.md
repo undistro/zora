@@ -72,8 +72,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | operator.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | operator.podAnnotations | object | `{"kubectl.kubernetes.io/default-container":"manager"}` | Annotations to be added to pods |
-| operator.podSecurityContext | object | `{"runAsNonRoot":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
-| operator.securityContext | object | `{"allowPrivilegeEscalation":false}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
+| operator.podSecurityContext | object | `{"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| operator.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
 | operator.metricsService.type | string | `"ClusterIP"` | Type of metrics service |
 | operator.metricsService.port | int | `8443` | Port of metrics service |
 | operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
@@ -81,6 +81,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.rbacProxy.image.repository | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy"` | `kube-rbac-proxy` image repository |
 | operator.rbacProxy.image.tag | string | `"v0.8.0"` | `kube-rbac-proxy` image tag |
 | operator.rbacProxy.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| operator.rbacProxy.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container |
 | operator.rbacProxy.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container |
 | operator.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | operator.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
@@ -98,11 +99,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | server.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | server.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | server.podAnnotations | object | `{}` | Annotations to be added to pods |
-| server.podSecurityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
-| server.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
+| server.podSecurityContext | object | `{"runAsGroup":65533,"runAsNonRoot":true,"runAsUser":65533}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| server.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
 | server.service.type | string | `"ClusterIP"` | Service type |
 | server.service.port | int | `8080` | Service port |
-| server.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
+| server.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
 | server.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
 | server.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
 | server.autoscaling.maxReplicas | int | `100` | Maximum replicas for the pod autoscaling |
@@ -123,11 +124,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | ui.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | ui.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | ui.podAnnotations | object | `{}` | Annotations to be added to pods |
-| ui.podSecurityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
-| ui.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
+| ui.podSecurityContext | object | `{"runAsGroup":1001,"runAsNonRoot":true,"runAsUser":1001}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| ui.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
 | ui.service.type | string | `"ClusterIP"` | Service type |
 | ui.service.port | int | `8080` | Service port |
-| ui.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
+| ui.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
 | ui.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
 | ui.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
 | ui.autoscaling.maxReplicas | int | `100` | Maximum replicas for the pod autoscaling |
@@ -144,11 +145,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nginx.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | nginx.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | nginx.podAnnotations | object | `{}` | Annotations to be added to pods |
-| nginx.podSecurityContext | object | `{"fsGroup":10000,"runAsUser":10000}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
-| nginx.securityContext | object | `{}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
+| nginx.podSecurityContext | object | `{"fsGroup":10000,"runAsGroup":10000,"runAsNonRoot":true,"runAsUser":10000}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| nginx.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":false}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the container |
 | nginx.service.type | string | `"ClusterIP"` | Service type |
 | nginx.service.port | int | `80` | Service port |
-| nginx.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
+| nginx.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to the container |
 | nginx.autoscaling.enabled | bool | `false` | Enable replica autoscaling settings |
 | nginx.autoscaling.minReplicas | int | `1` | Minimum replicas for the pod autoscaling |
 | nginx.autoscaling.maxReplicas | int | `100` | Maximum replicas for the pod autoscaling |
