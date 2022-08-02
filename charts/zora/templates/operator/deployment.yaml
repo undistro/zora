@@ -62,16 +62,23 @@ spec:
             - --cronjob-serviceaccount-name=zora-plugins
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+              name: probe
+            - containerPort: 8080
+              protocol: TCP
+              name: metrics
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8081
+              port: probe
             initialDelaySeconds: 15
             periodSeconds: 20
           readinessProbe:
             httpGet:
               path: /readyz
-              port: 8081
+              port: probe
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
