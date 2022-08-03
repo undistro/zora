@@ -4,7 +4,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-//+kubebuilder:validation:Enum=None;Low;Medium;High
+//+kubebuilder:validation:Enum=Unknown;Low;Medium;High
 
 type ClusterIssueSeverity string
 
