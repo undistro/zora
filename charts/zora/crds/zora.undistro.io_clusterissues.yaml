@@ -76,7 +76,7 @@ spec:
                 type: object
               severity:
                 enum:
-                - None
+                - Unknown
                 - Low
                 - Medium
                 - High
