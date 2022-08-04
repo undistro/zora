@@ -7,6 +7,7 @@ type Issue struct {
 	Message  string             `json:"message"`
 	Severity string             `json:"severity"`
 	Category string             `json:"category"`
+	Plugin   string             `json:"plugin"`
 	Clusters []ClusterReference `json:"clusters"`
 }
 
@@ -22,6 +23,7 @@ func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 		Message:  clusterIssue.Spec.Message,
 		Severity: string(clusterIssue.Spec.Severity),
 		Category: clusterIssue.Spec.Category,
+		Plugin:   clusterIssue.Labels[v1alpha1.LabelPlugin],
 	}
 }
 

@@ -186,9 +186,9 @@ components:
         severity:
           type: string
           example: "Medium"
-        infoURL:
+        plugin:
           type: string
-          example: "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits"
+          example: "popeye"
     ClusterIssue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'
