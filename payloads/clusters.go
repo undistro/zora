@@ -65,7 +65,7 @@ type ConnectionStatus struct {
 // <meta> package.
 //
 // In case no Conditions are provided, the connection and scan status will
-// default to <false> and <Unkown>, respectively.
+// default to <false> and <Unknown>, respectively.
 func deriveStatus(conds []metav1.Condition, cl *Cluster) {
 	cl.Scan.Status = Unknown
 	for _, c := range conds {
