@@ -204,6 +204,9 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
 // ClusterScan is the Schema for the clusterscans API
+//+genclient
+//+genclient:onlyVerbs=list,get
+//+genclient:noStatus
 type ClusterScan struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

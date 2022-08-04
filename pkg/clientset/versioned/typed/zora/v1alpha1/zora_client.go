@@ -14,6 +14,7 @@ type ZoraV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClustersGetter
 	ClusterIssuesGetter
+	ClusterScansGetter
 }
 
 // ZoraV1alpha1Client is used to interact with features provided by the zora group.
@@ -27,6 +28,10 @@ func (c *ZoraV1alpha1Client) Clusters(namespace string) ClusterInterface {
 
 func (c *ZoraV1alpha1Client) ClusterIssues(namespace string) ClusterIssueInterface {
 	return newClusterIssues(c, namespace)
+}
+
+func (c *ZoraV1alpha1Client) ClusterScans(namespace string) ClusterScanInterface {
+	return newClusterScans(c, namespace)
 }
 
 // NewForConfig creates a new ZoraV1alpha1Client for the given config.

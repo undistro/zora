@@ -20,6 +20,10 @@ func (c *FakeZoraV1alpha1) ClusterIssues(namespace string) v1alpha1.ClusterIssue
 	return &FakeClusterIssues{c, namespace}
 }
 
+func (c *FakeZoraV1alpha1) ClusterScans(namespace string) v1alpha1.ClusterScanInterface {
+	return &FakeClusterScans{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeZoraV1alpha1) RESTClient() rest.Interface {

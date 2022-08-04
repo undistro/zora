@@ -5,3 +5,5 @@ package v1alpha1
 type ClusterExpansion interface{}
 
 type ClusterIssueExpansion interface{}
+
+type ClusterScanExpansion interface{}
