@@ -25,6 +25,8 @@ status:
   conditions:
     - type: Ready
       status: "True"
+      reason: 'ClusterScanReconciled'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: 'cluster scan successfully configured for plugins: kubescape,popeye'
   lastFinishedStatus: Complete
   lastFinishedTime: "2022-08-04T21:47:00Z"
