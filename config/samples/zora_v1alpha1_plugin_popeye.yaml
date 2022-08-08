@@ -4,6 +4,9 @@ metadata:
   name: popeye
 spec:
   image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
+  env:
+    - name: POPEYE_REPORT_DIR
+      value: "/tmp/zora/results"
   command:
     - /bin/sh
     - -c
@@ -15,7 +18,8 @@ spec:
         --kubeconfig $(KUBECONFIG) \
         --all-namespaces \
         --force-exit-zero \
-        > $(DONE_DIR)/results.json
+        --save \
+        --output-file results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error

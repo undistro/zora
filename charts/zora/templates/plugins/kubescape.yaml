@@ -21,6 +21,8 @@ spec:
         --keep-local \
         --format=json \
         --output=$(DONE_DIR)/results.json \
+        --disable-color \
+        --logger error \
         --format-version=v2
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then

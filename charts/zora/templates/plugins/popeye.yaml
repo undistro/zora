@@ -6,6 +6,9 @@ metadata:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
+  env:
+    - name: POPEYE_REPORT_DIR
+      value: "/tmp/zora/results"
   command:
     - /bin/sh
     - -c
@@ -17,7 +20,8 @@ spec:
         --kubeconfig $(KUBECONFIG) \
         --all-namespaces \
         --force-exit-zero \
-        > $(DONE_DIR)/results.json
+        --save \
+        --output-file results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error
