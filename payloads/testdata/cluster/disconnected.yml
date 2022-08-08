@@ -15,12 +15,18 @@ status:
   conditions:
     - type: Ready
       status: "False"
+      reason: 'KubeconfigError'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: 'invalid kubeconfig: exec entrypoint is not supported'
     - type: Discovered
       status: "True"
+      reason: 'ClusterInfoDiscovered'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: cluster info successfully discovered
     - type: ResourcesDiscovered
       status: "True"
+      reason: 'ClusterResourcesDiscovered'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: cluster resources successfully discovered
   creationTimestamp: "2022-05-02T18:36:36Z"
   kubernetesVersion: v1.24.0

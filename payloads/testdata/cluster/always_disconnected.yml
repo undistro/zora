@@ -14,4 +14,6 @@ status:
   conditions:
     - type: Ready
       status: "False"
+      reason: 'ClusterVersionError'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: 'failed to discover server version: the server has asked for the client to provide credentials'

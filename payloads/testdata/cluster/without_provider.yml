@@ -14,9 +14,13 @@ status:
   conditions:
     - type: Ready
       status: "True"
+      reason: 'ClusterConnected'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: cluster successfully connected, version v1.24.0
     - type: Discovered
       status: "True"
+      reason: 'ClusterInfoDiscovered'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
       message: cluster info successfully discovered
     - type: ResourcesDiscovered
       status: "True"
