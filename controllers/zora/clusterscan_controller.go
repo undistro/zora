@@ -242,7 +242,7 @@ func (r *ClusterScanReconciler) getLastJob(ctx context.Context, cronJob *batchv1
 
 // setControllerReference add Cluster as owner (controller) of ClusterScan, add a label and update
 func (r *ClusterScanReconciler) setControllerReference(ctx context.Context, clusterscan *v1alpha1.ClusterScan, cluster *v1alpha1.Cluster) error {
-	if metav1.IsControlledBy(clusterscan, cluster) && cluster.Labels[v1alpha1.LabelCluster] == cluster.Name {
+	if metav1.IsControlledBy(clusterscan, cluster) && clusterscan.Labels != nil && clusterscan.Labels[v1alpha1.LabelCluster] == cluster.Name {
 		return nil
 	}
 	log := ctrllog.FromContext(ctx)
@@ -250,7 +250,10 @@ func (r *ClusterScanReconciler) setControllerReference(ctx context.Context, clus
 		log.Error(err, "failed to set Cluster as Owner of ClusterScan")
 		return err
 	}
-	cluster.Labels[v1alpha1.LabelCluster] = cluster.Name
+	if clusterscan.Labels == nil {
+		clusterscan.Labels = map[string]string{}
+	}
+	clusterscan.Labels[v1alpha1.LabelCluster] = cluster.Name
 	if err := r.Update(ctx, clusterscan); err != nil {
 		log.Error(err, "failed to update ClusterScan")
 		return err
