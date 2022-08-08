@@ -124,11 +124,11 @@ components:
           type: object
           properties:
             connected:
-              type: bool
+              type: boolean
               example: false
             message:
               type: string
-              example: 'metrics API not available'
+              example: 'the server has asked for the client to provide credentials'
         version:
           type: string
           example: v1.21.5-eks-bc4871b
