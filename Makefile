@@ -88,7 +88,7 @@ build: generate fmt vet ## Build manager binary.
 .PHONY: run
 run: install manifests generate ## Run a controller from your host.
 	go run ./main.go
-run-server: install manifests generate ## Run Inpect's server locally.
+run-server: install manifests generate ## Run Zora's server locally.
 	go run ./cmd/server/main.go
 
 .PHONY: docker-build
