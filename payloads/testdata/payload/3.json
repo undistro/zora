@@ -16,7 +16,7 @@
   },
   "scan": {
     "status": "unknown",
-    "message": "No finished scan yet"
+    "message": "No finished scan yet for this cluster"
   },
   "nextScheduleScanTime": "2022-08-04T23:45:00Z"
 }

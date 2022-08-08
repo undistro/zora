@@ -132,10 +132,10 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 	} else if failed != "" {
 		sort.Strings(failedPlugins)
 		cl.Scan.Status = Failed
-		cl.Scan.Message = fmt.Sprintf("The following plugins failed in the last scan of ClusterScan %s: %s", failed, strings.Join(failedPlugins, ", "))
+		cl.Scan.Message = failedPluginsMessage(failed, failedPlugins)
 		cl.TotalIssues = nil
 	} else if len(notFinished) == len(scans) {
-		cl.Scan.Message = "No finished scan yet"
+		cl.Scan.Message = "No finished scan yet for this cluster"
 	} else {
 		cl.Scan.Status = Scanned
 	}
@@ -156,6 +156,29 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 	}
 
 	return cl
+}
+
+func failedPluginsMessage(cs string, p []string) string {
+	css := fmt.Sprintf("in the last scan of ClusterScan <%s>", cs)
+	plen := len(p)
+	if plen == 1 {
+		return fmt.Sprintf("Plugin <%s> failed %s", p[0], css)
+	}
+	bu := &strings.Builder{}
+	bu.WriteString("Plugins ")
+	for c := 0; c < plen; c++ {
+		bu.WriteString("<")
+		bu.WriteString(p[c])
+		bu.WriteString(">")
+		if c == plen-2 {
+			bu.WriteString(" and ")
+		} else if c != plen-1 {
+			bu.WriteString(", ")
+		}
+	}
+	bu.WriteString(" failed ")
+	bu.WriteString(css)
+	return bu.String()
 }
 
 func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {

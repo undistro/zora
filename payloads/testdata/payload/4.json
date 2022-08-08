@@ -27,7 +27,7 @@
   },
   "scan": {
     "status": "failed",
-    "message": "The following plugins failed in the last scan of ClusterScan myclusterscan: popeye"
+    "message": "Plugin <popeye> failed in the last scan of ClusterScan <myclusterscan>"
   },
   "totalIssues": null,
   "lastSuccessfulScanTime": "2022-08-04T21:47:00Z",
