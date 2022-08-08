@@ -26,10 +26,10 @@ status:
       reason: 'ClusterScanReconciled'
       lastTransitionTime: '2022-07-05T12:02:54Z'
       message: 'cluster scan successfully configured for plugins: popeye'
-  nextScheduleTime: "2022-08-05T00:45:00Z"
+  nextScheduleTime: "2024-08-05T00:45:00Z"
   observedGeneration: 1
   pluginNames: popeye
   plugins:
     popeye:
-      nextScheduleTime: "2022-08-05T00:45:00Z"
+      nextScheduleTime: "2024-08-05T00:45:00Z"
   suspend: false
