@@ -1,10 +1,16 @@
 package payloads
 
 import (
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/formats"
+	"fmt"
+	"sort"
+	"strings"
+
+	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/pkg/formats"
 )
 
 type ScanStatusType string
@@ -16,21 +22,21 @@ const (
 )
 
 type Cluster struct {
-	Name                   string           `json:"name"`
-	Namespace              string           `json:"namespace"`
-	Environment            string           `json:"environment"`
-	Provider               string           `json:"provider"`
-	Region                 string           `json:"region"`
-	TotalNodes             *int             `json:"totalNodes"`
-	Version                string           `json:"version"`
-	Scan                   ScanStatus       `json:"scan"`
-	Connection             ConnectionStatus `json:"connection"`
-	TotalIssues            *int             `json:"totalIssues"`
-	Resources              *Resources       `json:"resources"`
-	CreationTimestamp      metav1.Time      `json:"creationTimestamp"`
-	Issues                 []ResourcedIssue `json:"issues"`
-	LastSuccessfulScanTime metav1.Time      `json:"lastSuccessfulScanTime"`
-	NextScheduleScanTime   metav1.Time      `json:"nextScheduleScanTime"`
+	Name                   string            `json:"name"`
+	Namespace              string            `json:"namespace"`
+	Environment            string            `json:"environment"`
+	Provider               string            `json:"provider"`
+	Region                 string            `json:"region"`
+	TotalNodes             *int              `json:"totalNodes"`
+	Version                string            `json:"version"`
+	Scan                   *ScanStatus       `json:"scan"`
+	Connection             *ConnectionStatus `json:"connection"`
+	TotalIssues            *int              `json:"totalIssues"`
+	Resources              *Resources        `json:"resources"`
+	CreationTimestamp      metav1.Time       `json:"creationTimestamp"`
+	Issues                 []ResourcedIssue  `json:"issues"`
+	LastSuccessfulScanTime *metav1.Time      `json:"lastSuccessfulScanTime"`
+	NextScheduleScanTime   *metav1.Time      `json:"nextScheduleScanTime"`
 }
 
 type ResourcedIssue struct {
@@ -39,8 +45,10 @@ type ResourcedIssue struct {
 }
 
 type Resources struct {
-	Memory *Resource `json:"memory"`
-	CPU    *Resource `json:"cpu"`
+	Discovered bool      `json:"discovered"`
+	Message    string    `json:"message"`
+	Memory     *Resource `json:"memory"`
+	CPU        *Resource `json:"cpu"`
 }
 
 type Resource struct {
@@ -59,46 +67,7 @@ type ConnectionStatus struct {
 	Message   string `json:"message"`
 }
 
-// Derives Zora's connection and scan status based on Kubernetes status
-// Conditions. The function assumes the Conditions are unique by type, as is
-// the case when using the <SetStatusCondition> function from API Machinery's
-// <meta> package.
-//
-// In case no Conditions are provided, the connection and scan status will
-// default to <false> and <Unknown>, respectively.
-func deriveStatus(conds []metav1.Condition, cl *Cluster) {
-	cl.Scan.Status = Unknown
-	for _, c := range conds {
-		if c.Type == v1alpha1.ClusterReady {
-			if c.Status == metav1.ConditionTrue {
-				cl.Connection.Connected = true
-			} else {
-				cl.Connection.Message = c.Message
-			}
-		}
-		if c.Type == v1alpha1.ClusterDiscovered && c.Status == metav1.ConditionFalse {
-			cl.Connection.Message = c.Message
-		}
-
-		if c.Type == v1alpha1.ClusterScanned {
-			if c.Status == metav1.ConditionTrue {
-				cl.Scan.Status = Scanned
-			} else {
-				cl.Scan.Message = c.Message
-				if c.Reason == v1alpha1.ClusterNotScanned || c.Reason == v1alpha1.ClusterScanNotConfigured {
-					cl.Scan.Status = Unknown
-				} else {
-					cl.Scan.Status = Failed
-					if cl.TotalIssues != nil {
-						*cl.TotalIssues = 0
-					}
-				}
-			}
-		}
-	}
-}
-
-func NewCluster(cluster v1alpha1.Cluster) Cluster {
+func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster {
 	cl := Cluster{
 		Name:              cluster.Name,
 		Namespace:         cluster.Namespace,
@@ -108,14 +77,67 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 		TotalNodes:        cluster.Status.TotalNodes,
 		Version:           cluster.Status.KubernetesVersion,
 		CreationTimestamp: cluster.Status.CreationTimestamp,
-		TotalIssues:       cluster.Status.TotalIssues,
 		Resources:         &Resources{},
+		Scan:              &ScanStatus{Status: Unknown},
+		Connection:        &ConnectionStatus{},
 	}
-	if cluster.Status.LastSuccessfulScanTime != nil {
-		cl.LastSuccessfulScanTime = *cluster.Status.LastSuccessfulScanTime
+
+	for _, c := range cluster.Status.Conditions {
+		switch c.Type {
+		case v1alpha1.ClusterReady:
+			cl.Connection.Connected = c.Status == metav1.ConditionTrue
+			cl.Connection.Message = c.Message
+		case v1alpha1.ClusterResourcesDiscovered:
+			cl.Resources.Discovered = c.Status == metav1.ConditionTrue
+			cl.Resources.Message = c.Message
+		}
 	}
-	if cluster.Status.NextScheduleScanTime != nil {
-		cl.NextScheduleScanTime = *cluster.Status.NextScheduleScanTime
+
+	var notFinished []string
+	var failedPlugins []string
+	var failed string
+	for _, cs := range scans {
+		// total issues
+		if cl.TotalIssues == nil {
+			cl.TotalIssues = cs.Status.TotalIssues
+		} else {
+			sum := *cl.TotalIssues + *cs.Status.TotalIssues
+			cl.TotalIssues = &sum
+		}
+
+		// last and next scan time
+		if cl.LastSuccessfulScanTime == nil || cl.LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
+			cl.LastSuccessfulScanTime = cs.Status.LastSuccessfulTime
+		}
+		if cl.NextScheduleScanTime == nil || cs.Status.NextScheduleTime.Before(cl.NextScheduleScanTime) {
+			cl.NextScheduleScanTime = cs.Status.NextScheduleTime
+		}
+
+		// scan status
+		if cs.Status.LastFinishedStatus == string(batchv1.JobFailed) {
+			failed = cs.Name
+			for n, p := range cs.Status.Plugins {
+				if p.LastFinishedStatus == string(batchv1.JobFailed) {
+					failedPlugins = append(failedPlugins, n)
+				}
+			}
+			break
+		} else if cs.Status.LastFinishedTime == nil {
+			notFinished = append(notFinished, cs.Name)
+		}
+	}
+
+	if len(scans) == 0 {
+		cl.Scan.Message = "No scan configured for this cluster"
+	} else if failed != "" {
+		sort.Strings(failedPlugins)
+		cl.Scan.Status = Failed
+		cl.Scan.Message = fmt.Sprintf("The following plugins failed in the last scan of ClusterScan %s: %s", failed, strings.Join(failedPlugins, ", "))
+		cl.TotalIssues = nil
+	} else if len(notFinished) == len(scans) {
+		cl.Scan.Message = "No finished scan yet"
+	} else {
+		cl.Scan.Status = Scanned
 	}
 
 	if cpu, ok := cluster.Status.Resources[corev1.ResourceCPU]; ok {
@@ -132,7 +154,6 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 			UsagePercentage: mem.UsagePercentage,
 		}
 	}
-	deriveStatus(cluster.Status.Conditions, &cl)
 
 	return cl
 }
@@ -144,8 +165,8 @@ func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 	return ri
 }
 
-func NewClusterWithIssues(cluster v1alpha1.Cluster, issues []v1alpha1.ClusterIssue) Cluster {
-	c := NewCluster(cluster)
+func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) Cluster {
+	c := NewCluster(cluster, scans)
 	if c.Scan.Status != Failed {
 		for _, i := range issues {
 			c.Issues = append(c.Issues, NewResourcedIssue(i))

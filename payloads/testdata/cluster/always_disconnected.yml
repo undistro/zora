@@ -1,0 +1,17 @@
+# Cluster disconnected and never connected before
+
+apiVersion: zora.undistro.io/v1alpha1
+kind: Cluster
+metadata:
+  labels:
+    zora.undistro.io/environment: env
+  name: mycluster
+  namespace: ns
+spec:
+  kubeconfigRef:
+    name: kubeconfig
+status:
+  conditions:
+    - type: Ready
+      status: "False"
+      message: 'failed to discover server version: the server has asked for the client to provide credentials'

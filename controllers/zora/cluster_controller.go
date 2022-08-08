@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"strings"
 	"time"
 
-	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -23,8 +21,6 @@ import (
 	"github.com/getupio-undistro/zora/pkg/discovery"
 	"github.com/getupio-undistro/zora/pkg/kubeconfig"
 )
-
-const clusterScanRefKey = ".metadata.cluster"
 
 // ClusterReconciler reconciles a Cluster object
 type ClusterReconciler struct {
@@ -71,7 +67,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		clusterConfig, err := kubeconfig.ConfigFromSecretName(ctx, r.Client, *key)
 		if err != nil {
 			log.Error(err, "failed to get config from kubeconfigRef")
-			r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, v1alpha1.KubeconfigError, err.Error())
+			r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "KubeconfigError", err.Error())
 			return err
 		}
 		config = clusterConfig
@@ -80,7 +76,7 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 	discoverer, err := discovery.NewForConfig(config)
 	if err != nil {
 		log.Error(err, "failed to get new discovery client from config")
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, v1alpha1.ClusterNotConnected, err.Error())
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterReady, false, "ClusterNotConnected", err.Error())
 		return err
 	}
 
@@ -91,125 +87,26 @@ func (r *ClusterReconciler) reconcile(ctx context.Context, cluster *v1alpha1.Clu
 		return err
 	}
 	cluster.Status.KubernetesVersion = version
-	cluster.SetStatus(v1alpha1.ClusterReady, true, v1alpha1.ClusterConnected, fmt.Sprintf("cluster successfully connected, version %s", version))
+	cluster.SetStatus(v1alpha1.ClusterReady, true, "ClusterConnected", fmt.Sprintf("cluster successfully connected, version %s", version))
 
 	if info, err := discoverer.Info(ctx); err != nil {
 		log.Error(err, "failed to discovery cluster info")
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, v1alpha1.ClusterInfoNotDiscovered, err.Error())
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterInfoNotDiscovered", err.Error())
 	} else {
 		cluster.Status.ClusterInfo = *info
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, v1alpha1.ClusterInfoDiscovered, "cluster info successfully discovered")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterInfoDiscovered", "cluster info successfully discovered")
 	}
 
 	if res, err := discoverer.Resources(ctx); err != nil {
 		log.Error(err, "failed to discovery cluster resources")
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, false, "ClusterResourcesNotDiscovered", err.Error())
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterResourcesDiscovered, false, "ClusterResourcesNotDiscovered", err.Error())
 	} else {
 		cluster.Status.SetResources(res)
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterDiscovered, true, "ClusterResourcesDiscovered", "cluster resources successfully discovered")
+		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterResourcesDiscovered, true, "ClusterResourcesDiscovered", "cluster resources successfully discovered")
 	}
 
-	if err := r.updateScanStatus(ctx, cluster); err != nil {
-		return err
-	}
-
-	cluster.Status.LastReconciliationTime = metav1.NewTime(time.Now().UTC())
+	cluster.Status.LastReconciliationTime = metav1.Now()
 	cluster.Status.ObservedGeneration = cluster.Generation
-	return nil
-}
-
-func buildFailedStatusMsg(p []string) string {
-	plen := len(p)
-	if plen == 1 {
-		return fmt.Sprintf("plugin <%s> failed", p[0])
-	}
-	bu := &strings.Builder{}
-	bu.WriteString("plugins ")
-	for c := 0; c < plen; c++ {
-		bu.WriteString("<")
-		bu.WriteString(p[c])
-		bu.WriteString(">")
-		if c == plen-2 {
-			bu.WriteString(" and ")
-		} else if c != plen-1 {
-			bu.WriteString(", ")
-		}
-	}
-	bu.WriteString("failed")
-	return bu.String()
-}
-
-// updateScanStatus updates status of the given Cluster based on ClusterScans that reference it
-func (r *ClusterReconciler) updateScanStatus(ctx context.Context, cluster *v1alpha1.Cluster) error {
-	log := ctrllog.FromContext(ctx)
-
-	clusterScanList := &v1alpha1.ClusterScanList{}
-	if err := r.List(ctx, clusterScanList, client.MatchingFields{clusterScanRefKey: cluster.Name}); err != nil {
-		log.Error(err, fmt.Sprintf("failed to list ClusterScan referenced by Cluster %s", cluster.Name))
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanListError, err.Error())
-		return err
-	}
-
-	if cluster.Status.LastSuccessfulScanTime == nil && len(clusterScanList.Items) != 0 &&
-		clusterScanList.Items[0].Status.LastSuccessfulTime != nil {
-		cluster.Status.LastSuccessfulScanTime = &metav1.Time{
-			Time: clusterScanList.Items[0].Status.LastSuccessfulTime.Time,
-		}
-	}
-	if cluster.Status.NextScheduleScanTime == nil && len(clusterScanList.Items) != 0 &&
-		clusterScanList.Items[0].Status.NextScheduleTime != nil {
-		cluster.Status.NextScheduleScanTime = &metav1.Time{
-			Time: clusterScanList.Items[0].Status.NextScheduleTime.Time,
-		}
-	}
-
-	var totalIssues *int
-	var lastScanIDs []string
-	var notFinished []string
-	for _, cs := range clusterScanList.Items {
-		if cs.Status.TotalIssues != nil {
-			if totalIssues == nil {
-				totalIssues = cs.Status.TotalIssues
-			} else {
-				sum := *totalIssues + *cs.Status.TotalIssues
-				totalIssues = &sum
-			}
-		}
-		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
-		if cs.Status.LastFinishedTime == nil {
-			notFinished = append(notFinished, cs.Name)
-		}
-
-		if cluster.Status.LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
-			cluster.Status.LastSuccessfulScanTime = &metav1.Time{Time: cs.Status.LastSuccessfulTime.Time}
-		}
-		if cluster.Status.NextScheduleScanTime.Before(cs.Status.NextScheduleTime) {
-			cluster.Status.NextScheduleScanTime = &metav1.Time{Time: cs.Status.NextScheduleTime.Time}
-		}
-	}
-
-	failedps := []string{}
-	if len(clusterScanList.Items) != 0 {
-		for n, p := range clusterScanList.Items[0].Status.Plugins {
-			if p.LastStatus == string(batchv1.JobFailed) {
-				failedps = append(failedps, n)
-			}
-		}
-	}
-
-	if len(clusterScanList.Items) == 0 {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanNotConfigured, "no scan configured")
-	} else if len(failedps) > 0 {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterScanFailed, buildFailedStatusMsg(failedps))
-	} else if len(notFinished) == len(clusterScanList.Items) {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, false, v1alpha1.ClusterNotScanned, "no finished scan yet")
-	} else {
-		r.setStatusAndCreateEvent(cluster, v1alpha1.ClusterScanned, true, v1alpha1.ClusterScanned, "cluster successfully scanned")
-	}
-
-	cluster.Status.TotalIssues = totalIssues
-	cluster.Status.LastScans = lastScanIDs
-
 	return nil
 }
 
@@ -229,18 +126,7 @@ func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, s
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &v1alpha1.ClusterScan{}, clusterScanRefKey, func(rawObj client.Object) []string {
-		clusterScan := rawObj.(*v1alpha1.ClusterScan)
-		if clusterName := clusterScan.Spec.ClusterRef.Name; clusterName == "" {
-			return nil
-		} else {
-			return []string{clusterName}
-		}
-	}); err != nil {
-		return err
-	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.Cluster{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
-		Owns(&v1alpha1.ClusterScan{}).
 		Complete(r)
 }

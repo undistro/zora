@@ -1,0 +1,61 @@
+# ClusterScan with Active and Failed plugins
+# 21:45 ->
+#     21:46 -> popeye -> Failed
+#     21:47 -> kubescape -> Complete  (LAST SUCCESSFUL SCAN)
+# 22:45 ->
+#     22:46 -> popeye -> Failed       (LAST FINISHED SCAN)
+#     22:47 -> kubescape -> Active    (NOW)
+# 23:45 -> Next
+
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  name: myclusterscan
+  namespace: ns
+  labels:
+    cluster: mycluster
+  ownerReferences:
+    - apiVersion: zora.undistro.io/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Cluster
+      name: mycluster
+      uid: 9f8832e8-d20f-4f39-a4e3-c2a2d6e9e114
+spec:
+  clusterRef:
+    name: mycluster
+  schedule: 45 * * * *
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      message: 'cluster scan successfully configured for plugins: kubescape,popeye'
+  lastFinishedStatus: Failed
+  lastFinishedTime: "2022-08-04T22:46:00Z"
+  lastScheduleTime: "2022-08-04T22:45:00Z"
+  lastStatus: Active
+  lastSuccessfulTime: "2022-08-04T21:47:00Z"
+  nextScheduleTime: "2022-08-04T23:45:00Z"
+  observedGeneration: 3
+  pluginNames: kubescape,popeye
+  plugins:
+    popeye:
+      lastFinishedStatus: Failed
+      lastFinishedTime: "2022-08-04T22:46:00Z"
+      lastScanID: af8fc113-8b95-4cec-8f6b-b22472652d7b
+      lastScheduleTime: "2022-08-04T22:45:00Z"
+      lastStatus: Failed
+      lastSuccessfulScanID: 2d129cf8-7516-4f4e-b3f3-eecd57584073
+      lastSuccessfulTime: "2022-08-04T20:46:00Z"
+      nextScheduleTime: "2022-08-04T23:45:00Z"
+    kubescape:
+      lastFinishedStatus: Complete
+      lastFinishedTime: "2022-08-04T21:47:00Z"
+      lastScanID: b08a1ed0-a0e3-43c8-b99c-8378acfb92ec
+      lastScheduleTime: "2022-08-04T22:45:00Z"
+      lastStatus: Active
+      lastSuccessfulScanID: b08a1ed0-a0e3-43c8-b99c-8378acfb92ec
+      lastSuccessfulTime: "2022-08-04T21:47:00Z"
+      nextScheduleTime: "2022-08-04T23:45:00Z"
+  suspend: false
+  totalIssues: 62

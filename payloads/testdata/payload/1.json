@@ -1,0 +1,35 @@
+{
+  "name": "mycluster",
+  "namespace": "ns",
+  "environment": "env",
+  "provider": "aws",
+  "region": "us-east-1",
+  "totalNodes": 2,
+  "version": "v1.24.0",
+  "creationTimestamp": "2022-05-02T18:36:36Z",
+  "connection": {
+    "connected": true,
+    "message": "cluster successfully connected, version v1.24.0"
+  },
+  "resources": {
+    "discovered": true,
+    "message": "cluster resources successfully discovered",
+    "memory": {
+      "available": "2938Mi",
+      "usage": "2047Mi",
+      "usagePercentage": 69
+    },
+    "cpu": {
+      "available": "3860m",
+      "usage": "135m",
+      "usagePercentage": 3
+    }
+  },
+  "scan": {
+    "status": "scanned",
+    "message": ""
+  },
+  "totalIssues": 62,
+  "lastSuccessfulScanTime": "2022-08-04T21:47:00Z",
+  "nextScheduleScanTime": "2022-08-04T23:45:00Z"
+}

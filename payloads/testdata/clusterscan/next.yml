@@ -1,0 +1,33 @@
+# ClusterScan never executed before
+# 00:45 -> Next
+
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  name: myclusterscan
+  namespace: ns
+  labels:
+    cluster: mycluster
+  ownerReferences:
+    - apiVersion: zora.undistro.io/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Cluster
+      name: mycluster
+      uid: 9f8832e8-d20f-4f39-a4e3-c2a2d6e9e114
+spec:
+  clusterRef:
+    name: mycluster
+  schedule: 45 * * * *
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      message: 'cluster scan successfully configured for plugins: popeye'
+  nextScheduleTime: "2022-08-05T00:45:00Z"
+  observedGeneration: 1
+  pluginNames: popeye
+  plugins:
+    popeye:
+      nextScheduleTime: "2022-08-05T00:45:00Z"
+  suspend: false

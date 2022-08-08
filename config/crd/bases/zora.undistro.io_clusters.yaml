@@ -48,10 +48,6 @@ spec:
       name: Region
       priority: 1
       type: string
-    - jsonPath: .status.totalIssues
-      name: Issues
-      priority: 1
-      type: integer
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -175,24 +171,11 @@ spec:
                 description: Timestamp representing the server time of the last reconciliation
                 format: date-time
                 type: string
-              lastScans:
-                description: List of last scan IDs
-                items:
-                  type: string
-                type: array
-              lastSuccessfulScanTime:
-                description: Datetime of last successful scan.
-                format: date-time
-                type: string
               memoryAvailable:
                 description: Quantity of memory available in Mi
                 type: string
               memoryUsage:
                 description: Usage of memory in quantity and percentage
-                type: string
-              nextScheduleScanTime:
-                description: Datetime of next scan.
-                format: date-time
                 type: string
               observedGeneration:
                 description: ObservedGeneration is the 'Generation' of the resource
@@ -229,10 +212,6 @@ spec:
                   type: object
                 description: Usage and available resources
                 type: object
-              totalIssues:
-                description: Total of ClusterIssues reported by the last successful
-                  scan
-                type: integer
               totalNodes:
                 description: total of Nodes
                 type: integer

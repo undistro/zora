@@ -153,6 +153,12 @@ components:
     Resources:
       type: object
       properties:
+        discovered:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "metrics API not available"
         memory:
           $ref: '#/components/schemas/Resource'
         cpu:

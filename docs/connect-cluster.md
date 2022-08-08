@@ -67,8 +67,8 @@ Now you can list them and see the discovered data through `kubectl`:
 
 ```shell
 kubectl get clusters -o wide
-NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   READY   AGE   PROVIDER   REGION      ISSUES
-mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       True    40d   aws        us-east-1   22
+NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   READY   AGE   PROVIDER   REGION   
+mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       True    40d   aws        us-east-1
 ```
 
 !!! tip
@@ -91,7 +91,6 @@ The cluster list output has the following columns:
 - `PROVIDER`: Cluster provider (with `-o=wide` flag)
 - `REGION`: Cluster region (`multi-region` if nodes have different `topology.kubernetes.io/region` label)
   (with `-o=wide` flag)
-- `ISSUES`: Total of issues reported in the last successful scan of this Cluster (with `-o=wide` flag)
 
 !!! info
     - The quantity of available and in use resources, is a sum of all Nodes.

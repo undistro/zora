@@ -31,11 +31,23 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error getting Cluster", err.Error())
 			return
 		}
-
+		var lastScanIDs []string
 		ls := fmt.Sprintf("%s=%s", v1alpha1.LabelCluster, clusterName)
-		if len(cluster.Status.LastScans) > 0 {
-			ls = fmt.Sprintf("%s,%s in (%s)", ls, v1alpha1.LabelScanID, strings.Join(cluster.Status.LastScans, ","))
+
+		scanList, err := client.ZoraV1alpha1().ClusterScans(namespace).List(r.Context(), metav1.ListOptions{LabelSelector: ls})
+		if err != nil {
+			log.Error(err, fmt.Sprintf("failed to list ClusterScans by label selector %s", ls))
+			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterScans", err.Error())
+			return
 		}
+		for _, cs := range scanList.Items {
+			lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
+		}
+
+		if len(lastScanIDs) > 0 {
+			ls = fmt.Sprintf("%s,%s in (%s)", ls, v1alpha1.LabelScanID, strings.Join(lastScanIDs, ","))
+		}
+
 		issueList, err := client.ZoraV1alpha1().ClusterIssues(namespace).List(r.Context(), metav1.ListOptions{LabelSelector: ls})
 		if err != nil {
 			log.Error(err, fmt.Sprintf("failed to list ClusterIssues by label selector %s", ls))
@@ -44,6 +56,6 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 		}
 
 		log.Info(fmt.Sprintf("cluster %s returned with %d issues", clusterName, len(issueList.Items)))
-		RespondWithJSON(w, http.StatusOK, payloads.NewClusterWithIssues(*cluster, issueList.Items))
+		RespondWithJSON(w, http.StatusOK, payloads.NewClusterWithIssues(*cluster, scanList.Items, issueList.Items))
 	}
 }
