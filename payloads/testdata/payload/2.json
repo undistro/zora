@@ -1,0 +1,20 @@
+{
+  "name": "mycluster",
+  "namespace": "ns",
+  "environment": "env",
+  "connection": {
+    "connected": false,
+    "message": "failed to discover server version: the server has asked for the client to provide credentials"
+  },
+  "resources": {
+    "discovered": false,
+    "message": "",
+    "memory": null,
+    "cpu": null
+  },
+  "scan": {
+    "status": "failed",
+    "message": "Plugins <kubescape> and <popeye> failed in the last scan of ClusterScan <myclusterscan>"
+  },
+  "nextScheduleScanTime": "2022-08-04T23:45:00Z"
+}

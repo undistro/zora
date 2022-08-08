@@ -59,14 +59,6 @@ type ClusterIssue struct {
 	Status ClusterIssueStatus `json:"status,omitempty"`
 }
 
-func (in *ClusterIssue) countResources() {
-	total := 0
-	for _, res := range in.Spec.Resources {
-		total += len(res)
-	}
-	in.Spec.TotalResources = total
-}
-
 //+kubebuilder:object:root=true
 
 // ClusterIssueList contains a list of ClusterIssue

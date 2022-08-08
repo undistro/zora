@@ -124,11 +124,11 @@ components:
           type: object
           properties:
             connected:
-              type: bool
+              type: boolean
               example: false
             message:
               type: string
-              example: 'metrics API not available'
+              example: 'the server has asked for the client to provide credentials'
         version:
           type: string
           example: v1.21.5-eks-bc4871b
@@ -153,6 +153,12 @@ components:
     Resources:
       type: object
       properties:
+        discovered:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "metrics API not available"
         memory:
           $ref: '#/components/schemas/Resource'
         cpu:
@@ -186,9 +192,9 @@ components:
         severity:
           type: string
           example: "Medium"
-        infoURL:
+        plugin:
           type: string
-          example: "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits"
+          example: "popeye"
     ClusterIssue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'

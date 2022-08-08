@@ -1,0 +1,45 @@
+# Cluster connected without metrics available but it had metrics before
+
+apiVersion: zora.undistro.io/v1alpha1
+kind: Cluster
+metadata:
+  labels:
+    zora.undistro.io/environment: env
+  name: mycluster
+  namespace: ns
+spec:
+  kubeconfigRef:
+    name: kubeconfig
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      reason: 'ClusterConnected'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
+      message: cluster successfully connected, version v1.24.0
+    - type: Discovered
+      status: "True"
+      reason: 'ClusterInfoDiscovered'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
+      message: cluster info successfully discovered
+    - type: ResourcesDiscovered
+      status: "False"
+      reason: 'ClusterResourcesNotDiscovered'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
+      message: metrics API not available
+  creationTimestamp: "2022-05-02T18:36:36Z"
+  kubernetesVersion: v1.24.0
+  lastReconciliationTime: "2022-08-05T12:24:35Z"
+  observedGeneration: 1
+  provider: aws
+  region: us-east-1
+  resources:
+    cpu:
+      available: 3860m
+      usage: 134615664n
+      usagePercentage: 3
+    memory:
+      available: 3008592Ki
+      usage: 2096396Ki
+      usagePercentage: 69
+  totalNodes: 2

@@ -1,0 +1,45 @@
+# ClusterScan with all plugins Active on the first scan
+# 22:30 -> Create ClusterScan (every 45 minutes)
+# 22:45 -> Active (NOW)
+# 23:45 -> Next
+
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  name: myclusterscan
+  namespace: ns
+  labels:
+    cluster: mycluster
+  ownerReferences:
+    - apiVersion: zora.undistro.io/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Cluster
+      name: mycluster
+      uid: 9f8832e8-d20f-4f39-a4e3-c2a2d6e9e114
+spec:
+  clusterRef:
+    name: mycluster
+  schedule: 45 * * * *
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      reason: 'ClusterScanReconciled'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
+      message: 'cluster scan successfully configured for plugins: kubescape,popeye'
+  lastScheduleTime: "2022-08-04T22:45:00Z"
+  lastStatus: Active
+  nextScheduleTime: "2022-08-04T23:45:00Z"
+  observedGeneration: 3
+  pluginNames: kubescape,popeye
+  plugins:
+    popeye:
+      lastScheduleTime: "2022-08-04T22:45:00Z"
+      lastStatus: Active
+      nextScheduleTime: "2022-08-04T23:45:00Z"
+    kubescape:
+      lastScheduleTime: "2022-08-04T22:45:00Z"
+      lastStatus: Active
+      nextScheduleTime: "2022-08-04T23:45:00Z"
+  suspend: false

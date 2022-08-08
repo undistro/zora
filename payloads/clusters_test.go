@@ -1,615 +1,156 @@
 package payloads
 
 import (
+	"encoding/json"
+	"os"
+	"reflect"
 	"testing"
-	"time"
 
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/apis"
-	"github.com/getupio-undistro/zora/pkg/discovery"
 	"github.com/google/go-cmp/cmp"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/yaml"
 )
 
-func TestDeriveStatus(t *testing.T) {
-	cases := []struct {
-		description string
-		conds       []metav1.Condition
-		cl          *Cluster
+func TestNewCluster(t *testing.T) {
+	type args struct {
+		cluster string
+		scans   []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
 	}{
 		{
-			description: "Cluster connected, discovered and scanned",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected, version 1.19",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterInfoDiscovered,
-					Message: "cluster info successfully discovered",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterScanned,
-					Message: "cluster successfully scanned",
-				},
+			name: "Cluster and ClusterScan OK",
+			args: args{
+				cluster: "ok.yml",
+				scans:   []string{"all_plugins_active.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Connected: true},
-				Scan:       ScanStatus{Status: Scanned},
-			},
+			want: "1.json",
 		},
 		{
-			description: "Cluster connected, discovered and not scanned due to error",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterInfoDiscovered,
-					Message: "cluster info successfully discovered",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanListError,
-					Message: "error fetching <ClusterScan> instances",
-				},
+			name: "Cluster disconnected since before and ClusterScan with all plugins failed",
+			args: args{
+				cluster: "always_disconnected.yml",
+				scans:   []string{"all_plugins_failed.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Connected: true},
-				Scan: ScanStatus{
-					Status:  Failed,
-					Message: "error fetching <ClusterScan> instances",
-				},
-			},
+			want: "2.json",
 		},
 		{
-			description: "Cluster connected and discovered. But errors when listing scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterInfoDiscovered,
-					Message: "cluster info successfully discovered",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanListError,
-					Message: "error fetching <ClusterScan> instances",
-				},
+			name: "Cluster without metrics and ClusterScan with all plugins active in the 1st scan",
+			args: args{
+				cluster: "always_without_metrics.yml",
+				scans:   []string{"all_plugins_active_1st.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Connected: true},
-				Scan: ScanStatus{
-					Status:  Failed,
-					Message: "error fetching <ClusterScan> instances",
-				},
-			},
+			want: "3.json",
 		},
 		{
-			description: "Cluster connected and discovered without configured scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterInfoDiscovered,
-					Message: "cluster info successfully discovered",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanNotConfigured,
-					Message: "no scan configured",
-				},
+			name: "Cluster currently disconnected and ClusterScan with Active and Failed plugins",
+			args: args{
+				cluster: "disconnected.yml",
+				scans:   []string{"plugins_active_and_failed.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Connected: true},
-				Scan: ScanStatus{
-					Status:  Unknown,
-					Message: "no scan configured",
-				},
-			},
+			want: "4.json",
 		},
 		{
-			description: "Cluster connected and discovered without finished scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterInfoDiscovered,
-					Message: "cluster info successfully discovered",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterNotScanned,
-					Message: "no finished scan yet",
-				},
+			name: "Cluster currently without metrics and ClusterScan with Active and Complete plugins",
+			args: args{
+				cluster: "without_metrics.yml",
+				scans:   []string{"plugins_active_and_complete.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Connected: true},
-				Scan: ScanStatus{
-					Status:  Unknown,
-					Message: "no finished scan yet",
-				},
-			},
+			want: "5.json",
 		},
 		{
-			description: "Cluster connected and discovered with failed scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterInfoDiscovered,
-					Message: "cluster info successfully discovered",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanFailed,
-					Message: "last scan failed",
-				},
+			name: "Cluster without provider/region and ClusterScan OK",
+			args: args{
+				cluster: "without_provider.yml",
+				scans:   []string{"ok.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Connected: true},
-				Scan: ScanStatus{
-					Status:  Failed,
-					Message: "last scan failed",
-				},
-			},
+			want: "6.json",
 		},
 		{
-			description: "Cluster connected and scanned but not discovered",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterInfoNotDiscovered,
-					Message: "metrics server not reachable",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterScanned,
-					Message: "cluster successfully scanned",
-				},
+			name: "Cluster currently without metrics and two ClusterScans",
+			args: args{
+				cluster: "without_metrics.yml",
+				scans:   []string{"plugins_complete_and_failed.yml", "next.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{
-					Connected: true,
-					Message:   "metrics server not reachable",
-				},
-				Scan: ScanStatus{Status: Scanned},
-			},
+			want: "7.json",
 		},
 		{
-			description: "Cluster connected but not discovered nor scanned due to error",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterInfoNotDiscovered,
-					Message: "metrics server not reachable",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanFailed,
-					Message: "last scan failed",
-				},
+			name: "Cluster currently without metrics, provider, region and ClusterScan",
+			args: args{
+				cluster: "without_provider_and_metrics.yml",
+				scans:   []string{},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{
-					Connected: true,
-					Message:   "metrics server not reachable",
-				},
-				Scan: ScanStatus{
-					Status:  Failed,
-					Message: "last scan failed",
-				},
-			},
+			want: "8.json",
 		},
 		{
-			description: "Cluster connected but not discovered without finished scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterInfoNotDiscovered,
-					Message: "metrics server not reachable",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterNotScanned,
-					Message: "no finished scan yet",
-				},
+			name: "Cluster currently without metrics and two ClusterScans with issues",
+			args: args{
+				cluster: "without_metrics.yml",
+				scans:   []string{"ok.yml", "plugins_active_and_complete.yml"},
 			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{
-					Connected: true,
-					Message:   "metrics server not reachable",
-				},
-				Scan: ScanStatus{
-					Status:  Unknown,
-					Message: "no finished scan yet",
-				},
-			},
-		},
-		{
-			description: "Cluster connected but not discovered without configured scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterInfoNotDiscovered,
-					Message: "metrics server not reachable",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanNotConfigured,
-					Message: "no scan configured",
-				},
-			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{
-					Connected: true,
-					Message:   "metrics server not reachable",
-				},
-				Scan: ScanStatus{
-					Status:  Unknown,
-					Message: "no scan configured",
-				},
-			},
-		},
-		{
-			description: "Cluster disconnected without configured scans",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionTrue,
-					Reason:  v1alpha1.ClusterConnected,
-					Message: "cluster successfully connected",
-				},
-				{
-					Type:    v1alpha1.ClusterDiscovered,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterInfoNotDiscovered,
-					Message: "metrics server not reachable",
-				},
-				{
-					Type:    v1alpha1.ClusterScanned,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterScanNotConfigured,
-					Message: "no scan configured",
-				},
-			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{
-					Connected: true,
-					Message:   "metrics server not reachable",
-				},
-				Scan: ScanStatus{
-					Status:  Unknown,
-					Message: "no scan configured",
-				},
-			},
-		},
-		{
-			description: "Cluster disconnected with valid Kubeconfig",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.ClusterNotConnected,
-					Message: "unauthorized access",
-				},
-			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Message: "unauthorized access"},
-				Scan:       ScanStatus{Status: Unknown},
-			},
-		},
-		{
-			description: "Cluster disconnected with invalid Kubeconfig",
-			conds: []metav1.Condition{
-				{
-					Type:    v1alpha1.ClusterReady,
-					Status:  metav1.ConditionFalse,
-					Reason:  v1alpha1.KubeconfigError,
-					Message: "invalid configuration",
-				},
-			},
-			cl: &Cluster{
-				Connection: ConnectionStatus{Message: "invalid configuration"},
-				Scan:       ScanStatus{Status: Unknown},
-			},
-		},
-		{
-			description: "Cluster controller error leads to empty conditions",
-			conds:       []metav1.Condition{},
-			cl:          &Cluster{Scan: ScanStatus{Status: Unknown}},
+			want: "9.json",
 		},
 	}
-
-	for _, c := range cases {
-		cl := &Cluster{}
-		if deriveStatus(c.conds, cl); !cmp.Equal(cl, c.cl) {
-			t.Errorf("Case: %s\n", c.description)
-			t.Errorf("Mismatch between expected and obtained results:\n%s", cmp.Diff(c.cl, cl))
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cluster, err := readCluster(tt.args.cluster)
+			if err != nil {
+				t.Errorf("failed to load Cluster testdata: %v", err)
+			}
+			scans := make([]v1alpha1.ClusterScan, 0, len(tt.args.scans))
+			for _, s := range tt.args.scans {
+				if cs, err := readClusterScan(s); err != nil {
+					t.Errorf("failed to load ClusterScan testdata: %v", err)
+				} else {
+					scans = append(scans, cs)
+				}
+			}
+			payload, err := readClusterPayload(tt.want)
+			if err != nil {
+				t.Errorf("failed to load Cluster payload testdata: %v", err)
+			}
+			if got := NewCluster(cluster, scans); !reflect.DeepEqual(got, payload) {
+				t.Errorf("NewCluster() = %s", cmp.Diff(got, payload))
+			}
+		})
 	}
 }
 
-func TestNewCluster(t *testing.T) {
-	intpf := func(i int) *int { return &i }
-	cases := []struct {
-		description string
-		v1a1cl      v1alpha1.Cluster
-		cl          Cluster
-	}{
-		{
-			description: "Cluster with discovered info and without scans",
-			v1a1cl: v1alpha1.Cluster{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "test",
-					Namespace: "test_ns",
-				},
-				Status: v1alpha1.ClusterStatus{
-					ClusterInfo: discovery.ClusterInfo{
-						Provider:   "test_provider",
-						Region:     "test_region",
-						TotalNodes: intpf(2),
-						CreationTimestamp: metav1.NewTime(
-							func(s string) time.Time {
-								t, err := time.Parse(time.RFC3339, "2022-07-27T17:05:38Z")
-								if err != nil {
-									panic(err)
-								}
-								return t
-							}("2022-07-27T17:05:38Z"),
-						),
-					},
-					KubernetesVersion: "v1.19.2",
-					Resources: discovery.ClusterResources{
-						corev1.ResourceCPU: discovery.Resources{
-							Available:       resource.MustParse("3860m"),
-							Usage:           resource.MustParse("285605379n"),
-							UsagePercentage: 7,
-						},
-						corev1.ResourceMemory: discovery.Resources{
-							Available:       resource.MustParse("6843704Ki"),
-							Usage:           resource.MustParse("2514116Ki"),
-							UsagePercentage: 36,
-						},
-					},
-				},
-			},
-			cl: Cluster{
-				Name:       "test",
-				Namespace:  "test_ns",
-				Provider:   "test_provider",
-				Region:     "test_region",
-				TotalNodes: intpf(2),
-				Version:    "v1.19.2",
-				CreationTimestamp: metav1.Time{
-					Time: func(s string) time.Time {
-						t, err := time.Parse(time.RFC3339, "2022-07-27T17:05:38Z")
-						if err != nil {
-							panic(err)
-						}
-						return t
-					}("2022-07-27T17:05:38Z"),
-				},
-				Resources: &Resources{
-					CPU: &Resource{
-						Available:       "3860m",
-						Usage:           "286m",
-						UsagePercentage: 7,
-					},
-					Memory: &Resource{
-						Available:       "6683Mi",
-						Usage:           "2455Mi",
-						UsagePercentage: 36,
-					},
-				},
-				Scan: ScanStatus{Status: Unknown},
-			},
-		},
-
-		{
-			description: "Cluster with discovered info and with scan",
-			v1a1cl: v1alpha1.Cluster{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "test",
-					Namespace: "test_ns",
-				},
-				Status: v1alpha1.ClusterStatus{
-					Status: apis.Status{
-						Conditions: []metav1.Condition{
-							{
-								Type:    v1alpha1.ClusterReady,
-								Status:  metav1.ConditionTrue,
-								Reason:  v1alpha1.ClusterConnected,
-								Message: "cluster successfully connected, version 1.19",
-							},
-							{
-								Type:    v1alpha1.ClusterDiscovered,
-								Status:  metav1.ConditionTrue,
-								Reason:  v1alpha1.ClusterInfoDiscovered,
-								Message: "cluster info successfully discovered",
-							},
-							{
-								Type:    v1alpha1.ClusterScanned,
-								Status:  metav1.ConditionTrue,
-								Reason:  v1alpha1.ClusterScanned,
-								Message: "cluster successfully scanned",
-							},
-						},
-					},
-					ClusterInfo: discovery.ClusterInfo{
-						Provider:   "test_provider",
-						Region:     "test_region",
-						TotalNodes: intpf(1),
-						CreationTimestamp: metav1.Time{
-							Time: func(s string) time.Time {
-								t, _ := time.Parse(time.RFC3339, s)
-								return t
-							}("2022-07-27T18:21:01Z"),
-						},
-					},
-					KubernetesVersion: "v1.23.1",
-					Resources: discovery.ClusterResources{
-						corev1.ResourceCPU: discovery.Resources{
-							Available:       resource.MustParse("4096m"),
-							Usage:           resource.MustParse("384958170n"),
-							UsagePercentage: 9,
-						},
-						corev1.ResourceMemory: discovery.Resources{
-							Available:       resource.MustParse("8024880Ki"),
-							Usage:           resource.MustParse("7294501Ki"),
-							UsagePercentage: 91,
-						},
-					},
-					TotalIssues: intpf(27),
-					LastSuccessfulScanTime: &metav1.Time{
-						Time: func(s string) time.Time {
-							t, err := time.Parse(time.RFC3339, s)
-							if err != nil {
-								panic(err)
-							}
-							return t
-						}("2022-07-27T18:22:01Z"),
-					},
-					NextScheduleScanTime: &metav1.Time{
-						Time: func(s string) time.Time {
-							t, err := time.Parse(time.RFC3339, s)
-							if err != nil {
-								panic(err)
-							}
-							return t
-						}("2022-07-27T18:24:40Z"),
-					},
-				},
-			},
-			cl: Cluster{
-				Name:       "test",
-				Namespace:  "test_ns",
-				Provider:   "test_provider",
-				Region:     "test_region",
-				TotalNodes: intpf(1),
-				// Environment:       ,
-				Version: "v1.23.1",
-				CreationTimestamp: metav1.NewTime(
-					func(s string) time.Time {
-						t, _ := time.Parse(time.RFC3339, s)
-						return t
-					}("2022-07-27T18:21:01Z"),
-				),
-				Resources: &Resources{
-					CPU: &Resource{
-						Available:       "4096m",
-						Usage:           "385m",
-						UsagePercentage: 9,
-					},
-					Memory: &Resource{
-						Available:       "7836Mi",
-						Usage:           "7123Mi",
-						UsagePercentage: 91,
-					},
-				},
-				Scan:        ScanStatus{Status: Scanned},
-				Connection:  ConnectionStatus{Connected: true},
-				TotalIssues: intpf(27),
-				LastSuccessfulScanTime: metav1.Time{
-					Time: func(s string) time.Time {
-						t, err := time.Parse(time.RFC3339, s)
-						if err != nil {
-							panic(err)
-						}
-						return t
-					}("2022-07-27T18:22:01Z"),
-				},
-				NextScheduleScanTime: metav1.Time{
-					Time: func(s string) time.Time {
-						t, err := time.Parse(time.RFC3339, s)
-						if err != nil {
-							panic(err)
-						}
-						return t
-					}("2022-07-27T18:24:40Z"),
-				},
-			},
-		},
+func readCluster(filename string) (v1alpha1.Cluster, error) {
+	b, err := os.ReadFile("testdata/cluster/" + filename)
+	var c v1alpha1.Cluster
+	if err != nil {
+		return c, err
 	}
-
-	for _, c := range cases {
-		if cl := NewCluster(c.v1a1cl); !cmp.Equal(cl, c.cl) {
-			t.Errorf("Case: %s\n", c.description)
-			t.Errorf("Mismatch between expected and obtained results:\n%s", cmp.Diff(c.cl, cl))
-		}
+	if err := yaml.Unmarshal(b, &c); err != nil {
+		return c, err
 	}
+	return c, err
+}
+
+func readClusterScan(filename string) (v1alpha1.ClusterScan, error) {
+	b, err := os.ReadFile("testdata/clusterscan/" + filename)
+	var cs v1alpha1.ClusterScan
+	if err != nil {
+		return cs, err
+	}
+	if err := yaml.Unmarshal(b, &cs); err != nil {
+		return cs, err
+	}
+	return cs, err
+}
+
+func readClusterPayload(filename string) (Cluster, error) {
+	b, err := os.ReadFile("testdata/payload/" + filename)
+	var cp Cluster
+	if err != nil {
+		return cp, err
+	}
+	if err := json.Unmarshal(b, &cp); err != nil {
+		return cp, err
+	}
+	return cp, err
 }

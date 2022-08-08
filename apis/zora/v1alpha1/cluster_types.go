@@ -12,19 +12,9 @@ import (
 const (
 	LabelEnvironment = "zora.undistro.io/environment"
 
-	ClusterReady      = "Ready"
-	ClusterDiscovered = "Discovered"
-	ClusterScanned    = "SuccessfullyScanned"
-
-	ClusterConnected         = "ClusterConnected"
-	KubeconfigError          = "KubeconfigError"
-	ClusterNotConnected      = "ClusterNotConnected"
-	ClusterInfoDiscovered    = "ClusterInfoDiscovered"
-	ClusterInfoNotDiscovered = "ClusterInfoNotDiscovered"
-	ClusterNotScanned        = "ClusterNotScanned"
-	ClusterScanNotConfigured = "ClusterScanNotConfigured"
-	ClusterScanListError     = "ClusterScanListError"
-	ClusterScanFailed        = "ClusterScanFailed"
+	ClusterReady               = "Ready"
+	ClusterDiscovered          = "Discovered"
+	ClusterResourcesDiscovered = "ResourcesDiscovered"
 )
 
 // ClusterSpec defines the desired state of Cluster
@@ -58,18 +48,6 @@ type ClusterStatus struct {
 
 	// Timestamp representing the server time of the last reconciliation
 	LastReconciliationTime metav1.Time `json:"lastReconciliationTime,omitempty"`
-
-	// Total of ClusterIssues reported by the last successful scan
-	TotalIssues *int `json:"totalIssues,omitempty"`
-
-	// List of last scan IDs
-	LastScans []string `json:"lastScans,omitempty"`
-
-	// Datetime of last successful scan.
-	LastSuccessfulScanTime *metav1.Time `json:"lastSuccessfulScanTime,omitempty"`
-
-	// Datetime of next scan.
-	NextScheduleScanTime *metav1.Time `json:"nextScheduleScanTime,omitempty"`
 }
 
 // SetResources format and fill temporary fields about resources
@@ -97,7 +75,6 @@ func (in *ClusterStatus) SetResources(res discovery.ClusterResources) {
 //+kubebuilder:printcolumn:name="Age",type="date",priority=0,JSONPath=".status.creationTimestamp"
 //+kubebuilder:printcolumn:name="Provider",type="string",priority=1,JSONPath=".status.provider"
 //+kubebuilder:printcolumn:name="Region",type="string",priority=1,JSONPath=".status.region"
-//+kubebuilder:printcolumn:name="Issues",type="integer",priority=1,JSONPath=".status.totalIssues"
 
 // Cluster is the Schema for the clusters API
 //+genclient

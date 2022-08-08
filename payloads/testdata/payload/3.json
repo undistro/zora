@@ -1,0 +1,22 @@
+{
+  "name": "mycluster",
+  "namespace": "ns",
+  "provider": "aws",
+  "region": "us-east-1",
+  "totalNodes": 2,
+  "version": "v1.24.0",
+  "creationTimestamp": "2022-05-02T18:36:36Z",
+  "connection": {
+    "connected": true,
+    "message": "cluster successfully connected, version v1.24.0"
+  },
+  "resources": {
+    "discovered": false,
+    "message": "metrics API not available"
+  },
+  "scan": {
+    "status": "unknown",
+    "message": "No finished scan yet for this cluster"
+  },
+  "nextScheduleScanTime": "2022-08-04T23:45:00Z"
+}
