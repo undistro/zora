@@ -99,7 +99,7 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 	return in.Plugins[name]
 }
 
-// SyncStatus fills PluginNames, NextScheduleTime, LastScheduleTime and LastSuccessfulTime fields based on PluginStatus
+// SyncStatus fills ClusterScan status and time fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names []string
 	var failed, active, complete int
