@@ -1,0 +1,56 @@
+Error: unknown flag: --brokenflag
+Usage:
+  popeye [flags]
+  popeye [command]
+
+Available Commands:
+  completion  generate the autocompletion script for the specified shell
+  help        Help about any command
+  version     Prints version/build info
+
+Flags:
+  -A, --all-namespaces                 Sanitize all namespaces
+      --as string                      Username to impersonate for the operation
+      --as-group stringArray           Group to impersonate for the operation
+      --certificate-authority string   Path to a cert file for the certificate authority
+  -c, --clear                          Clears the screen before a run
+      --client-certificate string      Path to a client certificate file for TLS
+      --client-key string              Path to a client key file for TLS
+      --cluster string                 The name of the kubeconfig cluster to use
+      --cluster-name string            Specificy a cluster name when running popeye in cluster
+      --context string                 The name of the kubeconfig context to use
+  -f, --file string                    Use a spinach YAML configuration file
+      --force-exit-zero                Force zero exit status when report errors are present
+  -h, --help                           help for popeye
+      --insecure-skip-tls-verify       If true, the server's caCertFile will not be checked for validity
+      --kubeconfig string              Path to the kubeconfig file to use for CLI requests
+  -l, --lint string                    Specify a lint level (ok, info, warn, error) (default "ok")
+      --min-score int                  Force non-zero exit if the cluster score is below that threshold (default 50)
+  -n, --namespace string               If present, the namespace scope for this CLI request
+  -o, --out string                     Specify the output type (standard, jurassic, yaml, json, html, junit, prometheus, score) (default "standard")
+      --output-file string             Specify the name of the saved output file
+      --over-allocs                    Check for cpu/memory over allocations
+      --pushgateway-address string     Address of pushgateway e.g. http://localhost:9091
+      --pushgateway-password string    BasicAuth password for pushgateway
+      --pushgateway-user string        BasicAuth username for pushgateway
+      --request-timeout string         The length of time to wait before giving up on a single server request
+      --s3-bucket string               Specify to which S3 bucket you want to save the output file
+      --s3-endpoint string             Specify an s3 compatible endpoint when the s3-bucket option is enabled
+      --s3-region string               Specify an s3 compatible region when the s3-bucket option is enabled
+      --save                           Specify if you want Popeye to persist the output to a file
+  -s, --sections strings               Specifies which resources to include in the scan ie -s po,svc
+      --token string                   Bearer token for authentication to the API server
+      --user string                    The name of the kubeconfig user to use
+
+Use "popeye [command] --help" for more information about a command.
+
+panic: 💥 [38;5;196mExec failed unknown flag: --brokenflag[0m
+
+
+goroutine 1 [running]:
+github.com/derailed/popeye/cmd.bomb({0xc00011cf80, 0x1f})
+	github.com/derailed/popeye/cmd/root.go:94 +0xc9
+github.com/derailed/popeye/cmd.Execute()
+	github.com/derailed/popeye/cmd/root.go:48 +0x65
+main.main()
+	github.com/derailed/popeye/main.go:25 +0x17
