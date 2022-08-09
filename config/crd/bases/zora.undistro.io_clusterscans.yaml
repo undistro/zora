@@ -338,6 +338,10 @@ spec:
               plugins:
                 additionalProperties:
                   properties:
+                    lastErrorMsg:
+                      description: LastErrorMsg contains a plugin error message from
+                        the last failed scan.
+                      type: string
                     lastFinishedStatus:
                       description: Status of the last finished plugin scan. Complete
                         or Failed

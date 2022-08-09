@@ -2,13 +2,17 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"strings"
 	"time"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -35,7 +39,28 @@ func init() {
 	//+kubebuilder:scaffold:scheme
 }
 
+func getKubeconfig() *rest.Config {
+	kpaths := []string{}
+
+	if kp := os.Getenv("KUBECONFIG"); len(kp) != 0 {
+		kpaths = append(kpaths, kp)
+	}
+	if h := os.Getenv("HOME"); len(h) != 0 {
+		kpaths = append(kpaths, fmt.Sprintf("%s/.kube/config", h))
+	}
+
+	for _, kp := range kpaths {
+		rconf, err := clientcmd.BuildConfigFromFlags("", kp)
+		if err == nil {
+			setupLog.Info(fmt.Sprintf("Using kubeconfig: <%s>", kp))
+			return rconf
+		}
+	}
+	return nil
+}
+
 func main() {
+	var rconf *rest.Config
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
@@ -54,6 +79,7 @@ func main() {
 	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.3.3", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+
 	opts := zap.Options{
 		Development: true,
 		TimeEncoder: zapcore.TimeEncoderOfLayout(time.RFC3339),
@@ -85,8 +111,23 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
 		os.Exit(1)
 	}
+
+	if rconf = getKubeconfig(); rconf == nil {
+		rconf, err = rest.InClusterConfig()
+		if err != nil {
+			setupLog.Error(err, "Failed to get cluster configuration")
+			os.Exit(1)
+		}
+	}
+	kcli, err := kubernetes.NewForConfig(rconf)
+	if err != nil {
+		setupLog.Error(err, "Failed to create Kubernetes clientset", "controller", "Cluster")
+		os.Exit(1)
+	}
+
 	if err = (&zoracontrollers.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
+		K8sClient:               kcli,
 		Scheme:                  mgr.GetScheme(),
 		Recorder:                mgr.GetEventRecorderFor("clusterscan-controller"),
 		DefaultPluginsNamespace: defaultPluginsNamespace,

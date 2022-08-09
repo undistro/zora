@@ -15,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/selection"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -25,6 +26,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/getupio-undistro/zora/pkg/errparse"
 	"github.com/getupio-undistro/zora/pkg/kubeconfig"
 	"github.com/getupio-undistro/zora/pkg/plugins/cronjobs"
 )
@@ -34,6 +36,7 @@ const jobOwnerKey = ".metadata.controller"
 // ClusterScanReconciler reconciles a ClusterScan object
 type ClusterScanReconciler struct {
 	client.Client
+	K8sClient               *kubernetes.Clientset
 	Scheme                  *runtime.Scheme
 	Recorder                record.EventRecorder
 	DefaultPluginsNamespace string
@@ -53,6 +56,7 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 //+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch
 //+kubebuilder:rbac:groups="",resources=serviceaccounts/status,verbs=get
+//+kubebuilder:rbac:groups="",resources=pods,verbs=list
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterrolebindings,verbs=get;list;watch;update;patch
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterrolebindings/status,verbs=get
 
@@ -166,6 +170,12 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 				isFinished, status, finTime := getFinishedStatus(j)
 				if isFinished {
 					pluginStatus.LastFinishedStatus = string(status)
+
+					if status == batchv1.JobFailed && pluginStatus.LastStatus == string(batchv1.JobFailed) {
+						if err := r.pluginErrorMsg(ctx, pluginStatus, plugin, j); err != nil {
+							return err
+						}
+					}
 				} else if len(cronJob.Status.Active) > 0 {
 					status = "Active"
 				}
@@ -192,6 +202,34 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
+	return nil
+}
+
+func (r *ClusterScanReconciler) pluginErrorMsg(ctx context.Context, ps *v1alpha1.PluginScanStatus, p *v1alpha1.Plugin, j *batchv1.Job) error {
+	log := ctrllog.FromContext(ctx, v1alpha1.LabelPlugin, p.Name)
+
+	plist, err := r.K8sClient.CoreV1().Pods(j.Namespace).List(ctx, metav1.ListOptions{
+		LabelSelector: fmt.Sprintf("job-name=%s", j.Name),
+	})
+	if err != nil {
+		return fmt.Errorf("Unable to list pods: %w", err)
+	} else if len(plist.Items) == 0 {
+		return fmt.Errorf("The job <%s/%s> has no pods", j.Namespace, j.Name)
+	}
+
+	lr, err := r.K8sClient.CoreV1().Pods(plist.Items[0].Namespace).GetLogs(
+		plist.Items[0].Name,
+		&corev1.PodLogOptions{Container: p.Name},
+	).Stream(ctx)
+	if err != nil {
+		return fmt.Errorf("Unable to fetch <%s> container logs: %w", p.Name, err)
+	}
+
+	defer lr.Close()
+	ps.LastErrorMsg, err = errparse.Parse(lr, p.Name)
+	if err != nil {
+		log.Error(err, fmt.Sprintf("Failed to extract <%s> error message", p.Name))
+	}
 	return nil
 }
 
