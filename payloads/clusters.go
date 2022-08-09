@@ -100,7 +100,7 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 		// total issues
 		if cl.TotalIssues == nil {
 			cl.TotalIssues = cs.Status.TotalIssues
-		} else {
+		} else if cs.Status.TotalIssues != nil {
 			sum := *cl.TotalIssues + *cs.Status.TotalIssues
 			cl.TotalIssues = &sum
 		}

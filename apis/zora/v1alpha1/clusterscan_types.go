@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/getupio-undistro/zora/pkg/apis"
@@ -98,52 +99,48 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 	return in.Plugins[name]
 }
 
-// SyncStatus fills PluginNames, NextScheduleTime, LastScheduleTime and LastSuccessfulTime fields based on PluginStatus
+// SyncStatus fills ClusterScan status and time fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names []string
-	failed := false
-	in.NextScheduleTime = nil
-	for n, s := range in.Plugins {
+	var failed, active, complete int
+	for n, p := range in.Plugins {
 		names = append(names, n)
-		if in.LastScheduleTime == nil {
-			in.LastScheduleTime = s.LastScheduleTime
-			in.LastStatus = s.LastStatus
+		if in.LastScheduleTime == nil || in.LastScheduleTime.Before(p.LastScheduleTime) {
+			in.LastScheduleTime = p.LastScheduleTime
 		}
-		if in.LastFinishedTime == nil {
-			in.LastFinishedTime = s.LastFinishedTime
-			in.LastStatus = s.LastStatus
-			in.LastFinishedStatus = s.LastStatus
+		if in.LastFinishedTime == nil || in.LastFinishedTime.Before(p.LastFinishedTime) {
+			in.LastFinishedTime = p.LastFinishedTime
 		}
-		if in.LastSuccessfulTime == nil {
-			in.LastSuccessfulTime = s.LastSuccessfulTime
+		if in.LastSuccessfulTime == nil || in.LastSuccessfulTime.Before(p.LastSuccessfulTime) {
+			in.LastSuccessfulTime = p.LastSuccessfulTime
 		}
-		if in.NextScheduleTime == nil {
-			in.NextScheduleTime = s.NextScheduleTime
+		if in.NextScheduleTime == nil || p.NextScheduleTime.Before(in.NextScheduleTime) {
+			in.NextScheduleTime = p.NextScheduleTime
 		}
-
-		if !failed && s.LastStatus == string(batchv1.JobFailed) {
-			failed = true
-			in.LastStatus = string(batchv1.JobFailed)
+		if p.LastStatus == "Active" {
+			active++
 		}
-		if s.LastScheduleTime != nil && s.LastScheduleTime.After(in.LastScheduleTime.Time) {
-			in.LastScheduleTime = s.LastScheduleTime
-			if !failed {
-				in.LastStatus = s.LastStatus
-			}
-		}
-		if !failed && s.LastFinishedTime != nil && s.LastFinishedTime.After(in.LastScheduleTime.Time) {
-			in.LastFinishedTime = s.LastFinishedTime
-			in.LastStatus = s.LastStatus
-			in.LastFinishedStatus = s.LastStatus
-		}
-
-		if s.LastSuccessfulTime != nil && s.LastSuccessfulTime.After(in.LastSuccessfulTime.Time) {
-			in.LastSuccessfulTime = s.LastSuccessfulTime
-		}
-		if s.NextScheduleTime != nil && s.NextScheduleTime.Before(in.NextScheduleTime) {
-			in.NextScheduleTime = s.NextScheduleTime
+		switch p.LastFinishedStatus {
+		case string(batchv1.JobFailed):
+			failed++
+		case string(batchv1.JobComplete):
+			complete++
 		}
 	}
+
+	if failed > 0 {
+		in.LastFinishedStatus = string(batchv1.JobFailed)
+		in.LastStatus = string(batchv1.JobFailed)
+	}
+	if failed == 0 && complete > 0 {
+		in.LastFinishedStatus = string(batchv1.JobComplete)
+		in.LastStatus = string(batchv1.JobComplete)
+	}
+	if active > 0 {
+		in.LastStatus = "Active"
+	}
+
+	sort.Strings(names)
 	in.PluginNames = strings.Join(names, ",")
 }
 
