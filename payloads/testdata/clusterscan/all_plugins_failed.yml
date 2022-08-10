@@ -45,6 +45,7 @@ status:
       lastScheduleTime: "2022-08-04T22:45:00Z"
       lastStatus: Failed
       nextScheduleTime: "2022-08-04T23:45:00Z"
+      lastErrorMsg: 'Get "http://localhost:8081/version?timeout=30s": dial tcp 127.0.0.1:8081: connect: connection refused'
     kubescape:
       lastFinishedStatus: Failed
       lastFinishedTime: "2022-08-04T22:47:00Z"
@@ -52,4 +53,5 @@ status:
       lastScheduleTime: "2022-08-04T22:45:00Z"
       lastStatus: Failed
       nextScheduleTime: "2022-08-04T23:45:00Z"
+      lastErrorMsg: 'failed to discover API server information. error: Get "https://35.236.51.220/version?timeout=32s": x509: certificate signed by unknown authority'
   suspend: false

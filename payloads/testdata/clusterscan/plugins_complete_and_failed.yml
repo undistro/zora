@@ -39,6 +39,7 @@ status:
       lastScheduleTime: "2022-08-08T21:00:00Z"
       lastStatus: Failed
       nextScheduleTime: "2022-08-08T22:00:00Z"
+      lastErrorMsg: 'failed to discover API server information. error: the server has asked for the client to provide credentials'
     popeye:
       lastFinishedStatus: Complete
       lastFinishedTime: "2022-08-08T21:00:03Z"

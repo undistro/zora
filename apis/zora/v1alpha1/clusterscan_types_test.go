@@ -162,6 +162,7 @@ func TestSyncStatus(t *testing.T) {
 					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
 					LastStatus:         "Active",
 					LastFinishedStatus: string(batchv1.JobFailed),
+					LastErrorMsg:       "failed connecting to Kubernetes cluster",
 				},
 			},
 			want: &ClusterScanStatus{
@@ -184,6 +185,7 @@ func TestSyncStatus(t *testing.T) {
 					LastFinishedStatus: string(batchv1.JobFailed),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 					LastScanID:         "9da315be-b5a1-4f1a-952b-915cc19fe446",
+					LastErrorMsg:       `Get "http://localhost:8081/version?timeout=30s": dial tcp 127.0.0.1:8081: connect: connection refused`,
 				},
 				"kubescape": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
@@ -192,6 +194,7 @@ func TestSyncStatus(t *testing.T) {
 					LastFinishedStatus: string(batchv1.JobFailed),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
+					LastErrorMsg:       "failed connecting to Kubernetes cluster",
 				},
 			},
 			want: &ClusterScanStatus{
@@ -223,6 +226,7 @@ func TestSyncStatus(t *testing.T) {
 					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
 					LastStatus:         "Active",
 					LastFinishedStatus: string(batchv1.JobFailed),
+					LastErrorMsg:       "failed connecting to Kubernetes cluster",
 				},
 			},
 			want: &ClusterScanStatus{
@@ -239,7 +243,6 @@ func TestSyncStatus(t *testing.T) {
 			name: "complete + active 1st",
 			plugins: map[string]*PluginScanStatus{
 				"popeye": {
-
 					LastScheduleTime: mustParseTime("2022-08-08T21:00:00Z"),
 					LastStatus:       "Active",
 					NextScheduleTime: mustParseTime("2022-08-08T22:00:00Z"),
@@ -286,6 +289,7 @@ func TestSyncStatus(t *testing.T) {
 					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
 					LastStatus:         string(batchv1.JobFailed),
 					LastFinishedStatus: string(batchv1.JobFailed),
+					LastErrorMsg:       `failed to discover API server information. error: Get "https://15.446.40.219/version?timeout=39s": x509: certificate signed by unknown authority`,
 				},
 			},
 			want: &ClusterScanStatus{
@@ -310,6 +314,7 @@ func TestSyncStatus(t *testing.T) {
 					LastSuccessfulScanID: "ab8b751d-a0ab-40ac-9980-0cd2133a43f8",
 					LastStatus:           string(batchv1.JobFailed),
 					LastFinishedStatus:   string(batchv1.JobFailed),
+					LastErrorMsg:         "the server has asked for the client to provide credentials",
 				},
 				"kubescape": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
@@ -318,6 +323,7 @@ func TestSyncStatus(t *testing.T) {
 					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
 					LastStatus:         string(batchv1.JobFailed),
 					LastFinishedStatus: string(batchv1.JobFailed),
+					LastErrorMsg:       `failed to discover API server information. error: Get "https://35.236.51.220/version?timeout=32s": x509: certificate signed by unknown authority`,
 				},
 			},
 			want: &ClusterScanStatus{

@@ -50,6 +50,7 @@ status:
       lastSuccessfulScanID: 2d129cf8-7516-4f4e-b3f3-eecd57584073
       lastSuccessfulTime: "2022-08-04T20:46:00Z"
       nextScheduleTime: "2022-08-04T23:45:00Z"
+      lastErrorMsg: 'the server has asked for the client to provide credentials'
     kubescape:
       lastFinishedStatus: Complete
       lastFinishedTime: "2022-08-04T21:47:00Z"
