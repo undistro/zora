@@ -6,15 +6,13 @@ metadata:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
-  env:
-    - name: POPEYE_REPORT_DIR
-      value: "/tmp/zora/results"
   command:
     - /bin/sh
     - -c
     - |
       start=$(date +%s)
       echo Scanning...
+      POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
         --kubeconfig $(KUBECONFIG) \

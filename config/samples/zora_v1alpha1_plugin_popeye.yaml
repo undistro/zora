@@ -4,15 +4,13 @@ metadata:
   name: popeye
 spec:
   image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
-  env:
-    - name: POPEYE_REPORT_DIR
-      value: "/tmp/zora/results"
   command:
     - /bin/sh
     - -c
     - |
       start=$(date +%s)
       echo Scanning...
+      POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
         --kubeconfig $(KUBECONFIG) \
