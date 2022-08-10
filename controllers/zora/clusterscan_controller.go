@@ -26,9 +26,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/errparse"
 	"github.com/getupio-undistro/zora/pkg/kubeconfig"
 	"github.com/getupio-undistro/zora/pkg/plugins/cronjobs"
+	"github.com/getupio-undistro/zora/pkg/plugins/errparse"
 )
 
 const jobOwnerKey = ".metadata.controller"
