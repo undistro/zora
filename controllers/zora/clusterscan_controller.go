@@ -170,7 +170,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 				if isFinished {
 					pluginStatus.LastFinishedStatus = string(status)
 
-					if status == batchv1.JobFailed && pluginStatus.LastStatus == string(batchv1.JobFailed) {
+					if status == batchv1.JobFailed {
 						if err := r.pluginErrorMsg(ctx, pluginStatus, plugin, j); err != nil {
 							return err
 						}
