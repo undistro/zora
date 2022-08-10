@@ -15,7 +15,7 @@ ENVTEST_K8S_VERSION = 1.23
 IMG ?= ${REG_ADDR}/operator:${IMG_TAG}
 # Name of dockerfile to use in the image.
 DOCKERFILE ?= Dockerfile
-
+PLUGINS ?= popeye
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -87,7 +87,7 @@ build: generate fmt vet ## Build manager binary.
 
 .PHONY: run
 run: install manifests generate ## Run a controller from your host.
-	go run ./main.go
+	go run ./main.go -default-plugins-names $(PLUGINS)
 run-server: install manifests generate ## Run Zora's server locally.
 	go run ./cmd/server/main.go
 
