@@ -56,7 +56,7 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 //+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch
 //+kubebuilder:rbac:groups="",resources=serviceaccounts/status,verbs=get
-//+kubebuilder:rbac:groups="",resources=pods,verbs=list
+//+kubebuilder:rbac:groups="",resources=pods;pods/log,verbs=get;list
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterrolebindings,verbs=get;list;watch;update;patch
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterrolebindings/status,verbs=get
 
