@@ -6,7 +6,7 @@ CLUSTER_NS=${CLUSTER_NS:-"zora-system"}
 KCONFIG_PATH=${KCONFIG_PATH:-"zora_view_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
 ENABLE_CLUSTER_SCAN=${ENABLE_CLUSTER_SCAN:-0}
-CLUSTER_SCAN_CRON_SCHEDULE=${CLUSTER_SCAN_CRON_SCHEDULE:-'*/2 * * * *'}
+CLUSTER_SCAN_SCHEDULE=${CLUSTER_SCAN_SCHEDULE:-'*/2 * * * *'}
 
 setup_namespaces() {
 	if ! kubectl get namespace $CLUSTER_NS > /dev/null 2>&1; then
@@ -49,7 +49,7 @@ metadata:
 spec:
   clusterRef:
     name: $CLUSTER_NAME
-  schedule: "$CLUSTER_SCAN_CRON_SCHEDULE"
+  schedule: "$CLUSTER_SCAN_SCHEDULE"
 EOF
 }
 

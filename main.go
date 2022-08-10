@@ -8,6 +8,7 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"go.uber.org/zap/zapcore"
@@ -54,6 +55,7 @@ func main() {
 	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.3.3", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+
 	opts := zap.Options{
 		Development: true,
 		TimeEncoder: zapcore.TimeEncoderOfLayout(time.RFC3339),
@@ -85,8 +87,16 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
 		os.Exit(1)
 	}
+
+	kcli, err := kubernetes.NewForConfig(mgr.GetConfig())
+	if err != nil {
+		setupLog.Error(err, "Failed to create Kubernetes clientset", "controller", "Cluster")
+		os.Exit(1)
+	}
+
 	if err = (&zoracontrollers.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
+		K8sClient:               kcli,
 		Scheme:                  mgr.GetScheme(),
 		Recorder:                mgr.GetEventRecorderFor("clusterscan-controller"),
 		DefaultPluginsNamespace: defaultPluginsNamespace,

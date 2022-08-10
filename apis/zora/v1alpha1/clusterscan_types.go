@@ -184,6 +184,9 @@ type PluginScanStatus struct {
 
 	// Status of the last finished plugin scan. Complete or Failed
 	LastFinishedStatus string `json:"lastFinishedStatus,omitempty"`
+
+	// LastErrorMsg contains a plugin error message from the last failed scan.
+	LastErrorMsg string `json:"lastErrorMsg,omitempty"`
 }
 
 //+kubebuilder:object:root=true

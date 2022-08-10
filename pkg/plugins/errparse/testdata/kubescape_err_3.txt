@@ -1,0 +1,1 @@
+[fatal] failed connecting to Kubernetes cluster

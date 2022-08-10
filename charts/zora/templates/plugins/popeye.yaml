@@ -12,12 +12,14 @@ spec:
     - |
       start=$(date +%s)
       echo Scanning...
+      POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
         --kubeconfig $(KUBECONFIG) \
         --all-namespaces \
         --force-exit-zero \
-        > $(DONE_DIR)/results.json
+        --save \
+        --output-file results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error
