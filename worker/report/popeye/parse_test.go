@@ -117,6 +117,7 @@ func TestParse(t *testing.T) {
 						},
 					},
 					TotalResources: 16,
+					Url:            "",
 				},
 			},
 			toerr: false,
@@ -135,6 +136,7 @@ func TestParse(t *testing.T) {
 						"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
 					},
 					TotalResources: 2,
+					Url:            "",
 				},
 				{
 					ID:       "POP-106",
@@ -146,6 +148,7 @@ func TestParse(t *testing.T) {
 						"apps/v1/deployments": {"cert-manager/cert-manager"},
 					},
 					TotalResources: 2,
+					Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 				},
 				{
 					ID:       "POP-107",
@@ -156,6 +159,7 @@ func TestParse(t *testing.T) {
 						"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
 					},
 					TotalResources: 2,
+					Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 				},
 				{
 					ID:       "POP-108",
@@ -166,6 +170,7 @@ func TestParse(t *testing.T) {
 						"apps/v1/deployments": {"cert-manager/cert-manager"},
 					},
 					TotalResources: 1,
+					Url:            "",
 				},
 			},
 			toerr: false,

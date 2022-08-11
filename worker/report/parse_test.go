@@ -87,6 +87,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 16,
 						Cluster:        "fake_cluster",
+						Url:            "",
 					},
 				},
 			},
@@ -139,6 +140,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
+						Url:            "",
 					},
 				},
 
@@ -176,6 +178,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
+						Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 					},
 				},
 
@@ -212,6 +215,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
+						Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 					},
 				},
 
@@ -248,6 +252,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 1,
 						Cluster:        "super_fake_cluster",
+						Url:            "",
 					},
 				},
 			},
