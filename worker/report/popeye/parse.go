@@ -55,6 +55,7 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 							san.GVR: {typ},
 						},
 						TotalResources: 1,
+						Url:            IssueIDtoUrl[id[strings.LastIndex(id, "-")+1:]],
 					}
 				}
 			}
