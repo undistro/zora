@@ -103,6 +103,7 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 func (in *ClusterScanStatus) SyncStatus() {
 	var names []string
 	var failed, active, complete int
+	in.NextScheduleTime = nil
 	for n, p := range in.Plugins {
 		names = append(names, n)
 		if in.LastScheduleTime == nil || in.LastScheduleTime.Before(p.LastScheduleTime) {
