@@ -285,7 +285,7 @@ func TestSyncStatus(t *testing.T) {
 				},
 				"kubescape": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
-					LastFinishedTime:   mustParseTime("2022-08-08T21:00:03Z"),
+					LastFinishedTime:   mustParseTime("2022-08-08T21:00:06Z"),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
 					LastStatus:         string(batchv1.JobFailed),
@@ -295,7 +295,7 @@ func TestSyncStatus(t *testing.T) {
 			},
 			want: &ClusterScanStatus{
 				LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
-				LastFinishedTime:   mustParseTime("2022-08-08T21:00:03Z"),
+				LastFinishedTime:   mustParseTime("2022-08-08T21:00:06Z"),
 				LastSuccessfulTime: mustParseTime("2022-08-08T21:00:03Z"),
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastFinishedStatus: string(batchv1.JobFailed),
