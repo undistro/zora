@@ -36,6 +36,7 @@ type Cluster struct {
 	CreationTimestamp      metav1.Time       `json:"creationTimestamp"`
 	Issues                 []ResourcedIssue  `json:"issues"`
 	LastSuccessfulScanTime *metav1.Time      `json:"lastSuccessfulScanTime"`
+	LastFinishedScanTime   *metav1.Time      `json:"lastFinishedScanTime"`
 	NextScheduleScanTime   *metav1.Time      `json:"nextScheduleScanTime"`
 }
 
@@ -108,6 +109,9 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 		// last and next scan time
 		if cl.LastSuccessfulScanTime == nil || cl.LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
 			cl.LastSuccessfulScanTime = cs.Status.LastSuccessfulTime
+		}
+		if cl.LastFinishedScanTime == nil || cl.LastFinishedScanTime.Before(cs.Status.LastFinishedTime) {
+			cl.LastFinishedScanTime = cs.Status.LastFinishedTime
 		}
 		if cl.NextScheduleScanTime == nil || cs.Status.NextScheduleTime.Before(cl.NextScheduleScanTime) {
 			cl.NextScheduleScanTime = cs.Status.NextScheduleTime

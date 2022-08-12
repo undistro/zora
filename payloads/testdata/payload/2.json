@@ -16,5 +16,6 @@
     "status": "failed",
     "message": "Plugins <kubescape> and <popeye> failed in the last scan of ClusterScan <myclusterscan>"
   },
-  "nextScheduleScanTime": "2022-08-04T23:45:00Z"
+  "nextScheduleScanTime": "2022-08-04T23:45:00Z",
+  "lastFinishedScanTime": "2022-08-04T22:47:00Z"
 }
