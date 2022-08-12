@@ -20,7 +20,7 @@ else
 endif
 
 # Code Generation
-PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+PROJECT_ROOT := $(shell git rev-parse --show-toplevel)
 PROJECT_PACKAGE ?= $(shell go list -m)
 CONTROLLER_GEN ?= $(shell pwd)/bin/controller-gen
 KUSTOMIZE ?= $(shell pwd)/bin/kustomize
