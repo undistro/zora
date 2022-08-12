@@ -1,7 +1,5 @@
 include hack/make/*
 
-default: build
-
 ##@ Tooling Download
 
 controller-gen: ## Download controller-gen locally if necessary.
@@ -22,13 +20,17 @@ test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
 charts/zora/templates/plugins/popeye.yaml: config/samples/zora_v1alpha1_plugin_popeye.yaml
-	cp $< $@
+	@ cp $< $@
 	patch -Nf --no-backup-if-mismatch $@ hack/patches/popeye_plugin.patch
 charts/zora/templates/plugins/kubescape.yaml: config/samples/zora_v1alpha1_plugin_kubescape.yaml
-	cp $< $@
+	@ cp $< $@
 	patch -Nf --no-backup-if-mismatch $@ hack/patches/kubescape_plugin.patch
 
-manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+manifest-consitency: \
+ charts/zora/templates/plugins/popeye.yaml \
+ charts/zora/templates/plugins/kubescape.yaml
+
+manifests: controller-gen manifest-consitency ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/
 
