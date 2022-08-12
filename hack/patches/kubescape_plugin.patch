@@ -1,0 +1,10 @@
+--- config/samples/zora_v1alpha1_plugin_kubescape.yaml	2022-08-10 18:15:07.001979562 -0300
++++ charts/zora/templates/plugins/kubescape.yaml	2022-08-10 17:52:14.395218571 -0300
+@@ -4,4 +4,6 @@
+   name: kubescape
++  labels:
++    {{- include "zora.labels" . | nindent 4 }}
+ spec:
+-  image: registry.undistro.io/quay/armosec/kubescape:v2.0.163
++  image: "{{ .Values.scan.plugins.kubescape.image.repository }}:{{ .Values.scan.plugins.kubescape.image.tag }}"
+   env:

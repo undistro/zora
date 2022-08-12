@@ -55,7 +55,20 @@ help: ## Display this help.
 
 ##@ Development
 
-.PHONY: manifests
+fmt: ## Run go fmt against code.
+	go fmt ./...
+vet: ## Run go vet against code.
+	go vet ./...
+test: manifests generate fmt vet envtest ## Run tests.
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+
+charts/zora/templates/plugins/popeye.yaml: config/samples/zora_v1alpha1_plugin_popeye.yaml
+	cp $< $@
+	patch -Nf --no-backup-if-mismatch $@ hack/patches/popeye_plugin.patch
+charts/zora/templates/plugins/kubescape.yaml: config/samples/zora_v1alpha1_plugin_kubescape.yaml
+	cp $< $@
+	patch -Nf --no-backup-if-mismatch $@ hack/patches/kubescape_plugin.patch
+
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/

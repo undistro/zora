@@ -1,0 +1,10 @@
+--- config/samples/zora_v1alpha1_plugin_popeye.yaml	2022-08-10 18:30:20.998709040 -0300
++++ charts/zora/templates/plugins/popeye.yaml	2022-08-10 18:30:40.808710401 -0300
+@@ -4,4 +4,6 @@
+   name: popeye
++  labels:
++    {{- include "zora.labels" . | nindent 4 }}
+ spec:
+-  image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
++  image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
+   command:
