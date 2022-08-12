@@ -195,6 +195,9 @@ components:
         plugin:
           type: string
           example: "popeye"
+        url:
+          type: string
+          example: "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels"
     ClusterIssue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'
