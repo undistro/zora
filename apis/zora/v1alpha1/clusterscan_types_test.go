@@ -13,9 +13,10 @@ import (
 
 func TestSyncStatus(t *testing.T) {
 	tests := []struct {
-		name    string
-		plugins map[string]*PluginScanStatus
-		want    *ClusterScanStatus
+		name          string
+		currentStatus *ClusterScanStatus
+		plugins       map[string]*PluginScanStatus
+		want          *ClusterScanStatus
 	}{
 		{
 			name: "complete + complete",
@@ -336,11 +337,40 @@ func TestSyncStatus(t *testing.T) {
 				PluginNames:        "kubescape,popeye",
 			},
 		},
+		{
+			name: "always failed",
+			currentStatus: &ClusterScanStatus{
+				NextScheduleTime: mustParseTime("2022-08-12T12:00:00Z"),
+			},
+			plugins: map[string]*PluginScanStatus{
+				"brutus": {
+					LastScheduleTime:   mustParseTime("2022-08-12T13:00:00Z"),
+					LastFinishedTime:   mustParseTime("2022-08-12T13:00:03Z"),
+					NextScheduleTime:   mustParseTime("2022-08-12T14:00:00Z"),
+					LastScanID:         "886938da-f1e5-438c-8ceb-be9dbd15c8e",
+					LastStatus:         string(batchv1.JobFailed),
+					LastFinishedStatus: string(batchv1.JobFailed),
+					LastErrorMsg:       `Exec failed unknown flag: --Xforce-exit-zero`,
+				},
+			},
+			want: &ClusterScanStatus{
+				LastScheduleTime:   mustParseTime("2022-08-12T13:00:00Z"),
+				LastFinishedTime:   mustParseTime("2022-08-12T13:00:03Z"),
+				NextScheduleTime:   mustParseTime("2022-08-12T14:00:00Z"),
+				LastFinishedStatus: string(batchv1.JobFailed),
+				LastStatus:         string(batchv1.JobFailed),
+				PluginNames:        "brutus",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.want.Plugins = tt.plugins
-			css := &ClusterScanStatus{Plugins: tt.plugins}
+			css := &ClusterScanStatus{}
+			if tt.currentStatus != nil {
+				css = tt.currentStatus
+			}
+			css.Plugins = tt.plugins
 			css.SyncStatus()
 			if !reflect.DeepEqual(css, tt.want) {
 				t.Errorf("SyncStatus() = %s", cmp.Diff(css, tt.want))
