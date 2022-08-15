@@ -79,7 +79,7 @@ install: manifests kustomize ## Install default configuration (RBAC for plugins)
 	@kubectl apply -f config/rbac/clusterissue_editor_role.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_kubescape.yaml
-	@kubectl create -f config/rbac/plugins_role_binding.yaml || true
+	@kubectl apply -f config/rbac/plugins_role_binding.yaml
 
 uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/crd | kubectl delete --ignore-not-found=$(IGNORE_NOT_FOUND) -f -
