@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "zora.fullname" . -}}
 {{- $serverPort := .Values.server.service.port -}}
+
 {{- $uiPort := .Values.ui.service.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
@@ -51,6 +52,8 @@ spec:
               serviceName: {{ $fullName }}-server
               servicePort: {{ $serverPort }}
               {{- end }}
+
+          {{- if .Values.ui.enabled }}
           - path: {{ .Values.ingress.ui.path }}
             {{- if and .Values.ingress.ui.pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
             pathType: {{ .Values.ingress.ui.pathType }}
@@ -65,4 +68,5 @@ spec:
               serviceName: {{ $fullName }}-ui
               servicePort: {{ $uiPort }}
               {{- end }}
+          {{- end }}
 {{- end }}

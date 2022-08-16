@@ -27,9 +27,11 @@ data:
       # this is necessary for us to be able to disable request buffering in all cases
       proxy_http_version 1.1;
 
+      {{- if .Values.ui.enabled }}
       upstream ui {
         server "{{ include "zora.fullname" . }}-ui:{{ .Values.ui.service.port }}";
       }
+      {{- end }}
 
       upstream server {
         server "{{ include "zora.fullname" . }}-server:{{ .Values.server.service.port }}";
@@ -57,6 +59,7 @@ data:
         add_header X-Frame-Options DENY;
         add_header Content-Security-Policy "frame-ancestors 'none'";
 
+        {{- if .Values.ui.enabled }}
         location / {
           proxy_pass http://ui/;
           proxy_set_header Host $host;
@@ -66,6 +69,7 @@ data:
           proxy_buffering off;
           proxy_request_buffering off;
         }
+        {{- end }}
 
         location /api/ {
           proxy_pass http://server/api/;
