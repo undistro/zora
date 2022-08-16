@@ -22,6 +22,7 @@ rules:
     verbs:
       - get
 ---
+{{ $crb := (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "zora-plugins") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -30,4 +31,13 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: clusterissues-editor
+{{- if $crb }}
+subjects:
+  {{- range $s := $crb.subjects }}
+  - kind: {{ $s.kind }}
+    name: {{ $s.name }}
+    namespace: {{ $s.namespace }}
+  {{- end }}
+{{- else }}
 subjects: []
+{{- end }}
