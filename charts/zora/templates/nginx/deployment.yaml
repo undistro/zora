@@ -50,13 +50,21 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
+              {{- if .Values.ui.enabled }}
               path: /
+              {{- else }}
+              path: /api/v1/clusters
+              {{- end }}
               port: http
             initialDelaySeconds: 300
             periodSeconds: 10
           readinessProbe:
             httpGet:
+              {{- if .Values.ui.enabled }}
               path: /
+              {{- else }}
+              path: /api/v1/clusters
+              {{- end }}
               port: http
             initialDelaySeconds: 1
             periodSeconds: 10

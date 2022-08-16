@@ -3,6 +3,7 @@
   For in-depth information about how to connect a cluster, visit
     https://zora.undistro.io/
 
+{{- if .Values.ui.enabled }}
 2. Get the UI URL by running these commands:
 {{- if .Values.ingress.enabled }}
   http{{ if .Values.ingress.tlsSecretName }}s{{ end }}://{{ .Values.ingress.host }}{{ .Values.ingress.ui.path }}
@@ -20,4 +21,5 @@
   export CONTAINER_PORT=$(kubectl get pod -n {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
 {{- end }}
