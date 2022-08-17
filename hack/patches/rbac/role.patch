@@ -1,0 +1,11 @@
+--- a/config/rbac/role.yaml	2022-08-17 14:23:38.267847207 -0300
++++ b/config/rbac/role.yaml	2022-08-17 15:54:39.134889137 -0300
+@@ -1,2 +1 @@
+----
+ apiVersion: rbac.authorization.k8s.io/v1
+@@ -4,4 +3,3 @@
+ metadata:
+-  creationTimestamp: null
+-  name: manager-role
++  name: {{ include "zora.operatorServiceAccountName" . }}
+ rules:

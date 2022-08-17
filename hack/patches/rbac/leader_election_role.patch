@@ -1,0 +1,10 @@
+--- a/config/rbac/leader_election_role.yaml	2022-04-12 17:43:03.730424686 -0300
++++ b/config/rbac/leader_election_role.yaml	2022-08-17 15:54:39.134889137 -0300
+@@ -1,2 +1 @@
+-# permissions to do leader election.
+ apiVersion: rbac.authorization.k8s.io/v1
+@@ -4,3 +3,3 @@
+ metadata:
+-  name: leader-election-role
++  name: {{ include "zora.operatorServiceAccountName" . }}-leader-election
+ rules:
