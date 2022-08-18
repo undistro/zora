@@ -49,7 +49,7 @@ help: ## Display this help.
 # go-install-tool will run "go install" for packages passed as arg <$2> and
 # install them to the location passed on arg <$1>.
 define go-install-tool
- [ -f $(1) ] || { \
+  @ test -f $(1) || { \
   set -e ;\
   TMP_DIR=$$(mktemp -d) ;\
   cd $$TMP_DIR ;\

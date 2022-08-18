@@ -12,6 +12,8 @@ spec:
     kind: ClusterScan
     listKind: ClusterScanList
     plural: clusterscans
+    shortNames:
+    - cscan
     singular: clusterscan
   scope: Namespaced
   versions:
