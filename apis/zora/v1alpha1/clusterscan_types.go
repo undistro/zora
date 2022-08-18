@@ -192,6 +192,7 @@ type PluginScanStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName="cscan"
 //+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".spec.clusterRef.name",priority=0
 //+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
