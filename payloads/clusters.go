@@ -42,9 +42,14 @@ type PluginStatus struct {
 	NextScheduleScanTime   *metav1.Time     `json:"nextScheduleScanTime"`
 }
 
+type NsName struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+}
+
 type ResourcedIssue struct {
 	Issue     `json:",inline"`
-	Resources map[string][]string `json:"resources"`
+	Resources map[string][]NsName `json:"resources"`
 }
 
 type Resources struct {
@@ -168,7 +173,29 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 	ri := ResourcedIssue{}
 	ri.Issue = NewIssue(i)
-	ri.Resources = i.Spec.Resources
+	for r, narr := range i.Spec.Resources {
+		for _, nspacedn := range narr {
+			ns := strings.Split(nspacedn, "/")
+			if len(ns) == 1 {
+				ns = append([]string{""}, ns[0])
+			}
+			if ri.Resources == nil {
+				ri.Resources = map[string][]NsName{
+					r: []NsName{{
+						Name:      ns[1],
+						Namespace: ns[0],
+					}},
+				}
+			} else {
+				ri.Resources[r] = append(ri.Resources[r],
+					NsName{
+						Name:      ns[1],
+						Namespace: ns[0],
+					},
+				)
+			}
+		}
+	}
 	return ri
 }
 
