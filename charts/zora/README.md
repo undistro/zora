@@ -116,6 +116,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | server.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
 | server.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | server.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
+| ui.enabled | bool | `true` | Toggles UI deployment |
 | ui.replicaCount | int | `1` | Number of replicas desired of Zora UI |
 | ui.image.repository | string | `"registry.undistro.io/zora/ui"` | Zora UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |

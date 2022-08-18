@@ -195,6 +195,7 @@ server:
     timeEncoding: rfc3339
 
 ui:
+  # -- Toggles UI deployment
   enabled: true
   # -- Number of replicas desired of Zora UI
   replicaCount: 1
