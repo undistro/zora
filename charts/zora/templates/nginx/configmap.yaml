@@ -33,9 +33,11 @@ data:
       }
       {{- end }}
 
+      {{- if .Values.server.enabled }}
       upstream server {
         server "{{ include "zora.fullname" . }}-server:{{ .Values.server.service.port }}";
       }
+      {{- end }}
 
       log_format timed_combined '[$time_local]:$remote_addr - '
         '"$request" $status $body_bytes_sent '
@@ -71,6 +73,7 @@ data:
         }
         {{- end }}
 
+        {{- if .Values.server.enabled }}
         location /api/ {
           proxy_pass http://server/api/;
           proxy_set_header Host $host;
@@ -80,6 +83,7 @@ data:
           proxy_buffering off;
           proxy_request_buffering off;
         }
+        {{- end }}
 
       }
 
