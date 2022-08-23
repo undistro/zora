@@ -1,0 +1,6 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterIssueOverride
+metadata:
+  name: clusterissueoverride-sample
+spec:
+  # TODO(user): Add fields here
