@@ -23,7 +23,7 @@ func NewClusterIssue(c *config.Config, cispec *zorav1a1.ClusterIssueSpec, orefs 
 			APIVersion: zorav1a1.SchemeGroupVersion.String(),
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            fmt.Sprintf("%s-%s-%s", c.Cluster, strings.ToLower(cispec.ID), *juid),
+			Name:            fmt.Sprintf("%s-%s-%s", c.Cluster, cispec.ID, *juid),
 			Namespace:       c.ClusterIssuesNs,
 			OwnerReferences: orefs,
 			Labels: map[string]string{

@@ -655,7 +655,7 @@ func TestParse(t *testing.T) {
 			testrepname: "testdata/test_report_1.json",
 			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
-					ID:       "C-0001",
+					ID:       "c-0001",
 					Message:  "Forbidden Container Registries",
 					Severity: "Medium",
 					Category: "deployment",
@@ -695,7 +695,7 @@ func TestParse(t *testing.T) {
 			testrepname: "testdata/test_report_2.json",
 			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
-					ID:       "C-0004",
+					ID:       "c-0004",
 					Message:  "Resources memory limit and request",
 					Severity: "High",
 					Category: "daemonset",
@@ -710,7 +710,7 @@ func TestParse(t *testing.T) {
 					TotalResources: 2,
 				},
 				{
-					ID:       "C-0006",
+					ID:       "c-0006",
 					Message:  "Allowed hostPath",
 					Severity: "Medium",
 					Category: "daemonset",
@@ -723,7 +723,7 @@ func TestParse(t *testing.T) {
 					TotalResources: 2,
 				},
 				{
-					ID:       "C-0013",
+					ID:       "c-0013",
 					Message:  "Non-root containers",
 					Severity: "Medium",
 					Category: "daemonset",
@@ -736,7 +736,7 @@ func TestParse(t *testing.T) {
 					TotalResources: 2,
 				},
 				{
-					ID:       "C-0017",
+					ID:       "c-0017",
 					Message:  "Immutable container filesystem",
 					Severity: "Low",
 					Category: "deployment",

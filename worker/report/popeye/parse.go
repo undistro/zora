@@ -22,9 +22,9 @@ func prepareIdAndMsg(msg string) (string, string, error) {
 		return "", "", errors.New("Unable to split Popeye error code from message.")
 	}
 	if msg, ok := IssueIDtoGenericMsg[s[1][strings.LastIndex(s[1], "-")+1:]]; ok {
-		return s[1], msg, nil
+		return strings.ToLower(s[1]), msg, nil
 	}
-	return s[1], s[2], nil
+	return strings.ToLower(s[1]), s[2], nil
 }
 
 // Parse transforms a Popeye report into a slice of <ClusterIssueSpec>. This

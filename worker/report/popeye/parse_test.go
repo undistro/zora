@@ -22,35 +22,35 @@ func TestPrepareIdAndMsg(t *testing.T) {
 		{
 			description: "Popeye generic issue 113",
 			popmsg:      "[POP-113] Container image fake_img:latest is not hosted on an allowed docker registry",
-			id:          "POP-113",
+			id:          "pop-113",
 			msg:         "Container image not hosted on an allowed docker registry",
 			toerr:       false,
 		},
 		{
 			description: "Popeye issue 400",
 			popmsg:      "[POP-400] Used? Unable to locate resource reference",
-			id:          "POP-400",
+			id:          "pop-400",
 			msg:         "Used? Unable to locate resource reference",
 			toerr:       false,
 		},
 		{
 			description: "Popeye issue 800",
 			popmsg:      "[POP-800] Namespace is inactive",
-			id:          "POP-800",
+			id:          "pop-800",
 			msg:         "Namespace is inactive",
 			toerr:       false,
 		},
 		{
 			description: "Popeye generic issue 1109",
 			popmsg:      "[POP-1109] Only one Pod associated with this endpoint",
-			id:          "POP-1109",
+			id:          "pop-1109",
 			msg:         "Only one Pod associated with this endpoint",
 			toerr:       false,
 		},
 		{
 			description: "Popeye generic issue 1200",
 			popmsg:      "[POP-1200] Unhealthy ReplicaSet 5 desired but have 2 ready",
-			id:          "POP-1200",
+			id:          "pop-1200",
 			msg:         "Unhealthy ReplicaSet",
 			toerr:       false,
 		},
@@ -92,7 +92,7 @@ func TestParse(t *testing.T) {
 			testrepname: "testdata/test_report_1.json",
 			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
-					ID:       "POP-400",
+					ID:       "pop-400",
 					Message:  "Used? Unable to locate resource reference",
 					Severity: "Low",
 					Category: "clusterroles",
@@ -128,7 +128,7 @@ func TestParse(t *testing.T) {
 			testrepname: "testdata/test_report_2.json",
 			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
-					ID:       "POP-400",
+					ID:       "pop-400",
 					Message:  "Used? Unable to locate resource reference",
 					Severity: "Low",
 					Category: "clusterroles",
@@ -139,7 +139,7 @@ func TestParse(t *testing.T) {
 					Url:            "",
 				},
 				{
-					ID:       "POP-106",
+					ID:       "pop-106",
 					Message:  "No resources requests/limits defined",
 					Severity: "Medium",
 					Category: "daemonsets",
@@ -151,7 +151,7 @@ func TestParse(t *testing.T) {
 					Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 				},
 				{
-					ID:       "POP-107",
+					ID:       "pop-107",
 					Message:  "No resource limits defined",
 					Severity: "Medium",
 					Category: "daemonsets",
@@ -162,7 +162,7 @@ func TestParse(t *testing.T) {
 					Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 				},
 				{
-					ID:       "POP-108",
+					ID:       "pop-108",
 					Message:  "Unnamed port",
 					Severity: "Low",
 					Category: "deployments",
