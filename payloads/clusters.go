@@ -192,10 +192,25 @@ func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 	return ri
 }
 
-func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) Cluster {
+func overrideInCluster(cl string, clusters []string) bool {
+	if len(clusters) == 0 {
+		return true
+	}
+	for _, c := range clusters {
+		if c == cl {
+			return true
+		}
+	}
+	return false
+}
+
+func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue, overr map[string][]string) Cluster {
 	c := NewCluster(cluster, scans)
 	if c.Scan.Status != Failed {
 		for _, i := range issues {
+			if cls, ov := overr[i.Spec.ID]; ov && overrideInCluster(i.Spec.Cluster, cls) {
+				continue
+			}
 			c.Issues = append(c.Issues, NewResourcedIssue(i))
 		}
 	}

@@ -1,6 +1,10 @@
 package payloads
 
-import "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+import (
+	"strings"
+
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+)
 
 type Issue struct {
 	ID       string             `json:"id"`
@@ -29,11 +33,14 @@ func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 	}
 }
 
-func NewIssues(clusterIssues []v1alpha1.ClusterIssue, failedscan map[string]struct{}) []Issue {
+func NewIssues(clusterIssues []v1alpha1.ClusterIssue, failedscan map[string]struct{}, overr map[string][]string) []Issue {
 	issuesByID := make(map[string]*Issue)
 	clustersByIssue := make(map[string]map[string]*ClusterReference)
 	for _, clusterIssue := range clusterIssues {
 		if _, ok := failedscan[clusterIssue.Spec.Cluster]; ok {
+			continue
+		}
+		if cls, ov := overr[clusterIssue.Spec.ID]; ov && overrideInCluster(clusterIssue.Spec.Cluster, cls) {
 			continue
 		}
 		clusterRef := &ClusterReference{

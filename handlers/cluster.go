@@ -55,7 +55,20 @@ func ClusterHandler(client versioned.Interface, logger logr.Logger) func(http.Re
 			return
 		}
 
+		ciolist, err := client.ZoraV1alpha1().ClusterIssueOverrides(namespace).List(r.Context(), metav1.ListOptions{})
+		if err != nil {
+			log.Error(err, "Failed to list ClusterIssueOverrides")
+			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterIssueOverrides", err.Error())
+			return
+		}
 		log.Info(fmt.Sprintf("cluster %s returned with %d issues", clusterName, len(issueList.Items)))
-		RespondWithJSON(w, http.StatusOK, payloads.NewClusterWithIssues(*cluster, scanList.Items, issueList.Items))
+		log.Info(fmt.Sprintf("cluster %s returned with %d issue overrides", clusterName, len(ciolist.Items)))
+
+		overr := map[string][]string{}
+		for _, o := range ciolist.Items {
+			overr[o.Name] = o.Spec.Clusters
+		}
+
+		RespondWithJSON(w, http.StatusOK, payloads.NewClusterWithIssues(*cluster, scanList.Items, issueList.Items, overr))
 	}
 }

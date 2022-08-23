@@ -29,6 +29,13 @@ func IssueListHandler(client versioned.Interface, logger logr.Logger) func(http.
 			return
 		}
 
+		ciolist, err := client.ZoraV1alpha1().ClusterIssueOverrides("").List(r.Context(), metav1.ListOptions{})
+		if err != nil {
+			log.Error(err, "Failed to list ClusterIssueOverrides")
+			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterIssueOverrides", err.Error())
+			return
+		}
+
 		failedscan := map[string]struct{}{}
 		for _, cs := range cslist.Items {
 			if cs.Status.LastFinishedStatus == string(batchv1.JobFailed) {
@@ -36,7 +43,12 @@ func IssueListHandler(client versioned.Interface, logger logr.Logger) func(http.
 			}
 		}
 
-		issues := payloads.NewIssues(issueList.Items, failedscan)
+		overr := map[string][]string{}
+		for _, o := range ciolist.Items {
+			overr[o.Name] = o.Spec.Clusters
+		}
+
+		issues := payloads.NewIssues(issueList.Items, failedscan, overr)
 		log.Info(fmt.Sprintf("%d issue(s) returned", len(issues)))
 		RespondWithJSON(w, http.StatusOK, issues)
 	}
