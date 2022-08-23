@@ -6,4 +6,6 @@ type ClusterExpansion interface{}
 
 type ClusterIssueExpansion interface{}
 
+type ClusterIssueOverrideExpansion interface{}
+
 type ClusterScanExpansion interface{}

@@ -14,6 +14,7 @@ type ZoraV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClustersGetter
 	ClusterIssuesGetter
+	ClusterIssueOverridesGetter
 	ClusterScansGetter
 }
 
@@ -28,6 +29,10 @@ func (c *ZoraV1alpha1Client) Clusters(namespace string) ClusterInterface {
 
 func (c *ZoraV1alpha1Client) ClusterIssues(namespace string) ClusterIssueInterface {
 	return newClusterIssues(c, namespace)
+}
+
+func (c *ZoraV1alpha1Client) ClusterIssueOverrides(namespace string) ClusterIssueOverrideInterface {
+	return newClusterIssueOverrides(c, namespace)
 }
 
 func (c *ZoraV1alpha1Client) ClusterScans(namespace string) ClusterScanInterface {
