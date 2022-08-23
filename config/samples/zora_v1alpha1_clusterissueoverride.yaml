@@ -1,6 +1,9 @@
 apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterIssueOverride
 metadata:
-  name: clusterissueoverride-sample
+  name: pop-500
 spec:
-  # TODO(user): Add fields here
+  clusters: []
+  message: ""
+  severity: "Low"
+  category: ""
