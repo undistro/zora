@@ -10,10 +10,10 @@ import (
 // clusters where this override is valid. An empty list emplies a global
 // override.
 type ClusterIssueOverrideSpec struct {
-	Clusters []string             `json:"clusters"`
-	Message  string               `json:"message,omitempty"`
-	Severity ClusterIssueSeverity `json:"severity,omitempty"`
-	Category string               `json:"category,omitempty"`
+	Clusters []string              `json:"clusters,omitempty"`
+	Message  *string               `json:"message,omitempty"`
+	Severity *ClusterIssueSeverity `json:"severity,omitempty"`
+	Category *string               `json:"category,omitempty"`
 }
 
 type ClusterIssueOverrideStatus struct{}
@@ -46,6 +46,22 @@ type ClusterIssueOverrideList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClusterIssueOverride `json:"items"`
+}
+
+func (r *ClusterIssueOverride) Hidden() bool {
+	return r.Spec.Severity == nil && r.Spec.Category == nil && r.Spec.Message == nil
+}
+
+func (r *ClusterIssueOverride) InCluster(cl string) bool {
+	if len(r.Spec.Clusters) == 0 {
+		return true
+	}
+	for _, c := range r.Spec.Clusters {
+		if c == cl {
+			return true
+		}
+	}
+	return false
 }
 
 func init() {

@@ -93,6 +93,20 @@ spec:
             type: object
           status:
             description: ClusterIssueStatus defines the observed state of ClusterIssue
+            properties:
+              hidden:
+                type: boolean
+              origCategory:
+                type: string
+              origMessage:
+                type: string
+              origSeverity:
+                enum:
+                - Unknown
+                - Low
+                - Medium
+                - High
+                type: string
             type: object
         type: object
     served: true

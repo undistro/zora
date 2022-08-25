@@ -36,6 +36,10 @@ type ClusterIssueSpec struct {
 
 // ClusterIssueStatus defines the observed state of ClusterIssue
 type ClusterIssueStatus struct {
+	Hidden       bool                  `json:"hidden,omitempty"`
+	OrigMessage  *string               `json:"origMessage,omitempty"`
+	OrigSeverity *ClusterIssueSeverity `json:"origSeverity,omitempty"`
+	OrigCategory *string               `json:"origCategory,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -67,6 +71,11 @@ type ClusterIssueList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClusterIssue `json:"items"`
+}
+
+func (r *ClusterIssue) HasOverride() bool {
+	return r.Status.Hidden ||
+		r.Status.OrigSeverity != nil || r.Status.OrigCategory != nil || r.Status.OrigMessage != nil
 }
 
 func init() {
