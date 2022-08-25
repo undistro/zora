@@ -43,6 +43,7 @@ rules:
       - persistentvolumes
       - persistentvolumeclaims
       - pods
+      - replicationcontrollers
       - secrets
       - serviceaccounts
       - services
@@ -53,7 +54,6 @@ rules:
       - deployments
       - statefulsets
       - replicasets
-      - replicationcontrollers
     verbs: [ "get", "list" ]
   - apiGroups: [ "autoscaling" ]
     resources:
