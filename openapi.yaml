@@ -202,6 +202,18 @@ components:
         url:
           type: string
           example: "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels"
+        original:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "No resources requests/limits defined"
+            category:
+              type: string
+              example: "Container"
+            severity:
+              type: string
+              example: "Medium"
     ClusterIssue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'
