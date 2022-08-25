@@ -53,6 +53,7 @@ rules:
       - deployments
       - statefulsets
       - replicasets
+      - replicationcontrollers
     verbs: [ "get", "list" ]
   - apiGroups: [ "autoscaling" ]
     resources:
