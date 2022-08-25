@@ -1,8 +1,6 @@
 package payloads
 
 import (
-	"strings"
-
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 )
 
@@ -14,6 +12,13 @@ type Issue struct {
 	Plugin   string             `json:"plugin"`
 	Clusters []ClusterReference `json:"clusters"`
 	Url      string             `json:"url"`
+	Original *Original          `json:"original"`
+}
+
+type Original struct {
+	Message  *string `json:"message"`
+	Severity *string `json:"severity"`
+	Category *string `json:"category"`
 }
 
 type ClusterReference struct {
@@ -23,7 +28,7 @@ type ClusterReference struct {
 }
 
 func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
-	return Issue{
+	i := Issue{
 		ID:       clusterIssue.Spec.ID,
 		Message:  clusterIssue.Spec.Message,
 		Severity: string(clusterIssue.Spec.Severity),
@@ -31,18 +36,27 @@ func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 		Plugin:   clusterIssue.Labels[v1alpha1.LabelPlugin],
 		Url:      clusterIssue.Spec.Url,
 	}
+	if clusterIssue.HasOverride() {
+		i.Original = &Original{
+			Message:  clusterIssue.Status.OrigMessage,
+			Category: clusterIssue.Status.OrigCategory,
+		}
+		if clusterIssue.Status.OrigSeverity != nil {
+			s := string(*clusterIssue.Status.OrigSeverity)
+			i.Original.Severity = &s
+		}
+	}
+	return i
 }
 
-func NewIssues(clusterIssues []v1alpha1.ClusterIssue, failedscan map[string]struct{}, overr map[string][]string) []Issue {
+func NewIssues(clusterIssues []v1alpha1.ClusterIssue, failedscan map[string]struct{}) []Issue {
 	issuesByID := make(map[string]*Issue)
 	clustersByIssue := make(map[string]map[string]*ClusterReference)
 	for _, clusterIssue := range clusterIssues {
-		if _, ok := failedscan[clusterIssue.Spec.Cluster]; ok {
+		if _, ok := failedscan[clusterIssue.Spec.Cluster]; ok || clusterIssue.Status.Hidden {
 			continue
 		}
-		if cls, ov := overr[clusterIssue.Spec.ID]; ov && overrideInCluster(clusterIssue.Spec.Cluster, cls) {
-			continue
-		}
+
 		clusterRef := &ClusterReference{
 			Name:           clusterIssue.Spec.Cluster,
 			Namespace:      clusterIssue.Namespace,
