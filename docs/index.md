@@ -23,3 +23,17 @@ Follow these steps to get started with Zora:
 5. After a successful scan [checkout the potential reported issues](/cluster-scan#list-cluster-issues)
 
 All the information about these steps are detailed throughout this documentation.
+
+## Zora origins
+
+In the early days of the cloud native era, [Borg](https://intl.startrek.com/database_article/borg) dominated the container-oriented cluster management scene.
+The origin of the name Borg refers to the cybernetic life form existing in the Star Trek series, 
+that worked as a collective of individuals with a single mind and the same purpose, as well as a "[cluster](https://pt.wikipedia.org/wiki/Cluster)".
+
+As good nerds as we are and wishing to honor our Kubernetes' [predecessor](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/) (Borg) we named our project [Zora](https://intl.startrek.com/node/15372).
+
+In Star Trek, Zora is the Artificial Intelligence that controls the ship U.S.S Discovery.  
+After being merged with a collective of other intelligences, Zora became sentient and became a member of the team, bringing insights and making the ship more efficient.
+
+Like Star Trek's Zora, our goal is to help manage your K8s environment by periodically scanning all of your clusters, 
+looking for potential issues or vulnerabilities with deployed features and configurations, and helping you ensure compliance with the best practices.
