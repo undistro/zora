@@ -3,11 +3,15 @@
 ## What is Zora?
 
 Zora is a multi-cluster scan that helps you to identify potential issues and vulnerabilities 
-in your kubernetes clusters in a centralized way, ensuring that the recommended best practices are in place.
+in your Kubernetes clusters in a centralized way, ensuring that the recommended best practices are in place.
+
+Throughout this documentation, we will use the following notation:
+- "Management Cluster" to refer to the only Kubernetes cluster where Zora is installed;
+- "Target Cluster" to refer to all clusters you will connect to Zora to be scanned. The Target clusters will be running on the Management Cluster.
 
 Follow these steps to get started with Zora:
 
-1. [Install Zora](/install) in a cluster, aka [Management Cluster](/glossary#management-cluster) 
+1. [Install Zora](/install) in a [Management Cluster](/glossary#management-cluster)
 
 2. [Prepare the target cluster](/target-cluster) by creating a service account and generating a kubeconfig
 
