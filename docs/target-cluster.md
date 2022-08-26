@@ -43,6 +43,7 @@ rules:
       - persistentvolumes
       - persistentvolumeclaims
       - pods
+      - replicationcontrollers
       - secrets
       - serviceaccounts
       - services
