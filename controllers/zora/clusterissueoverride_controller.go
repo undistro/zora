@@ -29,6 +29,10 @@ type ClusterIssueOverrideReconciler struct {
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissueoverrides,verbs=list
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues,verbs=list;update
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=update
+//+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get
+//+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
+//+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;watch
+//+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

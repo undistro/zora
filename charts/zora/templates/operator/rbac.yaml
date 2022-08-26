@@ -119,6 +119,7 @@ rules:
   - jobs/status
   verbs:
   - get
+  - watch
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
@@ -136,23 +137,30 @@ rules:
   verbs:
   - get
 - apiGroups:
-    - zora.undistro.io
+  - zora.undistro.io
   resources:
-    - clusterissues
+  - clusterissueoverrides
   verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
+  - list
 - apiGroups:
-    - zora.undistro.io
+  - zora.undistro.io
   resources:
-    - clusterissues/status
+  - clusterissues
   verbs:
-    - get
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusterissues/status
+  verbs:
+  - get
+  - update
 - apiGroups:
   - zora.undistro.io
   resources:
