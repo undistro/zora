@@ -4,10 +4,10 @@ kind: ServiceAccount
 metadata:
   name: {{ include "zora.operatorServiceAccountName" . }}
   labels:
-    {{- include "zora.operatorLabels" . | nindent 4 }}
+  {{- include "zora.operatorLabels" . | nindent 4 }}
   {{- with .Values.operator.rbac.serviceAccount.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 {{ end }}
 {{- if .Values.operator.rbac.create -}}
@@ -17,37 +17,37 @@ kind: Role
 metadata:
   name: {{ include "zora.operatorServiceAccountName" . }}-leader-election
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - configmaps
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - create
-      - patch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -141,7 +141,10 @@ rules:
   resources:
   - clusterissueoverrides
   verbs:
+  - get
   - list
+  - update
+  - watch
 - apiGroups:
   - zora.undistro.io
   resources:
@@ -227,28 +230,28 @@ kind: ClusterRole
 metadata:
   name: {{ include "zora.operatorServiceAccountName" . }}-metrics-reader
 rules:
-  - nonResourceURLs:
-      - /metrics
-    verbs:
-      - get
+- nonResourceURLs:
+  - "/metrics"
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ include "zora.operatorServiceAccountName" . }}-proxy
 rules:
-  - apiGroups:
-      - authentication.k8s.io
-    resources:
-      - tokenreviews
-    verbs:
-      - create
-  - apiGroups:
-      - authorization.k8s.io
-    resources:
-      - subjectaccessreviews
-    verbs:
-      - create
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -259,9 +262,9 @@ roleRef:
   kind: Role
   name: {{ include "zora.operatorServiceAccountName" . }}-leader-election
 subjects:
-  - kind: ServiceAccount
-    name: {{ include "zora.operatorServiceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: {{ include "zora.operatorServiceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -272,9 +275,9 @@ roleRef:
   kind: ClusterRole
   name: {{ include "zora.operatorServiceAccountName" . }}
 subjects:
-  - kind: ServiceAccount
-    name: {{ include "zora.operatorServiceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: {{ include "zora.operatorServiceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -285,7 +288,8 @@ roleRef:
   kind: ClusterRole
   name: {{ include "zora.operatorServiceAccountName" . }}-proxy
 subjects:
-  - kind: ServiceAccount
-    name: {{ include "zora.operatorServiceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: {{ include "zora.operatorServiceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
 {{- end }}
+---

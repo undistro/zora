@@ -26,9 +26,9 @@ type ClusterIssueOverrideReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissueoverrides,verbs=list
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissueoverrides,verbs=get;list;update;watch
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues,verbs=list;update
-//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=update
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=get;update
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;watch
