@@ -20,7 +20,7 @@ import (
 
 const Finalizer = "finalizer.undistro.io"
 
-// ClusterIssueOverrideReconciler reconciles a ClusterIssueOverride object
+// ClusterIssueOverrideReconciler reconciles a ClusterIssueOverride object.
 type ClusterIssueOverrideReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
@@ -34,7 +34,7 @@ type ClusterIssueOverrideReconciler struct {
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;watch
 //+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
+// Reconcile is part of the main Kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *ClusterIssueOverrideReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := ctrllog.FromContext(ctx)
@@ -83,6 +83,8 @@ func (r *ClusterIssueOverrideReconciler) Reconcile(ctx context.Context, req ctrl
 	return ctrl.Result{}, nil
 }
 
+// Mutate reflects overridden issue data on the issue itself, storing the
+// original values on the issue's status.
 func Mutate(ci *v1alpha1.ClusterIssue, cio *v1alpha1.ClusterIssueOverride) {
 	ci.Status.Hidden = cio.Hidden()
 	if ci.Status.Hidden {
@@ -122,6 +124,7 @@ func Mutate(ci *v1alpha1.ClusterIssue, cio *v1alpha1.ClusterIssueOverride) {
 	}
 }
 
+// Outdated tells whether an issue differs from its override.
 func Outdated(ci *v1alpha1.ClusterIssue, cio *v1alpha1.ClusterIssueOverride) bool {
 	if cio.Hidden() != ci.Status.Hidden {
 		return true
@@ -142,6 +145,7 @@ func Outdated(ci *v1alpha1.ClusterIssue, cio *v1alpha1.ClusterIssueOverride) boo
 	return false
 }
 
+// This function holds implementation specific reconciliation flows.
 func (r *ClusterIssueOverrideReconciler) reconcile(ctx context.Context, ciolist *v1alpha1.ClusterIssueOverrideList, cilist *v1alpha1.ClusterIssueList) error {
 	ciom := map[string]v1alpha1.ClusterIssueOverride{}
 	for _, cio := range ciolist.Items {
@@ -165,6 +169,7 @@ func (r *ClusterIssueOverrideReconciler) reconcile(ctx context.Context, ciolist 
 	return nil
 }
 
+// Restore mutates an issue back to its original state.
 func Restore(ci *v1alpha1.ClusterIssue) {
 	if ci.Status.OrigCategory != nil {
 		ci.Spec.Category = *ci.Status.OrigCategory
@@ -181,7 +186,10 @@ func Restore(ci *v1alpha1.ClusterIssue) {
 	ci.Status.Hidden = false
 }
 
-func (r *ClusterIssueOverrideReconciler) reconcileDelete(ctx context.Context, cio *v1alpha1.ClusterIssueOverride, cilist *v1alpha1.ClusterIssueList) error {
+// This function is used to restore an issue to its original state whenever
+// an override is deleted.
+func (r *ClusterIssueOverrideReconciler) reconcileDelete(ctx context.Context,
+	cio *v1alpha1.ClusterIssueOverride, cilist *v1alpha1.ClusterIssueList) error {
 	for _, ci := range cilist.Items {
 		if ci.Spec.ID == cio.Name && cio.InCluster(ci.Spec.Cluster) {
 			Restore(&ci)
@@ -193,6 +201,8 @@ func (r *ClusterIssueOverrideReconciler) reconcileDelete(ctx context.Context, ci
 	return nil
 }
 
+// This function is a Job trigger filter, whereby a request to this reconciler
+// is created when the given Job is known to be from Zora's plugins.
 func (r *ClusterIssueOverrideReconciler) completeJobTrigger(o client.Object) []ctrl.Request {
 	j := o.(*batchv1.Job)
 	if _, ct, _ := getFinishedStatus(j); ct != batchv1.JobComplete || len(j.OwnerReferences) != 1 {
@@ -224,7 +234,9 @@ func (r *ClusterIssueOverrideReconciler) completeJobTrigger(o client.Object) []c
 	return nil
 }
 
-// SetupWithManager sets up the controller with the Manager.
+// SetupWithManager sets up the controller with the Manager. This controller
+// not only reconciles <ClusterIssueOverrides> but also <ClusterIssues> by
+// watching Jobs from Zora's plugins.
 func (r *ClusterIssueOverrideReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(
