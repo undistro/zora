@@ -153,8 +153,7 @@ func (r *ClusterIssueOverrideReconciler) reconcile(ctx context.Context, ciolist 
 	}
 
 	for _, ci := range cilist.Items {
-		cio, overr := ciom[ci.Spec.ID]
-		if overr && cio.InCluster(ci.Spec.Cluster) && Outdated(&ci, &cio) {
+		if cio, overr := ciom[ci.Spec.ID]; overr && cio.InCluster(ci.Spec.Cluster) && Outdated(&ci, &cio) {
 			Mutate(&ci, &cio)
 			st := ci.Status
 			if err := r.Update(ctx, &ci); err != nil {
