@@ -34,6 +34,7 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
+  controller: true
   domain: undistro.io
   group: zora
   kind: ClusterScan
