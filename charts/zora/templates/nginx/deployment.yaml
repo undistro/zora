@@ -48,18 +48,28 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          {{- if or .Values.ui.enabled .Values.server.enabled}}
           livenessProbe:
             httpGet:
+              {{- if .Values.ui.enabled }}
               path: /
+              {{- else }}
+              path: /api/v1/clusters
+              {{- end }}
               port: http
             initialDelaySeconds: 300
             periodSeconds: 10
           readinessProbe:
             httpGet:
+              {{- if .Values.ui.enabled }}
               path: /
+              {{- else }}
+              path: /api/v1/clusters
+              {{- end }}
               port: http
             initialDelaySeconds: 1
             periodSeconds: 10
+          {{- end }}
           resources:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
       volumes:
