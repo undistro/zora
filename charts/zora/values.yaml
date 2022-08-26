@@ -123,6 +123,8 @@ operator:
     timeEncoding: rfc3339
 
 server:
+  # -- Toggles server deployment
+  enabled: true
   # -- Number of replicas desired of Zora server
   replicaCount: 1
   image:
@@ -195,6 +197,8 @@ server:
     timeEncoding: rfc3339
 
 ui:
+  # -- Toggles UI deployment
+  enabled: true
   # -- Number of replicas desired of Zora UI
   replicaCount: 1
   image:

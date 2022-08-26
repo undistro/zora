@@ -1,4 +1,4 @@
-{{- if .Values.server.rbac.serviceAccount.create -}}
+{{- if and .Values.server.enabled .Values.server.rbac.serviceAccount.create -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:

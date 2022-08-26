@@ -26,13 +26,30 @@ charts/zora/templates/plugins/kubescape.yaml: config/samples/zora_v1alpha1_plugi
 	@ cp $< $@
 	patch -Nf --no-backup-if-mismatch $@ hack/patches/kubescape_plugin.patch
 
-manifest-consitency: \
+charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
+ config/rbac/leader_election_role.yaml \
+ config/rbac/role.yaml \
+ config/rbac/auth_proxy_client_clusterrole.yaml \
+ config/rbac/auth_proxy_role.yaml \
+ config/rbac/leader_election_role_binding.yaml \
+ config/rbac/role_binding.yaml \
+ config/rbac/auth_proxy_role_binding.yaml
+	@ rm $@
+	@ for f in $^; do \
+		patch -Nfi "hack/patches/rbac/$$(basename -s '.yaml' $$f).patch" \
+			--no-backup-if-mismatch \
+			-p 1 -o - >> $@; \
+		echo "---" >> $@; \
+	done
+
+manifest-consitency: charts/zora/templates/operator/rbac.yaml \
  charts/zora/templates/plugins/popeye.yaml \
  charts/zora/templates/plugins/kubescape.yaml
 
-manifests: controller-gen manifest-consitency ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/
+	$(MAKE) manifest-consitency
 
 generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
