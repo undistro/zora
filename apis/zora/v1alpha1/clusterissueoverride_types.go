@@ -28,8 +28,6 @@ type ClusterIssueOverrideStatus struct{}
 
 // ClusterIssueOverride is the Schema for the clusterissueoverrides API. Its
 // name is always the identifier of a cluster issue.
-//+genclient
-//+genclient:noStatus
 //+k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ClusterIssueOverride struct {
 	metav1.TypeMeta   `json:",inline"`

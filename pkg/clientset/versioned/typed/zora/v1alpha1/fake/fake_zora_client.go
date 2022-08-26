@@ -20,10 +20,6 @@ func (c *FakeZoraV1alpha1) ClusterIssues(namespace string) v1alpha1.ClusterIssue
 	return &FakeClusterIssues{c, namespace}
 }
 
-func (c *FakeZoraV1alpha1) ClusterIssueOverrides(namespace string) v1alpha1.ClusterIssueOverrideInterface {
-	return &FakeClusterIssueOverrides{c, namespace}
-}
-
 func (c *FakeZoraV1alpha1) ClusterScans(namespace string) v1alpha1.ClusterScanInterface {
 	return &FakeClusterScans{c, namespace}
 }
