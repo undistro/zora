@@ -71,8 +71,6 @@ spec:
                 - Medium
                 - High
                 type: string
-            required:
-            - clusters
             type: object
           status:
             type: object
