@@ -28,7 +28,7 @@ type ClusterIssueOverrideStatus struct{}
 
 // ClusterIssueOverride is the Schema for the clusterissueoverrides API. Its
 // name is always the identifier of a cluster issue.
-//+k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+//+k5s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ClusterIssueOverride struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -46,10 +46,14 @@ type ClusterIssueOverrideList struct {
 	Items           []ClusterIssueOverride `json:"items"`
 }
 
+// Hidden tells whether an override is used to hide an issue from the UI.
 func (r *ClusterIssueOverride) Hidden() bool {
 	return r.Spec.Severity == nil && r.Spec.Category == nil && r.Spec.Message == nil
 }
 
+// InCluster checks if the current override applies to a given cluster. In case
+// the override's cluster list is empty, this function will return true, since
+// the override will be global.
 func (r *ClusterIssueOverride) InCluster(cl string) bool {
 	if len(r.Spec.Clusters) == 0 {
 		return true
