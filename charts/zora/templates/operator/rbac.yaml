@@ -90,6 +90,13 @@ rules:
 - apiGroups:
   - batch
   resources:
+  - clusterscans
+  verbs:
+  - get
+  - watch
+- apiGroups:
+  - batch
+  resources:
   - cronjobs
   verbs:
   - create
@@ -119,7 +126,6 @@ rules:
   - jobs/status
   verbs:
   - get
-  - watch
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:

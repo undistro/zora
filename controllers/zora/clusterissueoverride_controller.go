@@ -27,11 +27,8 @@ type ClusterIssueOverrideReconciler struct {
 
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissueoverrides,verbs=get;list;update;watch
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues,verbs=list;update
-//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=get;update
-//+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get
-//+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
-//+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;watch
-//+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=update
+//+kubebuilder:rbac:groups=batch,resources=clusterscans,verbs=get;watch
 
 // Reconcile is part of the main Kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -56,7 +53,7 @@ func (r *ClusterIssueOverrideReconciler) Reconcile(ctx context.Context, req ctrl
 
 	for _, cio := range ciolist.Items {
 		if !cio.ObjectMeta.DeletionTimestamp.IsZero() && controllerutil.ContainsFinalizer(&cio, Finalizer) {
-			log.Info("Instance under delition")
+			log.Info("Instance under deletion")
 			if err := r.reconcileDelete(ctx, &cio, cilist); err != nil {
 				return ctrl.Result{}, err
 			}
@@ -207,37 +204,20 @@ func (r *ClusterIssueOverrideReconciler) reconcileDelete(ctx context.Context,
 	return nil
 }
 
-// This function is a Job trigger filter, whereby a request to this reconciler
+// This function is a <ClusterScan> trigger, whereby a request to this reconciler
 // is created when the given Job is known to be from Zora's plugins.
-func (r *ClusterIssueOverrideReconciler) completeJobTrigger(o client.Object) []ctrl.Request {
-	j := o.(*batchv1.Job)
-	if _, ct, _ := getFinishedStatus(j); ct != batchv1.JobComplete || len(j.OwnerReferences) != 1 {
-		return nil
-	}
-
-	cj := &batchv1.CronJob{}
-	if err := r.Get(context.Background(), client.ObjectKey{
-		Name:      j.OwnerReferences[0].Name,
-		Namespace: j.Namespace,
-	}, cj); err != nil {
-		return nil
-	}
+func (r *ClusterIssueOverrideReconciler) completeScanTrigger(o client.Object) []ctrl.Request {
 	ciolist := &v1alpha1.ClusterIssueOverrideList{}
 	if err := r.List(context.Background(), ciolist, client.Limit(1)); err != nil || len(ciolist.Items) == 0 {
 		return nil
 	}
 
-	for _, o := range cj.OwnerReferences {
-		if o.Kind == "ClusterScan" {
-			return []ctrl.Request{{
-				NamespacedName: client.ObjectKey{
-					Name:      ciolist.Items[0].Name,
-					Namespace: ciolist.Items[0].Namespace,
-				},
-			}}
-		}
-	}
-	return nil
+	return []ctrl.Request{{
+		NamespacedName: client.ObjectKey{
+			Name:      ciolist.Items[0].Name,
+			Namespace: ciolist.Items[0].Namespace,
+		},
+	}}
 }
 
 // SetupWithManager sets up the controller with the Manager. This controller
@@ -250,7 +230,7 @@ func (r *ClusterIssueOverrideReconciler) SetupWithManager(mgr ctrl.Manager) erro
 			builder.WithPredicates(predicate.GenerationChangedPredicate{}),
 		).
 		Watches(
-			&source.Kind{Type: &batchv1.Job{}},
-			handler.EnqueueRequestsFromMapFunc(r.completeJobTrigger),
+			&source.Kind{Type: &v1alpha1.ClusterScan{}},
+			handler.EnqueueRequestsFromMapFunc(r.completeScanTrigger),
 		).Complete(r)
 }

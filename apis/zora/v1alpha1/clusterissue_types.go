@@ -73,6 +73,7 @@ type ClusterIssueList struct {
 	Items           []ClusterIssue `json:"items"`
 }
 
+// HasOverride tells whether an issue has an override.
 func (r *ClusterIssue) HasOverride() bool {
 	return r.Status.Hidden ||
 		r.Status.OrigSeverity != nil || r.Status.OrigCategory != nil || r.Status.OrigMessage != nil
