@@ -57,7 +57,7 @@ build: generate fmt vet ## Build manager binary.
 	go build -o bin/worker worker/main.go
 
 run: install manifests generate ## Run a controller from your host.
-	go run ./main.go -default-plugins-names $(PLUGINS)
+	go run ./main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}
 run-server: install manifests generate ## Run Zora's server locally.
 	go run ./cmd/server/main.go
 
@@ -67,9 +67,9 @@ docker-push: ## Push docker image with the manager.
 	docker push ${IMG}
 
 docker-build-operator-worker: docker-build ## Build Docker images for the operator and worker components.
-	$(MAKE) IMG=${REG_ADDR}/worker:${IMG_TAG} DOCKERFILE=Dockerfile.worker docker-build
+	$(MAKE) IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
 docker-push-operator-worker: docker-push ## Push Docker images for the operator and worker components.
-	$(MAKE) IMG=${REG_ADDR}/worker:${IMG_TAG} DOCKERFILE=Dockerfile.worker docker-push
+	$(MAKE) IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-push
 
 
 ##@ Deployment

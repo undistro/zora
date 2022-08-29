@@ -5,6 +5,7 @@ REG_ADDR ?= ${REG_HOST}:${REG_PORT}
 MINIK_ADDR ?= 192.168.49.2
 IMG_TAG ?= latest
 IMG ?= ${REG_ADDR}/operator:${IMG_TAG}
+WORKER_IMG ?= ${REG_ADDR}/worker:${IMG_TAG}
 DOCKERFILE ?= Dockerfile
 
 # Commands
