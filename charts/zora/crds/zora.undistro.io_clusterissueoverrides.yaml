@@ -60,7 +60,13 @@ spec:
                 type: string
               clusters:
                 items:
-                  type: string
+                  description: NameNs contains the name and namespace of a resource.
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  type: object
                 type: array
               message:
                 type: string

@@ -4,13 +4,19 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// NameNs contains the name and namespace of a resource.
+type NameNs struct {
+	Name      string `json:"name,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+}
+
 // ClusterIssueOverrideSpec stores user provided data to superseed the defaults
 // from a given <ClusterIssue>. The last 3 fields carry the same type of
 // information as its <ClusterIssue> equivalent, but the first is a list of
 // clusters where this override is valid. An empty list emplies a global
 // override.
 type ClusterIssueOverrideSpec struct {
-	Clusters []string              `json:"clusters,omitempty"`
+	Clusters []NameNs              `json:"clusters,omitempty"`
 	Message  *string               `json:"message,omitempty"`
 	Severity *ClusterIssueSeverity `json:"severity,omitempty"`
 	Category *string               `json:"category,omitempty"`
@@ -53,7 +59,7 @@ func (r *ClusterIssueOverride) Hidden() bool {
 // InCluster checks if the current override applies to a given cluster. In case
 // the override's cluster list is empty, this function will return true, since
 // the override will be global.
-func (r *ClusterIssueOverride) InCluster(cl string) bool {
+func (r *ClusterIssueOverride) InCluster(cl NameNs) bool {
 	if len(r.Spec.Clusters) == 0 {
 		return true
 	}

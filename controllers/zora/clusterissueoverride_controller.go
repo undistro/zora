@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -153,7 +152,11 @@ func (r *ClusterIssueOverrideReconciler) reconcile(ctx context.Context, ciolist 
 	}
 
 	for _, ci := range cilist.Items {
-		if cio, overr := ciom[ci.Spec.ID]; overr && cio.InCluster(ci.Spec.Cluster) && Outdated(&ci, &cio) {
+		if cio, overr := ciom[ci.Spec.ID]; overr && cio.InCluster(
+			v1alpha1.NameNs{
+				Name:      ci.Spec.Cluster,
+				Namespace: ci.Namespace,
+			}) && Outdated(&ci, &cio) {
 			Mutate(&ci, &cio)
 			st := ci.Status
 			if err := r.Update(ctx, &ci); err != nil {
@@ -190,7 +193,11 @@ func Restore(ci *v1alpha1.ClusterIssue) {
 func (r *ClusterIssueOverrideReconciler) reconcileDelete(ctx context.Context,
 	cio *v1alpha1.ClusterIssueOverride, cilist *v1alpha1.ClusterIssueList) error {
 	for _, ci := range cilist.Items {
-		if ci.Spec.ID == cio.Name && cio.InCluster(ci.Spec.Cluster) {
+		if ci.Spec.ID == cio.Name && cio.InCluster(
+			v1alpha1.NameNs{
+				Name:      ci.Spec.Cluster,
+				Namespace: ci.Namespace,
+			}) {
 			Restore(&ci)
 			if err := r.Update(ctx, &ci); err != nil {
 				return err
