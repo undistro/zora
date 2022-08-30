@@ -197,6 +197,13 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 		return err
 	} else if issues != nil {
+		issc := map[string]int{}
+		for _, i := range issues {
+			issc[i.Labels[v1alpha1.LabelPlugin]]++
+		}
+		for p, c := range issc {
+			clusterscan.Status.Plugins[p].IssueCount = &c
+		}
 		clusterscan.Status.TotalIssues = pointer.Int(len(issues))
 	}
 
