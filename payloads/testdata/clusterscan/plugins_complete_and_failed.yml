@@ -32,14 +32,6 @@ status:
   observedGeneration: 3
   pluginNames: kubescape,popeye
   plugins:
-    kubescape:
-      lastFinishedStatus: Failed
-      lastFinishedTime: "2022-08-08T21:00:03Z"
-      lastScanID: ce34e6fc-768d-49d0-91b5-65df89ed147d
-      lastScheduleTime: "2022-08-08T21:00:00Z"
-      lastStatus: Failed
-      nextScheduleTime: "2022-08-08T22:00:00Z"
-      lastErrorMsg: 'failed to discover API server information. error: the server has asked for the client to provide credentials'
     popeye:
       lastFinishedStatus: Complete
       lastFinishedTime: "2022-08-08T21:00:03Z"
@@ -49,5 +41,14 @@ status:
       lastSuccessfulScanID: 9da315be-b5a1-4f1a-952b-915cc19fe446
       lastSuccessfulTime: "2022-08-08T21:00:03Z"
       nextScheduleTime: "2022-08-08T22:00:00Z"
+      issueCount: 21
+    kubescape:
+      lastFinishedStatus: Failed
+      lastFinishedTime: "2022-08-08T21:00:03Z"
+      lastScanID: ce34e6fc-768d-49d0-91b5-65df89ed147d
+      lastScheduleTime: "2022-08-08T21:00:00Z"
+      lastStatus: Failed
+      nextScheduleTime: "2022-08-08T22:00:00Z"
+      lastErrorMsg: 'failed to discover API server information. error: the server has asked for the client to provide credentials'
   suspend: false
   totalIssues: 21
