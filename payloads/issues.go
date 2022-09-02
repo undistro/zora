@@ -14,7 +14,12 @@
 
 package payloads
 
-import "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+import (
+	"bytes"
+	"encoding/json"
+
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+)
 
 type Issue struct {
 	ID       string             `json:"id"`
@@ -69,4 +74,12 @@ func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
 		res = append(res, *i)
 	}
 	return res
+}
+
+func (r Issue) Read(b []byte) (int, error) {
+	jc, err := json.Marshal(r)
+	if err != nil {
+		return -1, err
+	}
+	return bytes.NewReader(jc).Read(b)
 }

@@ -152,6 +152,12 @@ rules:
 - apiGroups:
   - zora.undistro.io
   resources:
+  - cluster
+  verbs:
+  - list
+- apiGroups:
+  - zora.undistro.io
+  resources:
   - clusterissues
   verbs:
   - create
