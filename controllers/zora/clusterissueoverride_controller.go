@@ -83,9 +83,6 @@ func (r *ClusterIssueOverrideReconciler) Reconcile(ctx context.Context, req ctrl
 // original values on the issue's status.
 func Mutate(ci *v1alpha1.ClusterIssue, cio *v1alpha1.ClusterIssueOverride) {
 	ci.Status.Hidden = cio.Hidden()
-	if ci.Status.Hidden {
-		return
-	}
 
 	if ci.Status.OrigCategory == nil {
 		ci.Status.OrigCategory = new(string)
