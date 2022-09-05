@@ -45,7 +45,7 @@ jobs:
       - name: Push server
         run: IMG=$REPO/zora/server:$GITHUB_REF_NAME make docker-push
       - name: Push worker
-        run: IMG=$REPO/library/worker:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.worker make docker-push
+        run: IMG=$REPO/library/worker:$GITHUB_REF_NAME make docker-push
 
       - name: Registry logout
         run: docker logout
