@@ -60,5 +60,6 @@ status:
       lastSuccessfulScanID: b08a1ed0-a0e3-43c8-b99c-8378acfb92ec
       lastSuccessfulTime: "2022-08-04T21:47:00Z"
       nextScheduleTime: "2022-08-04T23:45:00Z"
+      issueCount: 62
   suspend: false
   totalIssues: 62

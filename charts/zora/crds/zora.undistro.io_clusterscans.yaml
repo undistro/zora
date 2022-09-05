@@ -340,6 +340,10 @@ spec:
               plugins:
                 additionalProperties:
                   properties:
+                    issueCount:
+                      description: IssueCount holds the sum of ClusterIssues found
+                        in the last successful scan.
+                      type: integer
                     lastErrorMsg:
                       description: LastErrorMsg contains a plugin error message from
                         the last failed scan.

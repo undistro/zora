@@ -49,11 +49,11 @@ func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 	return i
 }
 
-func NewIssues(clusterIssues []v1alpha1.ClusterIssue, failedscan map[string]struct{}) []Issue {
+func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
 	issuesByID := make(map[string]*Issue)
 	clustersByIssue := make(map[string]map[string]*ClusterReference)
 	for _, clusterIssue := range clusterIssues {
-		if _, ok := failedscan[clusterIssue.Spec.Cluster]; ok || clusterIssue.Status.Hidden {
+		if clusterIssue.Status.Hidden {
 			continue
 		}
 
