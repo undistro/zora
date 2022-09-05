@@ -175,10 +175,15 @@ func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) Cluster {
 	c := NewCluster(cluster, scans)
 	for _, i := range issues {
-		c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
-			c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
-			NewResourcedIssue(i),
-		)
+		if i.Status.Hidden {
+			*c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].IssueCount--
+			*c.TotalIssues--
+		} else {
+			c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
+				c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
+				NewResourcedIssue(i),
+			)
+		}
 	}
 	return c
 }
