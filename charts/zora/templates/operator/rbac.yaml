@@ -90,13 +90,6 @@ rules:
 - apiGroups:
   - batch
   resources:
-  - clusterscans
-  verbs:
-  - get
-  - watch
-- apiGroups:
-  - batch
-  resources:
   - cronjobs
   verbs:
   - create
