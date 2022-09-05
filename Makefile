@@ -38,6 +38,7 @@ generate: controller-gen ## Generate clientset and code containing DeepCopy, Dee
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 clientset-gen: ## Generate clientset
+	@rm -r $(PROJECT_ROOT)/pkg/clientset || echo -n
 	@docker run -i --rm \
 		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
 		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
