@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/payloads"
+	payloads "github.com/getupio-undistro/zora/pkg/payloads/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -88,8 +88,7 @@ func (r *SaasReconciler) reconcile(ctx context.Context, clist *v1alpha1.ClusterL
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	// The failed scans parameter is no longer used.
-	issues := payloads.NewIssues(cilist.Items, map[string]struct{}{})
+	issues := payloads.NewIssues(cilist.Items)
 	log.Info(fmt.Sprintf("Sending %d issues", len(issues)))
 	for _, bod := range issues {
 		sendf(bod)

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package payloads
+package v1alpha1
 
 import (
 	"bytes"
@@ -22,13 +22,14 @@ import (
 )
 
 type Issue struct {
-	ID       string             `json:"id"`
-	Message  string             `json:"message"`
-	Severity string             `json:"severity"`
-	Category string             `json:"category"`
-	Plugin   string             `json:"plugin"`
-	Clusters []ClusterReference `json:"clusters"`
-	Url      string             `json:"url"`
+	ApiVersion string             `json:"apiVersion"`
+	ID         string             `json:"id"`
+	Message    string             `json:"message"`
+	Severity   string             `json:"severity"`
+	Category   string             `json:"category"`
+	Plugin     string             `json:"plugin"`
+	Clusters   []ClusterReference `json:"clusters"`
+	Url        string             `json:"url"`
 }
 
 type ClusterReference struct {
@@ -39,12 +40,13 @@ type ClusterReference struct {
 
 func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 	return Issue{
-		ID:       clusterIssue.Spec.ID,
-		Message:  clusterIssue.Spec.Message,
-		Severity: string(clusterIssue.Spec.Severity),
-		Category: clusterIssue.Spec.Category,
-		Plugin:   clusterIssue.Labels[v1alpha1.LabelPlugin],
-		Url:      clusterIssue.Spec.Url,
+		ApiVersion: "v1alpha1",
+		ID:         clusterIssue.Spec.ID,
+		Message:    clusterIssue.Spec.Message,
+		Severity:   string(clusterIssue.Spec.Severity),
+		Category:   clusterIssue.Spec.Category,
+		Plugin:     clusterIssue.Labels[v1alpha1.LabelPlugin],
+		Url:        clusterIssue.Spec.Url,
 	}
 }
 
