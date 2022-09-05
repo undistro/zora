@@ -237,7 +237,7 @@ components:
             severity:
               type: string
               example: "Medium"
-    ClusterIssue:
+    ResourcedIssue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'
         - type: object
