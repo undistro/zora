@@ -5,45 +5,37 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: clusterissues.zora.undistro.io
+  name: clusterissueoverrides.zora.undistro.io
 spec:
   group: zora.undistro.io
   names:
-    kind: ClusterIssue
-    listKind: ClusterIssueList
-    plural: clusterissues
+    kind: ClusterIssueOverride
+    listKind: ClusterIssueOverrideList
+    plural: clusterissueoverrides
     shortNames:
-    - ci
-    singular: clusterissue
+    - cio
+    singular: clusterissueoverride
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.cluster
-      name: Cluster
-      type: string
-    - jsonPath: .spec.id
-      name: ID
-      type: string
-    - jsonPath: .spec.message
-      name: Message
-      type: string
     - jsonPath: .spec.severity
       name: Severity
       type: string
     - jsonPath: .spec.category
       name: Category
       type: string
-    - jsonPath: .metadata.creationTimestamp
-      name: Age
-      type: date
-    - jsonPath: .spec.totalResources
-      name: Total
+    - jsonPath: .spec.message
+      name: Message
+      type: string
+    - jsonPath: .spec.clusters
+      name: Clusters
       priority: 1
-      type: integer
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ClusterIssue is the Schema for the clusterissues API
+        description: ClusterIssueOverride is the Schema for the clusterissueoverrides
+          API. Its name is always the identifier of a cluster issue.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -58,22 +50,26 @@ spec:
           metadata:
             type: object
           spec:
-            description: ClusterIssueSpec defines the desired state of ClusterIssue
+            description: ClusterIssueOverrideSpec stores user provided data to superseed
+              the defaults from a given <ClusterIssue>. The last 3 fields carry the
+              same type of information as its <ClusterIssue> equivalent, but the first
+              is a list of clusters where this override is valid. An empty list emplies
+              a global override.
             properties:
               category:
                 type: string
-              cluster:
-                type: string
-              id:
-                type: string
+              clusters:
+                items:
+                  description: NameNs contains the name and namespace of a resource.
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  type: object
+                type: array
               message:
                 type: string
-              resources:
-                additionalProperties:
-                  items:
-                    type: string
-                  type: array
-                type: object
               severity:
                 enum:
                 - Unknown
@@ -81,32 +77,8 @@ spec:
                 - Medium
                 - High
                 type: string
-              totalResources:
-                type: integer
-              url:
-                type: string
-            required:
-            - cluster
-            - id
-            - message
-            - severity
             type: object
           status:
-            description: ClusterIssueStatus defines the observed state of ClusterIssue
-            properties:
-              hidden:
-                type: boolean
-              origCategory:
-                type: string
-              origMessage:
-                type: string
-              origSeverity:
-                enum:
-                - Unknown
-                - Low
-                - Medium
-                - High
-                type: string
             type: object
         type: object
     served: true

@@ -192,7 +192,7 @@ func Parse(log logr.Logger, fcont []byte) ([]*zorav1a1.ClusterIssueSpec, error) 
 						sev = ScoreFactorSeverity(sc.ScoreFactor)
 					}
 					issuesmap[c.ControlID] = &zorav1a1.ClusterIssueSpec{
-						ID:       c.ControlID,
+						ID:       strings.ToLower(c.ControlID),
 						Message:  c.Name,
 						Severity: sev,
 						Category: gvr[strings.LastIndex(gvr, "/")+1:],

@@ -89,6 +89,15 @@ rules:
 - apiGroups:
   - zora.undistro.io
   resources:
+  - clusterissueoverrides
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
   - clusterissues
   verbs:
   - create
@@ -104,6 +113,7 @@ rules:
   - clusterissues/status
   verbs:
   - get
+  - update
 - apiGroups:
   - zora.undistro.io
   resources:

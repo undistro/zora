@@ -8,6 +8,7 @@
  vet \
  test \
  manifests \
+ manifest-consistency \
  generate \
  clientset-gen \
  build \

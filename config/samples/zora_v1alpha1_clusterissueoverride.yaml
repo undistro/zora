@@ -1,0 +1,9 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterIssueOverride
+metadata:
+  name: pop-500
+spec:
+  clusters: []
+  message: ""
+  severity: "Low"
+  category: ""
