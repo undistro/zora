@@ -1,4 +1,5 @@
 {
+	"apiVersion": "v1alpha1",
 	"name": "mycluster",
 	"namespace": "ns",
 	"environment": "",

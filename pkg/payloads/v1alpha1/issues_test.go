@@ -131,10 +131,11 @@ func TestNewIssues(t *testing.T) {
 			},
 			want: []Issue{
 				{
-					ID:       "POP-106",
-					Message:  "No resources requests/limits defined",
-					Severity: "Medium",
-					Category: "Category",
+					ApiVersion: "v1alpha1",
+					ID:         "POP-106",
+					Message:    "No resources requests/limits defined",
+					Severity:   "Medium",
+					Category:   "Category",
 					Clusters: []ClusterReference{
 						{
 							Name:           "dev1",
@@ -154,10 +155,11 @@ func TestNewIssues(t *testing.T) {
 					},
 				},
 				{
-					ID:       "POP-777",
-					Message:  "Message",
-					Severity: "Medium",
-					Category: "Category",
+					ApiVersion: "v1alpha1",
+					ID:         "POP-777",
+					Message:    "Message",
+					Severity:   "Medium",
+					Category:   "Category",
 					Clusters: []ClusterReference{
 						{
 							Name:           "dev2",
