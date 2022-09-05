@@ -13,7 +13,7 @@ paths:
     get:
       tags:
         - cluster
-      summary: List clusters
+      summary: List clusters, not including their issues
       operationId: listClusters
       responses:
         200:
@@ -82,12 +82,6 @@ components:
     Cluster:
       allOf:
         - $ref: '#/components/schemas/ClusterItem'
-        - type: object
-          properties:
-            issues:
-              type: array
-              items:
-                $ref: '#/components/schemas/ClusterIssue'
     ClusterItem:
       type: object
       properties:
@@ -110,16 +104,6 @@ components:
           type: integer
           minimum: 0
           example: 178
-        scan:
-          type: object
-          properties:
-            status:
-              type: string
-              enum: [failed, unknown, scanned]
-              example: unknown
-            message:
-              type: string
-              example: 'no finished scan yet'
         connection:
           type: object
           properties:
@@ -132,28 +116,67 @@ components:
         version:
           type: string
           example: v1.21.5-eks-bc4871b
-        totalIssues:
-          type: integer
-          minimum: 0
-          example: 4
         creationTimestamp:
           type: string
           format: date-time
           example: "2022-03-17T19:45:07Z"
-        lastSuccessfulScanTime:
-          type: string
-          format: date-time
-          example: "2022-06-14T17:30:11Z"
-        lastFinishedScanTime:
-          type: string
-          format: date-time
-          example: "2022-06-14T17:30:11Z"
-        nextScheduleScanTime:
-          type: string
-          format: date-time
-          example: "2022-06-14T17:33:00Z"
-        resources:
-          $ref: '#/components/schemas/Resources'
+        totalIssues:
+          type: integer
+          minimum: 0
+          example: 4
+        pluginStatus:
+          type: object
+          properties:
+            issueCount:
+              type: integer
+              example: 2
+            issues:
+              type: array
+              items:
+                $ref: '#/components/schemas/ResourcedIssue'
+            scan:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [failed, unknown, scanned]
+                  example: unknown
+                message:
+                  type: string
+                  example: 'no finished scan yet'
+            lastSuccessfulScanTime:
+              type: string
+              format: date-time
+              example: "2022-06-14T17:30:11Z"
+            lastFinishedScanTime:
+              type: string
+              format: date-time
+              example: "2022-06-14T17:30:11Z"
+            nextScheduleScanTime:
+              type: string
+              format: date-time
+              example: "2022-06-14T17:33:00Z"
+            resources:
+             $ref: '#/components/schemas/Resources'
+          example:
+            kubescape:
+              scan:
+                status: "scanned"
+                message: ""
+              issueCount: 30
+              issues: null
+              lastSuccessfulScanTime: "2022-08-04T21:47:00Z"
+              lastFinishedScanTime: "2022-08-04T21:47:00Z"
+              nextScheduleScanTime: "2022-08-04T23:45:00Z"
+            popeye:
+              scan:
+                status: "scanned"
+                message: ""
+              issueCount: 32
+              issues: null
+              lastSuccessfulScanTime: "2022-08-04T21:47:00Z"
+              lastFinishedScanTime: "2022-08-04T21:47:00Z"
+              nextScheduleScanTime: "2022-08-04T23:45:00Z"
     Resources:
       type: object
       properties:
@@ -202,7 +225,7 @@ components:
         url:
           type: string
           example: "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels"
-    ClusterIssue:
+    ResourcedIssue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'
         - type: object

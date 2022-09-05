@@ -46,6 +46,7 @@ status:
       lastScheduleTime: "2022-08-04T22:45:00Z"
       lastStatus: Active
       nextScheduleTime: "2022-08-04T23:45:00Z"
+      issueCount: 32
     kubescape:
       lastFinishedStatus: Complete
       lastFinishedTime: "2022-08-04T21:47:00Z"
@@ -55,5 +56,6 @@ status:
       lastScheduleTime: "2022-08-04T22:45:00Z"
       lastStatus: Active
       nextScheduleTime: "2022-08-04T23:45:00Z"
+      issueCount: 30
   suspend: false
   totalIssues: 62
