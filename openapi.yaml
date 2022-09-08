@@ -245,19 +245,41 @@ components:
             resources:
               type: object
               additionalProperties:
-                type: object
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "aws-node"
+                    namespace:
+                      type: string
+                      example: "kube-system"
+                example:
+                  - 'name': 'kube-proxy'
+                    'namespace': 'kube-system'
+                  - 'name': 'aws-node'
+                    'namespace': 'kube-system'
               example:
                 'apps/v1/daemonsets':
-                  - 'kube-system/kube-proxy'
-                  - 'kube-system/aws-node'
+                  - 'name': 'kube-proxy'
+                    'namespace': 'kube-system'
+                  - 'name': 'aws-node'
+                    'namespace': 'kube-system'
                 'apps/v1/deployments':
-                  - 'undistro-system/ingress-nginx-controller'
+                  - 'name': 'ingress-nginx-controller'
+                    'namespace': 'undistro-system'
                 'v1/pods':
-                  - 'undistro-system/ingress-nginx-controller-75759597f9-zkpth'
-                  - 'kube-system/kube-proxy-f287p'
-                  - 'kube-system/kube-proxy-s67tv'
-                  - 'kube-system/aws-node-5qb87'
-                  - 'kube-system/aws-node-xls4r'
+                  - 'name': 'ingress-nginx-controller-75759597f9-zkpth'
+                    'namespace': 'undistro-system'
+                  - 'name': 'kube-proxy-f287p'
+                    'namespace': 'kube-system'
+                  - 'name': 'kube-proxy-s67tv'
+                    'namespace': 'kube-system'
+                  - 'name': 'aws-node-5qb87'
+                    'namespace': 'kube-system'
+                  - 'name': 'aws-node-xls4r'
+                    'namespace': 'kube-system'
     Issue:
       allOf:
         - $ref: '#/components/schemas/BaseIssue'
