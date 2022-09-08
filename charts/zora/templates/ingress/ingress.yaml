@@ -37,7 +37,9 @@ spec:
   rules:
     - host: {{ .Values.ingress.host | quote }}
       http:
+
         paths:
+          {{- if .Values.server.enabled }}
           - path: {{ .Values.ingress.server.path }}
             {{- if and .Values.ingress.server.pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
             pathType: {{ .Values.ingress.server.pathType }}
@@ -52,6 +54,7 @@ spec:
               serviceName: {{ $fullName }}-server
               servicePort: {{ $serverPort }}
               {{- end }}
+          {{- end }}
 
           {{- if .Values.ui.enabled }}
           - path: {{ .Values.ingress.ui.path }}

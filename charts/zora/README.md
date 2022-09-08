@@ -11,8 +11,6 @@ To install the chart with the release name `zora`:
 ```console
 helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm upgrade --install zora undistro/zora \
-  --set imageCredentials.username='<USERNAME>' \
-  --set imageCredentials.password='<PASSWORD>' \
   -n zora-system \
   --create-namespace --wait
 ```
@@ -51,7 +49,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 |-----|------|---------|-------------|
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
-| imageCredentials.create | bool | `true` | Specifies whether the secret should be created by providing credentials |
+| imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
 | imageCredentials.registry | string | `"registry.undistro.io"` | Docker registry host |
 | imageCredentials.username | string | `""` | Docker registry username |
 | imageCredentials.password | string | `""` | Docker registry password |

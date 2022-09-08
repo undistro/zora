@@ -18,8 +18,6 @@ To install the chart with the release name `{{ $release }}`:
 ```console
 helm repo add {{ $repoName }} {{ $repoURL }}
 helm upgrade --install {{ $release }} {{ $repoName }}/{{ template "chart.name" . }} \
-  --set imageCredentials.username='<USERNAME>' \
-  --set imageCredentials.password='<PASSWORD>' \
   -n {{ $namespace }} \
   --create-namespace --wait
 ```

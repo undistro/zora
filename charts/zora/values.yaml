@@ -3,9 +3,10 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+# Credentials for private registries.
 imageCredentials:
   # -- Specifies whether the secret should be created by providing credentials
-  create: true
+  create: false
   # -- Docker registry host
   registry: registry.undistro.io
   # -- Docker registry username

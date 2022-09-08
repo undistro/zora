@@ -21,7 +21,7 @@ spec:
       {{- if .Values.imageCredentials.create  }}
       imagePullSecrets:
         - name: {{ include "zora.fullname" . }}-registry-cred
-      {{- else }}
+      {{- else if not (eq (len .Values.imagePullSecrets) 0) }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
