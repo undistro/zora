@@ -43,7 +43,7 @@ operator:
   replicaCount: 1
   image:
     # -- Zora operator image repository
-    repository: registry.undistro.io/zora/operator
+    repository: registry.undistro.io/library/zora-operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -130,7 +130,7 @@ server:
   replicaCount: 1
   image:
     # -- Zora server image repository
-    repository: registry.undistro.io/zora/server
+    repository: registry.undistro.io/library/zora-server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy

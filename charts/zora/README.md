@@ -62,7 +62,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Zora operator |
-| operator.image.repository | string | `"registry.undistro.io/zora/operator"` | Zora operator image repository |
+| operator.image.repository | string | `"registry.undistro.io/library/zora-operator"` | Zora operator image repository |
 | operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
@@ -90,7 +90,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | server.enabled | bool | `true` | Toggles server deployment |
 | server.replicaCount | int | `1` | Number of replicas desired of Zora server |
-| server.image.repository | string | `"registry.undistro.io/zora/server"` | Zora server image repository |
+| server.image.repository | string | `"registry.undistro.io/library/zora-server"` | Zora server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
