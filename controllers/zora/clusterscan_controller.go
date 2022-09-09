@@ -202,7 +202,10 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			issc[i.Labels[v1alpha1.LabelPlugin]]++
 		}
 		for p, c := range issc {
-			clusterscan.Status.Plugins[p].IssueCount = &c
+			if clusterscan.Status.Plugins[p].IssueCount == nil {
+				clusterscan.Status.Plugins[p].IssueCount = new(int)
+			}
+			*clusterscan.Status.Plugins[p].IssueCount = c
 		}
 		clusterscan.Status.TotalIssues = pointer.Int(len(issues))
 	}
