@@ -32,7 +32,7 @@ jobs:
       - name: Get Chart version
         run: |
           echo "CHART_VERSION=$(
-            helm search repo undistro/zora | awk '/zora/{print $2}'
+            helm search repo undistro/zora --versions --devel | awk '/zora\s+\S+-open/{print $2; exit}'
           )" >> $GITHUB_ENV
 
       - name: Create kubeconfig file
