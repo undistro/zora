@@ -322,7 +322,7 @@ scan:
   worker:
     image:
       # -- worker image repository
-      repository: registry.undistro.io/library/worker
+      repository: registry.undistro.io/library/zora-worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
   # -- Names of the default plugins
