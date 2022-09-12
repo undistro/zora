@@ -3,9 +3,10 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+# Credentials for private registries.
 imageCredentials:
   # -- Specifies whether the secret should be created by providing credentials
-  create: true
+  create: false
   # -- Docker registry host
   registry: registry.undistro.io
   # -- Docker registry username
@@ -42,7 +43,7 @@ operator:
   replicaCount: 1
   image:
     # -- Zora operator image repository
-    repository: registry.undistro.io/zora/operator
+    repository: registry.undistro.io/library/zora-operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -129,7 +130,7 @@ server:
   replicaCount: 1
   image:
     # -- Zora server image repository
-    repository: registry.undistro.io/zora/server
+    repository: registry.undistro.io/library/zora-server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -203,7 +204,7 @@ ui:
   replicaCount: 1
   image:
     # -- Zora UI image repository
-    repository: registry.undistro.io/zora/ui
+    repository: registry.undistro.io/library/zora-ui
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -321,7 +322,7 @@ scan:
   worker:
     image:
       # -- worker image repository
-      repository: registry.undistro.io/library/worker
+      repository: registry.undistro.io/library/zora-worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
   # -- Names of the default plugins
