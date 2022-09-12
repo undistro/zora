@@ -117,7 +117,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | server.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | ui.enabled | bool | `true` | Toggles UI deployment |
 | ui.replicaCount | int | `1` | Number of replicas desired of Zora UI |
-| ui.image.repository | string | `"registry.undistro.io/zora/ui"` | Zora UI image repository |
+| ui.image.repository | string | `"registry.undistro.io/library/zora-ui"` | Zora UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
