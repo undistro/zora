@@ -1,5 +1,7 @@
 site_name: "Zora"
 site_url: https://zora.undistro.io
+repo_url: https://github.com/getupio-undistro/zora
+repo_name: getupio-undistro/zora
 extra_css:
   - stylesheets/extra.css
 theme:
