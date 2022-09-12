@@ -38,14 +38,14 @@ jobs:
       - name: Build server
         run: IMG=$REPO/library/zora-server:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.server make docker-build
       - name: Build worker
-        run: IMG=$REPO/library/worker:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.worker make docker-build
+        run: IMG=$REPO/library/zora-worker:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.worker make docker-build
 
       - name: Push operator
         run: IMG=$REPO/library/zora-operator:$GITHUB_REF_NAME make docker-push
       - name: Push server
         run: IMG=$REPO/library/zora-server:$GITHUB_REF_NAME make docker-push
       - name: Push worker
-        run: IMG=$REPO/library/worker:$GITHUB_REF_NAME make docker-push
+        run: IMG=$REPO/library/zora-worker:$GITHUB_REF_NAME make docker-push
 
       - name: Registry logout
         run: docker logout
