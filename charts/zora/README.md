@@ -12,6 +12,7 @@ To install the chart with the release name `zora`:
 helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm upgrade --install zora undistro/zora \
   -n zora-system \
+  --version 0.3.7 \
   --create-namespace --wait
 ```
 
