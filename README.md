@@ -17,4 +17,4 @@ Checkout our live docs at https://zora.undistro.io
 
 ## License
 
-[Apache 2.0](LICENSE)
+[Apache License 2.0](LICENSE)
