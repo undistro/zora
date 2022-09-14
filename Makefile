@@ -8,7 +8,8 @@ kustomize: ## Download kustomize locally if necessary.
 	$(call go-install-tool,$(KUSTOMIZE),sigs.k8s.io/kustomize/kustomize/v4@v4.5.2)
 envtest: ## Download envtest-setup locally if necessary.
 	$(call go-install-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest@latest)
-
+addlicense: ## Download addlicense locally if necessary.
+	$(call go-install-tool,$(ADDLICENSE),github.com/google/addlicense@latest)
 
 ##@ Development
 
@@ -151,3 +152,9 @@ preview-docs: helm-docs ## Run a server to preview the documentation
 		-v $(PWD)/charts/zora/README.md:/docs/docs/helm-chart.md \
 		-v $(PWD)/charts/zora/values.yaml:/docs/docs/values.yaml \
 		squidfunk/mkdocs-material:8.3.8
+
+license: addlicense ## Add license headers in source files
+	$(ADDLICENSE) -c "Undistro Authors" -f "LICENSE" -l "apache" -ignore "docs/**" -v .
+
+check-license: addlicense ## Add license headers in source files
+	$(ADDLICENSE) -c "Undistro Authors" -f "LICENSE" -l "apache" -ignore "docs/**" -v -check .
