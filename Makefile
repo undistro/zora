@@ -154,7 +154,7 @@ preview-docs: helm-docs ## Run a server to preview the documentation
 		squidfunk/mkdocs-material:8.3.8
 
 license: addlicense ## Add license headers in source files
-	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore "docs/**" -v .
+	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore "docs/**" -ignore ".github/**" -v .
 
 check-license: addlicense ## Check license headers in source files
-	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore "docs/**" -v -check .
+	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore "docs/**" -ignore ".github/**" -v -check .
