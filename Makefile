@@ -156,5 +156,5 @@ preview-docs: helm-docs ## Run a server to preview the documentation
 license: addlicense ## Add license headers in source files
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore "docs/**" -v .
 
-check-license: addlicense ## Add license headers in source files
+check-license: addlicense ## Check license headers in source files
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore "docs/**" -v -check .
