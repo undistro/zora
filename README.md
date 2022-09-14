@@ -2,7 +2,7 @@
 <img src="docs/assets/logo-github.png">
 
 [![license](https://img.shields.io/github/license/getupio-undistro/zora)](https://github.com/getupio-undistro/zora/blob/main/LICENSE)
-[![release](https://img.shields.io/github/v/release/getupio-undistro/zora?display_name=tag&sort=semver)](https://github.com/getupio-undistro/zora/releases)
+[![version](https://img.shields.io/github/v/tag/getupio-undistro/zora?sort=semver)](https://github.com/getupio-undistro/zora/tags)
 [![build](https://github.com/getupio-undistro/zora/actions/workflows/build.yml/badge.svg?event=workflow_dispatch)](https://github.com/getupio-undistro/zora/actions/workflows/build.yml)
 
 [📖 Documentation](https://zora.undistro.io)
