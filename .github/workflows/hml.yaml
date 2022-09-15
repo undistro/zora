@@ -48,12 +48,14 @@ jobs:
         run: |
           helm upgrade --install zora undistro/zora \
             -f charts/zora/values-hml.yaml \
+            --set imageCredentials.create=true \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
             --set operator.image.tag=$GITHUB_REF_NAME \
             --set server.image.tag=$GITHUB_REF_NAME \
             --set scan.worker.image.tag=$GITHUB_REF_NAME \
             --set ui.image.tag=$UI_IMAGE_TAG \
+            --set ui.image.repository=registry.undistro.io/zora/ui \
             --version $CHART_VERSION \
             --namespace zora-system \
             --create-namespace \
@@ -67,12 +69,14 @@ jobs:
         run: |
           helm upgrade --install zora undistro/zora \
             -f charts/zora/values-hml.yaml \
+            --set imageCredentials.create=true \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
             --set operator.image.tag=$GITHUB_REF_NAME \
             --set server.image.tag=$GITHUB_REF_NAME \
             --set scan.worker.image.tag=$GITHUB_REF_NAME \
             --set ui.image.tag=$UI_IMAGE_TAG \
+            --set ui.image.repository=registry.undistro.io/zora/ui \
             --version $CHART_VERSION \
             --namespace zora-system \
             --create-namespace \
