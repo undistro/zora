@@ -60,3 +60,14 @@ define go-install-tool
   rm -rf $$TMP_DIR ;\
  }
 endef
+
+define addlicense-tool
+  $(ADDLICENSE) \
+  -c "Undistro Authors" \
+  -l "apache" \
+  -ignore "docs/**" \
+  -ignore ".github/**" \
+  -v \
+  $(1) \
+  .
+endef
