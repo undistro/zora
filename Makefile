@@ -153,8 +153,8 @@ preview-docs: helm-docs ## Run a server to preview the documentation
 		-v $(PWD)/charts/zora/values.yaml:/docs/docs/values.yaml \
 		squidfunk/mkdocs-material:8.3.8
 
-license: addlicense ## Add license headers in source files
+license: addlicense ## Add license header to source files
 	$(call addlicense-tool,)
 
-check-license: addlicense ## Check license headers in source files
+check-license: addlicense ## Check license header to source files
 	$(call addlicense-tool,"-check")
