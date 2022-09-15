@@ -25,6 +25,7 @@ PROJECT_ROOT := $(shell git rev-parse --show-toplevel)
 PROJECT_PACKAGE ?= $(shell go list -m)
 CONTROLLER_GEN ?= $(shell pwd)/bin/controller-gen
 KUSTOMIZE ?= $(shell pwd)/bin/kustomize
+ADDLICENSE ?= $(shell pwd)/bin/addlicense
 
 # Tests
 # Kubebuilder assets required by <envtest>.
