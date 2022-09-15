@@ -16,9 +16,6 @@ helm upgrade --install zora undistro/zora \
   --create-namespace --wait
 ```
 
-!!! warning
-    `<USERNAME>` and `<PASSWORD>` must be replaced with your credentials.
-
 These commands deploy Zora to the Kubernetes cluster.
 [This section](helm-chart.md) lists the parameters
 that can be configured during installation.
