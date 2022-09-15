@@ -67,6 +67,7 @@ define addlicense-tool
   -l "apache" \
   -ignore "docs/**" \
   -ignore ".github/**" \
+  -ignore ".idea/**" \
   -v \
   $(1) \
   .
