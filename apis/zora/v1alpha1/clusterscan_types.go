@@ -15,8 +15,11 @@
 package v1alpha1
 
 import (
+	"fmt"
 	"sort"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/getupio-undistro/zora/pkg/apis"
 	batchv1 "k8s.io/api/batch/v1"
@@ -24,6 +27,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
+
+// +kubebuilder:validation:Minimum=0
+// +kubebuilder:validation:Maximum=6
+type DayOfWeek int
+
+type Schedule struct {
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=23
+	HourlyRep int `json:"hourlyRep,omitempty"`
+	// +kubebuilder:validation:MaxItems=7
+	DaysOfWeek []DayOfWeek `json:"daysOfWeek,omitempty"`
+	// +kubebuilder:validation:Pattern=`^(2[0-3]|[0-1]?[0-9]):[0-5]?[0-9]$`
+	StartTime *string `json:"startTime,omitempty"`
+}
 
 // ClusterScanSpec defines the desired state of ClusterScan
 type ClusterScanSpec struct {
@@ -34,8 +51,7 @@ type ClusterScanSpec struct {
 	// not apply to already started executions.  Defaults to false.
 	Suspend *bool `json:"suspend,omitempty"`
 
-	// The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
-	Schedule string `json:"schedule"`
+	Schedule *Schedule `json:"schedule"`
 
 	// The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
 	Plugins []PluginReference `json:"plugins,omitempty"`
@@ -53,7 +69,7 @@ type PluginReference struct {
 	Suspend *bool `json:"suspend,omitempty"`
 
 	// The schedule in Cron format for this Plugin, see https://en.wikipedia.org/wiki/Cron.
-	Schedule string `json:"schedule,omitempty"`
+	Schedule *Schedule `json:"schedule,omitempty"`
 
 	// List of environment variables to set in the Plugin container.
 	Env []corev1.EnvVar `json:"env,omitempty"`
@@ -260,6 +276,73 @@ type ClusterScanList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClusterScan `json:"items"`
+}
+
+func (r *Schedule) SplitStartTime() (int, int) {
+	if r == nil || r.StartTime == nil || len(*r.StartTime) == 0 {
+		now := time.Now().UTC()
+		return now.Hour(), now.Minute()
+	}
+	tslice := strings.Split(*r.StartTime, ":")
+	res := [2]int{0, 0}
+	for c := 0; c < len(tslice); c++ {
+		i, err := strconv.Atoi(tslice[c])
+		if err != nil {
+			i = 0
+		}
+		res[c] = i
+	}
+	return res[0], res[1]
+}
+
+func (r *Schedule) HourlyRepetitions() string {
+	if r == nil {
+		return ""
+	}
+	if r.HourlyRep == 1 {
+		return "*"
+	}
+	h, _ := r.SplitStartTime()
+	if r.HourlyRep == 0 {
+		return strconv.Itoa(h)
+	}
+
+	reps := ""
+	for c := h % r.HourlyRep; c <= 23; c += r.HourlyRep {
+		reps += fmt.Sprintf("%d", c)
+		if c+r.HourlyRep <= 23 {
+			reps = fmt.Sprintf("%s,", reps)
+		}
+	}
+	return reps
+}
+
+func (r *Schedule) DayOfWeekSeries() string {
+	if r == nil {
+		return ""
+	}
+	if len(r.DaysOfWeek) == 0 {
+		return "*"
+	}
+
+	uniq := map[int]struct{}{}
+	for c := 0; c < len(r.DaysOfWeek); c++ {
+		uniq[int(r.DaysOfWeek[c])] = struct{}{}
+	}
+	dow := []string{}
+	for d, _ := range uniq {
+		dow = append(dow, strconv.Itoa(d))
+	}
+	sort.Strings(dow)
+	return strings.Join(dow, ",")
+}
+
+func (r *Schedule) CronExpr() string {
+	if r == nil {
+		return ""
+	}
+	_, m := r.SplitStartTime()
+	return fmt.Sprintf("%d %s * * %s", m, r.HourlyRepetitions(), r.DayOfWeekSeries())
 }
 
 func init() {
