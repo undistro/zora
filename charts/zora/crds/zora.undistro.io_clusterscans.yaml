@@ -35,9 +35,6 @@ spec:
     - jsonPath: .spec.clusterRef.name
       name: Cluster
       type: string
-    - jsonPath: .spec.schedule
-      name: Schedule
-      type: string
     - jsonPath: .status.suspend
       name: Suspend
       type: boolean
@@ -62,6 +59,18 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
+    - jsonPath: .spec.schedule.hourlyRep
+      name: Hourly Repetition
+      priority: 1
+      type: string
+    - jsonPath: .spec.schedule.daysOfWeek
+      name: Days Of Week
+      priority: 1
+      type: string
+    - jsonPath: .spec.schedule.startTime
+      name: Start Time
+      priority: 1
+      type: string
     - jsonPath: .status.nextScheduleTime
       name: Next Schedule
       priority: 1

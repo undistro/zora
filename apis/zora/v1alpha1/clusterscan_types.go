@@ -228,7 +228,6 @@ type PluginScanStatus struct {
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:shortName="cscan"
 //+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".spec.clusterRef.name",priority=0
-//+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
 //+kubebuilder:printcolumn:name="Plugins",type="string",JSONPath=".status.pluginNames",priority=0
 //+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastStatus",priority=0
@@ -237,6 +236,9 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
+//+kubebuilder:printcolumn:name="Hourly Repetition",type="string",JSONPath=".spec.schedule.hourlyRep",priority=1
+//+kubebuilder:printcolumn:name="Days Of Week",type="string",JSONPath=".spec.schedule.daysOfWeek",priority=1
+//+kubebuilder:printcolumn:name="Start Time",type="string",JSONPath=".spec.schedule.startTime",priority=1
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
 // ClusterScan is the Schema for the clusterscans API
