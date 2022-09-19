@@ -78,7 +78,10 @@ type Mutator struct {
 	ServiceAccountName string
 }
 
-// Mutate returns a function which mutates the existing CronJob into it's desired state.
+// Mutate returns a function which mutates the existing CronJob into it's
+// desired state, as well as the required delay for the first scan execution.
+// The delay is represented in absolute minutes, where 1 minute is subtracted
+// from it to allow the Cronjob to be created before the scan start time.
 func (r *Mutator) Mutate() (controllerutil.MutateFn, int) {
 	sch := firstNonNilSchedule(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
 

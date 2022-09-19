@@ -28,16 +28,23 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+// DayOfWeek represents the days of week, from Sunday to Saturday.
 // +kubebuilder:validation:Minimum=0
 // +kubebuilder:validation:Maximum=6
 type DayOfWeek int
 
+// Schedule represents a scan timetable with repetition and start time data.
 type Schedule struct {
+	// HourlyRep contains the hourly rate by which the scan will repeat.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
 	HourlyRep int `json:"hourlyRep,omitempty"`
+	// DaysOfWeek stores the days of week in which the scan will execute. An
+	// empty array indicates the entire week.
 	// +kubebuilder:validation:MaxItems=7
 	DaysOfWeek []DayOfWeek `json:"daysOfWeek,omitempty"`
+	// StartTime holds the hour and minute in which the scan will start on its
+	// first execution. The time should be specified in UTC.
 	// +kubebuilder:validation:Pattern=`^(2[0-3]|[0-1]?[0-9]):[0-5]?[0-9]$`
 	StartTime *string `json:"startTime,omitempty"`
 }
@@ -51,6 +58,7 @@ type ClusterScanSpec struct {
 	// not apply to already started executions.  Defaults to false.
 	Suspend *bool `json:"suspend,omitempty"`
 
+	// Schedule contains scan repetition and start time data.
 	Schedule *Schedule `json:"schedule"`
 
 	// The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
@@ -68,7 +76,7 @@ type PluginReference struct {
 	// not apply to already started executions.  Defaults to false.
 	Suspend *bool `json:"suspend,omitempty"`
 
-	// The schedule in Cron format for this Plugin, see https://en.wikipedia.org/wiki/Cron.
+	// Schedule contains scan repetition and start time data.
 	Schedule *Schedule `json:"schedule,omitempty"`
 
 	// List of environment variables to set in the Plugin container.
@@ -280,6 +288,9 @@ type ClusterScanList struct {
 	Items           []ClusterScan `json:"items"`
 }
 
+// SplitStartTime returns the hour and minute of the Schedule's start time
+// entry, as integers. In case the field is not set or the receiver, it'll
+// return the current hour and minute.
 func (r *Schedule) SplitStartTime() (int, int) {
 	if r == nil || r.StartTime == nil || len(*r.StartTime) == 0 {
 		now := time.Now().UTC()
@@ -297,6 +308,9 @@ func (r *Schedule) SplitStartTime() (int, int) {
 	return res[0], res[1]
 }
 
+// HourlyRepetitions returns the scan's hourly scheduling formatted as the hour
+// field of a Cron expression. If the receiver is nil, it'll return an empty
+// string.
 func (r *Schedule) HourlyRepetitions() string {
 	if r == nil {
 		return ""
@@ -319,6 +333,9 @@ func (r *Schedule) HourlyRepetitions() string {
 	return reps
 }
 
+// DayOfWeekSeries prepares the days of week in which the scan will execute
+// formatted as the week field of a Cron expression. If the receiver is nil,
+// it'll return an empty string.
 func (r *Schedule) DayOfWeekSeries() string {
 	if r == nil {
 		return ""
@@ -339,6 +356,8 @@ func (r *Schedule) DayOfWeekSeries() string {
 	return strings.Join(dow, ",")
 }
 
+// CronExpr transforms the scan schedule data on a Cron expression. If the
+// receiver is nil, it'll return an empty string.
 func (r *Schedule) CronExpr() string {
 	if r == nil {
 		return ""
