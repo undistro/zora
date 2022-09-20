@@ -127,15 +127,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&zoracontrollers.SaasReconciler{
-		Client:     mgr.GetClient(),
-		Scheme:     mgr.GetScheme(),
-		HttpCli:    &http.Client{},
-		ID:         saasID,
-		ServerAddr: saasServerAddr,
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Saas")
-		os.Exit(1)
+	if len(saasID) != 0 {
+		if err = (&zoracontrollers.SaasReconciler{
+			Client:     mgr.GetClient(),
+			Scheme:     mgr.GetScheme(),
+			HttpCli:    &http.Client{},
+			ID:         saasID,
+			ServerAddr: saasServerAddr,
+		}).SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "Saas")
+			os.Exit(1)
+		}
+	} else {
+		setupLog.Info("No saas ID provided, not initing saas controller")
 	}
 
 	//+kubebuilder:scaffold:builder

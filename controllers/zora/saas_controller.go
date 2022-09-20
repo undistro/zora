@@ -50,10 +50,6 @@ type SaasReconciler struct {
 func (r *SaasReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := ctrllog.FromContext(ctx)
 
-	if len(r.ID) == 0 {
-		log.Info("No saas ID provided, nothing to do")
-		return ctrl.Result{}, nil
-	}
 	if !r.validAddress() {
 		log.Error(fmt.Errorf("Invalid url <%s>", r.ServerAddr), "No valid server address provided, nothing to do")
 		return ctrl.Result{}, nil
