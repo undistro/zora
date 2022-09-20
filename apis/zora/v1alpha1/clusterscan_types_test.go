@@ -587,7 +587,7 @@ func TestHourlyRepetitions(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		if res := c.sch.HourlyRepetitions(); res != c.res {
+		if res := c.sch.HourlyRepSeries(); res != c.res {
 			t.Errorf("Case: %s\n", c.description)
 			t.Errorf("\nExpected: %s\nBut got:  %s", c.res, res)
 		}

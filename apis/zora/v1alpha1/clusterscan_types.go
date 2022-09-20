@@ -308,10 +308,10 @@ func (r *Schedule) SplitStartTime() (int, int) {
 	return res[0], res[1]
 }
 
-// HourlyRepetitions returns the scan's hourly scheduling formatted as the hour
+// HourlyRepSeries returns the scan's hourly scheduling formatted as the hour
 // field of a Cron expression. If the receiver is nil, it'll return an empty
 // string.
-func (r *Schedule) HourlyRepetitions() string {
+func (r *Schedule) HourlyRepSeries() string {
 	if r == nil {
 		return ""
 	}
@@ -363,7 +363,7 @@ func (r *Schedule) CronExpr() string {
 		return ""
 	}
 	_, m := r.SplitStartTime()
-	return fmt.Sprintf("%d %s * * %s", m, r.HourlyRepetitions(), r.DayOfWeekSeries())
+	return fmt.Sprintf("%d %s * * %s", m, r.HourlyRepSeries(), r.DayOfWeekSeries())
 }
 
 func init() {
