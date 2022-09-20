@@ -1,4 +1,5 @@
 {
+	"apiVersion": "v1alpha1",
 	"name": "mycluster",
 	"namespace": "ns",
 	"environment": "env",
@@ -11,8 +12,8 @@
 		"message": "cluster successfully connected, version v1.24.0"
 	},
 	"resources": {
-		"discovered": false,
-		"message": "metrics API not available",
+		"discovered": true,
+		"message": "cluster resources successfully discovered",
 		"memory": {
 			"available": "2938Mi",
 			"usage": "2047Mi",
@@ -25,29 +26,29 @@
 		}
 	},
 	"creationTimestamp": "2022-05-02T18:36:36Z",
-	"totalIssues": 21,
+	"totalIssues": 62,
 	"pluginStatus": {
 		"kubescape": {
 			"scan": {
-				"status": "failed",
-				"message": "failed to discover API server information. error: the server has asked for the client to provide credentials"
+				"status": "scanned",
+				"message": ""
 			},
-			"issueCount": null,
+			"issueCount": 30,
 			"issues": null,
-			"lastSuccessfulScanTime": "2022-08-08T21:00:03Z",
-			"lastFinishedScanTime": "2022-08-08T21:00:03Z",
-			"nextScheduleScanTime": "2022-08-08T22:00:00Z"
+			"lastSuccessfulScanTime": "2022-08-04T21:47:00Z",
+			"lastFinishedScanTime": "2022-08-04T21:47:00Z",
+			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
 		},
 		"popeye": {
 			"scan": {
 				"status": "scanned",
-				"message": "Scan not finished"
+				"message": ""
 			},
-			"issueCount": 21,
+			"issueCount": 32,
 			"issues": null,
-			"lastSuccessfulScanTime": "2022-08-08T21:00:03Z",
-			"lastFinishedScanTime": "2022-08-08T21:00:03Z",
-			"nextScheduleScanTime": "2022-08-08T22:00:00Z"
+			"lastSuccessfulScanTime": "2022-08-04T21:47:00Z",
+			"lastFinishedScanTime": "2022-08-04T21:47:00Z",
+			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
 		}
 	}
 }

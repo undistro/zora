@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package payloads
+package v1alpha1
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"strings"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -34,6 +37,7 @@ const (
 )
 
 type Cluster struct {
+	ApiVersion        string            `json:"apiVersion"`
 	Name              string            `json:"name"`
 	Namespace         string            `json:"namespace"`
 	Environment       string            `json:"environment"`
@@ -93,6 +97,7 @@ type ConnectionStatus struct {
 
 func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster {
 	cl := Cluster{
+		ApiVersion:        "v1alpha1",
 		Name:              cluster.Name,
 		Namespace:         cluster.Namespace,
 		Environment:       cluster.Labels[v1alpha1.LabelEnvironment],
@@ -224,4 +229,29 @@ func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan
 		)
 	}
 	return c
+}
+
+func NewClusterSlice(carr []v1alpha1.Cluster, csarr []v1alpha1.ClusterScan) []Cluster {
+	scanm := map[string][]v1alpha1.ClusterScan{}
+	clusters := []Cluster{}
+
+	for _, cs := range csarr {
+		nn := fmt.Sprintf("%s/%s", cs.Namespace, cs.Spec.ClusterRef.Name)
+		scanm[nn] = append(scanm[nn], cs)
+	}
+	for _, c := range carr {
+		clusters = append(clusters, NewCluster(
+			c,
+			scanm[fmt.Sprintf("%s/%s", c.Namespace, c.Name)],
+		))
+	}
+	return clusters
+}
+
+func (r Cluster) Read(b []byte) (int, error) {
+	jc, err := json.Marshal(r)
+	if err != nil {
+		return -1, err
+	}
+	return bytes.NewReader(jc).Read(b)
 }

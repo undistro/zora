@@ -1,9 +1,10 @@
 {
+	"apiVersion": "v1alpha1",
 	"name": "mycluster",
 	"namespace": "ns",
 	"environment": "env",
-	"provider": "",
-	"region": "",
+	"provider": "aws",
+	"region": "us-east-1",
 	"totalNodes": 2,
 	"version": "v1.24.0",
 	"connection": {
@@ -11,8 +12,8 @@
 		"message": "cluster successfully connected, version v1.24.0"
 	},
 	"resources": {
-		"discovered": true,
-		"message": "cluster resources successfully discovered",
+		"discovered": false,
+		"message": "metrics API not available",
 		"memory": {
 			"available": "2938Mi",
 			"usage": "2047Mi",
@@ -34,8 +35,8 @@
 			},
 			"issueCount": 30,
 			"issues": null,
-			"lastSuccessfulScanTime": "2022-08-04T22:47:00Z",
-			"lastFinishedScanTime": "2022-08-04T22:47:00Z",
+			"lastSuccessfulScanTime": "2022-08-04T22:46:00Z",
+			"lastFinishedScanTime": "2022-08-04T22:46:00Z",
 			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
 		},
 		"popeye": {
@@ -45,8 +46,8 @@
 			},
 			"issueCount": 32,
 			"issues": null,
-			"lastSuccessfulScanTime": "2022-08-04T22:47:00Z",
-			"lastFinishedScanTime": "2022-08-04T22:47:00Z",
+			"lastSuccessfulScanTime": "2022-08-04T22:46:00Z",
+			"lastFinishedScanTime": "2022-08-04T22:46:00Z",
 			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
 		}
 	}

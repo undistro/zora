@@ -1,4 +1,5 @@
 {
+	"apiVersion": "v1alpha1",
 	"name": "mycluster",
 	"namespace": "ns",
 	"environment": "env",
@@ -7,8 +8,8 @@
 	"totalNodes": 2,
 	"version": "v1.24.0",
 	"connection": {
-		"connected": true,
-		"message": "cluster successfully connected, version v1.24.0"
+		"connected": false,
+		"message": "invalid kubeconfig: exec entrypoint is not supported"
 	},
 	"resources": {
 		"discovered": true,
@@ -32,21 +33,21 @@
 				"status": "scanned",
 				"message": ""
 			},
-			"issueCount": 30,
+			"issueCount": 62,
 			"issues": null,
 			"lastSuccessfulScanTime": "2022-08-04T21:47:00Z",
-			"lastFinishedScanTime": "2022-08-04T21:47:00Z",
+			"lastFinishedScanTime": "2022-08-04T22:46:00Z",
 			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
 		},
 		"popeye": {
 			"scan": {
-				"status": "scanned",
-				"message": ""
+				"status": "failed",
+				"message": "the server has asked for the client to provide credentials"
 			},
-			"issueCount": 32,
+			"issueCount": null,
 			"issues": null,
 			"lastSuccessfulScanTime": "2022-08-04T21:47:00Z",
-			"lastFinishedScanTime": "2022-08-04T21:47:00Z",
+			"lastFinishedScanTime": "2022-08-04T22:46:00Z",
 			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
 		}
 	}

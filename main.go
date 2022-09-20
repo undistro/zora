@@ -16,12 +16,11 @@ package main
 
 import (
 	"flag"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-	// to ensure that exec-entrypoint and run can make use of them.
 	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
@@ -59,6 +58,9 @@ func main() {
 	var workerImage string
 	var cronJobClusterRoleBinding string
 	var cronJobServiceAccount string
+	var saasID string
+	var saasServerAddr string
+
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -69,6 +71,8 @@ func main() {
 	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.3.6", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+	flag.StringVar(&saasID, "saas-id", "", "ID of Zora's service offering")
+	flag.StringVar(&saasServerAddr, "saas-server-address", "localhost:8082", "Address for Zora's saas server")
 
 	opts := zap.Options{
 		Development: true,
@@ -122,6 +126,22 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)
 	}
+
+	if len(saasID) != 0 {
+		if err = (&zoracontrollers.SaasReconciler{
+			Client:     mgr.GetClient(),
+			Scheme:     mgr.GetScheme(),
+			HttpCli:    &http.Client{},
+			ID:         saasID,
+			ServerAddr: saasServerAddr,
+		}).SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "Saas")
+			os.Exit(1)
+		}
+	} else {
+		setupLog.Info("No saas ID provided, not initing saas controller")
+	}
+
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

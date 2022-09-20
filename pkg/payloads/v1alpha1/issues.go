@@ -12,18 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package payloads
+package v1alpha1
 
-import "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+import (
+	"bytes"
+	"encoding/json"
+
+	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+)
 
 type Issue struct {
-	ID       string             `json:"id"`
-	Message  string             `json:"message"`
-	Severity string             `json:"severity"`
-	Category string             `json:"category"`
-	Plugin   string             `json:"plugin"`
-	Clusters []ClusterReference `json:"clusters"`
-	Url      string             `json:"url"`
+	ApiVersion string             `json:"apiVersion"`
+	ID         string             `json:"id"`
+	Message    string             `json:"message"`
+	Severity   string             `json:"severity"`
+	Category   string             `json:"category"`
+	Plugin     string             `json:"plugin"`
+	Clusters   []ClusterReference `json:"clusters"`
+	Url        string             `json:"url"`
 }
 
 type ClusterReference struct {
@@ -34,12 +40,13 @@ type ClusterReference struct {
 
 func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 	return Issue{
-		ID:       clusterIssue.Spec.ID,
-		Message:  clusterIssue.Spec.Message,
-		Severity: string(clusterIssue.Spec.Severity),
-		Category: clusterIssue.Spec.Category,
-		Plugin:   clusterIssue.Labels[v1alpha1.LabelPlugin],
-		Url:      clusterIssue.Spec.Url,
+		ApiVersion: "v1alpha1",
+		ID:         clusterIssue.Spec.ID,
+		Message:    clusterIssue.Spec.Message,
+		Severity:   string(clusterIssue.Spec.Severity),
+		Category:   clusterIssue.Spec.Category,
+		Plugin:     clusterIssue.Labels[v1alpha1.LabelPlugin],
+		Url:        clusterIssue.Spec.Url,
 	}
 }
 
@@ -69,4 +76,12 @@ func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
 		res = append(res, *i)
 	}
 	return res
+}
+
+func (r Issue) Read(b []byte) (int, error) {
+	jc, err := json.Marshal(r)
+	if err != nil {
+		return -1, err
+	}
+	return bytes.NewReader(jc).Read(b)
 }

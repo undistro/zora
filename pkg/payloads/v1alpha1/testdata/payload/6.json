@@ -1,9 +1,10 @@
 {
+	"apiVersion": "v1alpha1",
 	"name": "mycluster",
 	"namespace": "ns",
 	"environment": "env",
-	"provider": "aws",
-	"region": "us-east-1",
+	"provider": "",
+	"region": "",
 	"totalNodes": 2,
 	"version": "v1.24.0",
 	"connection": {
@@ -11,8 +12,8 @@
 		"message": "cluster successfully connected, version v1.24.0"
 	},
 	"resources": {
-		"discovered": false,
-		"message": "metrics API not available",
+		"discovered": true,
+		"message": "cluster resources successfully discovered",
 		"memory": {
 			"available": "2938Mi",
 			"usage": "2047Mi",
@@ -25,14 +26,14 @@
 		}
 	},
 	"creationTimestamp": "2022-05-02T18:36:36Z",
-	"totalIssues": 124,
+	"totalIssues": 62,
 	"pluginStatus": {
 		"kubescape": {
 			"scan": {
 				"status": "scanned",
 				"message": ""
 			},
-			"issueCount": 60,
+			"issueCount": 30,
 			"issues": null,
 			"lastSuccessfulScanTime": "2022-08-04T22:47:00Z",
 			"lastFinishedScanTime": "2022-08-04T22:47:00Z",
@@ -43,7 +44,7 @@
 				"status": "scanned",
 				"message": ""
 			},
-			"issueCount": 64,
+			"issueCount": 32,
 			"issues": null,
 			"lastSuccessfulScanTime": "2022-08-04T22:47:00Z",
 			"lastFinishedScanTime": "2022-08-04T22:47:00Z",
