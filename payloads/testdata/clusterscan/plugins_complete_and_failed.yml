@@ -28,7 +28,10 @@ metadata:
 spec:
   clusterRef:
     name: harbor
-  schedule: 0 12-22 * * 1-5
+  schedule:
+    hourlyRep: 1
+    startTime: "0:45"
+    daysOfWeek: [1, 2, 3, 4, 5]
 status:
   conditions:
     - lastTransitionTime: "2022-06-28T12:56:38Z"

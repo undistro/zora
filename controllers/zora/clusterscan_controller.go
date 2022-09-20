@@ -45,7 +45,10 @@ import (
 	"github.com/getupio-undistro/zora/pkg/plugins/errparse"
 )
 
-const jobOwnerKey = ".metadata.controller"
+const (
+	jobOwnerKey    = ".metadata.controller"
+	defaultReqTime = 5
+)
 
 // ClusterScanReconciler reconciles a ClusterScan object
 type ClusterScanReconciler struct {
@@ -92,45 +95,46 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Info(fmt.Sprintf("ClusterScan has been reconciled in %v", time.Since(t)))
 	}(time.Now())
 
-	err := r.reconcile(ctx, clusterscan)
+	t, err := r.reconcile(ctx, clusterscan)
 	if err := r.Status().Update(ctx, clusterscan); err != nil {
 		log.Error(err, "failed to update ClusterScan status")
 	}
 
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
+	return ctrl.Result{RequeueAfter: time.Duration(t) * time.Minute}, err
 }
 
-func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
+func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) (int, error) {
 	log := ctrllog.FromContext(ctx)
+	reqTime := defaultReqTime
 
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, clusterscan.ClusterKey(), cluster); err != nil {
 		log.Error(err, fmt.Sprintf("failed to fetch Cluster %s", clusterscan.Spec.ClusterRef.Name))
 		clusterscan.SetReadyStatus(false, "ClusterFetchError", err.Error())
-		return err
+		return reqTime, err
 	}
 
 	if !cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady) {
 		err := errors.New(fmt.Sprintf("the Cluster %s is not Ready", cluster.Name))
 		log.Error(err, "Cluster is not ready")
 		clusterscan.SetReadyStatus(false, "ClusterNotReady", err.Error())
-		return err
+		return reqTime, err
 	}
 	kubeconfigKey := cluster.KubeconfigRefKey()
 	kubeconfigSecret, err := kubeconfig.SecretFromRef(ctx, r.Client, *kubeconfigKey)
 	if err != nil {
 		log.Error(err, fmt.Sprintf("failed to get kubeconfig secret %s", kubeconfigKey.String()))
 		clusterscan.SetReadyStatus(false, "ClusterKubeconfigError", err.Error())
-		return err
+		return reqTime, err
 	}
 
 	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterScanSetOwnerError", err.Error())
-		return err
+		return reqTime, err
 	}
 
 	if err := r.applyRBAC(ctx, clusterscan); err != nil {
-		return err
+		return reqTime, err
 	}
 
 	pluginRefs := r.defaultPlugins()
@@ -145,7 +149,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		if err := r.Get(ctx, pluginKey, plugin); err != nil {
 			log.Error(err, fmt.Sprintf("failed to fetch Plugin %s", pluginKey.String()))
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
-			return err
+			return reqTime, err
 		}
 		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
 
@@ -160,11 +164,18 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			ServiceAccountName: r.ServiceAccountName,
 		}
 
-		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate())
+		f, rem := cronJobMutator.Mutate()
+		if rem != 0 && (reqTime == defaultReqTime || reqTime >= rem) {
+			reqTime = rem
+			log.Info(fmt.Sprintf("Delaying Cronjob creation for plugin <%s> by %d minutes", plugin.Name, reqTime))
+			continue
+		}
+
+		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, f)
 		if err != nil {
 			log.Error(err, fmt.Sprintf("failed to apply CronJob %s", cronJob.Name))
 			clusterscan.SetReadyStatus(false, "CronJobApplyError", err.Error())
-			return err
+			return reqTime, err
 		}
 		if result != controllerutil.OperationResultNone {
 			msg := fmt.Sprintf("CronJob %s has been %s", cronJob.Name, result)
@@ -181,7 +192,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			log.V(1).Info(fmt.Sprintf("CronJob %s has scheduled jobs", cronJob.Name))
 			if j, err := r.getLastJob(ctx, cronJob); err != nil {
 				clusterscan.SetReadyStatus(false, "JobListError", err.Error())
-				return err
+				return reqTime, err
 			} else if j != nil {
 				isFinished, status, finTime := getFinishedStatus(j)
 				if isFinished {
@@ -189,7 +200,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 					if status == batchv1.JobFailed {
 						if err := r.pluginErrorMsg(ctx, pluginStatus, plugin, j); err != nil {
-							return err
+							return reqTime, err
 						}
 					}
 				} else if len(cronJob.Status.Active) > 0 {
@@ -209,7 +220,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...); err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
-		return err
+		return reqTime, err
 	} else if issues != nil {
 		issc := map[string]int{}
 		for _, i := range issues {
@@ -228,7 +239,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
-	return nil
+	return reqTime, nil
 }
 
 func (r *ClusterScanReconciler) pluginErrorMsg(ctx context.Context, ps *v1alpha1.PluginScanStatus, p *v1alpha1.Plugin, j *batchv1.Job) error {

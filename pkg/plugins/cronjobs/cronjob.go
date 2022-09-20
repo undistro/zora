@@ -16,6 +16,7 @@ package cronjobs
 
 import (
 	"path/filepath"
+	"time"
 
 	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/getupio-undistro/zora/pkg/kubeconfig"
@@ -77,15 +78,20 @@ type Mutator struct {
 	ServiceAccountName string
 }
 
-// Mutate returns a function which mutates the existing CronJob into it's desired state.
-func (r *Mutator) Mutate() controllerutil.MutateFn {
-	return func() error {
+// Mutate returns a function which mutates the existing CronJob into it's
+// desired state, as well as the required delay for the first scan execution.
+// The delay is represented in absolute minutes, where 1 minute is subtracted
+// from it to allow the Cronjob to be created before the scan start time.
+func (r *Mutator) Mutate() (controllerutil.MutateFn, int) {
+	sch := firstNonNilSchedule(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
+
+	f := func() error {
 		if r.Existing.ObjectMeta.Labels == nil {
 			r.Existing.ObjectMeta.Labels = make(map[string]string)
 		}
 		r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
 		r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
-		r.Existing.Spec.Schedule = firstNonEmptyString(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
+		r.Existing.Spec.Schedule = sch.CronExpr()
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
@@ -140,6 +146,19 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 
 		return ctrl.SetControllerReference(r.ClusterScan, r.Existing, r.Scheme)
 	}
+
+	rem := 0
+	if sch.StartTime != nil && r.ClusterScan.Status.Plugins[r.Plugin.Name] == nil {
+		now := time.Now().UTC()
+		h, m := sch.SplitStartTime()
+		rem = 60*(h-now.Hour()) + m - now.Minute()
+		if rem > 0 {
+			rem -= 1
+		} else {
+			rem += 1439
+		}
+	}
+	return f, rem
 }
 
 // workerContainer returns a Container for Worker
@@ -216,13 +235,13 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 	)
 }
 
-func firstNonEmptyString(strings ...string) string {
-	for _, s := range strings {
-		if s != "" {
+func firstNonNilSchedule(scheds ...*v1alpha1.Schedule) *v1alpha1.Schedule {
+	for _, s := range scheds {
+		if s != nil {
 			return s
 		}
 	}
-	return ""
+	return nil
 }
 
 func firstNonNilBoolPointer(pointers ...*bool) *bool {
