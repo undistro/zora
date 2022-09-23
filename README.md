@@ -30,4 +30,4 @@ We are in alpha stage and we'd love it if you contributed to Zora. For informati
 
 ## License
 
-Zora is a Undistro product, backed by [Getup.io](https://getup.io) under the [Apache License 2.0](LICENSE)
+Zora is a Undistro product, backed by [Getup.io](https://getup.io) under the [Apache License 2.0](LICENSE).
