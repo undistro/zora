@@ -1,4 +1,4 @@
-# Zora Alpha Release
+# Zora (Alpha Release)
 
 <div align="center">
 
@@ -26,7 +26,7 @@ Check out our live [documentation](https://zora.undistro.io) for details about h
 
 ## Contributing
 
-We'd love it if you contributed to Zora. For information on contributing to this project, please see our [guideline](https://github.com/getupio-undistro/zora/blob/main/CONTRIBUTING.md).
+We are in alpha stage and we'd love it if you contributed to Zora. For information on contributing to this project, please see our [guideline](https://github.com/getupio-undistro/zora/blob/main/CONTRIBUTING.md).
 
 ## License
 
