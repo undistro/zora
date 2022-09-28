@@ -77,12 +77,12 @@ var (
 
 		// Node
 		"700": "Found taint that no pod can tolerate",
-		"704": "Insufficient memory (MemoryPressure condition)",
-		"705": "Insufficient disk space (DiskPressure condition)",
+		"704": "Insufficient memory on Node (MemoryPressure condition)",
+		"705": "Insufficient disk space on Node (DiskPressure condition)",
 		"706": "Insufficient PIDs on Node (PIDPressure condition)",
-		"707": "No network configured on node (NetworkUnavailable condition)",
-		"709": "CPU threshold reached",
-		"710": "Memory threshold reached",
+		"707": "No network configured on Node (NetworkUnavailable condition)",
+		"709": "Node CPU threshold reached",
+		"710": "Node Memory threshold reached",
 
 		// PodDisruptionBudget
 		"901": "MinAvailable is greater than the number of pods currently running",
