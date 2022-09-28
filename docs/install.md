@@ -11,6 +11,7 @@ So it is recommended to keep it separated from any application workload.
 
 ```shell
 helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
   --create-namespace --wait
