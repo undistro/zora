@@ -50,8 +50,8 @@ var (
 		"207": "Pod is in an unhappy phase",
 
 		// Security
-		"304": "References a secret which does not exist",
-		"305": "References a docker-image pull secret which does not exist",
+		"304": "ServiceAccount references a secret which does not exist",
+		"305": "ServiceAccount references a docker-image pull secret which does not exist",
 
 		// General
 		"401": "Unable to locate key reference",
@@ -77,6 +77,10 @@ var (
 
 		// Node
 		"700": "Found taint that no pod can tolerate",
+		"704": "Insufficient memory (MemoryPressure condition)",
+		"705": "Insufficient disk space (DiskPressure condition)",
+		"706": "Insufficient PIDs on Node (PIDPressure condition)",
+		"707": "No network configured on node (NetworkUnavailable condition)",
 		"709": "CPU threshold reached",
 		"710": "Memory threshold reached",
 
@@ -104,19 +108,19 @@ var (
 	// the "POP-" preffix.
 	IssueIDtoUrl = map[string]string{
 		// Container
-		"100": "https://kubernetes.io/pt-br/docs/concepts/containers/images/#nomes-das-imagens",
+		"100": "https://kubernetes.io/docs/concepts/containers/images/#image-names",
 		"101": "https://kubernetes.io/docs/concepts/containers/images/#image-names",
-		"102": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-tcp-liveness-probe",
-		"103": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command",
-		"104": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command",
+		"102": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+		"103": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+		"104": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes",
 		"105": "",
-		"106": "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
-		"107": "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
+		"106": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"107": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 		"108": "",
-		"109": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu",
-		"110": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory",
-		"111": "",
-		"112": "",
+		"109": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"110": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"111": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"112": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 		"113": "",
 
 		// Pod
@@ -125,95 +129,95 @@ var (
 		"202": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
 		"203": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
 		"204": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
-		"205": "https://www.ibm.com/docs/en/cloud-paks/cp-management/1.2.0?topic=issues-pods-restart-frequently",
+		"205": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
 		"206": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions",
 		"207": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
-		"208": "https://kubernetes.io/pt-br/docs/concepts/scheduling-eviction/pod-overhead",
+		"208": "https://kubernetes.io/docs/concepts/configuration/overview/#naked-pods-vs-replicasets-deployments-and-jobs",
 
 		// Security
-		"300": "https://thenewstack.io/kubernetes-access-control-exploring-service-accounts/#:~:text=Service%20accounts%20are%20associated%20with,a%20ClusterIP%20service%20called%20Kubernete",
-		"301": "https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens",
-		"302": "https://medium.com/devzera/processos-em-containers-n%C3%A3o-devem-ser-executados-como-root-30755daff56f",
-		"303": "https://kubernetes.io/docs/concepts/security/controlling-access",
-		"304": "https://kubernetes.io/docs/concepts/configuration/secret/#using-a-secret",
+		"300": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+		"301": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+		"302": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
+		"303": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+		"304": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account",
 		"305": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account",
-		"306": "",
+		"306": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
 
 		// General
 		"400": "",
 		"401": "",
-		"402": "https://www.ibm.com/docs/en/spp/10.1.8?topic=prerequisites-kubernetes-verifying-whether-metrics-server-is-running",
+		"402": "https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#metrics-server",
 		"403": "https://kubernetes.io/docs/reference/using-api/deprecation-guide",
-		"404": "https://opster.com/analysis/elasticsearch-nodes-failed-to-run-deprecation-checks",
-		"405": "https://faun.pub/upgrade-your-kubernetes-cluster-without-upsetting-your-developers-e7d8559dee49",
-		"406": "",
+		"404": "https://kubernetes.io/docs/reference/using-api/deprecation-guide",
+		"405": "https://kubernetes.io/docs/tasks/administer-cluster/cluster-upgrade/",
+		"406": "https://kubernetes.io/releases/",
 
 		// Deployment and StatefulSet
-		"500": "https://dzone.com/articles/scale-to-zero-with-kubernetes",
-		"501": "",
-		"503": "",
-		"504": "",
-		"505": "",
-		"506": "",
-		"507": "https://medium.com/the-programmer/working-with-service-account-in-kubernetes-df129cb4d1cc",
+		"500": "https://kubernetes.io/docs/concepts/workloads/",
+		"501": "https://kubernetes.io/docs/concepts/workloads/",
+		"503": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"504": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"505": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"506": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+		"507": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
 
 		// HPA
-		"600": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#implicit-maintenance-mode-deactivation",
-		"601": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#implicit-maintenance-mode-deactivation",
-		"602": "https://medium.com/omio-engineering/cpu-limits-and-aggressive-throttling-in-kubernetes-c6b20bd8a718",
-		"603": "https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource",
-		"604": "https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource",
-		"605": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale",
+		"600": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+		"601": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+		"602": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+		"603": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+		"604": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+		"605": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
 
 		// Node
 		"700": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
-		"701": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller",
-		"702": "https://komodor.com/learn/how-to-fix-kubernetes-node-not-ready-error",
-		"703": "https://www.ibm.com/docs/en/api-connect/10.0.x?topic=kubernetes-analytics-running-out-disk-space",
-		"704": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers",
-		"705": "https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction",
-		"706": "https://containersolutions.github.io/runbooks/posts/kubernetes/0-nodes-available-insufficient",
-		"707": "https://www.ibm.com/docs/en/csfdcd/7.1?topic=network-configuring-node",
-		"708": "https://www.datadoghq.com/blog/how-to-collect-and-graph-kubernetes-metrics",
-		"709": "https://www.ibm.com/docs/en/cloud-app-management/2019.4.0?topic=collector-kubernetes-metrics-thresholds",
-		"710": "https://medium.com/@betz.mark/understanding-resource-limits-in-kubernetes-memory-6b41e9a955f9",
-		"711": "https://kubernetes.io/docs/reference/scheduling/config",
-		"712": "",
+		"701": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"702": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"703": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"704": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"705": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"706": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"707": "https://kubernetes.io/docs/concepts/architecture/nodes/#node-status",
+		"708": "https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/",
+		"709": "https://kubernetes.io/docs/concepts/architecture/nodes/",
+		"710": "https://kubernetes.io/docs/concepts/architecture/nodes/",
+		"711": "https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration",
+		"712": "https://kubernetes.io/docs/concepts/overview/components/",
 
 		// Namespace
-		"800": "https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/#viewing-namespaces",
+		"800": "https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
 
 		// PodDisruptionBudget
-		"900": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node",
-		"901": "https://kubernetes.io/docs/tasks/run-application/configure-pdb",
+		"900": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions/",
+		"901": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions/",
 
 		// PV and PVC
-		"1000": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors",
-		"1001": "https://hungsblog.de/en/technology/troubleshooting/kubernetes-pod-stuck-in-pending-status-nodes-had-no-available-volume",
-		"1002": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage",
-		"1003": "https://www.ibm.com/docs/en/cloud-paks/1.0?topic=issues-persistentvolumeclaims-pvcs-are-in-pending-state",
-		"1004": "",
+		"1000": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+		"1001": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+		"1002": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+		"1003": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+		"1004": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
 
 		// Service
-		"1100": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors",
-		"1101": "https://www.gitpod.io/docs/config-ports",
-		"1102": "https://www.bmc.com/blogs/kubernetes-port-targetport-nodeport/#:~:text=TargetPort%20is%20the%20port%20on,IP%20address%20and%20the%20NodePort",
-		"1103": "https://kubernetes.io/docs/concepts/services-networking/_print/#load-balancing",
-		"1104": "",
-		"1105": "",
-		"1106": "https://www.bmc.com/blogs/kubernetes-port-targetport-nodeport",
-		"1107": "",
-		"1108": "",
-		"1109": "https://www.codegrepper.com/code-examples/shell/only+one+associated+endpoint+kubernetes",
+		"1100": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
+		"1101": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
+		"1102": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
+		"1103": "https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer",
+		"1104": "https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport",
+		"1105": "https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors",
+		"1106": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
+		"1107": "https://kubernetes.io/docs/concepts/services-networking/service/#external-traffic-policy",
+		"1108": "https://kubernetes.io/docs/concepts/services-networking/service/#external-traffic-policy",
+		"1109": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
 
 		// ReplicaSet
-		"1120": "",
+		"1120": "https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/",
 
 		// NetworkPolicies
-		"1200": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node",
-		"1201": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+		"1200": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"1201": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
 
 		// RBAC
-		"1300": "",
+		"1300": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding",
 	}
 )
