@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if .Values.ui.enabled }}
+{{ if .Values.ui.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
