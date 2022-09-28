@@ -162,7 +162,7 @@ func TestParse(t *testing.T) {
 						"apps/v1/deployments": {"cert-manager/cert-manager"},
 					},
 					TotalResources: 2,
-					Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
+					Url:            "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 				},
 				{
 					ID:       "POP-107",
@@ -173,7 +173,7 @@ func TestParse(t *testing.T) {
 						"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
 					},
 					TotalResources: 2,
-					Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
+					Url:            "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 				},
 				{
 					ID:       "POP-108",
