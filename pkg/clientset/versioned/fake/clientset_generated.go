@@ -3,9 +3,9 @@
 package fake
 
 import (
-	clientset "github.com/getupio-undistro/zora/pkg/clientset/versioned"
-	zorav1alpha1 "github.com/getupio-undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
-	fakezorav1alpha1 "github.com/getupio-undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1/fake"
+	clientset "github.com/undistro/zora/pkg/clientset/versioned"
+	zorav1alpha1 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
+	fakezorav1alpha1 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"

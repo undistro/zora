@@ -3,7 +3,7 @@
 package fake
 
 import (
-	zorav1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	zorav1alpha1 "github.com/undistro/zora/apis/zora/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

@@ -20,8 +20,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/google/go-cmp/cmp"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
 	"sigs.k8s.io/yaml"
 )
 

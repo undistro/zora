@@ -19,11 +19,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/payloads"
-	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-logr/logr"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/payloads"
+	"github.com/undistro/zora/pkg/clientset/versioned"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

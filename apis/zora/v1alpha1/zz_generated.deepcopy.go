@@ -6,7 +6,7 @@
 package v1alpha1
 
 import (
-	"github.com/getupio-undistro/zora/pkg/discovery"
+	"github.com/undistro/zora/pkg/discovery"
 	"k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )

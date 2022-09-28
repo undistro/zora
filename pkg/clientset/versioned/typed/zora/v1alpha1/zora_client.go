@@ -5,8 +5,8 @@ package v1alpha1
 import (
 	"net/http"
 
-	v1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/clientset/versioned/scheme"
+	v1alpha1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
 )
 

@@ -28,7 +28,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	zorav1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	zorav1alpha1 "github.com/undistro/zora/apis/zora/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 

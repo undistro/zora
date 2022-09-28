@@ -19,8 +19,8 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/google/go-cmp/cmp"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
