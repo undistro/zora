@@ -92,6 +92,17 @@ The cluster list output has the following columns:
 - `REGION`: Cluster region (`multi-region` if nodes have different `topology.kubernetes.io/region` label)
   (with `-o=wide` flag)
 
+!!! info "Provider"
+    The value in `PROVIDER` column is obtained by matching the Node's labels
+    (e.g., a Node with label key prefix `eks.amazonaws.com/` means that the provider of this cluster is `aws`).
+
+    For now, Zora recognizes only the providers in this [list](https://github.com/undistro/zora/blob/main/pkg/discovery/cluster_labels.go#L21).
+    But you can connect clusters of any provider. 
+    If the provider isn't in this list, the column will not be filled and Zora will continue to work normally.
+    
+    Fell free to contribute to the project and add new labels prefixes for providers. 
+    See our [contribution guidelines](https://github.com/undistro/zora/blob/main/CONTRIBUTING.md).
+
 !!! info
     - The quantity of available and in use resources, is a sum of all Nodes.
     - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
