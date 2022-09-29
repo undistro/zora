@@ -21,8 +21,8 @@ import (
 	"regexp"
 	"strings"
 
-	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/go-logr/logr"
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
 var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)

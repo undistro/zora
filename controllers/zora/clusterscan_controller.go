@@ -39,10 +39,10 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/kubeconfig"
-	"github.com/getupio-undistro/zora/pkg/plugins/cronjobs"
-	"github.com/getupio-undistro/zora/pkg/plugins/errparse"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/kubeconfig"
+	"github.com/undistro/zora/pkg/plugins/cronjobs"
+	"github.com/undistro/zora/pkg/plugins/errparse"
 )
 
 const jobOwnerKey = ".metadata.controller"

@@ -31,4 +31,4 @@ version: 0.3.7
 appVersion: "v0.3.7"
 
 sources:
-  - https://github.com/getupio-undistro/zora
+  - https://github.com/undistro/zora

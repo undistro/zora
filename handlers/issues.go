@@ -18,9 +18,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getupio-undistro/zora/payloads"
-	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
 	"github.com/go-logr/logr"
+	"github.com/undistro/zora/payloads"
+	"github.com/undistro/zora/pkg/clientset/versioned"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

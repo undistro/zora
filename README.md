@@ -6,10 +6,10 @@
     <img src="docs/assets/logo-github.png" alt="Zora Logo">
 </a>
 
-[![build](https://github.com/getupio-undistro/zora/actions/workflows/build.yaml/badge.svg)](https://github.com/getupio-undistro/zora/actions/workflows/build.yaml)
-[![license](https://img.shields.io/github/license/getupio-undistro/zora)](https://github.com/getupio-undistro/zora/blob/main/LICENSE)
-[![version](https://img.shields.io/github/v/tag/getupio-undistro/zora?sort=semver)](https://github.com/getupio-undistro/zora/tags)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgetupio-undistro%2Fzora.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgetupio-undistro%2Fzora?ref=badge_shield)
+[![build](https://github.com/undistro/zora/actions/workflows/build.yaml/badge.svg)](https://github.com/undistro/zora/actions/workflows/build.yaml)
+[![license](https://img.shields.io/github/license/undistro/zora)](https://github.com/undistro/zora/blob/main/LICENSE)
+[![version](https://img.shields.io/github/v/tag/undistro/zora?sort=semver)](https://github.com/undistro/zora/tags)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fundistro%2Fzora.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fundistro%2Fzora?ref=badge_shield)
 
 </div>
 
@@ -26,7 +26,7 @@ Check out our live [documentation](https://zora.undistro.io) for details about h
 
 ## Contributing
 
-We are in alpha stage and we'd love it if you contributed to Zora. For information on contributing to this project, please see our [guideline](https://github.com/getupio-undistro/zora/blob/main/CONTRIBUTING.md).
+We are in alpha stage and we'd love it if you contributed to Zora. For information on contributing to this project, please see our [guideline](https://github.com/undistro/zora/blob/main/CONTRIBUTING.md).
 
 ## License
 

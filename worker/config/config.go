@@ -22,10 +22,10 @@ import (
 	"path"
 	"strings"
 
-	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/worker/report/kubescape"
-	"github.com/getupio-undistro/zora/worker/report/popeye"
 	"github.com/go-logr/logr"
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/worker/report/kubescape"
+	"github.com/undistro/zora/worker/report/popeye"
 )
 
 const (
