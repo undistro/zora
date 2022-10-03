@@ -98,8 +98,29 @@ kubectl get clusterissues -l cluster=mycluster
 kubectl get clusterissues -l id=POP-106
 
 # issues from mycluster with high severity
-kubectl get clusterissues -l cluster=mycluster,severity=high
+kubectl get clusterissues -l cluster=mycluster,severity=High
 
 # only issues reported by the last scan from mycluster
 kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-599e1c83208b
 ```
+
+!!! tip "Why is it an issue?"
+
+    The field `url` in `ClusterIssue` spec represents a link for a documentation about this issue.
+    It is displayed in the UI and you can see by `kubectl` with the `-o=yaml` flag or the command below.
+    
+    ```shell
+    kubectl get clusterissues -o=custom-columns="NAME:.metadata.name,MESSAGE:.spec.message,URL:.spec.url"
+    NAME                          MESSAGE                                                                        URL
+    mycluster-pop-102-27557035    No probes defined                                                              https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+    mycluster-pop-105-27557035    Liveness probe uses a port#, prefer a named port                               <none>
+    mycluster-pop-106-27557035    No resources requests/limits defined                                           https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+    mycluster-pop-1100-27557035   No pods match service selector                                                 https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+    mycluster-pop-306-27557035    Container could be running as root user. Check SecurityContext/Image           https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
+    mycluster-pop-500-27557035    Zero scale detected                                                            https://kubernetes.io/docs/concepts/workloads/
+    ```
+    
+    These docs should help you understand why it's an issue and how to fix it.
+    
+    All URLs are available [here](https://github.com/undistro/zora/blob/main/worker/report/popeye/parse_types.go#L109) 
+    and you can contribute to Zora adding new links. See our [contribution guidelines](https://github.com/undistro/zora/blob/main/CONTRIBUTING.md).
