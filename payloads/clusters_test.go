@@ -107,6 +107,14 @@ func TestNewCluster(t *testing.T) {
 			},
 			want: "9.json",
 		},
+		{
+			name: "Cluster without provider/region and ClusterScan suspended",
+			args: args{
+				cluster: "without_provider.yml",
+				scans:   []string{"suspend.yml"},
+			},
+			want: "10.json",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
