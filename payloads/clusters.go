@@ -61,6 +61,7 @@ type Resource struct {
 type ScanStatus struct {
 	Status  ScanStatusType `json:"status"`
 	Message string         `json:"message"`
+	Suspend bool           `json:"suspend"`
 }
 
 type ConnectionStatus struct {
@@ -97,7 +98,13 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 	var notFinished []string
 	var failedPlugins []string
 	var failed string
+	var suspend bool
 	for _, cs := range scans {
+		//suspend
+		if cs.Spec.Suspend != nil && *cs.Spec.Suspend == true {
+			suspend = true
+		}
+
 		// total issues
 		if cl.TotalIssues == nil {
 			cl.TotalIssues = cs.Status.TotalIssues
@@ -131,6 +138,7 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 		}
 	}
 
+	cl.Scan.Suspend = suspend
 	if len(scans) == 0 {
 		cl.Scan.Message = "No scan configured for this cluster"
 	} else if failed != "" {
