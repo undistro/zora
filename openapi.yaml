@@ -120,6 +120,9 @@ components:
             message:
               type: string
               example: 'no finished scan yet'
+            suspend:
+              type: boolean
+              example: false
         connection:
           type: object
           properties:
