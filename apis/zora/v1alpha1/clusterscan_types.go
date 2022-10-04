@@ -206,6 +206,9 @@ type PluginScanStatus struct {
 	// IssueCount holds the sum of ClusterIssues found in the last successful
 	// scan.
 	IssueCount *int `json:"issueCount,omitempty"`
+
+	// Suspend field value from ClusterScan spec.plugins.*.suspend
+	Suspend bool `json:"suspend,omitempty"`
 }
 
 //+kubebuilder:object:root=true
