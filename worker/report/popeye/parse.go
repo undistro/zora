@@ -42,6 +42,10 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 				if err != nil {
 					return nil, fmt.Errorf("Unable to parse Popeye issue on <%s>: %w", typ, err)
 				}
+				if iss.Level == OkLevel {
+					log.Info("Skipping OK level issue", "id", id, "msg", msg)
+					continue
+				}
 				if ci, ok := issuesmap[id]; ok {
 					ci.Resources[san.GVR] = append(ci.Resources[san.GVR], typ)
 					ci.TotalResources++
