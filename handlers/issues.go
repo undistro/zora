@@ -17,8 +17,10 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-logr/logr"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
 	"github.com/undistro/zora/payloads"
 	"github.com/undistro/zora/pkg/clientset/versioned"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,7 +30,21 @@ func IssueListHandler(client versioned.Interface, logger logr.Logger) func(http.
 	return func(w http.ResponseWriter, r *http.Request) {
 		log := logger.WithName("handlers.issues").WithValues("method", r.Method, "path", r.URL.Path)
 
-		issueList, err := client.ZoraV1alpha1().ClusterIssues("").List(r.Context(), metav1.ListOptions{})
+		scanList, err := client.ZoraV1alpha1().ClusterScans("").List(r.Context(), metav1.ListOptions{})
+		if err != nil {
+			log.Error(err, "failed to list ClusterScans")
+			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterScans", err.Error())
+			return
+		}
+		var lastScanIDs []string
+		var ls string
+		for _, cs := range scanList.Items {
+			lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
+		}
+		if len(lastScanIDs) > 0 {
+			ls = fmt.Sprintf("%s in (%s)", v1alpha1.LabelScanID, strings.Join(lastScanIDs, ","))
+		}
+		issueList, err := client.ZoraV1alpha1().ClusterIssues("").List(r.Context(), metav1.ListOptions{LabelSelector: ls})
 		if err != nil {
 			log.Error(err, "failed to list ClusterIssues")
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterIssues", err.Error())
