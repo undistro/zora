@@ -395,6 +395,9 @@ spec:
                       description: Time when the next job will schedule.
                       format: date-time
                       type: string
+                    suspend:
+                      description: Suspend field value from ClusterScan spec.plugins.*.suspend
+                      type: boolean
                   type: object
                 description: Information of the last scans of plugins
                 type: object

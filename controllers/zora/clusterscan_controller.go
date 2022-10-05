@@ -172,6 +172,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
 		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
+		pluginStatus.Suspend = pointer.BoolDeref(cronJob.Spec.Suspend, false)
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {
