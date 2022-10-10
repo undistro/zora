@@ -94,6 +94,13 @@ spec:
                       TODO: Add other useful fields. apiVersion, kind, uid?'
                     type: string
                 type: object
+              failedScansHistoryLimit:
+                description: FailedScansHistoryLimit specifies the amount of failed
+                  scan Jobs to be kept in the cluster. This field is analogous to
+                  <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
+                format: int32
+                minimum: 0
+                type: integer
               plugins:
                 description: The list of Plugin references that are used to scan the
                   referenced Cluster.  Defaults to 'popeye'
@@ -238,6 +245,13 @@ spec:
               schedule:
                 description: The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
                 type: string
+              successfulScansHistoryLimit:
+                description: SuccessfulScansHistoryLimit specifies the amount of successfully
+                  completed scan Jobs to be kept in the cluster. This field is analogous
+                  to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
+                format: int32
+                minimum: 0
+                type: integer
               suspend:
                 description: This flag tells the controller to suspend subsequent
                   executions, it does not apply to already started executions.  Defaults
