@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if and .Values.ui.enabled .Values.ui.autoscaling.enabled }}
+{{ if and .Values.ui.enabled .Values.ui.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:

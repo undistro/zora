@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if .Values.ingress.enabled -}}
+{{ if .Values.ingress.enabled -}}
 {{- $fullName := include "zora.fullname" . -}}
 {{- $serverPort := .Values.server.service.port -}}
 

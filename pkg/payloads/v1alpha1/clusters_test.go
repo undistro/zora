@@ -20,8 +20,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/google/go-cmp/cmp"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
 	"sigs.k8s.io/yaml"
 )
 
@@ -106,6 +106,14 @@ func TestNewCluster(t *testing.T) {
 				scans:   []string{"ok.yml", "plugins_active_and_complete.yml"},
 			},
 			want: "9.json",
+		},
+		{
+			name: "Cluster without provider/region and ClusterScan suspended",
+			args: args{
+				cluster: "without_provider.yml",
+				scans:   []string{"suspend.yml"},
+			},
+			want: "10.json",
 		},
 	}
 	for _, tt := range tests {

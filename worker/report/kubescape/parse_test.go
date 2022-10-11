@@ -19,9 +19,9 @@ import (
 	"sort"
 	"testing"
 
-	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
 func TestScoreFactorSeverity(t *testing.T) {

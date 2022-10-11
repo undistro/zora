@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"strings"
 
-	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/go-logr/logr"
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
 // ScoreFactorSeverity converts a Kubescape Control <ScoreFactor> to Zora's

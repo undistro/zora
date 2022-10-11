@@ -1,4 +1,4 @@
-module github.com/getupio-undistro/zora
+module github.com/undistro/zora
 
 go 1.17
 

@@ -22,8 +22,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	payloads "github.com/getupio-undistro/zora/pkg/payloads/v1alpha1"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	payloads "github.com/undistro/zora/pkg/payloads/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"

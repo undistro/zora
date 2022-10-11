@@ -24,6 +24,10 @@ Follow these steps to get started with Zora:
 
 All the information about these steps are detailed throughout this documentation.
 
+## Architecture
+
+<img src="assets/arch.png" alt="Zora Architecture Diagram">
+
 ## Zora origins
 
 In the early days of the cloud native era, [Borg](https://intl.startrek.com/database_article/borg) dominated the container-oriented cluster management scene.

@@ -18,8 +18,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/kubeconfig"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/kubeconfig"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -94,6 +94,8 @@ func (r *Mutator) Mutate() (controllerutil.MutateFn, int) {
 		r.Existing.Spec.Schedule = sch.CronExpr()
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
+		r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
+		r.Existing.Spec.FailedJobsHistoryLimit = r.ClusterScan.Spec.FailedScansHistoryLimit
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 		r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName

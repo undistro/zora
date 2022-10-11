@@ -158,6 +158,9 @@ components:
                 message:
                   type: string
                   example: 'no finished scan yet'
+                suspend:
+                  type: boolean
+                  example: false
             lastSuccessfulScanTime:
               type: string
               format: date-time
@@ -177,6 +180,7 @@ components:
               scan:
                 status: "scanned"
                 message: ""
+                suspend: false
               issueCount: 30
               issues: null
               lastSuccessfulScanTime: "2022-08-04T21:47:00Z"
@@ -186,6 +190,7 @@ components:
               scan:
                 status: "scanned"
                 message: ""
+                suspend: false
               issueCount: 32
               issues: null
               lastSuccessfulScanTime: "2022-08-04T21:47:00Z"

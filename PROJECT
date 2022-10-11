@@ -3,7 +3,7 @@ layout:
 - go.kubebuilder.io/v3
 multigroup: true
 projectName: zora
-repo: github.com/getupio-undistro/zora
+repo: github.com/undistro/zora
 resources:
 - api:
     crdVersion: v1
@@ -12,7 +12,7 @@ resources:
   domain: undistro.io
   group: zora
   kind: Cluster
-  path: github.com/getupio-undistro/zora/api/v1alpha1
+  path: github.com/undistro/zora/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -20,7 +20,7 @@ resources:
   domain: undistro.io
   group: zora
   kind: Plugin
-  path: github.com/getupio-undistro/zora/apis/zora/v1alpha1
+  path: github.com/undistro/zora/apis/zora/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -28,7 +28,7 @@ resources:
   domain: undistro.io
   group: zora
   kind: ClusterIssue
-  path: github.com/getupio-undistro/zora/apis/zora/v1alpha1
+  path: github.com/undistro/zora/apis/zora/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -37,6 +37,6 @@ resources:
   domain: undistro.io
   group: zora
   kind: ClusterScan
-  path: github.com/getupio-undistro/zora/apis/zora/v1alpha1
+  path: github.com/undistro/zora/apis/zora/v1alpha1
   version: v1alpha1
 version: "3"

@@ -39,10 +39,10 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/kubeconfig"
-	"github.com/getupio-undistro/zora/pkg/plugins/cronjobs"
-	"github.com/getupio-undistro/zora/pkg/plugins/errparse"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/kubeconfig"
+	"github.com/undistro/zora/pkg/plugins/cronjobs"
+	"github.com/undistro/zora/pkg/plugins/errparse"
 )
 
 const (
@@ -183,6 +183,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
 		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
+		pluginStatus.Suspend = pointer.BoolDeref(cronJob.Spec.Suspend, false)
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {

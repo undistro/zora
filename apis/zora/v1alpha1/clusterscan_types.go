@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/getupio-undistro/zora/pkg/apis"
+	"github.com/undistro/zora/pkg/apis"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -63,6 +63,20 @@ type ClusterScanSpec struct {
 
 	// The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
 	Plugins []PluginReference `json:"plugins,omitempty"`
+
+	// SuccessfulScansHistoryLimit specifies the amount of successfully
+	// completed scan Jobs to be kept in the cluster. This field is analogous
+	// to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:default=3
+	SuccessfulScansHistoryLimit *int32 `json:"successfulScansHistoryLimit,omitempty"`
+
+	// FailedScansHistoryLimit specifies the amount of failed scan Jobs to be
+	// kept in the cluster. This field is analogous to
+	// <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:default=1
+	FailedScansHistoryLimit *int32 `json:"failedScansHistoryLimit,omitempty"`
 }
 
 type PluginReference struct {
@@ -230,6 +244,9 @@ type PluginScanStatus struct {
 	// IssueCount holds the sum of ClusterIssues found in the last successful
 	// scan.
 	IssueCount *int `json:"issueCount,omitempty"`
+
+	// Suspend field value from ClusterScan spec.plugins.*.suspend
+	Suspend bool `json:"suspend,omitempty"`
 }
 
 //+kubebuilder:object:root=true

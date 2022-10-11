@@ -57,7 +57,21 @@
 				}
 				]
 			}
-		}
+		},
+        {
+            "sanitizer": "cluster",
+            "gvr": "cluster",
+            "issues": {
+                "Version": [
+                    {
+                        "group": "__root__",
+                        "gvr": "cluster",
+                        "level": 0,
+                        "message": "[POP-406] K8s version OK"
+                    }
+                ]
+            }
+        }
 		]
 	}
 }

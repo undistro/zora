@@ -15,9 +15,9 @@
 package v1alpha1
 
 import (
-	"github.com/getupio-undistro/zora/pkg/apis"
-	"github.com/getupio-undistro/zora/pkg/discovery"
-	"github.com/getupio-undistro/zora/pkg/formats"
+	"github.com/undistro/zora/pkg/apis"
+	"github.com/undistro/zora/pkg/discovery"
+	"github.com/undistro/zora/pkg/formats"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"

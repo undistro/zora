@@ -31,8 +31,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/getupio-undistro/zora/handlers"
-	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
+	"github.com/undistro/zora/handlers"
+	"github.com/undistro/zora/pkg/clientset/versioned"
 )
 
 var log = ctrl.Log.WithName("server")
