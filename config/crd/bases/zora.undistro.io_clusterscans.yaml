@@ -95,6 +95,7 @@ spec:
                     type: string
                 type: object
               failedScansHistoryLimit:
+                default: 1
                 description: FailedScansHistoryLimit specifies the amount of failed
                   scan Jobs to be kept in the cluster. This field is analogous to
                   <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
@@ -246,6 +247,7 @@ spec:
                 description: The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
                 type: string
               successfulScansHistoryLimit:
+                default: 3
                 description: SuccessfulScansHistoryLimit specifies the amount of successfully
                   completed scan Jobs to be kept in the cluster. This field is analogous
                   to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
