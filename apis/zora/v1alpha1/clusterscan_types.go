@@ -44,12 +44,14 @@ type ClusterScanSpec struct {
 	// completed scan Jobs to be kept in the cluster. This field is analogous
 	// to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
 	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:default=3
 	SuccessfulScansHistoryLimit *int32 `json:"successfulScansHistoryLimit,omitempty"`
 
 	// FailedScansHistoryLimit specifies the amount of failed scan Jobs to be
 	// kept in the cluster. This field is analogous to
 	// <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
 	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:default=1
 	FailedScansHistoryLimit *int32 `json:"failedScansHistoryLimit,omitempty"`
 }
 
