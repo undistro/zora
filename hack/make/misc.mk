@@ -7,8 +7,9 @@
  fmt \
  vet \
  test \
- manifests \
  manifest-consistency \
+ manifests \
+ script-consistency \
  generate \
  clientset-gen \
  build \

@@ -1,0 +1,3 @@
+setup_cluster_role
+setup_cluster_role_binding
+create_kubeconfig

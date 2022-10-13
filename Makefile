@@ -50,9 +50,14 @@ manifest-consitency: charts/zora/templates/operator/rbac.yaml \
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/
-	$(MAKE) manifest-consitency license
+	${MAKE} manifest-consitency license
 
-generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+hack/scripts/gen_zora_view_kubeconfig.sh hack/scripts/target_cluster.sh: hack/scripts/m4/*
+	@ m4 -I hack/scripts/m4 $(shell basename $@.m4) > $@
+
+script-consitency: hack/scripts/gen_zora_view_kubeconfig.sh hack/scripts/target_cluster.sh
+
+generate: controller-gen script-consitency license ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 clientset-gen: ## Generate clientset

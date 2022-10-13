@@ -8,10 +8,6 @@ CLUSTER_ROLE_NAME=${CLUSTER_ROLE_NAME:-"zora-view"}
 SVC_ACCOUNT_SECRET_NS=${SVC_ACCOUNT_SECRET_NS:-$SVC_ACCOUNT_NS}
 SVC_ACCOUNT_SECRET_NAME=${SVC_ACCOUNT_SECRET_NAME:-"$SVC_ACCOUNT_NAME-token"}
 
-KCONFIG_NAME=${KCONFIG_NAME:-"zora_view_kubeconfig.yaml"}
-METRICS_SERVER_VERSION=${METRICS_SERVER_VERSION:-"latest"}
-METRICS_SERVER_DEPLOYMENT_NAME=${METRICS_SERVER_DEPLOYMENT_NAME:-"metrics-server"}
-METRICS_SERVER_DEPLOYMENT=${METRICS_SERVER_DEPLOYMENT:-"https://github.com/kubernetes-sigs/metrics-server/releases/$METRICS_SERVER_VERSION/download/components.yaml"}
 
 get_token_name() {
 	echo $(kubectl -n $SVC_ACCOUNT_NS \
@@ -178,13 +174,6 @@ users:
 EOF
 }
 
-
-setup_metrics_server() {
-	if ! kubectl get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
-		kubectl apply -f "$METRICS_SERVER_DEPLOYMENT"
-	fi
-}
-
 setup_namespaces() {
 	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
 		kubectl create namespace $SVC_ACCOUNT_NS
@@ -215,6 +204,40 @@ setup_cluster_role_binding() {
 }
 
 
+show_generated_kconfig_name() {
+	echo -e "Kubeconfing file:
+	$KCONFIG_NAME
+	"
+}
+
+show_kconfig_creation_cmd() {
+	echo "Create a Kubeconfig Secret on the management cluster by running:
+	kubectl create secret generic $KCONFIG_SECRET_NAME \\
+		--namespace $CLUSTER_NS \\
+		--from-file=value=$KCONFIG_NAME
+"
+}
+
+create_cluster_sample() {
+	cat << EOF > $SAMPLE_MANIFEST_NAME
+apiVersion: zora.undistro.io/v1alpha1
+kind: Cluster
+metadata:
+  name: $CLUSTER_NAME
+  namespace: $CLUSTER_NS
+spec:
+  kubeconfigRef:
+	name: $KCONFIG_SECRET_NAME 
+EOF
+}
+
+show_cluster_sample_name() {
+	echo "Sample manifest:
+	$SAMPLE_MANIFEST_NAME
+	"
+}
+
+
 setup_namespaces
 setup_svc_account
 
@@ -231,9 +254,17 @@ CLUSTER_NAME=${CLUSTER_NAME:-"$(get_cluster_name)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
-
-setup_metrics_server
+CLUSTER_NS=${CLUSTER_NS:-$SVC_ACCOUNT_NS}
+KCONFIG_NAME=${KCONFIG_NAME:-"$CONTEXT-kubeconfig.yaml"}
+KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
+SAMPLE_MANIFEST_NAME=${SAMPLE_MANIFEST_NAME:-"cluster_sample.yaml"}
 setup_cluster_role
 setup_cluster_role_binding
 create_kubeconfig
 
+
+echo
+show_generated_kconfig_name
+show_kconfig_creation_cmd
+create_cluster_sample
+show_cluster_sample_name

@@ -1,0 +1,28 @@
+setup_namespaces() {
+	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
+		kubectl create namespace $SVC_ACCOUNT_NS
+	fi
+	if ! kubectl get namespace $SVC_ACCOUNT_SECRET_NS > /dev/null 2>&1; then
+		kubectl create namespace $SVC_ACCOUNT_SECRET_NS
+	fi
+}
+setup_svc_account() {
+	if ! kubectl -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
+		create_svc_account
+	fi
+}
+setup_svc_account_secret() {
+	if ! kubectl -n $SVC_ACCOUNT_SECRET_NS get secret $SVC_ACCOUNT_SECRET_NAME > /dev/null 2>&1; then
+		create_svc_account_secret
+	fi
+}
+setup_cluster_role() {
+	if ! kubectl get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
+		create_cluster_role
+	fi
+}
+setup_cluster_role_binding() {
+	if ! kubectl get -n $SVC_ACCOUNT_NS clusterrolebinding $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
+		create_cluster_role_binding
+	fi
+}
