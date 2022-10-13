@@ -40,11 +40,11 @@ get_token_value() {
 get_current_context() {
 	echo $(kubectl config current-context)
 }
-get_current_cluster() {
+get_cluster_name() {
 	echo $(kubectl config view \
 		--raw -o go-template='
 			{{range .contexts}}
-				{{if eq .name "'$CURRENT_CONTEXT'"}}
+				{{if eq .name "'$CONTEXT'"}}
 					{{index .context "cluster"}}
 				{{end}}
 			{{end}}
@@ -55,7 +55,7 @@ get_cluster_ca() {
 	echo $(kubectl config view \
 		--raw -o go-template='
 			{{range .clusters}}
-				{{if eq .name "'$CURRENT_CLUSTER'"}}
+				{{if eq .name "'$CLUSTER_NAME'"}}
 					{{with index .cluster "certificate-authority-data"}}
 						{{.}}
 					{{end}}
@@ -68,7 +68,7 @@ get_cluster_server() {
 	echo $(kubectl config view \
 		--raw -o go-template='
 			{{range .clusters}}
-				{{if eq .name "'$CURRENT_CLUSTER'"}}
+				{{if eq .name "'$CLUSTER_NAME'"}}
 					{{ .cluster.server }}
 				{{end}}
 			{{end}}
@@ -163,7 +163,7 @@ EOF
 
 create_cluster_role_binding() {
 	kubectl create clusterrolebinding $SVC_ACCOUNT_NAME \
-		--clusterrole=zora-view \
+		--clusterrole=$CLUSTER_ROLE_NAME \
 		--serviceaccount=$SVC_ACCOUNT_NS:$SVC_ACCOUNT_NAME
 }
 
@@ -171,15 +171,15 @@ create_kubeconfig() {
 cat << EOF > $KCONFIG_NAME
 apiVersion: v1
 kind: Config
-current-context: $CURRENT_CONTEXT
+current-context: $CONTEXT
 contexts:
-  - name: $CURRENT_CONTEXT
+  - name: $CONTEXT
     context:
-      cluster: $CURRENT_CONTEXT
+      cluster: $CONTEXT
       user: $SVC_ACCOUNT_NAME
       namespace: $SVC_ACCOUNT_NS
 clusters:
-  - name: $CURRENT_CONTEXT
+  - name: $CONTEXT
     cluster:
       certificate-authority-data: $CLUSTER_CA
       server: $CLUSTER_SERVER
@@ -200,6 +200,9 @@ setup_namespaces() {
 	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
 		kubectl create namespace $SVC_ACCOUNT_NS
 	fi
+	if ! kubectl get namespace $SVC_ACCOUNT_SECRET_NS > /dev/null 2>&1; then
+		kubectl create namespace $SVC_ACCOUNT_SECRET_NS
+	fi
 }
 setup_svc_account() {
 	if ! kubectl -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
@@ -212,7 +215,7 @@ setup_svc_account_secret() {
 	fi
 }
 setup_cluster_role() {
-	if ! kubectl -n $SVC_ACCOUNT_NS get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
+	if ! kubectl get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
 		create_cluster_role
 	fi
 }
@@ -234,12 +237,14 @@ else
 fi
 
 TOKEN_VALUE=${TOKEN_VALUE:-"$(get_token_value)"}
-CURRENT_CONTEXT=${CURRENT_CONTEXT:-"$(get_current_context)"}
-CURRENT_CLUSTER=${CURRENT_CLUSTER:-"$(get_current_cluster)"}
+CONTEXT=${CONTEXT:-"$(get_current_context)"}
+CLUSTER_NAME=${CLUSTER_NAME:-"$(get_cluster_name)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
+
 
 setup_metrics_server
 setup_cluster_role
 setup_cluster_role_binding
 create_kubeconfig
+

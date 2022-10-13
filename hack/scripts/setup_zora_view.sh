@@ -27,6 +27,7 @@ setup_namespaces() {
 		kubectl create namespace $CLUSTER_NS 
 	fi
 }
+
 setup_kubeconfig_secret() {
 	if ! kubectl -n $CLUSTER_NS get secret $KCONFIG_SECRET_NAME > /dev/null 2>&1; then
 		kubectl create secret generic $KCONFIG_SECRET_NAME \
@@ -48,12 +49,12 @@ spec:
 EOF
 }
 
-apply_plugin_crds(){
+apply_plugin_crds() {
 	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
 	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin_kubescape.yaml
 }
 
-apply_clusterscan_crd(){
+apply_clusterscan_crd() {
 cat << EOF | kubectl apply -f -
 apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
