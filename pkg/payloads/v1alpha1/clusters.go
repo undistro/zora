@@ -24,8 +24,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/pkg/formats"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/formats"
 )
 
 type ScanStatusType string
@@ -88,6 +88,7 @@ type Resource struct {
 type ScanStatus struct {
 	Status  ScanStatusType `json:"status"`
 	Message string         `json:"message"`
+	Suspend bool           `json:"suspend"`
 }
 
 type ConnectionStatus struct {
@@ -154,6 +155,7 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 					},
 				}
 			}
+			cl.PluginStatus[p].Scan.Suspend = s.Suspend
 
 			if s.IssueCount != nil {
 				if cl.PluginStatus[p].IssueCount == nil {
@@ -202,7 +204,7 @@ func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 			}
 			if ri.Resources == nil {
 				ri.Resources = map[string][]NsName{
-					r: []NsName{{
+					r: {{
 						Name:      ns[1],
 						Namespace: ns[0],
 					}},

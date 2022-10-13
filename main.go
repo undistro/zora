@@ -32,8 +32,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	zorav1alpha1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	zoracontrollers "github.com/getupio-undistro/zora/controllers/zora"
+	zorav1alpha1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	zoracontrollers "github.com/undistro/zora/controllers/zora"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -68,7 +68,7 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
-	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/worker:v0.3.6", "Docker image name of Worker container")
+	flag.StringVar(&workerImage, "worker-image", "registry.undistro.io/library/zora-worker:v0.3.9", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	flag.StringVar(&saasID, "saas-id", "", "ID of Zora's service offering")

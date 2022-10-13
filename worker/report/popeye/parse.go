@@ -21,8 +21,8 @@ import (
 	"regexp"
 	"strings"
 
-	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
 	"github.com/go-logr/logr"
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
 var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
@@ -55,6 +55,10 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 				id, msg, err := prepareIdAndMsg(iss.Message)
 				if err != nil {
 					return nil, fmt.Errorf("Unable to parse Popeye issue on <%s>: %w", typ, err)
+				}
+				if iss.Level == OkLevel {
+					log.Info("Skipping OK level issue", "id", id, "msg", msg)
+					continue
 				}
 				if ci, ok := issuesmap[id]; ok {
 					ci.Resources[san.GVR] = append(ci.Resources[san.GVR], typ)

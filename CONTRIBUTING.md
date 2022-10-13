@@ -3,7 +3,7 @@
 :+1::tada: Thanks for taking the time to contribute! :tada::+1:
 
 The following is a set of guidelines for contributing to Zora, 
-which are hosted in the [Undistro Organization](https://github.com/getupio-undistro) on GitHub. 
+which are hosted in the [Undistro Organization](https://github.com/undistro) on GitHub. 
 
 ## How Can I Contribute?
 
@@ -17,7 +17,7 @@ which are hosted in the [Undistro Organization](https://github.com/getupio-undis
   feel free to hit the `edit` button at the top of the page.
 
 - **Reporting bugs.** We use GitHub issues to track public bugs. 
-  Report a bug by [opening a new issue](https://github.com/getupio-undistro/zora/issues/new/choose).
+  Report a bug by [opening a new issue](https://github.com/undistro/zora/issues/new/choose).
   
 - **Pull Request.** Unless you are fixing a known bug, we **strongly** 
   recommend discussing it with the core team via a GitHub issue before 

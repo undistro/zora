@@ -18,9 +18,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getupio-undistro/zora/pkg/clientset/versioned"
-	payloads "github.com/getupio-undistro/zora/pkg/payloads/v1alpha1"
 	"github.com/go-logr/logr"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/clientset/versioned"
+	payloads "github.com/undistro/zora/pkg/payloads/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -39,8 +40,17 @@ func ClusterListHandler(client versioned.Interface, logger logr.Logger) func(htt
 			RespondWithDetailedError(w, http.StatusInternalServerError, "Error listing ClusterScans", err.Error())
 			return
 		}
-
-		clusters := payloads.NewClusterSlice(clusterList.Items, scanList.Items)
+		scansByCluster := make(map[string][]v1alpha1.ClusterScan)
+		for _, cs := range scanList.Items {
+			nn := cs.Namespace + "/" + cs.Spec.ClusterRef.Name
+			scansByCluster[nn] = append(scansByCluster[nn], cs)
+		}
+		clusters := make([]payloads.Cluster, 0, len(clusterList.Items))
+		for _, c := range clusterList.Items {
+			nn := c.Namespace + "/" + c.Name
+			cs := scansByCluster[nn]
+			clusters = append(clusters, payloads.NewCluster(c, cs))
+		}
 		log.Info(fmt.Sprintf("%d cluster(s) returned", len(clusters)))
 		RespondWithJSON(w, http.StatusOK, clusters)
 	}

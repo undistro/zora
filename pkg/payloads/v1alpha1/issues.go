@@ -18,7 +18,7 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/getupio-undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
 type Issue struct {

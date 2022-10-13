@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.3.7](https://img.shields.io/badge/Version-0.3.7-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.3.6](https://img.shields.io/badge/AppVersion-v0.3.6-informational?style=flat-square&color=38C794)
+![Version: 0.3.9](https://img.shields.io/badge/Version-0.3.9-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.3.9](https://img.shields.io/badge/AppVersion-v0.3.9-informational?style=flat-square&color=38C794)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -12,7 +12,7 @@ To install the chart with the release name `zora`:
 helm repo add undistro https://registry.undistro.io/chartrepo/library
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.3.7 \
+  --version 0.3.9 \
   --create-namespace --wait
 ```
 

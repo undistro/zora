@@ -20,10 +20,10 @@ import (
 	"sort"
 	"testing"
 
-	zorav1a1 "github.com/getupio-undistro/zora/apis/zora/v1alpha1"
-	"github.com/getupio-undistro/zora/worker/config"
 	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/worker/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -192,7 +192,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
-						Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
+						Url:            "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 					},
 				},
 
@@ -229,7 +229,7 @@ func TestParse(t *testing.T) {
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",
-						Url:            "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
+						Url:            "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 					},
 				},
 

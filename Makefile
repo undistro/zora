@@ -39,7 +39,7 @@ charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
 	@ for f in $^; do \
 		patch -Nfi "hack/patches/rbac/$$(basename -s '.yaml' $$f).patch" \
 			--no-backup-if-mismatch \
-			-p 1 -o - >> $@; \
+			-p 1 -o - | sed '/#/{N; d}' >> $@; \
 		echo "---" >> $@; \
 	done
 
@@ -50,7 +50,7 @@ manifest-consitency: charts/zora/templates/operator/rbac.yaml \
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/
-	$(MAKE) manifest-consitency
+	$(MAKE) manifest-consitency license
 
 generate: controller-gen ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."

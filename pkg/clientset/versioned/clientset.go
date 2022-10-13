@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	zorav1alpha1 "github.com/getupio-undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
+	zorav1alpha1 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
