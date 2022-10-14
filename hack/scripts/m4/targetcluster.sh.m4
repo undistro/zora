@@ -5,7 +5,7 @@ include(common_create_funcs.sh.in)
 include(common_setup_funcs.sh.in)
 
 show_generated_kconfig_name() {
-	echo -e "Kubeconfing file:
+	echo "Kubeconfing file:
 	$KCONFIG_NAME
 	"
 }
