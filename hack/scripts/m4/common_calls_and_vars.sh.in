@@ -1,7 +1,9 @@
+CONTEXT=${CONTEXT:-"$(get_current_context)"}
+
 setup_namespaces
 setup_svc_account
 
-if kubectl version --short | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
+if kubectl --context $CONTEXT version --short | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
   setup_svc_account_secret
   TOKEN_NAME=${TOKEN_NAME:-"$SVC_ACCOUNT_SECRET_NAME"}
 else
@@ -9,7 +11,6 @@ else
 fi
 
 TOKEN_VALUE=${TOKEN_VALUE:-"$(get_token_value)"}
-CONTEXT=${CONTEXT:-"$(get_current_context)"}
 CLUSTER_NAME=${CLUSTER_NAME:-"$(get_cluster_name)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}

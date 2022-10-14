@@ -27,23 +27,23 @@ METRICS_SERVER_VERSION=${METRICS_SERVER_VERSION:-"latest"}
 METRICS_SERVER_DEPLOYMENT_NAME=${METRICS_SERVER_DEPLOYMENT_NAME:-"metrics-server"}
 METRICS_SERVER_DEPLOYMENT=${METRICS_SERVER_DEPLOYMENT:-"https://github.com/kubernetes-sigs/metrics-server/releases/$METRICS_SERVER_VERSION/download/components.yaml"}
 
+get_current_context() {
+	echo $(kubectl config current-context)
+}
 get_token_name() {
-	echo $(kubectl -n $SVC_ACCOUNT_NS \
+	echo $(kubectl --context $CONTEXT -n $SVC_ACCOUNT_NS \
 		get serviceaccount $SVC_ACCOUNT_NAME \
 		-o jsonpath='{.secrets[0].name}'
 	)
 }
 get_token_value() {
-	echo $(kubectl -n $SVC_ACCOUNT_NS \
+	echo $(kubectl --context $CONTEXT -n $SVC_ACCOUNT_NS \
 		get secret $TOKEN_NAME \
 		-o jsonpath='{.data.token}' | base64 --decode
 	)
 }
-get_current_context() {
-	echo $(kubectl config current-context)
-}
 get_cluster_name() {
-	echo $(kubectl config view \
+	echo $(kubectl --context $CONTEXT config view \
 		--raw -o go-template='
 			{{range .contexts}}
 				{{if eq .name "'$CONTEXT'"}}
@@ -54,7 +54,7 @@ get_cluster_name() {
 	)
 }
 get_cluster_ca() {
-	echo $(kubectl config view \
+	echo $(kubectl --context $CONTEXT config view \
 		--raw -o go-template='
 			{{range .clusters}}
 				{{if eq .name "'$CLUSTER_NAME'"}}
@@ -67,7 +67,7 @@ get_cluster_ca() {
 	)
 }
 get_cluster_server() {
-	echo $(kubectl config view \
+	echo $(kubectl --context $CONTEXT config view \
 		--raw -o go-template='
 			{{range .clusters}}
 				{{if eq .name "'$CLUSTER_NAME'"}}
@@ -79,11 +79,11 @@ get_cluster_server() {
 }
 
 create_svc_account() {
-	kubectl -n $SVC_ACCOUNT_NS create serviceaccount $SVC_ACCOUNT_NAME
+	kubectl --context $CONTEXT -n $SVC_ACCOUNT_NS create serviceaccount $SVC_ACCOUNT_NAME
 }
 
 create_svc_account_secret() {
-cat << EOF | kubectl create -f -
+cat << EOF | kubectl --context $CONTEXT create -f -
 apiVersion: v1
 kind: Secret
 metadata:
@@ -96,7 +96,7 @@ EOF
 }
 
 create_cluster_role() {
-cat << EOF | kubectl apply -f -
+cat << EOF | kubectl --context $CONTEXT apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -164,7 +164,7 @@ EOF
 }
 
 create_cluster_role_binding() {
-	kubectl create clusterrolebinding $SVC_ACCOUNT_NAME \
+	kubectl --context $CONTEXT create clusterrolebinding $SVC_ACCOUNT_NAME \
 		--clusterrole=$CLUSTER_ROLE_NAME \
 		--serviceaccount=$SVC_ACCOUNT_NS:$SVC_ACCOUNT_NAME
 }
@@ -194,45 +194,47 @@ EOF
 
 
 setup_metrics_server() {
-	if ! kubectl get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
-		kubectl apply -f "$METRICS_SERVER_DEPLOYMENT"
+	if ! kubectl --context $CONTEXT get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
+		kubectl --context $CONTEXT apply -f "$METRICS_SERVER_DEPLOYMENT"
 	fi
 }
 
 setup_namespaces() {
-	if ! kubectl get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
-		kubectl create namespace $SVC_ACCOUNT_NS
+	if ! kubectl --context $CONTEXT get namespace $SVC_ACCOUNT_NS > /dev/null 2>&1; then
+		kubectl --context $CONTEXT create namespace $SVC_ACCOUNT_NS
 	fi
-	if ! kubectl get namespace $SVC_ACCOUNT_SECRET_NS > /dev/null 2>&1; then
-		kubectl create namespace $SVC_ACCOUNT_SECRET_NS
+	if ! kubectl --context $CONTEXT get namespace $SVC_ACCOUNT_SECRET_NS > /dev/null 2>&1; then
+		kubectl --context $CONTEXT create namespace $SVC_ACCOUNT_SECRET_NS
 	fi
 }
 setup_svc_account() {
-	if ! kubectl -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
+	if ! kubectl --context $CONTEXT -n $SVC_ACCOUNT_NS get serviceaccount $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
 		create_svc_account
 	fi
 }
 setup_svc_account_secret() {
-	if ! kubectl -n $SVC_ACCOUNT_SECRET_NS get secret $SVC_ACCOUNT_SECRET_NAME > /dev/null 2>&1; then
+	if ! kubectl --context $CONTEXT -n $SVC_ACCOUNT_SECRET_NS get secret $SVC_ACCOUNT_SECRET_NAME > /dev/null 2>&1; then
 		create_svc_account_secret
 	fi
 }
 setup_cluster_role() {
-	if ! kubectl get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
+	if ! kubectl --context $CONTEXT get clusterrole $CLUSTER_ROLE_NAME > /dev/null 2>&1; then
 		create_cluster_role
 	fi
 }
 setup_cluster_role_binding() {
-	if ! kubectl get -n $SVC_ACCOUNT_NS clusterrolebinding $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
+	if ! kubectl --context $CONTEXT get -n $SVC_ACCOUNT_NS clusterrolebinding $SVC_ACCOUNT_NAME > /dev/null 2>&1; then
 		create_cluster_role_binding
 	fi
 }
 
 
+CONTEXT=${CONTEXT:-"$(get_current_context)"}
+
 setup_namespaces
 setup_svc_account
 
-if kubectl version --short | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
+if kubectl --context $CONTEXT version --short | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
   setup_svc_account_secret
   TOKEN_NAME=${TOKEN_NAME:-"$SVC_ACCOUNT_SECRET_NAME"}
 else
@@ -240,11 +242,9 @@ else
 fi
 
 TOKEN_VALUE=${TOKEN_VALUE:-"$(get_token_value)"}
-CONTEXT=${CONTEXT:-"$(get_current_context)"}
 CLUSTER_NAME=${CLUSTER_NAME:-"$(get_cluster_name)"}
 CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
-
 
 setup_metrics_server
 setup_cluster_role

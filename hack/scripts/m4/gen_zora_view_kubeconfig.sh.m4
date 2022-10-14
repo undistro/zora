@@ -8,14 +8,13 @@ include(common_get_funcs.sh.in)
 include(common_create_funcs.sh.in)
 
 setup_metrics_server() {
-	if ! kubectl get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
-		kubectl apply -f "$METRICS_SERVER_DEPLOYMENT"
+	if ! kubectl --context $CONTEXT get pods -A 2> /dev/null | grep -q $METRICS_SERVER_DEPLOYMENT_NAME; then
+		kubectl --context $CONTEXT apply -f "$METRICS_SERVER_DEPLOYMENT"
 	fi
 }
 
 include(common_setup_funcs.sh.in)
 
 include(common_calls_and_vars.sh.in)
-
 setup_metrics_server
 include(common_calls.sh.in)

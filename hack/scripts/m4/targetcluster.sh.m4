@@ -44,7 +44,6 @@ KCONFIG_NAME=${KCONFIG_NAME:-"$CONTEXT-kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
 SAMPLE_MANIFEST_NAME=${SAMPLE_MANIFEST_NAME:-"cluster_sample.yaml"}
 include(common_calls.sh.in)
-
 echo
 show_generated_kconfig_name
 show_kconfig_creation_cmd
