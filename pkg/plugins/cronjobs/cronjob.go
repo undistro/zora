@@ -75,6 +75,7 @@ type Mutator struct {
 	KubeconfigSecret   *corev1.Secret
 	WorkerImage        string
 	ServiceAccountName string
+	Suspend            bool
 }
 
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
@@ -87,9 +88,13 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 		r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
 		r.Existing.Spec.Schedule = firstNonEmptyString(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
-		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
 		r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
 		r.Existing.Spec.FailedJobsHistoryLimit = r.ClusterScan.Spec.FailedScansHistoryLimit
+
+		r.Existing.Spec.Suspend = &r.Suspend
+		if !r.Suspend {
+			r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
+		}
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 		r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
