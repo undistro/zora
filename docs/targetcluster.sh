@@ -14,7 +14,6 @@
 # limitations under the License.
 
 
-
 set -o errexit
 
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"zora-system"}
@@ -220,7 +219,7 @@ setup_cluster_role_binding() {
 
 
 show_generated_kconfig_name() {
-	echo -e "Kubeconfing file:
+	echo "Kubeconfing file:
 	$KCONFIG_NAME
 	"
 }
