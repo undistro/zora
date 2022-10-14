@@ -9,9 +9,9 @@ A setup [script](https://zora.undistro.io/targetcluster.sh) is also avaiable for
 curl -qL https://zora.undistro.io/targetcluster.sh | sh
 ```
 
-By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with "-kubeconfig".
+By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with "-kubeconfig.yaml".
 
-Before finishing, the script will show the kubectl command to place the kubeconfig in a Secret and save a sample `Cluster` manifest pointing to the Secret in question.
+Before finishing, the script will show a command to [connect the target cluster](/connect-cluster) through the generated kubeconfig, and save a sample `Cluster` manifest.
 
 A complete list of customizable environment variables can be seen on the table below.
 
