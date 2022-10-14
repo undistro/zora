@@ -66,7 +66,9 @@ define addlicense-tool
   $(ADDLICENSE) \
   -c "Undistro Authors" \
   -l "apache" \
-  -ignore "docs/**" \
+  -ignore "**/*.png" \
+  -ignore "**/*.md" \
+  -ignore "**/*.css" \
   -ignore ".github/**" \
   -ignore ".idea/**" \
   -v \

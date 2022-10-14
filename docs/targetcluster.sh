@@ -14,6 +14,7 @@
 # limitations under the License.
 
 
+
 set -o errexit
 
 SVC_ACCOUNT_NS=${SVC_ACCOUNT_NS:-"zora-system"}
