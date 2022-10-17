@@ -7,8 +7,9 @@
  fmt \
  vet \
  test \
- manifests \
  manifest-consistency \
+ manifests \
+ script-consistency \
  generate \
  clientset-gen \
  build \
@@ -65,7 +66,9 @@ define addlicense-tool
   $(ADDLICENSE) \
   -c "Undistro Authors" \
   -l "apache" \
-  -ignore "docs/**" \
+  -ignore "**/*.png" \
+  -ignore "**/*.md" \
+  -ignore "**/*.css" \
   -ignore ".github/**" \
   -ignore ".idea/**" \
   -v \
