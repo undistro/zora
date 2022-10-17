@@ -8,13 +8,20 @@ For manual configuration, go to [Manual Configuration](/target-cluster#manual-co
 
 ## Setup Script
 
-A [script](https://zora.undistro.io/targetcluster.sh) is available to prepare a cluster as Zora target, which can be executed by any POSIX compliant shell. Export the `CONTEXT` variable with the target cluster's context or switch to it with _kubectl_, then run:
+A [script](https://zora.undistro.io/targetcluster.sh) is available to prepare a cluster, which can be executed by any POSIX compliant shell. 
+
+The target cluster context can be set by exporting the `CONTEXT` variable or switching via `kubectl`, before running the script:
 
 ```shel
+CONTEXT=my-target-cluster curl -qL https://zora.undistro.io/targetcluster.sh | sh
+```
+or
+```shel
+kubectl config use-context my-target-cluster
 curl -qL https://zora.undistro.io/targetcluster.sh | sh
 ```
 
-By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with "-kubeconfig.yaml".
+By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with `-kubeconfig.yaml`.
 
 Before finishing, the script will show a command to [connect the target cluster](/connect-cluster) through the generated kubeconfig, and save a sample `Cluster` manifest.
 
@@ -42,7 +49,7 @@ The instructions presented in sequence dictate how to manually configure the tar
 
 ## Manual Configuration
 
-The target cluster can be configure through the steps described in the next sections.
+The target cluster can be configured through the steps described in the next sections.
 
 ### 1. Access the [target cluster](/glossary#target-cluster)
 
