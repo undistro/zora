@@ -87,13 +87,9 @@ run-server: install manifests generate ## Run Zora's server locally.
 
 docker-build: test ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
-docker-push: ## Push docker image with the manager.
-	docker push ${IMG}
-
-docker-build-operator-worker: docker-build ## Build Docker images for the operator and worker components.
-	$(MAKE) IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
-docker-push-operator-worker: docker-push ## Push Docker images for the operator and worker components.
-	$(MAKE) IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-push
+docker-build-all: docker-build  ## Build Docker images for all components.
+	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
+	${MAKE} IMG=server:${IMG_TAG} DOCKERFILE=Dockerfile.server docker-build
 
 
 ##@ Deployment
