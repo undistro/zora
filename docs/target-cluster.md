@@ -44,7 +44,7 @@ A complete list of customizable environment variables can be seen on the table b
 | `KCONFIG_NAME`			| Name of the generated kubeconfig, defaulting to the value of `CONTEXT` plus the string "-kubeconfig.yaml" |
 | `SAMPLE_MANIFEST_NAME` 	| Name of the `Cluster` manifest sample, defaults to `cluster_sample.yaml` |
 
-The instructions presented in sequence dictate how to manually configure the target cluster.
+The next instructions explain how to manually configure your target clusters.
 
 
 ## Manual Configuration
