@@ -41,11 +41,11 @@ jobs:
         run: IMG=$REPO/library/zora-worker:$GITHUB_REF_NAME DOCKERFILE=Dockerfile.worker make docker-build
 
       - name: Push operator
-        run: IMG=$REPO/library/zora-operator:$GITHUB_REF_NAME make docker-push
+        run: docker push $REPO/library/zora-operator:$GITHUB_REF_NAME
       - name: Push server
-        run: IMG=$REPO/library/zora-server:$GITHUB_REF_NAME make docker-push
+        run: docker push $REPO/library/zora-server:$GITHUB_REF_NAME
       - name: Push worker
-        run: IMG=$REPO/library/zora-worker:$GITHUB_REF_NAME make docker-push
+        run: docker push $REPO/library/zora-worker:$GITHUB_REF_NAME
 
       - name: Registry logout
         run: docker logout
