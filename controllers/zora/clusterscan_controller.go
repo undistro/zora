@@ -16,7 +16,6 @@ package zora
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sort"
 	"time"
@@ -112,7 +111,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	}
 
 	if !cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady) {
-		notReadyErr = errors.New(fmt.Sprintf("the Cluster %s is not Ready", cluster.Name))
+		notReadyErr = fmt.Errorf("the Cluster %s is not Ready", cluster.Name)
 		log.Error(notReadyErr, "Cluster is not ready")
 		clusterscan.SetReadyStatus(false, "ClusterNotReady", notReadyErr.Error())
 	}
