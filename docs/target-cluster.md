@@ -13,12 +13,12 @@ A [script](https://zora.undistro.io/targetcluster.sh) is available to prepare a 
 The target cluster context can be set by exporting the `CONTEXT` variable or switching via `kubectl`, before running the script:
 
 ```shel
-CONTEXT=my-target-cluster curl -qL https://zora.undistro.io/targetcluster.sh | sh
+curl -q https://zora.undistro.io/targetcluster.sh | CONTEXT=<TARGET_CONTEXT> sh
 ```
 or
 ```shel
-kubectl config use-context my-target-cluster
-curl -qL https://zora.undistro.io/targetcluster.sh | sh
+kubectl config use-context <TARGET_CONTEXT>
+curl -q https://zora.undistro.io/targetcluster.sh | sh
 ```
 
 By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with `-kubeconfig.yaml`.
