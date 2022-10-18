@@ -16,7 +16,6 @@ package zora
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sort"
 	"time"
@@ -101,6 +100,7 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
+	var notReadyErr error
 	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
@@ -111,10 +111,9 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	}
 
 	if !cluster.Status.ConditionIsTrue(v1alpha1.ClusterReady) {
-		err := errors.New(fmt.Sprintf("the Cluster %s is not Ready", cluster.Name))
-		log.Error(err, "Cluster is not ready")
-		clusterscan.SetReadyStatus(false, "ClusterNotReady", err.Error())
-		return err
+		notReadyErr = fmt.Errorf("the Cluster %s is not Ready", cluster.Name)
+		log.Error(notReadyErr, "Cluster is not ready")
+		clusterscan.SetReadyStatus(false, "ClusterNotReady", notReadyErr.Error())
 	}
 	kubeconfigKey := cluster.KubeconfigRefKey()
 	kubeconfigSecret, err := kubeconfig.SecretFromRef(ctx, r.Client, *kubeconfigKey)
@@ -158,6 +157,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			KubeconfigSecret:   kubeconfigSecret,
 			WorkerImage:        r.WorkerImage,
 			ServiceAccountName: r.ServiceAccountName,
+			Suspend:            (notReadyErr != nil),
 		}
 
 		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate())
@@ -171,8 +171,9 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			log.Info(msg)
 			r.Recorder.Event(clusterscan, corev1.EventTypeNormal, "CronJobConfigured", msg)
 		}
+
 		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
-		pluginStatus.Suspend = pointer.BoolDeref(cronJob.Spec.Suspend, false)
+		pluginStatus.Suspend = *cronJob.Spec.Suspend
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {
@@ -226,10 +227,14 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	}
 
 	clusterscan.Status.SyncStatus()
-	clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
+	clusterscan.Status.Suspend = (notReadyErr != nil)
+	if notReadyErr == nil {
+		clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
+	}
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
-	return nil
+
+	return notReadyErr
 }
 
 func (r *ClusterScanReconciler) pluginErrorMsg(ctx context.Context, ps *v1alpha1.PluginScanStatus, p *v1alpha1.Plugin, j *batchv1.Job) error {
