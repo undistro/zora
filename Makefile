@@ -122,22 +122,23 @@ setup-zora-view: install ## Create and apply view secret.
 
 setup-region-label: ## Add label used by Zora to detect the cluster region.
 	./hack/scripts/setup_region_label.sh
-setup-local-registry: ## Create a local Docker registry.
-	./hack/scripts/setup_local_registry.sh
-setup-kind: setup-local-registry ## Start Kind and a local Docker registry.
-	./hack/scripts/setup_kind.sh
-	$(MAKE) setup-region-label
-delete-kind: ## Delete Kind node.
+
+setup-kind:  ## Start Kind and a local Docker registry.
+	kind create cluster
+	${MAKE} setup-region-label
+kind-load:  ## Load Docker image into Kind.
+	kind load docker-image ${IMG}
+del-kind:  ## Delete Kind node.
 	kind delete cluster
+
 setup-minikube:  ## Start Minikube with an inner Docker registry.
-	minikube start --addons="registry" \
-		--driver=docker \
-		--cni=kindnet \
+	minikube start --driver=docker \
 		--container-runtime=containerd \
-		--insecure-registry="${MINIK_ADDR}:${REG_PORT}" \
-		--extra-config="kubelet.container-runtime-endpoint='http://${MINIK_ADDR}:${REG_PORT}"
-	$(MAKE) setup-region-label
-delete-minikube: ## Delete Minikube node.
+		--cni=kindnet
+	${MAKE} setup-region-label
+minikube-load:  ## Load Docker image into Minikube.
+	minikube image load ${IMG}
+del-minikube:  ## Delete Minikube node.
 	minikube delete
 
 
