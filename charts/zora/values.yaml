@@ -355,3 +355,8 @@ scan:
         repository: registry.undistro.io/quay/armosec/kubescape
         # -- kubescape plugin image tag
         tag: v2.0.163
+
+saas:
+  accountID: ""
+  server: "https://cloud.undistro.io"
+  installHookURL: "{{.Values.saas.server}}/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"
