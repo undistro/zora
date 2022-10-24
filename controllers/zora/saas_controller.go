@@ -101,13 +101,23 @@ func (r *SaasReconciler) reconcile(ctx context.Context, clist *v1alpha1.ClusterL
 	issues := payloads.NewIssues(cilist.Items)
 	log.Info(fmt.Sprintf("Sending %d issues", len(issues)))
 	for _, bod := range issues {
-		sendf(bod.Reader())
+		ior, err := bod.Reader()
+		if err != nil {
+			log.Error(err, "Unable to create <io.Reader> from issue")
+			continue
+		}
+		sendf(ior)
 	}
 
 	clusters := payloads.NewClusterSlice(clist.Items, cslist.Items)
 	log.Info(fmt.Sprintf("Sending %d clusters", len(clusters)))
 	for _, bod := range clusters {
-		sendf(bod.Reader())
+		ior, err := bod.Reader()
+		if err != nil {
+			log.Error(err, "Unable to create <io.Reader> from cluster")
+			continue
+		}
+		sendf(ior)
 	}
 
 	return nil

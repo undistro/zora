@@ -251,10 +251,10 @@ func NewClusterSlice(carr []v1alpha1.Cluster, csarr []v1alpha1.ClusterScan) []Cl
 	return clusters
 }
 
-func (r Cluster) Reader() io.Reader {
+func (r Cluster) Reader() (io.Reader, error) {
 	jc, err := json.Marshal(r)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return bytes.NewReader(jc)
+	return bytes.NewReader(jc), nil
 }

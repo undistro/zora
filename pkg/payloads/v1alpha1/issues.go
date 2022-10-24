@@ -79,10 +79,10 @@ func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
 	return res
 }
 
-func (r Issue) Reader() io.Reader {
+func (r Issue) Reader() (io.Reader, error) {
 	jc, err := json.Marshal(r)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return bytes.NewReader(jc)
+	return bytes.NewReader(jc), nil
 }

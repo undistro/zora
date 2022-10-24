@@ -88,7 +88,9 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		}
 		clus := payloads.NewClusterSlice([]v1alpha1.Cluster{*cluster}, cslist.Items)
 		if len(clus) == 1 {
-			if err := r.Send(clus[0].Reader()); err != nil {
+			if ior, err := clus[0].Reader(); err != nil {
+				log.Error(err, "Unable to create <io.Reader> from cluster")
+			} else if err := r.Send(ior); err != nil {
 				log.Error(err, "Unable to complete transfer")
 			}
 		}
