@@ -16,6 +16,7 @@ package main
 
 import (
 	"flag"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -60,6 +61,7 @@ func main() {
 	var cronJobServiceAccount string
 	var saasID string
 	var saasServerAddr string
+	var send func(io.Reader) error
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -72,7 +74,7 @@ func main() {
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	flag.StringVar(&saasID, "saas-id", "", "ID of Zora's service offering")
-	flag.StringVar(&saasServerAddr, "saas-server-address", "localhost:8082", "Address for Zora's saas server")
+	flag.StringVar(&saasServerAddr, "saas-server-address", "http://localhost:8082", "Address for Zora's saas server")
 
 	opts := zap.Options{
 		Development: true,
@@ -96,11 +98,29 @@ func main() {
 		os.Exit(1)
 	}
 
+	if len(saasID) != 0 {
+		r := &zoracontrollers.SaasReconciler{
+			Client:     mgr.GetClient(),
+			Scheme:     mgr.GetScheme(),
+			HttpCli:    &http.Client{},
+			ID:         saasID,
+			ServerAddr: saasServerAddr,
+		}
+		if err = r.SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "Saas")
+			os.Exit(1)
+		}
+		send = r.Send
+	} else {
+		setupLog.Info("No saas ID provided, not initing saas controller")
+	}
+
 	if err = (&zoracontrollers.ClusterReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
 		Config:   mgr.GetConfig(),
+		Send:     send,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
 		os.Exit(1)
@@ -125,21 +145,6 @@ func main() {
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)
-	}
-
-	if len(saasID) != 0 {
-		if err = (&zoracontrollers.SaasReconciler{
-			Client:     mgr.GetClient(),
-			Scheme:     mgr.GetScheme(),
-			HttpCli:    &http.Client{},
-			ID:         saasID,
-			ServerAddr: saasServerAddr,
-		}).SetupWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Saas")
-			os.Exit(1)
-		}
-	} else {
-		setupLog.Info("No saas ID provided, not initing saas controller")
 	}
 
 	//+kubebuilder:scaffold:builder
