@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"strings"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -250,10 +251,10 @@ func NewClusterSlice(carr []v1alpha1.Cluster, csarr []v1alpha1.ClusterScan) []Cl
 	return clusters
 }
 
-func (r Cluster) Read(b []byte) (int, error) {
+func (r Cluster) Reader() io.Reader {
 	jc, err := json.Marshal(r)
 	if err != nil {
-		return -1, err
+		return nil
 	}
-	return bytes.NewReader(jc).Read(b)
+	return bytes.NewReader(jc)
 }
