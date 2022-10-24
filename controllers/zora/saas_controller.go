@@ -92,7 +92,7 @@ func (r *SaasReconciler) reconcile(ctx context.Context, clist *v1alpha1.ClusterL
 	log := ctrllog.FromContext(ctx)
 
 	sendf := func(bod io.Reader) {
-		if err := r.send(bod); err != nil {
+		if err := r.Send(bod); err != nil {
 			log.Error(err, "Unable to complete transfer")
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -101,19 +101,19 @@ func (r *SaasReconciler) reconcile(ctx context.Context, clist *v1alpha1.ClusterL
 	issues := payloads.NewIssues(cilist.Items)
 	log.Info(fmt.Sprintf("Sending %d issues", len(issues)))
 	for _, bod := range issues {
-		sendf(bod)
+		sendf(bod.Reader())
 	}
 
 	clusters := payloads.NewClusterSlice(clist.Items, cslist.Items)
 	log.Info(fmt.Sprintf("Sending %d clusters", len(clusters)))
 	for _, bod := range clusters {
-		sendf(bod)
+		sendf(bod.Reader())
 	}
 
 	return nil
 }
 
-func (r *SaasReconciler) send(bod io.Reader) error {
+func (r *SaasReconciler) Send(bod io.Reader) error {
 	req, err := http.NewRequest("POST", r.ServerAddr, bod)
 	if err != nil {
 		return err
@@ -129,7 +129,7 @@ func (r *SaasReconciler) send(bod io.Reader) error {
 	}
 	res.Body.Close()
 	if res.StatusCode != 200 {
-		return fmt.Errorf("Request returned status <%d %s>", res.StatusCode, res.Status)
+		return fmt.Errorf("Request returned status <%s>", res.Status)
 	}
 	return nil
 }
