@@ -38,9 +38,16 @@ const (
 )
 
 // +k8s:deepcopy-gen=true
+type Metadata struct {
+	CreatedAt *string `json:"createdAt,omitempty"`
+	UpdatedAt *string `json:"updatedAt,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
 type Cluster struct {
+	Metadata
 	NsName
-	ApiVersion        string            `json:"apiVersion"`
+	ApiVersion        string            `json:"apiVersion,omitempty"`
 	Environment       string            `json:"environment"`
 	Provider          string            `json:"provider"`
 	Region            string            `json:"region"`

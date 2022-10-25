@@ -24,7 +24,7 @@ import (
 
 // +k8s:deepcopy-gen=true
 type Issue struct {
-	ApiVersion string             `json:"apiVersion"`
+	ApiVersion string             `json:"apiVersion,omitempty"`
 	ID         string             `json:"id"`
 	Message    string             `json:"message"`
 	Severity   string             `json:"severity"`
