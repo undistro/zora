@@ -22,6 +22,7 @@ import (
 	"github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
+// +k8s:deepcopy-gen=true
 type Issue struct {
 	ApiVersion string             `json:"apiVersion"`
 	ID         string             `json:"id"`
@@ -33,6 +34,7 @@ type Issue struct {
 	Url        string             `json:"url"`
 }
 
+// +k8s:deepcopy-gen=true
 type ClusterReference struct {
 	Name           string `json:"name"`
 	Namespace      string `json:"namespace"`

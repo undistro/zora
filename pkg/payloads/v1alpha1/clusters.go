@@ -37,6 +37,7 @@ const (
 	Scanned ScanStatusType = "scanned"
 )
 
+// +k8s:deepcopy-gen=true
 type Cluster struct {
 	ApiVersion        string            `json:"apiVersion"`
 	Name              string            `json:"name"`
@@ -54,6 +55,7 @@ type Cluster struct {
 	PluginStatus map[string]*PluginStatus `json:"pluginStatus"`
 }
 
+// +k8s:deepcopy-gen=true
 type PluginStatus struct {
 	Scan                   *ScanStatus      `json:"scan"`
 	IssueCount             *int             `json:"issueCount"`
@@ -63,16 +65,19 @@ type PluginStatus struct {
 	NextScheduleScanTime   *metav1.Time     `json:"nextScheduleScanTime"`
 }
 
+// +k8s:deepcopy-gen=true
 type NsName struct {
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
 }
 
+// +k8s:deepcopy-gen=true
 type ResourcedIssue struct {
 	Issue     `json:",inline"`
 	Resources map[string][]NsName `json:"resources"`
 }
 
+// +k8s:deepcopy-gen=true
 type Resources struct {
 	Discovered bool      `json:"discovered"`
 	Message    string    `json:"message"`
@@ -80,18 +85,21 @@ type Resources struct {
 	CPU        *Resource `json:"cpu"`
 }
 
+// +k8s:deepcopy-gen=true
 type Resource struct {
 	Available       string `json:"available"`
 	Usage           string `json:"usage"`
 	UsagePercentage int32  `json:"usagePercentage"`
 }
 
+// +k8s:deepcopy-gen=true
 type ScanStatus struct {
 	Status  ScanStatusType `json:"status"`
 	Message string         `json:"message"`
 	Suspend bool           `json:"suspend"`
 }
 
+// +k8s:deepcopy-gen=true
 type ConnectionStatus struct {
 	Connected bool   `json:"connected"`
 	Message   string `json:"message"`
