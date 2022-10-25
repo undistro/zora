@@ -138,18 +138,24 @@ func TestNewIssues(t *testing.T) {
 					Category:   "Category",
 					Clusters: []ClusterReference{
 						{
-							Name:           "dev1",
-							Namespace:      "dev",
+							NsName: NsName{
+								Name:      "dev1",
+								Namespace: "dev",
+							},
 							TotalResources: 71,
 						},
 						{
-							Name:           "hml1",
-							Namespace:      "hml",
+							NsName: NsName{
+								Name:      "hml1",
+								Namespace: "hml",
+							},
 							TotalResources: 17,
 						},
 						{
-							Name:           "prd1",
-							Namespace:      "prd",
+							NsName: NsName{
+								Name:      "prd1",
+								Namespace: "prd",
+							},
 							TotalResources: 10,
 						},
 					},
@@ -162,13 +168,17 @@ func TestNewIssues(t *testing.T) {
 					Category:   "Category",
 					Clusters: []ClusterReference{
 						{
-							Name:           "dev2",
-							Namespace:      "dev",
+							NsName: NsName{
+								Name:      "dev2",
+								Namespace: "dev",
+							},
 							TotalResources: 27,
 						},
 						{
-							Name:           "prd2",
-							Namespace:      "prd",
+							NsName: NsName{
+								Name:      "prd2",
+								Namespace: "prd",
+							},
 							TotalResources: 7,
 						},
 					},

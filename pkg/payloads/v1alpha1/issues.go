@@ -36,9 +36,8 @@ type Issue struct {
 
 // +k8s:deepcopy-gen=true
 type ClusterReference struct {
-	Name           string `json:"name"`
-	Namespace      string `json:"namespace"`
-	TotalResources int    `json:"totalResources"`
+	NsName
+	TotalResources int `json:"totalResources"`
 }
 
 func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
@@ -58,8 +57,10 @@ func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
 	clustersByIssue := make(map[string]map[string]*ClusterReference)
 	for _, clusterIssue := range clusterIssues {
 		clusterRef := &ClusterReference{
-			Name:           clusterIssue.Spec.Cluster,
-			Namespace:      clusterIssue.Namespace,
+			NsName: NsName{
+				Name:      clusterIssue.Spec.Cluster,
+				Namespace: clusterIssue.Namespace,
+			},
 			TotalResources: clusterIssue.Spec.TotalResources,
 		}
 		newIssue := NewIssue(clusterIssue)

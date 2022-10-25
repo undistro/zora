@@ -39,9 +39,8 @@ const (
 
 // +k8s:deepcopy-gen=true
 type Cluster struct {
+	NsName
 	ApiVersion        string            `json:"apiVersion"`
-	Name              string            `json:"name"`
-	Namespace         string            `json:"namespace"`
 	Environment       string            `json:"environment"`
 	Provider          string            `json:"provider"`
 	Region            string            `json:"region"`
@@ -107,9 +106,11 @@ type ConnectionStatus struct {
 
 func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster {
 	cl := Cluster{
-		ApiVersion:        "v1alpha1",
-		Name:              cluster.Name,
-		Namespace:         cluster.Namespace,
+		ApiVersion: "v1alpha1",
+		NsName: NsName{
+			Name:      cluster.Name,
+			Namespace: cluster.Namespace,
+		},
 		Environment:       cluster.Labels[v1alpha1.LabelEnvironment],
 		Provider:          cluster.Status.Provider,
 		Region:            cluster.Status.Region,
@@ -257,6 +258,13 @@ func NewClusterSlice(carr []v1alpha1.Cluster, csarr []v1alpha1.ClusterScan) []Cl
 		))
 	}
 	return clusters
+}
+
+func (r *NsName) Key() string {
+	if r == nil {
+		return ""
+	}
+	return fmt.Sprintf("%s/%s", r.Namespace, r.Name)
 }
 
 func (r Cluster) Reader() (io.Reader, error) {
