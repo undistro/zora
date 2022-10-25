@@ -17,11 +17,13 @@ package zora
 import (
 	"context"
 	"fmt"
+	"io"
 	"reflect"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/record"
@@ -34,6 +36,7 @@ import (
 	"github.com/undistro/zora/apis/zora/v1alpha1"
 	"github.com/undistro/zora/pkg/discovery"
 	"github.com/undistro/zora/pkg/kubeconfig"
+	payloads "github.com/undistro/zora/pkg/payloads/v1alpha1"
 )
 
 // ClusterReconciler reconciles a Cluster object
@@ -42,21 +45,24 @@ type ClusterReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Config   *rest.Config
+	Send     func(io.Reader) error
 }
 
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters/finalizers,verbs=update
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans,verbs=list
 //+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	var err error
 	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
-	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
-		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
+	if err = r.Get(ctx, req.NamespacedName, cluster); client.IgnoreNotFound(err) != nil {
+		return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 	}
 	log = log.WithValues("resourceVersion", cluster.ResourceVersion)
 	ctx = ctrllog.IntoContext(ctx, log)
@@ -65,9 +71,29 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		log.Info(fmt.Sprintf("Cluster has been reconciled in %v", time.Since(t)))
 	}(time.Now())
 
-	err := r.reconcile(ctx, cluster)
-	if err := r.Status().Update(ctx, cluster); err != nil {
-		log.Error(err, "failed to update Cluster status")
+	if err == nil {
+		err = r.reconcile(ctx, cluster)
+		if err := r.Status().Update(ctx, cluster); err != nil {
+			log.Error(err, "failed to update Cluster status")
+		}
+	}
+
+	if r.Send != nil {
+		cslist := &v1alpha1.ClusterScanList{}
+		if err := r.List(ctx, cslist, &client.ListOptions{
+			Namespace:     cluster.Namespace,
+			FieldSelector: fields.OneTermEqualSelector("spec.clusterRef.name", cluster.Name),
+		}); client.IgnoreNotFound(err) != nil {
+			log.Error(err, "Unable to fetch scan list")
+		}
+		clus := payloads.NewClusterSlice([]v1alpha1.Cluster{*cluster}, cslist.Items)
+		if len(clus) == 1 {
+			if ior, err := clus[0].Reader(); err != nil {
+				log.Error(err, "Unable to create <io.Reader> from cluster")
+			} else if err := r.Send(ior); err != nil {
+				log.Error(err, "Unable to complete transfer")
+			}
+		}
 	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }
@@ -140,6 +166,17 @@ func (r *ClusterReconciler) setStatusAndCreateEvent(cluster *v1alpha1.Cluster, s
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if err := mgr.GetFieldIndexer().IndexField(
+		context.Background(),
+		&v1alpha1.ClusterScan{},
+		"spec.clusterRef.name",
+		func(o client.Object) []string {
+			cs := o.(*v1alpha1.ClusterScan)
+			return []string{cs.Spec.ClusterRef.Name}
+		},
+	); err != nil {
+		return err
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.Cluster{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)

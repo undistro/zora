@@ -17,6 +17,7 @@ package v1alpha1
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 
 	"github.com/undistro/zora/apis/zora/v1alpha1"
 )
@@ -78,10 +79,10 @@ func NewIssues(clusterIssues []v1alpha1.ClusterIssue) []Issue {
 	return res
 }
 
-func (r Issue) Read(b []byte) (int, error) {
+func (r Issue) Reader() (io.Reader, error) {
 	jc, err := json.Marshal(r)
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
-	return bytes.NewReader(jc).Read(b)
+	return bytes.NewReader(jc), nil
 }
