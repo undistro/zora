@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/undistro/zora/apis/zora/v1alpha1"
@@ -50,11 +49,6 @@ type SaasReconciler struct {
 func (r *SaasReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := ctrllog.FromContext(ctx)
 
-	if !r.validAddress() {
-		log.Error(fmt.Errorf("Invalid url <%s>", r.ServerAddr), "No valid server address provided, nothing to do")
-		return ctrl.Result{}, nil
-	}
-
 	clist := &v1alpha1.ClusterList{}
 	if err := r.List(ctx, clist); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
@@ -76,16 +70,6 @@ func (r *SaasReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{RequeueAfter: 20 * time.Minute}, err
 	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
-}
-
-func (r *SaasReconciler) validAddress() bool {
-	if r.ServerAddr[:4] != "http" {
-		r.ServerAddr = fmt.Sprintf("http://%s", r.ServerAddr)
-	}
-	if u, err := url.ParseRequestURI(r.ServerAddr); err != nil || len(u.Host) == 0 {
-		return false
-	}
-	return true
 }
 
 func (r *SaasReconciler) reconcile(ctx context.Context, clist *v1alpha1.ClusterList, cslist *v1alpha1.ClusterScanList, cilist *v1alpha1.ClusterIssueList) error {

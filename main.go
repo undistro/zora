@@ -16,8 +16,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -42,6 +44,19 @@ var (
 	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
 )
+
+func validAddress(a *string) bool {
+	if a == nil {
+		return false
+	}
+	if len(*a) < 5 || (*a)[:4] != "http" {
+		*a = fmt.Sprintf("http://%s", *a)
+	}
+	if u, err := url.ParseRequestURI(*a); err != nil || len(u.Host) == 0 {
+		return false
+	}
+	return true
+}
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
@@ -99,6 +114,13 @@ func main() {
 	}
 
 	if len(saasID) != 0 {
+		if !validAddress(&saasServerAddr) {
+			setupLog.Error(
+				fmt.Errorf("Invalid url <%s>", saasServerAddr),
+				"No valid server address provided",
+			)
+			os.Exit(1)
+		}
 		r := &zoracontrollers.SaasReconciler{
 			Client:     mgr.GetClient(),
 			Scheme:     mgr.GetScheme(),
