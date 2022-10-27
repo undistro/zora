@@ -101,6 +101,7 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
 	var notReadyErr error
+	var cronJob *batchv1.CronJob
 	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
@@ -138,6 +139,14 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		pluginRefs = clusterscan.Spec.Plugins
 	}
 
+	cjlist := &batchv1.CronJobList{}
+	if err := r.List(ctx, cjlist, client.MatchingLabels{
+		cronjobs.LabelClusterScan: clusterscan.Name,
+	}); err != nil {
+		return err
+	}
+	cjmap := mapCjSlice(cjlist.Items)
+
 	for _, ref := range pluginRefs {
 		pluginKey := ref.PluginKey(r.DefaultPluginsNamespace)
 		plugin := &v1alpha1.Plugin{}
@@ -146,7 +155,19 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
-		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
+		if len(cjmap) != 0 {
+			cj, ok := cjmap[plugin.Name]
+			if !ok {
+				return fmt.Errorf("No <CronJob> for plugin <%s>", plugin.Name)
+			}
+			delete(cjmap, plugin.Name)
+			cronJob = cj
+		} else {
+			cronJob = cronjobs.New(
+				fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name),
+				kubeconfigSecret.Namespace,
+			)
+		}
 
 		cronJobMutator := &cronjobs.Mutator{
 			Scheme:             r.Scheme,
@@ -208,6 +229,9 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			}
 		}
 	}
+	if len(cjmap) != 0 {
+		r.deleteCjs(ctx, cjmap)
+	}
 
 	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...); err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
@@ -235,6 +259,23 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
 
 	return notReadyErr
+}
+
+func mapCjSlice(cjs []batchv1.CronJob) map[string]*batchv1.CronJob {
+	cjmap := map[string]*batchv1.CronJob{}
+	for c := 0; c < len(cjs); c++ {
+		cjmap[cjs[c].Labels[cronjobs.LabelPlugin]] = &cjs[c]
+	}
+	return cjmap
+}
+
+func (r *ClusterScanReconciler) deleteCjs(ctx context.Context, cjmap map[string]*batchv1.CronJob) {
+	l := ctrllog.FromContext(ctx)
+	for _, cj := range cjmap {
+		if err := r.Delete(ctx, cj); err != nil {
+			l.Error(err, fmt.Sprintf("Failed to delete dangling <CronJob> <%s/%s>", cj.Namespace, cj.Name))
+		}
+	}
 }
 
 func (r *ClusterScanReconciler) pluginErrorMsg(ctx context.Context, ps *v1alpha1.PluginScanStatus, p *v1alpha1.Plugin, j *batchv1.Job) error {
