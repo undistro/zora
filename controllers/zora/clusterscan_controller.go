@@ -261,6 +261,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	return notReadyErr
 }
 
+// Transforms the slice of <Cronjobs> into a map in the form:
+// 		<plugin_name>: <cronjob_pointer>
 func mapCjSlice(cjs []batchv1.CronJob) map[string]*batchv1.CronJob {
 	cjmap := map[string]*batchv1.CronJob{}
 	for c := 0; c < len(cjs); c++ {
@@ -269,6 +271,8 @@ func mapCjSlice(cjs []batchv1.CronJob) map[string]*batchv1.CronJob {
 	return cjmap
 }
 
+// Deletes <Cronjobs> in the map parameter. If the deletion fails, the error
+// will be logged.
 func (r *ClusterScanReconciler) deleteCjs(ctx context.Context, cjmap map[string]*batchv1.CronJob) {
 	l := ctrllog.FromContext(ctx)
 	for _, cj := range cjmap {
@@ -278,6 +282,7 @@ func (r *ClusterScanReconciler) deleteCjs(ctx context.Context, cjmap map[string]
 	}
 }
 
+// Extracts error messages emitted by plugins when their execution fails.
 func (r *ClusterScanReconciler) pluginErrorMsg(ctx context.Context, ps *v1alpha1.PluginScanStatus, p *v1alpha1.Plugin, j *batchv1.Job) error {
 	log := ctrllog.FromContext(ctx, v1alpha1.LabelPlugin, p.Name)
 
