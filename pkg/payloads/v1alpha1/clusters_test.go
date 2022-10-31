@@ -134,7 +134,7 @@ func TestNewCluster(t *testing.T) {
 			if err != nil {
 				t.Errorf("failed to load Cluster payload testdata: %v", err)
 			}
-			if got := NewCluster(cluster, scans); !reflect.DeepEqual(got, payload) {
+			if got := NewClusterWithScans(cluster, scans); !reflect.DeepEqual(got, payload) {
 				t.Errorf("NewCluster() = %s", cmp.Diff(got, payload))
 			}
 		})
