@@ -13,7 +13,7 @@
 # limitations under the License.
 
 site_name: "Zora"
-site_url: https://zora.undistro.io
+site_url: https://zora.undistro.io/docs
 repo_url: https://github.com/undistro/zora
 repo_name: undistro/zora
 edit_uri: edit/main/docs/
