@@ -358,5 +358,5 @@ scan:
 
 saas:
   accountID: ""
-  server: "https://cloud.undistro.io"
+  server: "https://saas-hml.undistro.io"
   installHookURL: "{{.Values.saas.server}}/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"

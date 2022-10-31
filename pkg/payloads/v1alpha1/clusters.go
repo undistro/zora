@@ -15,10 +15,6 @@
 package v1alpha1
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"io"
 	"strings"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -38,20 +34,19 @@ const (
 )
 
 type Cluster struct {
-	ApiVersion        string            `json:"apiVersion"`
-	Name              string            `json:"name"`
-	Namespace         string            `json:"namespace"`
-	Environment       string            `json:"environment"`
-	Provider          string            `json:"provider"`
-	Region            string            `json:"region"`
-	TotalNodes        *int              `json:"totalNodes"`
-	Version           string            `json:"version"`
-	Connection        *ConnectionStatus `json:"connection"`
-	Resources         *Resources        `json:"resources"`
-	CreationTimestamp metav1.Time       `json:"creationTimestamp"`
-	// Deprecated
-	TotalIssues  *int                     `json:"totalIssues"`
-	PluginStatus map[string]*PluginStatus `json:"pluginStatus"`
+	ApiVersion        string                   `json:"apiVersion"`
+	Name              string                   `json:"name"`
+	Namespace         string                   `json:"namespace"`
+	Environment       string                   `json:"environment"`
+	Provider          string                   `json:"provider"`
+	Region            string                   `json:"region"`
+	TotalNodes        *int                     `json:"totalNodes"`
+	Version           string                   `json:"version"`
+	Connection        *ConnectionStatus        `json:"connection"`
+	Resources         *Resources               `json:"resources"`
+	CreationTimestamp metav1.Time              `json:"creationTimestamp"`
+	TotalIssues       *int                     `json:"totalIssues"`
+	PluginStatus      map[string]*PluginStatus `json:"pluginStatus"`
 }
 
 type PluginStatus struct {
@@ -97,7 +92,8 @@ type ConnectionStatus struct {
 	Message   string `json:"message"`
 }
 
-func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster {
+//NewCluster returns a Cluster without pluginStatus and issues
+func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	cl := Cluster{
 		ApiVersion:        "v1alpha1",
 		Name:              cluster.Name,
@@ -138,60 +134,98 @@ func NewCluster(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster 
 		}
 	}
 
+	return cl
+}
+
+//NewClusterWithScans returns a Cluster with pluginStatus and without issues
+func NewClusterWithScans(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster {
+	cl := NewCluster(cluster)
+	ps, totalIssues := NewScanStatus(scans)
+	cl.PluginStatus = ps
+	cl.TotalIssues = totalIssues
+	return cl
+}
+
+//NewClusterWithIssues returns a Cluster with pluginStatus and their issues
+func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) Cluster {
+	c := NewClusterWithScans(cluster, scans)
+	for _, i := range issues {
+		c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
+			c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
+			NewResourcedIssue(i),
+		)
+	}
+	return c
+}
+
+func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
+	var pluginStatus map[string]*PluginStatus
+	var totalIssues *int
+
 	for _, cs := range scans {
 		if cs.Status.TotalIssues != nil {
-			if cl.TotalIssues == nil {
-				cl.TotalIssues = new(int)
+			if totalIssues == nil {
+				totalIssues = new(int)
 			}
-			*cl.TotalIssues += *cs.Status.TotalIssues
+			*totalIssues += *cs.Status.TotalIssues
 		}
 		for p, s := range cs.Status.Plugins {
-			if cl.PluginStatus[p] == nil {
-				if cl.PluginStatus == nil {
-					cl.PluginStatus = map[string]*PluginStatus{}
+			if pluginStatus[p] == nil {
+				if pluginStatus == nil {
+					pluginStatus = map[string]*PluginStatus{}
 				}
-				cl.PluginStatus[p] = &PluginStatus{
+				pluginStatus[p] = &PluginStatus{
 					Scan: &ScanStatus{
 						Status: Unknown,
 					},
 				}
 			}
-			cl.PluginStatus[p].Scan.Suspend = s.Suspend
+			pluginStatus[p].Scan.Suspend = s.Suspend
 
 			if s.IssueCount != nil {
-				if cl.PluginStatus[p].IssueCount == nil {
-					cl.PluginStatus[p].IssueCount = new(int)
+				if pluginStatus[p].IssueCount == nil {
+					pluginStatus[p].IssueCount = new(int)
 				}
-				*cl.PluginStatus[p].IssueCount += *s.IssueCount
+				*pluginStatus[p].IssueCount += *s.IssueCount
 			}
 
 			switch s.LastFinishedStatus {
 			case string(batchv1.JobComplete):
-				cl.PluginStatus[p].Scan.Status = Scanned
+				pluginStatus[p].Scan.Status = Scanned
 			case string(batchv1.JobFailed):
-				cl.PluginStatus[p].Scan.Status = Failed
-				cl.PluginStatus[p].Scan.Message = s.LastErrorMsg
+				pluginStatus[p].Scan.Status = Failed
+				pluginStatus[p].Scan.Message = s.LastErrorMsg
 			case "":
-				cl.PluginStatus[p].Scan.Message = "Scan not finished"
+				pluginStatus[p].Scan.Message = "Scan not finished"
 			}
 
-			if cl.PluginStatus[p].LastSuccessfulScanTime == nil ||
-				cl.PluginStatus[p].LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
-				cl.PluginStatus[p].LastSuccessfulScanTime = cs.Status.LastSuccessfulTime
+			if pluginStatus[p].LastSuccessfulScanTime == nil ||
+				pluginStatus[p].LastSuccessfulScanTime.Before(cs.Status.LastSuccessfulTime) {
+				pluginStatus[p].LastSuccessfulScanTime = cs.Status.LastSuccessfulTime
 			}
-			if cl.PluginStatus[p].LastFinishedScanTime == nil ||
-				cl.PluginStatus[p].LastFinishedScanTime.Before(cs.Status.LastFinishedTime) {
-				cl.PluginStatus[p].LastFinishedScanTime = cs.Status.LastFinishedTime
+			if pluginStatus[p].LastFinishedScanTime == nil ||
+				pluginStatus[p].LastFinishedScanTime.Before(cs.Status.LastFinishedTime) {
+				pluginStatus[p].LastFinishedScanTime = cs.Status.LastFinishedTime
 			}
-			if cl.PluginStatus[p].NextScheduleScanTime == nil ||
-				cs.Status.NextScheduleTime.Before(cl.PluginStatus[p].NextScheduleScanTime) {
-				cl.PluginStatus[p].NextScheduleScanTime = cs.Status.NextScheduleTime
+			if pluginStatus[p].NextScheduleScanTime == nil ||
+				cs.Status.NextScheduleTime.Before(pluginStatus[p].NextScheduleScanTime) {
+				pluginStatus[p].NextScheduleScanTime = cs.Status.NextScheduleTime
 			}
-
 		}
 	}
 
-	return cl
+	return pluginStatus, totalIssues
+}
+
+func NewScanStatusWithIssues(scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) map[string]*PluginStatus {
+	pluginStatus, _ := NewScanStatus(scans)
+	for _, i := range issues {
+		pluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
+			pluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
+			NewResourcedIssue(i),
+		)
+	}
+	return pluginStatus
 }
 
 func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
@@ -221,40 +255,4 @@ func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
 		}
 	}
 	return ri
-}
-
-func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) Cluster {
-	c := NewCluster(cluster, scans)
-	for _, i := range issues {
-		c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
-			c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
-			NewResourcedIssue(i),
-		)
-	}
-	return c
-}
-
-func NewClusterSlice(carr []v1alpha1.Cluster, csarr []v1alpha1.ClusterScan) []Cluster {
-	scanm := map[string][]v1alpha1.ClusterScan{}
-	clusters := []Cluster{}
-
-	for _, cs := range csarr {
-		nn := fmt.Sprintf("%s/%s", cs.Namespace, cs.Spec.ClusterRef.Name)
-		scanm[nn] = append(scanm[nn], cs)
-	}
-	for _, c := range carr {
-		clusters = append(clusters, NewCluster(
-			c,
-			scanm[fmt.Sprintf("%s/%s", c.Namespace, c.Name)],
-		))
-	}
-	return clusters
-}
-
-func (r Cluster) Reader() (io.Reader, error) {
-	jc, err := json.Marshal(r)
-	if err != nil {
-		return nil, err
-	}
-	return bytes.NewReader(jc), nil
 }

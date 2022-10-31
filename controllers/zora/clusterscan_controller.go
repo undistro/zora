@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/robfig/cron/v3"
+	"github.com/undistro/zora/pkg/saas"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -45,8 +46,9 @@ import (
 )
 
 const (
-	jobOwnerKey    = ".metadata.controller"
-	defaultReqTime = 5
+	jobOwnerKey          = ".metadata.controller"
+	defaultReqTime       = 5
+	clusterscanFinalizer = "clusterscan.zora.undistro.io/finalizer"
 )
 
 // ClusterScanReconciler reconciles a ClusterScan object
@@ -60,6 +62,8 @@ type ClusterScanReconciler struct {
 	WorkerImage             string
 	ClusterRoleBindingName  string
 	ServiceAccountName      string
+	OnUpdate                saas.ClusterScanHook
+	OnDelete                saas.ClusterScanHook
 }
 
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans,verbs=get;list;watch;create;update;patch;delete
@@ -94,9 +98,40 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Info(fmt.Sprintf("ClusterScan has been reconciled in %v", time.Since(t)))
 	}(time.Now())
 
+	if clusterscan.DeletionTimestamp.IsZero() {
+		if !controllerutil.ContainsFinalizer(clusterscan, clusterscanFinalizer) {
+			controllerutil.AddFinalizer(clusterscan, clusterscanFinalizer)
+			if err := r.Update(ctx, clusterscan); err != nil {
+				log.Error(err, "failed to add finalizer")
+				return ctrl.Result{}, err
+			}
+		}
+	} else {
+		log.Info("the ClusterScan is being deleted")
+		if controllerutil.ContainsFinalizer(clusterscan, clusterscanFinalizer) {
+			if r.OnDelete != nil {
+				if err := r.OnDelete(ctx, *clusterscan); err != nil {
+					log.Error(err, "error in delete hook")
+				}
+			}
+			controllerutil.RemoveFinalizer(clusterscan, clusterscanFinalizer)
+			if err := r.Update(ctx, clusterscan); err != nil {
+				log.Error(err, "failed to remove finalizer")
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
+	}
+
 	t, err := r.reconcile(ctx, clusterscan)
 	if err := r.Status().Update(ctx, clusterscan); err != nil {
 		log.Error(err, "failed to update ClusterScan status")
+	}
+
+	if r.OnUpdate != nil {
+		if err := r.OnUpdate(ctx, *clusterscan); err != nil {
+			log.Error(err, "error in update hook")
+		}
 	}
 
 	return ctrl.Result{RequeueAfter: time.Duration(t) * time.Minute}, err
@@ -161,7 +196,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			KubeconfigSecret:   kubeconfigSecret,
 			WorkerImage:        r.WorkerImage,
 			ServiceAccountName: r.ServiceAccountName,
-			Suspend:            (notReadyErr != nil),
+			Suspend:            notReadyErr != nil,
 		}
 
 		f, rem := cronJobMutator.Mutate()
@@ -238,7 +273,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	}
 
 	clusterscan.Status.SyncStatus()
-	clusterscan.Status.Suspend = (notReadyErr != nil)
+	clusterscan.Status.Suspend = notReadyErr != nil
 	if notReadyErr == nil {
 		clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
 	}
