@@ -241,7 +241,7 @@ metadata:
   namespace: $CLUSTER_NS
 spec:
   kubeconfigRef:
-	name: $KCONFIG_SECRET_NAME 
+    name: $KCONFIG_SECRET_NAME
 EOF
 }
 
