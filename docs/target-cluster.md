@@ -5,6 +5,10 @@ These are the only steps required to be performed in the target cluster.
 
 For manual configuration, go to [Manual Configuration](/target-cluster#manual-configuration), otherwise proceed to [Setup Script](/target-cluster#setup-script).
 
+!!! note
+    If the target cluster is under [Rancher](https://www.rancher.com/), we recommend generating a kubeconfig file through Rancher.
+    Zora requires read-only access, as described [here](#2-create-the-rbac-resources).
+
 
 ## Setup Script
 
