@@ -5,6 +5,18 @@ After the installation process this cluster will be your [management cluster](/g
 with the Zora components installed. 
 So it is recommended to keep it separated from any application workload.
 
+## Setup Requirements
+
+Zora's management cluster requires these programs in order to be installed and configured:
+
+- Kubernetes >= 1.21.0
+- Helm >= 3.4.0
+- Kubectl
+- Awk
+- Cat
+- POSIX shell
+
+
 ## Install with Helm
 
 1. To install Zora using [Helm](https://helm.sh/docs/) follow these commands:
