@@ -3,23 +3,7 @@
   For in-depth information about how to connect a cluster, visit
     https://zora.undistro.io/
 
-{{- if .Values.ui.enabled }}
-2. Get the UI URL by running these commands:
-{{- if .Values.ingress.enabled }}
-  http{{ if .Values.ingress.tlsSecretName }}s{{ end }}://{{ .Values.ingress.host }}{{ .Values.ingress.ui.path }}
-{{- else if contains "NodePort" .Values.nginx.service.type }}
-  export NODE_PORT=$(kubectl get -n {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "zora.fullname" . }}-nginx)
-  export NODE_IP=$(kubectl get nodes -n {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-  echo http://$NODE_IP:$NODE_PORT
-{{- else if contains "LoadBalancer" .Values.nginx.service.type }}
-     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-           You can watch the status of by running 'kubectl get -n {{ .Release.Namespace }} svc -w {{ include "zora.fullname" . }}-nginx'
-  export SERVICE_IP=$(kubectl get svc -n {{ .Release.Namespace }} {{ include "zora.fullname" . }}-nginx --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
-  echo http://$SERVICE_IP:{{ .Values.nginx.service.port }}
-{{- else if contains "ClusterIP" .Values.nginx.service.type }}
-  export POD_NAME=$(kubectl get pods -n {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component=nginx" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod -n {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
-{{- end }}
+{{- if .Values.saas.accountID }}
+2. Now you can see your clusters and issues in the SaaS:
+     {{ .Values.saas.server }}
 {{- end }}

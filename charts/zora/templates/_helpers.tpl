@@ -51,30 +51,6 @@ app.kubernetes.io/component: operator
 {{- end }}
 
 {{/*
-Server labels
-*/}}
-{{- define "zora.serverLabels" -}}
-{{ include "zora.labels" . }}
-app.kubernetes.io/component: server
-{{- end }}
-
-{{/*
-UI labels
-*/}}
-{{- define "zora.uiLabels" -}}
-{{ include "zora.labels" . }}
-app.kubernetes.io/component: ui
-{{- end }}
-
-{{/*
-NGINX labels
-*/}}
-{{- define "zora.nginxLabels" -}}
-{{ include "zora.labels" . }}
-app.kubernetes.io/component: nginx
-{{- end }}
-
-{{/*
 Selector labels
 */}}
 {{- define "zora.selectorLabels" -}}
@@ -91,30 +67,6 @@ app.kubernetes.io/component: operator
 {{- end }}
 
 {{/*
-Server selector labels
-*/}}
-{{- define "zora.serverSelectorLabels" -}}
-{{ include "zora.selectorLabels" . }}
-app.kubernetes.io/component: server
-{{- end }}
-
-{{/*
-UI selector labels
-*/}}
-{{- define "zora.uiSelectorLabels" -}}
-{{ include "zora.selectorLabels" . }}
-app.kubernetes.io/component: ui
-{{- end }}
-
-{{/*
-NGINX selector labels
-*/}}
-{{- define "zora.nginxSelectorLabels" -}}
-{{ include "zora.selectorLabels" . }}
-app.kubernetes.io/component: nginx
-{{- end }}
-
-{{/*
 Create the name of the service account to use in Operator
 */}}
 {{- define "zora.operatorServiceAccountName" -}}
@@ -122,39 +74,6 @@ Create the name of the service account to use in Operator
 {{- default (printf "%s-%s" (include "zora.fullname" .) "operator") .Values.operator.rbac.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.operator.rbac.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use in Server
-*/}}
-{{- define "zora.serverServiceAccountName" -}}
-{{- if .Values.server.rbac.serviceAccount.create }}
-{{- default (printf "%s-%s" (include "zora.fullname" .) "server") .Values.server.rbac.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.server.rbac.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use in UI
-*/}}
-{{- define "zora.uiServiceAccountName" -}}
-{{- if .Values.ui.serviceAccount.create }}
-{{- default (printf "%s-%s" (include "zora.fullname" .) "ui") .Values.ui.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.ui.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use in NGINX
-*/}}
-{{- define "zora.nginxServiceAccountName" -}}
-{{- if .Values.nginx.serviceAccount.create }}
-{{- default (printf "%s-%s" (include "zora.fullname" .) "nginx") .Values.nginx.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.nginx.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
