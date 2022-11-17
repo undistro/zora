@@ -270,15 +270,15 @@ CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
 CLUSTER_NS=${CLUSTER_NS:-$SVC_ACCOUNT_NS}
-KCONFIG_NAME=${KCONFIG_NAME:-"$CONTEXT-kubeconfig.yaml"}
+KCONFIG_NAME=${KCONFIG_NAME:-"${CONTEXT}_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
-SAMPLE_MANIFEST_NAME=${SAMPLE_MANIFEST_NAME:-"cluster_sample.yaml"}
+SAMPLE_MANIFEST_NAME=${SAMPLE_MANIFEST_NAME:-"${CONTEXT}_cluster_sample.yaml"}
 setup_cluster_role
 setup_cluster_role_binding
 create_kubeconfig
 
 echo
 show_generated_kconfig_name
-show_kconfig_creation_cmd
 create_cluster_sample
 show_cluster_sample_name
+show_kconfig_creation_cmd
