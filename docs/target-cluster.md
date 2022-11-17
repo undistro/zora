@@ -49,8 +49,8 @@ A complete list of customizable environment variables can be seen on the table b
 | `CLUSTER_NS`				| Cluster namespace used on the manifest sample, defaults to the value of `SVC_ACCOUNT_NS` |
 | `CLUSTER_CA`				| Cluster Certificate Authority, extracted according to `CONTEXT` |
 | `CLUSTER_SERVER`			| Cluster server address, extracted according to `CONTEXT` |
-| `KCONFIG_NAME`			| Name of the generated kubeconfig, defaulting to the value of `CONTEXT` plus the string "-kubeconfig.yaml" |
-| `SAMPLE_MANIFEST_NAME` 	| Name of the `Cluster` manifest sample, defaults to `cluster_sample.yaml` |
+| `KCONFIG_NAME`			| Name of the generated kubeconfig, defaulting to the value of `CONTEXT` plus the string "_kubeconfig.yaml" |
+| `SAMPLE_MANIFEST_NAME` 	| Name of the `Cluster` manifest sample, defaults to `cluster_sample.yaml` plus the K8s context as prefix |
 
 The next instructions explain how to manually configure your target clusters.
 
