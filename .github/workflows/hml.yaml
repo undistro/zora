@@ -1,80 +1,82 @@
 name: Update HML Environment
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "hml*"
+env:
+  UI_PRIVATE_REPOSITORY: ghcr.io/undistro/zora/ui
 jobs:
-  build:
-    uses: ./.github/workflows/docker-push.yaml
+  docker:
+    uses: ./.github/workflows/docker.yaml
     secrets: inherit
-  update_hml_environment:
-    needs: build
+  hml:
+    needs: [docker]
     name: Update HML Environment
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install Helm
-        env:
-          HELM_VERSION: v3.8.2
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.2
+
+      - name: Add Undistro Helm chart repository
         run: |
-          curl -sL "https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz" -o - | tar -xz
-          mv linux-amd64/helm /usr/local/bin
-          rm -r linux-amd64
+          helm repo add undistro https://charts.undistro.io --force-update
+          helm repo update undistro
 
-      - name: Add Undistro Helm repository
-        run: helm repo add undistro "https://registry.undistro.io/chartrepo/library"
-      - name: Update Undistro Helm repository
-        run: helm repo update undistro
-
-      - name: Get Chart version
+      - name: Get the latest version of Zora Chart
         run: |
           echo "CHART_VERSION=$(
-            helm search repo undistro/zora | awk '/zora/{print $2}'
+            helm search repo undistro/zora --versions --devel -o yaml | yq '.[0].version'
           )" >> $GITHUB_ENV
 
       - name: Create kubeconfig file
-        run: echo "${{ secrets.HML_KUBECONFIG }}" > /tmp/hml_kubeconfig.yaml
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.HML_KUBECONFIG }}" > ~/.kube/config
+          kubectl config current-context
+          kubectl version -o yaml
 
       - name: Get UI image tag
         run: |
           echo "UI_IMAGE_TAG=$(
-            helm -n zora-system get values zora -o yaml --kubeconfig /tmp/hml_kubeconfig.yaml | yq .ui.image.tag
+            helm -n zora-system get values zora -o yaml | yq '.ui.image.tag'
           )" >> $GITHUB_ENV
 
       - name: Dry run
         run: |
           helm upgrade --install zora undistro/zora \
             -f charts/zora/values-hml.yaml \
+            --set imageCredentials.create=true \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
-            --set operator.image.tag=$GITHUB_REF_NAME \
-            --set server.image.tag=$GITHUB_REF_NAME \
-            --set scan.worker.image.tag=$GITHUB_REF_NAME \
+            --set operator.image.tag=$GITHUB_SHA \
+            --set server.image.tag=$GITHUB_SHA \
+            --set scan.worker.image.tag=$GITHUB_SHA \
             --set ui.image.tag=$UI_IMAGE_TAG \
+            --set ui.image.repository=$UI_PRIVATE_REPOSITORY \
             --version $CHART_VERSION \
             --namespace zora-system \
             --create-namespace \
-            --kubeconfig /tmp/hml_kubeconfig.yaml \
             --dry-run
 
       - name: Apply CRDs
-        run: kubectl --kubeconfig=/tmp/hml_kubeconfig.yaml apply --recursive -f charts/zora/crds/
+        run: kubectl apply --recursive -f charts/zora/crds/
 
       - name: Upgrade Helm release
         run: |
           helm upgrade --install zora undistro/zora \
             -f charts/zora/values-hml.yaml \
+            --set imageCredentials.create=true \
             --set imageCredentials.username='${{ secrets.REGISTRY_USERNAME }}' \
             --set imageCredentials.password='${{ secrets.REGISTRY_PASSWORD }}' \
-            --set operator.image.tag=$GITHUB_REF_NAME \
-            --set server.image.tag=$GITHUB_REF_NAME \
-            --set scan.worker.image.tag=$GITHUB_REF_NAME \
+            --set operator.image.tag=$GITHUB_SHA \
+            --set server.image.tag=$GITHUB_SHA \
+            --set scan.worker.image.tag=$GITHUB_SHA \
             --set ui.image.tag=$UI_IMAGE_TAG \
+            --set ui.image.repository=$UI_PRIVATE_REPOSITORY \
             --version $CHART_VERSION \
             --namespace zora-system \
             --create-namespace \
-            --kubeconfig /tmp/hml_kubeconfig.yaml \
             --wait
