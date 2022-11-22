@@ -17,7 +17,7 @@ kind: Plugin
 metadata:
   name: popeye
 spec:
-  image: registry.undistro.io/dockerhub/derailed/popeye:v0.10.0
+  image: derailed/popeye:v0.10.0
   command:
     - /bin/sh
     - -c

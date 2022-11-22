@@ -22,7 +22,7 @@ Zora's management cluster requires these programs in order to be installed and c
 1. To install Zora using [Helm](https://helm.sh/docs/) follow these commands:
 
 ```shell
-helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm repo add undistro https://charts.undistro.io
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
