@@ -46,4 +46,4 @@ jobs:
           git add $CHART_PATH
           git status
           git diff-index --quiet HEAD || git commit -m "$COMMIT_MESSAGE"
-          git push -u origin HEAD:$CHARTS_REPOSITORY_BRANCH
+          git push -u origin HEAD:main
