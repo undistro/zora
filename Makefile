@@ -46,7 +46,7 @@ clientset-gen: ## Generate clientset
 		-e GROUPS_VERSION="zora:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
 		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
+		quay.io/slok/kube-code-generator:v1.23.0
 
 
 ##@ Build and Execution
@@ -122,7 +122,7 @@ delete-minikube: ## Delete Minikube node.
 helm-docs: ## Generate documentation for helm charts
 	@docker run -it --rm \
 		-v $(PWD):/helm-docs \
-		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
+		jnorwood/helm-docs:v1.8.1 \
 		helm-docs -s=file --badge-style="flat-square&color=38C794"
 
 preview-docs: helm-docs ## Run a server to preview the documentation

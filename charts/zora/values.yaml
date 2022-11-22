@@ -1,13 +1,28 @@
+# Copyright 2022 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # -- String to partially override fullname template with a string (will prepend the release name)
 nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+# Credentials for private registries.
 imageCredentials:
   # -- Specifies whether the secret should be created by providing credentials
-  create: true
+  create: false
   # -- Docker registry host
-  registry: registry.undistro.io
+  registry: ghcr.io
   # -- Docker registry username
   username: ""
   # -- Docker registry password
@@ -42,7 +57,7 @@ operator:
   replicaCount: 1
   image:
     # -- Zora operator image repository
-    repository: registry.undistro.io/zora/operator
+    repository: ghcr.io/undistro/zora/operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -88,7 +103,7 @@ operator:
   rbacProxy:
     image:
       # -- `kube-rbac-proxy` image repository
-      repository: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
       # -- `kube-rbac-proxy` image tag
       tag: v0.8.0
       # -- Image pull policy
@@ -123,11 +138,13 @@ operator:
     timeEncoding: rfc3339
 
 server:
+  # -- Toggles server deployment
+  enabled: true
   # -- Number of replicas desired of Zora server
   replicaCount: 1
   image:
     # -- Zora server image repository
-    repository: registry.undistro.io/zora/server
+    repository: ghcr.io/undistro/zora/server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -195,11 +212,13 @@ server:
     timeEncoding: rfc3339
 
 ui:
+  # -- Toggles UI deployment
+  enabled: true
   # -- Number of replicas desired of Zora UI
   replicaCount: 1
   image:
     # -- Zora UI image repository
-    repository: registry.undistro.io/zora/ui
+    repository: ghcr.io/undistro/zora/ui
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -258,7 +277,7 @@ nginx:
   replicaCount: 1
   image:
     # -- NGINX image repository
-    repository: registry.undistro.io/dockerhub/library/nginx
+    repository: nginx
     # -- NGINX image tag
     tag: 1.20.2-alpine
     # -- Image pull policy
@@ -317,7 +336,7 @@ scan:
   worker:
     image:
       # -- worker image repository
-      repository: registry.undistro.io/library/worker
+      repository: ghcr.io/undistro/zora/worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
   # -- Names of the default plugins
@@ -327,12 +346,12 @@ scan:
     popeye:
       image:
         # -- popeye plugin image repository
-        repository: registry.undistro.io/dockerhub/derailed/popeye
+        repository: derailed/popeye
         # -- popeye plugin image tag
         tag: v0.10.0
     kubescape:
       image:
         # -- kubescape plugin image repository
-        repository: registry.undistro.io/quay/armosec/kubescape
+        repository: quay.io/armosec/kubescape
         # -- kubescape plugin image tag
         tag: v2.0.163
