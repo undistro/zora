@@ -32,7 +32,7 @@ jobs:
           repository: undistro/charts.undistro.io
           ref: main
           fetch-depth: 1
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
           path: ${{ env.CHARTS_REPOSITORY_PATH }}
 
       - name: Sync charts
