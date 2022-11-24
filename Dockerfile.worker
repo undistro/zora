@@ -25,7 +25,7 @@ COPY pkg/ pkg/
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/worker worker/main.go
 
-FROM registry.undistro.io/gcr/distroless/static:nonroot
+FROM gcr.io/distroless/static:nonroot
 WORKDIR /
 COPY --from=builder /workspace/bin/worker /usr/local/bin/
 USER 65534:65534

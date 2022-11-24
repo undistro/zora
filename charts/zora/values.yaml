@@ -22,7 +22,7 @@ imageCredentials:
   # -- Specifies whether the secret should be created by providing credentials
   create: false
   # -- Docker registry host
-  registry: registry.undistro.io
+  registry: ghcr.io
   # -- Docker registry username
   username: ""
   # -- Docker registry password
@@ -57,7 +57,7 @@ operator:
   replicaCount: 1
   image:
     # -- Zora operator image repository
-    repository: registry.undistro.io/library/zora-operator
+    repository: ghcr.io/undistro/zora/operator
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -103,7 +103,7 @@ operator:
   rbacProxy:
     image:
       # -- `kube-rbac-proxy` image repository
-      repository: registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
       # -- `kube-rbac-proxy` image tag
       tag: v0.8.0
       # -- Image pull policy
@@ -144,7 +144,7 @@ server:
   replicaCount: 1
   image:
     # -- Zora server image repository
-    repository: registry.undistro.io/library/zora-server
+    repository: ghcr.io/undistro/zora/server
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -218,7 +218,7 @@ ui:
   replicaCount: 1
   image:
     # -- Zora UI image repository
-    repository: registry.undistro.io/library/zora-ui
+    repository: ghcr.io/undistro/zora/ui
     # -- Overrides the image tag whose default is the chart appVersion
     tag: ""
     # -- Image pull policy
@@ -277,7 +277,7 @@ nginx:
   replicaCount: 1
   image:
     # -- NGINX image repository
-    repository: registry.undistro.io/dockerhub/library/nginx
+    repository: nginx
     # -- NGINX image tag
     tag: 1.20.2-alpine
     # -- Image pull policy
@@ -336,7 +336,7 @@ scan:
   worker:
     image:
       # -- worker image repository
-      repository: registry.undistro.io/library/zora-worker
+      repository: ghcr.io/undistro/zora/worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
   # -- Names of the default plugins
@@ -346,12 +346,12 @@ scan:
     popeye:
       image:
         # -- popeye plugin image repository
-        repository: registry.undistro.io/dockerhub/derailed/popeye
+        repository: derailed/popeye
         # -- popeye plugin image tag
         tag: v0.10.0
     kubescape:
       image:
         # -- kubescape plugin image repository
-        repository: registry.undistro.io/quay/armosec/kubescape
+        repository: quay.io/armosec/kubescape
         # -- kubescape plugin image tag
         tag: v2.0.163
