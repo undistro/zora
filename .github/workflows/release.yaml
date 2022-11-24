@@ -9,8 +9,8 @@ env:
   CHARTS_REPOSITORY_PATH: charts.undistro.io
   CHART_PATH: charts/zora
   COMMIT_MESSAGE: "update zora chart"
-  GIT_USER: "github-actions"
-  GIT_EMAIL: "github-actions@github.com"
+  GIT_USER: "undistro-bot"
+  GIT_EMAIL: "undistro-e2e@getupcloud.com"
 
 jobs:
   docker:
@@ -32,7 +32,7 @@ jobs:
           repository: undistro/charts.undistro.io
           ref: main
           fetch-depth: 1
-          token: ${{ secrets.GH_PAT }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
+          token: ${{ secrets.BOT_TOKEN }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
           path: ${{ env.CHARTS_REPOSITORY_PATH }}
 
       - name: Sync charts
