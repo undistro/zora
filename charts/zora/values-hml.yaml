@@ -9,3 +9,7 @@ scan:
   defaultPlugins:
     - popeye
     - kubescape
+ui:
+  image:
+    # UI private repository
+    repository: ghcr.io/undistro/zora-ui
