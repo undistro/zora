@@ -9,12 +9,16 @@ Zora scans multiple Kubernetes clusters and reports potential issues.
 To install the chart with the release name `zora`:
 
 ```console
-helm repo add undistro https://charts.undistro.io
+helm repo add undistro https://charts.undistro.io --force-update
 helm upgrade --install zora undistro/zora \
   -n zora-system \
   --version 0.3.10 \
   --create-namespace --wait
 ```
+
+> The Helm chart repository has been updated from `https://registry.undistro.io/chartrepo/library` to `https://charts.undistro.io`.
+>
+> The `--force-update` flag is needed to update the repository URL.
 
 These commands deploy Zora on the Kubernetes cluster in the default configuration.
 
