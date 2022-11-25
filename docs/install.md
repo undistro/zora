@@ -22,12 +22,17 @@ Zora's management cluster requires these programs in order to be installed and c
 1. To install Zora using [Helm](https://helm.sh/docs/) follow these commands:
 
 ```shell
-helm repo add undistro https://charts.undistro.io
+helm repo add undistro https://charts.undistro.io --force-update
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
   --create-namespace --wait
 ```
+
+!!! info
+    The Helm chart repository has been updated from `https://registry.undistro.io/chartrepo/library` to `https://charts.undistro.io`.
+
+    The `--force-update` flag is needed to update the repository URL.
 
 These commands deploy Zora to the Kubernetes cluster.
 [This section](helm-chart.md) lists the parameters
