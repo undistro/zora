@@ -1,0 +1,980 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://zora.undistro.io/v0.3/target-cluster/">
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Prepare the target cluster - Zora</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.472b142f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.08040f6c.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prepare-the-target-cluster" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Zora" class="md-header__button md-logo" aria-label="Zora" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Zora
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Prepare the target cluster
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/undistro/zora" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    undistro/zora
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link md-tabs__link--active">
+        Documentation
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../helm-chart/" class="md-tabs__link">
+        Helm Chart
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Zora" class="md-nav__button md-logo" aria-label="Zora" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Zora
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/undistro/zora" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    undistro/zora
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Documentation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Documentation" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Documentation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Prepare the target cluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Prepare the target cluster
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-script" class="md-nav__link">
+    Setup Script
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-configuration" class="md-nav__link">
+    Manual Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-access-the-target-cluster" class="md-nav__link">
+    1. Access the target cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-the-rbac-resources" class="md-nav__link">
+    2. Create the RBAC resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-set-up-the-environment-variables" class="md-nav__link">
+    3. Set up the environment variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-generate-a-kubeconfig-file" class="md-nav__link">
+    4. Generate a kubeconfig file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-generated-kubeconfig" class="md-nav__link">
+    Verify the generated kubeconfig
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../connect-cluster/" class="md-nav__link">
+        Connect the target cluster to Zora
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-scan/" class="md-nav__link">
+        Configure a cluster scan
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        Glossary
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Helm Chart
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Helm Chart" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Helm Chart
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helm-chart/" class="md-nav__link">
+        Zora Helm Chart
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-script" class="md-nav__link">
+    Setup Script
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-configuration" class="md-nav__link">
+    Manual Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-access-the-target-cluster" class="md-nav__link">
+    1. Access the target cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-the-rbac-resources" class="md-nav__link">
+    2. Create the RBAC resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-set-up-the-environment-variables" class="md-nav__link">
+    3. Set up the environment variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-generate-a-kubeconfig-file" class="md-nav__link">
+    4. Generate a kubeconfig file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-generated-kubeconfig" class="md-nav__link">
+    Verify the generated kubeconfig
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/undistro/zora/edit/main/docs/target-cluster.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="prepare-the-target-cluster">Prepare the target cluster<a class="headerlink" href="#prepare-the-target-cluster" title="Permanent link">&para;</a></h1>
+<p>Follow this guide to create a service account and generate a kubeconfig file from a <a href="/glossary#target-cluster">target cluster</a>.
+These are the only steps required to be performed in the target cluster.</p>
+<p>For manual configuration, go to <a href="/target-cluster#manual-configuration">Manual Configuration</a>, otherwise proceed to <a href="/target-cluster#setup-script">Setup Script</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your target cluster is under a server proxy for external communication, like those present on platforms like <a href="https://www.rancher.com/">Rancher</a>, 
+we recommend generating a kubeconfig file through your own platform.</p>
+<p>Normally these platforms handle their own tokens instead of a service account token.</p>
+<p>Zora requires read-only access, as described <a href="#2-create-the-rbac-resources">here</a>.</p>
+</div>
+<h2 id="setup-script">Setup Script<a class="headerlink" href="#setup-script" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://zora.undistro.io/targetcluster.sh">script</a> is available to prepare a cluster, which can be executed by any POSIX compliant shell. </p>
+<p>The target cluster context can be set by exporting the <code>CONTEXT</code> variable or switching via <code>kubectl</code>, before running the script:</p>
+<p><div class="highlight"><pre><span></span><code>curl -q https://zora.undistro.io/targetcluster.sh | CONTEXT=&lt;TARGET_CONTEXT&gt; sh
+</code></pre></div>
+or
+<div class="highlight"><pre><span></span><code>kubectl config use-context &lt;TARGET_CONTEXT&gt;
+curl -q https://zora.undistro.io/targetcluster.sh | sh
+</code></pre></div></p>
+<p>By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with <code>-kubeconfig.yaml</code>.</p>
+<p>Before finishing, the script will show a command to <a href="/connect-cluster">connect the target cluster</a> through the generated kubeconfig, and save a sample <code>Cluster</code> manifest.</p>
+<p>A complete list of customizable environment variables can be seen on the table below.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Environment Variable</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>SVC_ACCOUNT_NS</code></td>
+<td align="left">Service Account namespace, defaults to <code>zora-system</code></td>
+</tr>
+<tr>
+<td align="left"><code>SVC_ACCOUNT_NAME</code></td>
+<td align="left">Service Account name, defaults to <code>zora-view</code></td>
+</tr>
+<tr>
+<td align="left"><code>CLUSTER_ROLE_NAME</code></td>
+<td align="left">Cluster Role name, defaults to <code>zora-view</code></td>
+</tr>
+<tr>
+<td align="left"><code>SVC_ACCOUNT_SECRET_NS</code></td>
+<td align="left">Service Account Secret namespace, defaults to the value of <code>SVC_ACCOUNT_NS</code></td>
+</tr>
+<tr>
+<td align="left"><code>SVC_ACCOUNT_SECRET_NAME</code></td>
+<td align="left">Service Account Secret name, defaults to the of value of <code>SVC_ACCOUNT_NAME</code> with the "-token" suffix</td>
+</tr>
+<tr>
+<td align="left"><code>KCONFIG_SECRET_NAME</code></td>
+<td align="left">Name of the displayed kubeconfig Secret, defaults to the value of <code>CLUSTER_NAME</code> with the "-kubeconfig" suffix</td>
+</tr>
+<tr>
+<td align="left"><code>TOKEN_NAME</code></td>
+<td align="left">Uses the value of <code>SVC_ACCOUNT_SECRET_NAME</code> or the one generated by K8s, according to the cluster version</td>
+</tr>
+<tr>
+<td align="left"><code>CONTEXT</code></td>
+<td align="left">K8s context, using the current one as default</td>
+</tr>
+<tr>
+<td align="left"><code>CLUSTER_NAME</code></td>
+<td align="left">Cluster name from the <code>CONTEXT</code> variable</td>
+</tr>
+<tr>
+<td align="left"><code>CLUSTER_NS</code></td>
+<td align="left">Cluster namespace used on the manifest sample, defaults to the value of <code>SVC_ACCOUNT_NS</code></td>
+</tr>
+<tr>
+<td align="left"><code>CLUSTER_CA</code></td>
+<td align="left">Cluster Certificate Authority, extracted according to <code>CONTEXT</code></td>
+</tr>
+<tr>
+<td align="left"><code>CLUSTER_SERVER</code></td>
+<td align="left">Cluster server address, extracted according to <code>CONTEXT</code></td>
+</tr>
+<tr>
+<td align="left"><code>KCONFIG_NAME</code></td>
+<td align="left">Name of the generated kubeconfig, defaulting to the value of <code>CONTEXT</code> plus the string "_kubeconfig.yaml"</td>
+</tr>
+<tr>
+<td align="left"><code>SAMPLE_MANIFEST_NAME</code></td>
+<td align="left">Name of the <code>Cluster</code> manifest sample, defaults to <code>cluster_sample.yaml</code> plus the K8s context as prefix</td>
+</tr>
+</tbody>
+</table>
+<p>The next instructions explain how to manually configure your target clusters.</p>
+<h2 id="manual-configuration">Manual Configuration<a class="headerlink" href="#manual-configuration" title="Permanent link">&para;</a></h2>
+<p>The target cluster can be configured through the steps described in the next sections.</p>
+<h3 id="1-access-the-target-cluster">1. Access the <a href="/glossary#target-cluster">target cluster</a><a class="headerlink" href="#1-access-the-target-cluster" title="Permanent link">&para;</a></h3>
+<p>First, make sure you are in the context of the <strong>target cluster</strong>.
+You can do this by the following commands:</p>
+<ul>
+<li>
+<p>Display list of contexts: <code>kubectl config get-contexts</code></p>
+</li>
+<li>
+<p>Display the current-context: <code>kubectl config current-context</code></p>
+</li>
+<li>
+<p>Set the default context to <strong>my-target-cluster</strong>: <code>kubectl config use-context my-target-cluster</code></p>
+</li>
+</ul>
+<h3 id="2-create-the-rbac-resources">2. Create the RBAC resources<a class="headerlink" href="#2-create-the-rbac-resources" title="Permanent link">&para;</a></h3>
+<p>Create the service account in a separate namespace and configure <code>view</code> permissions.
+The token generated by this service account will be used in the kubeconfig file.</p>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>You should create a separate service account in the target cluster to connect it to Zora. 
+This is required because the kubeconfig files generated by most cloud providers, 
+call CLI commands, such as <code>aws</code> or <code>gcloud</code>, those can’t be called by Zora.</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">kubectl create namespace zora-system</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">kubectl -n zora-system create serviceaccount zora-view</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">cat &lt;&lt; EOF | kubectl apply -f -</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterRole</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zora-view</span><span class="w"></span>
+<span class="nt">rules</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">configmaps</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">endpoints</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">limitranges</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodes</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persistentvolumes</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persistentvolumeclaims</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pods</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replicationcontrollers</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secrets</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serviceaccounts</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">services</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;apps&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">daemonsets</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployments</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">statefulsets</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replicasets</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;autoscaling&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">horizontalpodautoscalers</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;networking.k8s.io&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingresses</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networkpolicies</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;policy&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poddisruptionbudgets</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">podsecuritypolicies</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;rbac.authorization.k8s.io&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clusterroles</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clusterrolebindings</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">roles</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rolebindings</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;metrics.k8s.io&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pods</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodes</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">batch</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jobs</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cronjobs</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">admissionregistration.k8s.io</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validatingwebhookconfigurations</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mutatingwebhookconfigurations</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">EOF</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">kubectl create clusterrolebinding zora-view --clusterrole=zora-view --serviceaccount=zora-system:zora-view</span><span class="w"></span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Zora requires just view permissions of your target clusters.</p>
+</div>
+<h3 id="3-set-up-the-environment-variables">3. Set up the environment variables<a class="headerlink" href="#3-set-up-the-environment-variables" title="Permanent link">&para;</a></h3>
+<p>Set up the following environment variables based on the Kubernetes version of the target cluster.</p>
+<p>You can verify the version of your cluster by running:
+<div class="highlight"><pre><span></span><code>kubectl version
+</code></pre></div></p>
+<p>The <em>Server Version</em> is the version of Kubernetes your target cluster is running.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kubernetes prior to 1.24.0</label><label for="__tabbed_1_2">Kubernetes 1.24.0 or later</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">TOKEN_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl -n zora-system get serviceaccount zora-view -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.secrets[0].name}&#39;</span><span class="k">)</span>
+<span class="nb">export</span> <span class="nv">TOKEN_VALUE</span><span class="o">=</span><span class="k">$(</span>kubectl -n zora-system get secret <span class="si">${</span><span class="nv">TOKEN_NAME</span><span class="si">}</span> -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.token}&#39;</span> <span class="p">|</span> base64 --decode<span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CURRENT_CONTEXT</span><span class="o">=</span><span class="k">$(</span>kubectl config current-context<span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CURRENT_CLUSTER</span><span class="o">=</span><span class="k">$(</span>kubectl config view --raw -o<span class="o">=</span>go-template<span class="o">=</span><span class="s1">&#39;{{range .contexts}}{{if eq .name &quot;&#39;&#39;&#39;</span><span class="si">${</span><span class="nv">CURRENT_CONTEXT</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;&quot;}}{{ index .context &quot;cluster&quot; }}{{end}}{{end}}&#39;</span><span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CLUSTER_CA</span><span class="o">=</span><span class="k">$(</span>kubectl config view --raw -o<span class="o">=</span>go-template<span class="o">=</span><span class="s1">&#39;{{range .clusters}}{{if eq .name &quot;&#39;&#39;&#39;</span><span class="si">${</span><span class="nv">CURRENT_CLUSTER</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;&quot;}}&quot;{{with index .cluster &quot;certificate-authority-data&quot; }}{{.}}{{end}}&quot;{{ end }}{{ end }}&#39;</span><span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CLUSTER_SERVER</span><span class="o">=</span><span class="k">$(</span>kubectl config view --raw -o<span class="o">=</span>go-template<span class="o">=</span><span class="s1">&#39;{{range .clusters}}{{if eq .name &quot;&#39;&#39;&#39;</span><span class="si">${</span><span class="nv">CURRENT_CLUSTER</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;&quot;}}{{ .cluster.server }}{{end}}{{ end }}&#39;</span><span class="k">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">TOKEN_NAME</span><span class="o">=</span><span class="s2">&quot;zora-view-token&quot;</span>
+cat <span class="s">&lt;&lt; EOF | kubectl apply -f - </span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Secret</span>
+<span class="s">metadata:</span>
+<span class="s">    name: &quot;$TOKEN_NAME&quot;</span>
+<span class="s">    namespace: &quot;zora-system&quot;</span>
+<span class="s">    annotations:</span>
+<span class="s">        kubernetes.io/service-account.name: &quot;zora-view&quot;</span>
+<span class="s">type: kubernetes.io/service-account-token</span>
+<span class="s">EOF</span>
+<span class="nb">export</span> <span class="nv">TOKEN_VALUE</span><span class="o">=</span><span class="k">$(</span>kubectl -n zora-system get secret <span class="si">${</span><span class="nv">TOKEN_NAME</span><span class="si">}</span> -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.token}&#39;</span> <span class="p">|</span> base64 --decode<span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CURRENT_CONTEXT</span><span class="o">=</span><span class="k">$(</span>kubectl config current-context<span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CURRENT_CLUSTER</span><span class="o">=</span><span class="k">$(</span>kubectl config view --raw -o<span class="o">=</span>go-template<span class="o">=</span><span class="s1">&#39;{{range .contexts}}{{if eq .name &quot;&#39;&#39;&#39;</span><span class="si">${</span><span class="nv">CURRENT_CONTEXT</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;&quot;}}{{ index .context &quot;cluster&quot; }}{{end}}{{end}}&#39;</span><span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CLUSTER_CA</span><span class="o">=</span><span class="k">$(</span>kubectl config view --raw -o<span class="o">=</span>go-template<span class="o">=</span><span class="s1">&#39;{{range .clusters}}{{if eq .name &quot;&#39;&#39;&#39;</span><span class="si">${</span><span class="nv">CURRENT_CLUSTER</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;&quot;}}&quot;{{with index .cluster &quot;certificate-authority-data&quot; }}{{.}}{{end}}&quot;{{ end }}{{ end }}&#39;</span><span class="k">)</span>
+<span class="nb">export</span> <span class="nv">CLUSTER_SERVER</span><span class="o">=</span><span class="k">$(</span>kubectl config view --raw -o<span class="o">=</span>go-template<span class="o">=</span><span class="s1">&#39;{{range .clusters}}{{if eq .name &quot;&#39;&#39;&#39;</span><span class="si">${</span><span class="nv">CURRENT_CLUSTER</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;&quot;}}{{ .cluster.server }}{{end}}{{ end }}&#39;</span><span class="k">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="4-generate-a-kubeconfig-file">4. Generate a kubeconfig file<a class="headerlink" href="#4-generate-a-kubeconfig-file" title="Permanent link">&para;</a></h3>
+<p>Generate a file with kubeconfig data, based on the environment variables defined before:</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">cat &lt;&lt; EOF &gt; zora-view-kubeconfig.yml</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Config</span><span class="w"></span>
+<span class="nt">current-context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CURRENT_CONTEXT}</span><span class="w"></span>
+<span class="nt">contexts</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CURRENT_CONTEXT}</span><span class="w"></span>
+<span class="w">  </span><span class="nt">context</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cluster</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CURRENT_CONTEXT}</span><span class="w"></span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zora-view</span><span class="w"></span>
+<span class="nt">clusters</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CURRENT_CONTEXT}</span><span class="w"></span>
+<span class="w">  </span><span class="nt">cluster</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">certificate-authority-data</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLUSTER_CA}</span><span class="w"></span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLUSTER_SERVER}</span><span class="w"></span>
+<span class="nt">users</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zora-view</span><span class="w"></span>
+<span class="w">  </span><span class="nt">user</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TOKEN_VALUE}</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">EOF</span><span class="w"></span>
+</code></pre></div>
+<h3 id="verify-the-generated-kubeconfig">Verify the generated kubeconfig<a class="headerlink" href="#verify-the-generated-kubeconfig" title="Permanent link">&para;</a></h3>
+<p>These steps create a file in your current working directory called <code>zora-view-kubeconfig.yml</code>.
+The contents of this file are used in <a href="connect-cluster">the next guide</a> to connect this target cluster into Zora.</p>
+<p>Before using this kubeconfig, you can verify that it is functional by running:</p>
+<div class="highlight"><pre><span></span><code>kubectl --kubeconfig zora-view-kubeconfig.yml get all --all-namespaces
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../install/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Install" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Install
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../connect-cluster/" class="md-footer__link md-footer__link--next" aria-label="Next: Connect the target cluster to Zora" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Connect the target cluster to Zora
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant"], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
+      
+    
+  </body>
+</html>
