@@ -139,6 +139,12 @@ del-minikube:  ## Delete Minikube node.
 
 ##@ Documentation
 
+mike-publish:  ## Prepare a documentation version
+	cp -f charts/zora/README.md docs/helm-chart.md
+	cp -f charts/zora/values.yaml docs/values.yaml
+	mike deploy -u ${TAG} latest
+	rm -f docs/{helm-chart.md,values.yaml}
+
 helm-docs:  ## Generate documentation for helm charts
 	@docker run -it --rm \
 		-v ${PWD}:/helm-docs \

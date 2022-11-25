@@ -59,6 +59,5 @@ jobs:
       - name: Release documentation
         run: |
           cd main
-          cp $CHART_PATH/README.md docs/helm-chart.md
-          cp $CHART_PATH/values.yaml docs/values.yaml
-          mike deploy -pu ${GITHUB_REF_NAME%.*} latest
+          TAG=${GITHUB_REF_NAME%.*} make mike-publish
+          git push origin gh-pages
