@@ -90,7 +90,7 @@ docker-build: test  ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
 docker-build-all: docker-build  ## Build Docker images for all components.
 	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
-	${MAKE} IMG=server:${IMG_TAG} DOCKERFILE=Dockerfile.server docker-build
+	${MAKE} IMG=server:${TAG} DOCKERFILE=Dockerfile.server docker-build
 
 
 ##@ Deployment
