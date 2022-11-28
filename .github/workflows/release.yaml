@@ -1,4 +1,4 @@
-name: Publish Docker images and Helm chart
+name: Publish Docker images, Helm chart and documentation
 on:
   workflow_dispatch:
   push:
@@ -47,3 +47,17 @@ jobs:
           git status
           git diff-index --quiet HEAD || git commit -m "$COMMIT_MESSAGE"
           git push -u origin HEAD:main
+
+      - name: Add Mkdocs and Mike
+        run: pip install mkdocs-material mike
+
+      - name: Fetch Github Pages branch
+        run: |
+          cd main
+          git fetch origin gh-pages:gh-pages
+
+      - name: Release documentation
+        run: |
+          cd main
+          TAG=${GITHUB_REF_NAME%.*} make mike-publish
+          git push origin gh-pages

@@ -90,7 +90,7 @@ docker-build: test  ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
 docker-build-all: docker-build  ## Build Docker images for all components.
 	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
-	${MAKE} IMG=server:${IMG_TAG} DOCKERFILE=Dockerfile.server docker-build
+	${MAKE} IMG=server:${TAG} DOCKERFILE=Dockerfile.server docker-build
 
 
 ##@ Deployment
@@ -138,6 +138,12 @@ del-minikube:  ## Delete Minikube node.
 
 
 ##@ Documentation
+
+mike-publish:  ## Prepare a documentation version
+	cp -f charts/zora/README.md docs/helm-chart.md
+	cp -f charts/zora/values.yaml docs/values.yaml
+	mike deploy -u ${TAG} latest
+	rm -f docs/{helm-chart.md,values.yaml}
 
 helm-docs:  ## Generate documentation for helm charts
 	@docker run -it --rm \

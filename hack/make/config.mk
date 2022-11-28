@@ -1,7 +1,7 @@
 # Docker
-IMG_TAG ?= latest
-IMG ?= operator:${IMG_TAG}
-WORKER_IMG ?= worker:${IMG_TAG}
+TAG ?= latest
+IMG ?= operator:${TAG}
+WORKER_IMG ?= worker:${TAG}
 DOCKERFILE ?= Dockerfile
 
 # Commands
