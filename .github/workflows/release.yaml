@@ -1,0 +1,63 @@
+name: Publish Docker images, Helm chart and documentation
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+env:
+  CHARTS_REPOSITORY_PATH: charts.undistro.io
+  CHART_PATH: charts/zora
+  COMMIT_MESSAGE: "update zora chart"
+  GIT_USER: "undistro-bot"
+  GIT_EMAIL: "undistro-e2e@getupcloud.com"
+
+jobs:
+  docker:
+    uses: ./.github/workflows/docker.yaml
+    secrets: inherit
+  helm:
+    name: Update Helm repository
+    runs-on: ubuntu-latest
+    needs: [docker]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: main
+
+      - name: Checkout charts repository
+        uses: actions/checkout@v3
+        with:
+          repository: undistro/charts.undistro.io
+          ref: main
+          fetch-depth: 1
+          token: ${{ secrets.BOT_TOKEN }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
+          path: ${{ env.CHARTS_REPOSITORY_PATH }}
+
+      - name: Sync charts
+        run: rsync -avh --delete main/$CHART_PATH/ ${{ env.CHARTS_REPOSITORY_PATH }}/$CHART_PATH
+
+      - name: Commit and push
+        working-directory: ${{ env.CHARTS_REPOSITORY_PATH }}
+        run: |
+          git config --global user.email "$GIT_EMAIL"
+          git config --global user.name "$GIT_USER"
+          git add $CHART_PATH
+          git status
+          git diff-index --quiet HEAD || git commit -m "$COMMIT_MESSAGE"
+          git push -u origin HEAD:main
+
+      - name: Add Mkdocs and Mike
+        run: pip install mkdocs-material mike
+
+      - name: Fetch Github Pages branch
+        run: |
+          cd main
+          git fetch origin gh-pages:gh-pages
+
+      - name: Release documentation
+        run: |
+          cd main
+          TAG=${GITHUB_REF_NAME%.*} make mike-publish
+          git push origin gh-pages

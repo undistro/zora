@@ -5,6 +5,14 @@ These are the only steps required to be performed in the target cluster.
 
 For manual configuration, go to [Manual Configuration](/target-cluster#manual-configuration), otherwise proceed to [Setup Script](/target-cluster#setup-script).
 
+!!! note
+    If your target cluster is under a server proxy for external communication, like those present on platforms like [Rancher](https://www.rancher.com/), 
+    we recommend generating a kubeconfig file through your own platform.
+
+    Normally these platforms handle their own tokens instead of a service account token.
+    
+    Zora requires read-only access, as described [here](#2-create-the-rbac-resources).
+
 
 ## Setup Script
 
@@ -41,8 +49,8 @@ A complete list of customizable environment variables can be seen on the table b
 | `CLUSTER_NS`				| Cluster namespace used on the manifest sample, defaults to the value of `SVC_ACCOUNT_NS` |
 | `CLUSTER_CA`				| Cluster Certificate Authority, extracted according to `CONTEXT` |
 | `CLUSTER_SERVER`			| Cluster server address, extracted according to `CONTEXT` |
-| `KCONFIG_NAME`			| Name of the generated kubeconfig, defaulting to the value of `CONTEXT` plus the string "-kubeconfig.yaml" |
-| `SAMPLE_MANIFEST_NAME` 	| Name of the `Cluster` manifest sample, defaults to `cluster_sample.yaml` |
+| `KCONFIG_NAME`			| Name of the generated kubeconfig, defaulting to the value of `CONTEXT` plus the string "_kubeconfig.yaml" |
+| `SAMPLE_MANIFEST_NAME` 	| Name of the `Cluster` manifest sample, defaults to `cluster_sample.yaml` plus the K8s context as prefix |
 
 The next instructions explain how to manually configure your target clusters.
 

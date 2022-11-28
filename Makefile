@@ -71,7 +71,7 @@ clientset-gen:  ## Generate clientset
 		-e GROUPS_VERSION="zora:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
 		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		registry.undistro.io/quay/slok/kube-code-generator:v1.23.0
+		quay.io/slok/kube-code-generator:v1.23.0
 
 
 ##@ Build and Execution
@@ -90,7 +90,7 @@ docker-build: test  ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
 docker-build-all: docker-build  ## Build Docker images for all components.
 	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
-	${MAKE} IMG=server:${IMG_TAG} DOCKERFILE=Dockerfile.server docker-build
+	${MAKE} IMG=server:${TAG} DOCKERFILE=Dockerfile.server docker-build
 
 
 ##@ Deployment
@@ -139,10 +139,16 @@ del-minikube:  ## Delete Minikube node.
 
 ##@ Documentation
 
+mike-publish:  ## Prepare a documentation version
+	cp -f charts/zora/README.md docs/helm-chart.md
+	cp -f charts/zora/values.yaml docs/values.yaml
+	mike deploy -u ${TAG} latest
+	rm -f docs/{helm-chart.md,values.yaml}
+
 helm-docs:  ## Generate documentation for helm charts
 	@docker run -it --rm \
 		-v ${PWD}:/helm-docs \
-		registry.undistro.io/dockerhub/jnorwood/helm-docs:v1.8.1 \
+		jnorwood/helm-docs:v1.8.1 \
 		helm-docs -s=file --badge-style="flat-square&color=38C794"
 
 preview-docs: helm-docs  ## Run a server to preview the documentation

@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.3.9](https://img.shields.io/badge/Version-0.3.9-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.3.9](https://img.shields.io/badge/AppVersion-v0.3.9-informational?style=flat-square&color=38C794)
+![Version: 0.3.10](https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.3.10](https://img.shields.io/badge/AppVersion-v0.3.10-informational?style=flat-square&color=38C794)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -9,12 +9,16 @@ Zora scans multiple Kubernetes clusters and reports potential issues.
 To install the chart with the release name `zora`:
 
 ```console
-helm repo add undistro https://registry.undistro.io/chartrepo/library
+helm repo add undistro https://charts.undistro.io --force-update
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.3.9 \
+  --version 0.3.10 \
   --create-namespace --wait
 ```
+
+> The Helm chart repository has been updated from `https://registry.undistro.io/chartrepo/library` to `https://charts.undistro.io`.
+>
+> The `--force-update` flag is needed to update the repository URL.
 
 These commands deploy Zora on the Kubernetes cluster in the default configuration.
 
@@ -51,7 +55,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
 | imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
-| imageCredentials.registry | string | `"registry.undistro.io"` | Docker registry host |
+| imageCredentials.registry | string | `"ghcr.io"` | Docker registry host |
 | imageCredentials.username | string | `""` | Docker registry username |
 | imageCredentials.password | string | `""` | Docker registry password |
 | imagePullSecrets | list | `[]` | Specify docker-registry secret names as an array to be used when `imageCredentials.create` is false |
@@ -63,7 +67,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | ingress.ui | object | `{"path":"/","pathType":"ImplementationSpecific"}` | `path` and `pathType` of UI in ingress rule. `path` pattern may vary according ingress controller (`/*` for GCE, `/.*` for NCP) |
 | ingress.tlsSecretName | string | `""` | The name of secret which contains keys named: `tls.crt` - the certificate; `tls.key` - the private key |
 | operator.replicaCount | int | `1` | Number of replicas desired of Zora operator |
-| operator.image.repository | string | `"registry.undistro.io/library/zora-operator"` | Zora operator image repository |
+| operator.image.repository | string | `"ghcr.io/undistro/zora/operator"` | Zora operator image repository |
 | operator.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | operator.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbac.create | bool | `true` | Specifies whether ClusterRoles and ClusterRoleBindings should be created |
@@ -77,7 +81,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.metricsService.port | int | `8443` | Port of metrics service |
 | operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
 | operator.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container |
-| operator.rbacProxy.image.repository | string | `"registry.undistro.io/gcr/kubebuilder/kube-rbac-proxy"` | `kube-rbac-proxy` image repository |
+| operator.rbacProxy.image.repository | string | `"gcr.io/kubebuilder/kube-rbac-proxy"` | `kube-rbac-proxy` image repository |
 | operator.rbacProxy.image.tag | string | `"v0.8.0"` | `kube-rbac-proxy` image tag |
 | operator.rbacProxy.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbacProxy.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container |
@@ -91,7 +95,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | server.enabled | bool | `true` | Toggles server deployment |
 | server.replicaCount | int | `1` | Number of replicas desired of Zora server |
-| server.image.repository | string | `"registry.undistro.io/library/zora-server"` | Zora server image repository |
+| server.image.repository | string | `"ghcr.io/undistro/zora/server"` | Zora server image repository |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | server.rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
@@ -118,7 +122,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | server.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | ui.enabled | bool | `true` | Toggles UI deployment |
 | ui.replicaCount | int | `1` | Number of replicas desired of Zora UI |
-| ui.image.repository | string | `"registry.undistro.io/library/zora-ui"` | Zora UI image repository |
+| ui.image.repository | string | `"ghcr.io/undistro/zora/ui"` | Zora UI image repository |
 | ui.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | ui.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | ui.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -139,7 +143,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | ui.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | ui.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | nginx.replicaCount | int | `1` | Number of replicas desired of nginx |
-| nginx.image.repository | string | `"registry.undistro.io/dockerhub/library/nginx"` | NGINX image repository |
+| nginx.image.repository | string | `"nginx"` | NGINX image repository |
 | nginx.image.tag | string | `"1.20.2-alpine"` | NGINX image tag |
 | nginx.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | nginx.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -159,12 +163,12 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nginx.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
 | nginx.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
 | nginx.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
-| scan.worker.image.repository | string | `"registry.undistro.io/library/zora-worker"` | worker image repository |
+| scan.worker.image.repository | string | `"ghcr.io/undistro/zora/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
-| scan.plugins.popeye.image.repository | string | `"registry.undistro.io/dockerhub/derailed/popeye"` | popeye plugin image repository |
+| scan.plugins.popeye.image.repository | string | `"derailed/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"v0.10.0"` | popeye plugin image tag |
-| scan.plugins.kubescape.image.repository | string | `"registry.undistro.io/quay/armosec/kubescape"` | kubescape plugin image repository |
+| scan.plugins.kubescape.image.repository | string | `"quay.io/armosec/kubescape"` | kubescape plugin image repository |
 | scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
