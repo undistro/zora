@@ -28,7 +28,6 @@ COPY cmd/server/main.go cmd/server/main.go
 COPY apis/ apis/
 COPY pkg/ pkg/
 COPY handlers/ handlers/
-COPY payloads/ payloads/
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o server cmd/server/main.go
