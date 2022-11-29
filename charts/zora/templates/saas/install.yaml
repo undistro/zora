@@ -30,12 +30,12 @@ spec:
     runAsGroup: 1000
   containers:
     - name: curl
-      image: registry.undistro.io/dockerhub/radial/busyboxplus:curl
+      image: {{ .Values.saas.hooks.image.repository }}:{{ .Values.saas.hooks.image.tag }}
       command:
         - sh
         - -xc
         - |
-          curl -kfsS -X POST '{{ tpl .Values.saas.installHookURL . }}' \
+          curl -kfsS -X POST '{{ tpl .Values.saas.hooks.installURL . }}' \
             -H 'content-type: application/json' \
             -d '{{ toJson (dict
               "kubeVersion" .Capabilities.KubeVersion.GitVersion

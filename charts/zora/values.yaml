@@ -144,4 +144,8 @@ scan:
 saas:
   accountID: ""
   server: "https://saas-hml.undistro.io"
-  installHookURL: "{{.Values.saas.server}}/zora/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"
+  hooks:
+    image:
+      repository: radial/busyboxplus
+      tag: curl
+    installURL: "{{.Values.saas.server}}/zora/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"
