@@ -17,6 +17,20 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+saas:
+  # -- Your SaaS account ID
+  accountID: ""
+  # -- SaaS server URL
+  server: "https://saas-hml.undistro.io"
+  hooks:
+    image:
+      # -- SaaS hooks image repository
+      repository: radial/busyboxplus
+      # -- SaaS hooks image tag
+      tag: curl
+    # -- SaaS install hook URL
+    installURL: "{{.Values.saas.server}}/zora/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"
+
 # Credentials for private registries.
 imageCredentials:
   # -- Specifies whether the secret should be created by providing credentials
@@ -140,12 +154,3 @@ scan:
         repository: quay.io/armosec/kubescape
         # -- kubescape plugin image tag
         tag: v2.0.163
-
-saas:
-  accountID: ""
-  server: "https://saas-hml.undistro.io"
-  hooks:
-    image:
-      repository: radial/busyboxplus
-      tag: curl
-    installURL: "{{.Values.saas.server}}/zora/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"
