@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	accountPathF = "api/%s/accounts/%s"
+	accountPathF = "zora/api/%s/accounts/%s"
 	clusterPathF = "namespaces/%s/clusters/%s"
 )
 
