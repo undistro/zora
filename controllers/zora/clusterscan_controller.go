@@ -232,6 +232,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
 		pluginStatus.Suspend = *cronJob.Spec.Suspend
+		pluginStatus.Schedule = cronJob.Spec.Schedule
+
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {
