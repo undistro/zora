@@ -217,12 +217,14 @@ type PluginScanStatus struct {
 	// LastErrorMsg contains a plugin error message from the last failed scan.
 	LastErrorMsg string `json:"lastErrorMsg,omitempty"`
 
-	// IssueCount holds the sum of ClusterIssues found in the last successful
-	// scan.
+	// IssueCount holds the sum of ClusterIssues found in the last successful scan.
 	IssueCount *int `json:"issueCount,omitempty"`
 
 	// Suspend field value from ClusterScan spec.plugins.*.suspend
 	Suspend bool `json:"suspend,omitempty"`
+
+	// The Cron schedule of this plugin
+	Schedule string `json:"schedule,omitempty"`
 }
 
 //+kubebuilder:object:root=true
