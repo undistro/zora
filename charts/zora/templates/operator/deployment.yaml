@@ -74,7 +74,7 @@ spec:
             - --worker-image={{ printf "%s:%s" .Values.scan.worker.image.repository (.Values.scan.worker.image.tag | default .Chart.AppVersion) }}
             - --cronjob-clusterrolebinding-name=zora-plugins
             - --cronjob-serviceaccount-name=zora-plugins
-            - --saas-account-id={{ .Values.saas.accountID }}
+            - --saas-workspace-id={{ .Values.saas.workspaceID }}
             - --saas-server={{ .Values.saas.server }}
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}

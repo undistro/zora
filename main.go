@@ -59,7 +59,7 @@ func main() {
 	var workerImage string
 	var cronJobClusterRoleBinding string
 	var cronJobServiceAccount string
-	var saasAccountID string
+	var saasWorkspaceID string
 	var saasServer string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
@@ -72,7 +72,7 @@ func main() {
 	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:v0.4.0-alpha1", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
-	flag.StringVar(&saasAccountID, "saas-account-id", "", "Your account ID in Zora SaaS")
+	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
 	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
 
 	opts := zap.Options{
@@ -99,13 +99,13 @@ func main() {
 
 	var onClusterUpdate, onClusterDelete saas.ClusterHook
 	var onClusterScanUpdate, onClusterScanDelete saas.ClusterScanHook
-	if saasAccountID != "" {
-		saasClient, err := saas.NewClient(saasServer, "v1alpha1", saasAccountID, http.DefaultClient)
+	if saasWorkspaceID != "" {
+		saasClient, err := saas.NewClient(saasServer, "v1alpha1", saasWorkspaceID, http.DefaultClient)
 		if err != nil {
-			setupLog.Error(err, "unable to create SaaS client", "accountID", saasAccountID)
+			setupLog.Error(err, "unable to create SaaS client", "workspaceID", saasWorkspaceID)
 			os.Exit(1)
 		}
-		setupLog.Info("registering SaaS hooks on reconcilers", "accountID", saasAccountID)
+		setupLog.Info("registering SaaS hooks on reconcilers", "workspaceID", saasWorkspaceID)
 		onClusterUpdate = saas.UpdateClusterHook(saasClient)
 		onClusterDelete = saas.DeleteClusterHook(saasClient)
 		onClusterScanUpdate = saas.UpdateClusterScanHook(saasClient, mgr.GetClient())

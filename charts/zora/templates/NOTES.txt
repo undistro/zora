@@ -3,7 +3,7 @@
   For in-depth information about how to connect a cluster, visit
     https://zora.undistro.io/
 
-{{- if .Values.saas.accountID }}
+{{- if .Values.saas.workspaceID }}
 2. Now you can see your clusters and issues in the SaaS:
      {{ .Values.saas.server }}
 {{- end }}

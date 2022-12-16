@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	accountPathF = "zora/api/%s/accounts/%s"
-	clusterPathF = "namespaces/%s/clusters/%s"
+	workspacePathF = "zora/api/%s/workspaces/%s"
+	clusterPathF   = "namespaces/%s/clusters/%s"
 )
 
 var allowedStatus = []int{
@@ -46,23 +46,23 @@ type Client interface {
 }
 
 type client struct {
-	client    *http.Client
-	baseURL   *url.URL
-	accountID string
-	version   string
+	client      *http.Client
+	baseURL     *url.URL
+	workspaceID string
+	version     string
 }
 
-func NewClient(baseURL, version, accountID string, httpclient *http.Client) (Client, error) {
+func NewClient(baseURL, version, workspaceID string, httpclient *http.Client) (Client, error) {
 	u, err := validateURL(baseURL)
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path.Join(u.Path, fmt.Sprintf(accountPathF, version, accountID))
+	u.Path = path.Join(u.Path, fmt.Sprintf(workspacePathF, version, workspaceID))
 	return &client{
-		version:   version,
-		baseURL:   u,
-		accountID: accountID,
-		client:    httpclient,
+		version:     version,
+		baseURL:     u,
+		workspaceID: workspaceID,
+		client:      httpclient,
 	}, nil
 }
 
