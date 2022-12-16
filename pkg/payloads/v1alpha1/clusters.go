@@ -82,9 +82,10 @@ type Resource struct {
 }
 
 type ScanStatus struct {
-	Status  ScanStatusType `json:"status"`
-	Message string         `json:"message"`
-	Suspend bool           `json:"suspend"`
+	Status   ScanStatusType `json:"status"`
+	Message  string         `json:"message"`
+	Suspend  bool           `json:"suspend"`
+	Schedule string         `json:"schedule"`
 }
 
 type ConnectionStatus struct {
@@ -181,6 +182,7 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 				}
 			}
 			pluginStatus[p].Scan.Suspend = s.Suspend
+			pluginStatus[p].Scan.Schedule = s.Schedule
 
 			if s.IssueCount != nil {
 				if pluginStatus[p].IssueCount == nil {
