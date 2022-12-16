@@ -19,7 +19,4 @@ metadata:
 spec:
   clusterRef:
     name: mycluster
-  schedule:
-    hourlyRep: 1
-    daysOfWeek: []
-    startTime: "15:04"
+  schedule: "*/2 * * * *"

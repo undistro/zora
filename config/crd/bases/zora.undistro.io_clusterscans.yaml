@@ -35,6 +35,9 @@ spec:
     - jsonPath: .spec.clusterRef.name
       name: Cluster
       type: string
+    - jsonPath: .spec.schedule
+      name: Schedule
+      type: string
     - jsonPath: .status.suspend
       name: Suspend
       type: boolean
@@ -59,18 +62,6 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    - jsonPath: .spec.schedule.hourlyRep
-      name: Hourly Repetition
-      priority: 1
-      type: string
-    - jsonPath: .spec.schedule.daysOfWeek
-      name: Days Of Week
-      priority: 1
-      type: string
-    - jsonPath: .spec.schedule.startTime
-      name: Start Time
-      priority: 1
-      type: string
     - jsonPath: .status.nextScheduleTime
       name: Next Schedule
       priority: 1
@@ -240,34 +231,9 @@ spec:
                         name must be unique.
                       type: string
                     schedule:
-                      description: Schedule contains scan repetition and start time
-                        data.
-                      properties:
-                        daysOfWeek:
-                          description: DaysOfWeek stores the days of week in which
-                            the scan will execute. An empty array indicates the entire
-                            week.
-                          items:
-                            description: DayOfWeek represents the days of week, from
-                              Sunday to Saturday.
-                            maximum: 6
-                            minimum: 0
-                            type: integer
-                          maxItems: 7
-                          type: array
-                        hourlyRep:
-                          description: HourlyRep contains the hourly rate by which
-                            the scan will repeat.
-                          maximum: 23
-                          minimum: 0
-                          type: integer
-                        startTime:
-                          description: StartTime holds the hour and minute in which
-                            the scan will start on its first execution. The time should
-                            be specified in UTC.
-                          pattern: ^(2[0-3]|[0-1]?[0-9]):[0-5]?[0-9]$
-                          type: string
-                      type: object
+                      description: The schedule in Cron format for this Plugin, see
+                        https://en.wikipedia.org/wiki/Cron.
+                      type: string
                     suspend:
                       description: This flag tells the controller to suspend subsequent
                         executions, it does not apply to already started executions.  Defaults
@@ -278,32 +244,8 @@ spec:
                   type: object
                 type: array
               schedule:
-                description: Schedule contains scan repetition and start time data.
-                properties:
-                  daysOfWeek:
-                    description: DaysOfWeek stores the days of week in which the scan
-                      will execute. An empty array indicates the entire week.
-                    items:
-                      description: DayOfWeek represents the days of week, from Sunday
-                        to Saturday.
-                      maximum: 6
-                      minimum: 0
-                      type: integer
-                    maxItems: 7
-                    type: array
-                  hourlyRep:
-                    description: HourlyRep contains the hourly rate by which the scan
-                      will repeat.
-                    maximum: 23
-                    minimum: 0
-                    type: integer
-                  startTime:
-                    description: StartTime holds the hour and minute in which the
-                      scan will start on its first execution. The time should be specified
-                      in UTC.
-                    pattern: ^(2[0-3]|[0-1]?[0-9]):[0-5]?[0-9]$
-                    type: string
-                type: object
+                description: The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
+                type: string
               successfulScansHistoryLimit:
                 default: 3
                 description: SuccessfulScansHistoryLimit specifies the amount of successfully

@@ -15,11 +15,8 @@
 package v1alpha1
 
 import (
-	"fmt"
 	"sort"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/undistro/zora/pkg/apis"
 	batchv1 "k8s.io/api/batch/v1"
@@ -27,27 +24,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
-
-// DayOfWeek represents the days of week, from Sunday to Saturday.
-// +kubebuilder:validation:Minimum=0
-// +kubebuilder:validation:Maximum=6
-type DayOfWeek int
-
-// Schedule represents a scan timetable with repetition and start time data.
-type Schedule struct {
-	// HourlyRep contains the hourly rate by which the scan will repeat.
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=23
-	HourlyRep int `json:"hourlyRep,omitempty"`
-	// DaysOfWeek stores the days of week in which the scan will execute. An
-	// empty array indicates the entire week.
-	// +kubebuilder:validation:MaxItems=7
-	DaysOfWeek []DayOfWeek `json:"daysOfWeek,omitempty"`
-	// StartTime holds the hour and minute in which the scan will start on its
-	// first execution. The time should be specified in UTC.
-	// +kubebuilder:validation:Pattern=`^(2[0-3]|[0-1]?[0-9]):[0-5]?[0-9]$`
-	StartTime *string `json:"startTime,omitempty"`
-}
 
 // ClusterScanSpec defines the desired state of ClusterScan
 type ClusterScanSpec struct {
@@ -58,8 +34,8 @@ type ClusterScanSpec struct {
 	// not apply to already started executions.  Defaults to false.
 	Suspend *bool `json:"suspend,omitempty"`
 
-	// Schedule contains scan repetition and start time data.
-	Schedule *Schedule `json:"schedule"`
+	// The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
+	Schedule string `json:"schedule"`
 
 	// The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
 	Plugins []PluginReference `json:"plugins,omitempty"`
@@ -90,8 +66,8 @@ type PluginReference struct {
 	// not apply to already started executions.  Defaults to false.
 	Suspend *bool `json:"suspend,omitempty"`
 
-	// Schedule contains scan repetition and start time data.
-	Schedule *Schedule `json:"schedule,omitempty"`
+	// The schedule in Cron format for this Plugin, see https://en.wikipedia.org/wiki/Cron.
+	Schedule string `json:"schedule,omitempty"`
 
 	// List of environment variables to set in the Plugin container.
 	Env []corev1.EnvVar `json:"env,omitempty"`
@@ -253,6 +229,7 @@ type PluginScanStatus struct {
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:shortName="cscan"
 //+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".spec.clusterRef.name",priority=0
+//+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
 //+kubebuilder:printcolumn:name="Plugins",type="string",JSONPath=".status.pluginNames",priority=0
 //+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastStatus",priority=0
@@ -261,9 +238,6 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
-//+kubebuilder:printcolumn:name="Hourly Repetition",type="string",JSONPath=".spec.schedule.hourlyRep",priority=1
-//+kubebuilder:printcolumn:name="Days Of Week",type="string",JSONPath=".spec.schedule.daysOfWeek",priority=1
-//+kubebuilder:printcolumn:name="Start Time",type="string",JSONPath=".spec.schedule.startTime",priority=1
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
 // ClusterScan is the Schema for the clusterscans API
@@ -303,84 +277,6 @@ type ClusterScanList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClusterScan `json:"items"`
-}
-
-// SplitStartTime returns the hour and minute of the Schedule's start time
-// entry, as integers. In case the field is not set or the receiver, it'll
-// return the current hour and minute.
-func (r *Schedule) SplitStartTime() (int, int) {
-	if r == nil || r.StartTime == nil || len(*r.StartTime) == 0 {
-		now := time.Now().UTC()
-		return now.Hour(), now.Minute()
-	}
-	tslice := strings.Split(*r.StartTime, ":")
-	res := [2]int{0, 0}
-	for c := 0; c < len(tslice); c++ {
-		i, err := strconv.Atoi(tslice[c])
-		if err != nil {
-			i = 0
-		}
-		res[c] = i
-	}
-	return res[0], res[1]
-}
-
-// HourlyRepSeries returns the scan's hourly scheduling formatted as the hour
-// field of a Cron expression. If the receiver is nil, it'll return an empty
-// string.
-func (r *Schedule) HourlyRepSeries() string {
-	if r == nil {
-		return ""
-	}
-	if r.HourlyRep == 1 {
-		return "*"
-	}
-	h, _ := r.SplitStartTime()
-	if r.HourlyRep == 0 {
-		return strconv.Itoa(h)
-	}
-
-	reps := ""
-	for c := h % r.HourlyRep; c <= 23; c += r.HourlyRep {
-		reps += fmt.Sprintf("%d", c)
-		if c+r.HourlyRep <= 23 {
-			reps = fmt.Sprintf("%s,", reps)
-		}
-	}
-	return reps
-}
-
-// DayOfWeekSeries prepares the days of week in which the scan will execute
-// formatted as the week field of a Cron expression. If the receiver is nil,
-// it'll return an empty string.
-func (r *Schedule) DayOfWeekSeries() string {
-	if r == nil {
-		return ""
-	}
-	if len(r.DaysOfWeek) == 0 {
-		return "*"
-	}
-
-	uniq := map[int]struct{}{}
-	for c := 0; c < len(r.DaysOfWeek); c++ {
-		uniq[int(r.DaysOfWeek[c])] = struct{}{}
-	}
-	dow := []string{}
-	for d, _ := range uniq {
-		dow = append(dow, strconv.Itoa(d))
-	}
-	sort.Strings(dow)
-	return strings.Join(dow, ",")
-}
-
-// CronExpr transforms the scan schedule data on a Cron expression. If the
-// receiver is nil, it'll return an empty string.
-func (r *Schedule) CronExpr() string {
-	if r == nil {
-		return ""
-	}
-	_, m := r.SplitStartTime()
-	return fmt.Sprintf("%d %s * * %s", m, r.HourlyRepSeries(), r.DayOfWeekSeries())
 }
 
 func init() {

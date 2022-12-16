@@ -36,9 +36,7 @@ metadata:
 spec:
   clusterRef:
     name: mycluster
-  schedule:
-    hourlyRep: 1
-    startTime: "0:45"
+  schedule: "45 * * * *"
 status:
   conditions:
     - type: Ready
