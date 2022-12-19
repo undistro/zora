@@ -18,8 +18,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 saas:
-  # -- Your SaaS account ID
-  accountID: ""
+  # -- Your SaaS workspace ID
+  workspaceID: ""
   # -- SaaS server URL
   server: "https://saas-hml.undistro.io"
   hooks:
@@ -29,7 +29,7 @@ saas:
       # -- SaaS hooks image tag
       tag: curl
     # -- SaaS install hook URL
-    installURL: "{{.Values.saas.server}}/zora/api/v1/accounts/{{.Values.saas.accountID}}/helmreleases"
+    installURL: "{{.Values.saas.server}}/zora/api/v1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
 
 # Credentials for private registries.
 imageCredentials:
