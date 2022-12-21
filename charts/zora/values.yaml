@@ -29,7 +29,7 @@ saas:
       # -- SaaS hooks image tag
       tag: curl
     # -- SaaS install hook URL
-    installURL: "{{.Values.saas.server}}/zora/api/v1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
+    installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
 
 # Credentials for private registries.
 imageCredentials:
