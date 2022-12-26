@@ -56,6 +56,7 @@ type PluginStatus struct {
 	LastSuccessfulScanTime *metav1.Time     `json:"lastSuccessfulScanTime"`
 	LastFinishedScanTime   *metav1.Time     `json:"lastFinishedScanTime"`
 	NextScheduleScanTime   *metav1.Time     `json:"nextScheduleScanTime"`
+	Schedule               string           `json:"schedule"`
 }
 
 type NsName struct {
@@ -82,10 +83,9 @@ type Resource struct {
 }
 
 type ScanStatus struct {
-	Status   ScanStatusType `json:"status"`
-	Message  string         `json:"message"`
-	Suspend  bool           `json:"suspend"`
-	Schedule string         `json:"schedule"`
+	Status  ScanStatusType `json:"status"`
+	Message string         `json:"message"`
+	Suspend bool           `json:"suspend"`
 }
 
 type ConnectionStatus struct {
@@ -182,7 +182,7 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 				}
 			}
 			pluginStatus[p].Scan.Suspend = s.Suspend
-			pluginStatus[p].Scan.Schedule = s.Schedule
+			pluginStatus[p].Schedule = s.Schedule
 
 			if s.IssueCount != nil {
 				if pluginStatus[p].IssueCount == nil {
