@@ -41,6 +41,9 @@ theme:
     - navigation.instant
 plugins:
   - search
+  - mike:
+      version_selector: true
+
 markdown_extensions:
   - admonition
   - toc:
@@ -48,6 +51,9 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+extra:
+  version:
+    provider: mike
 
 nav:
   - Documentation:

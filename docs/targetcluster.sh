@@ -241,7 +241,7 @@ metadata:
   namespace: $CLUSTER_NS
 spec:
   kubeconfigRef:
-	name: $KCONFIG_SECRET_NAME 
+    name: $KCONFIG_SECRET_NAME
 EOF
 }
 
@@ -257,7 +257,7 @@ CONTEXT=${CONTEXT:-"$(get_current_context)"}
 setup_namespaces
 setup_svc_account
 
-if kubectl --context $CONTEXT version --short | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
+if kubectl --context $CONTEXT version --short 2> /dev/null | awk '/Server/{if ($3 < "1.24.0") {exit 1}}'; then
   setup_svc_account_secret
   TOKEN_NAME=${TOKEN_NAME:-"$SVC_ACCOUNT_SECRET_NAME"}
 else
@@ -270,15 +270,15 @@ CLUSTER_CA=${CLUSTER_CA:-"$(get_cluster_ca)"}
 CLUSTER_SERVER=${CLUSTER_SERVER:-"$(get_cluster_server)"}
 
 CLUSTER_NS=${CLUSTER_NS:-$SVC_ACCOUNT_NS}
-KCONFIG_NAME=${KCONFIG_NAME:-"$CONTEXT-kubeconfig.yaml"}
+KCONFIG_NAME=${KCONFIG_NAME:-"${CONTEXT}_kubeconfig.yaml"}
 KCONFIG_SECRET_NAME=${KCONFIG_SECRET_NAME:-"$CLUSTER_NAME-kubeconfig"}
-SAMPLE_MANIFEST_NAME=${SAMPLE_MANIFEST_NAME:-"cluster_sample.yaml"}
+SAMPLE_MANIFEST_NAME=${SAMPLE_MANIFEST_NAME:-"${CONTEXT}_cluster_sample.yaml"}
 setup_cluster_role
 setup_cluster_role_binding
 create_kubeconfig
 
 echo
 show_generated_kconfig_name
-show_kconfig_creation_cmd
 create_cluster_sample
 show_cluster_sample_name
+show_kconfig_creation_cmd

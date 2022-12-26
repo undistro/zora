@@ -1,6 +1,7 @@
 {{- $release := "zora" -}}
 {{- $namespace := "zora-system" -}}
-{{- $repoURL := "https://registry.undistro.io/chartrepo/library" -}}
+{{- $repoURL := "https://charts.undistro.io" -}}
+{{- $oldRepoURL := "https://registry.undistro.io/chartrepo/library" -}}
 {{- $repoName := "undistro" -}}
 {{- $title := .Name | title -}}
 # {{ $title }} Helm Chart
@@ -16,13 +17,17 @@
 To install the chart with the release name `{{ $release }}`:
 
 ```console
-helm repo add {{ $repoName }} {{ $repoURL }}
+helm repo add {{ $repoName }} {{ $repoURL }} {{ if $oldRepoURL }}--force-update{{ end }}
 helm upgrade --install {{ $release }} {{ $repoName }}/{{ template "chart.name" . }} \
   -n {{ $namespace }} \
   --version {{ template "chart.version" . }} \
   --create-namespace --wait
 ```
-
+{{ if $oldRepoURL }}
+> The Helm chart repository has been updated from `{{ $oldRepoURL }}` to `{{ $repoURL }}`.
+>
+> The `--force-update` flag is needed to update the repository URL.
+{{ end }}
 These commands deploy {{ $title }} on the Kubernetes cluster in the default configuration.
 
 The [Parameters](#parameters) section lists the parameters that can be configured during installation.

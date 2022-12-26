@@ -5,6 +5,6 @@
 +  labels:
 +    {{- include "zora.labels" . | nindent 4 }}
  spec:
--  image: registry.undistro.io/quay/armosec/kubescape:v2.0.163
+-  image: quay.io/armosec/kubescape:v2.0.163
 +  image: "{{ .Values.scan.plugins.kubescape.image.repository }}:{{ .Values.scan.plugins.kubescape.image.tag }}"
    env:
