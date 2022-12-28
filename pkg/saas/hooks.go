@@ -23,25 +23,25 @@ import (
 	ctrlClient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type ClusterHook func(ctx context.Context, cluster v1alpha1.Cluster) error
+type ClusterHook func(ctx context.Context, cluster *v1alpha1.Cluster) error
 
-type ClusterScanHook func(ctx context.Context, clusterScan v1alpha1.ClusterScan) error
+type ClusterScanHook func(ctx context.Context, clusterScan *v1alpha1.ClusterScan) error
 
 func UpdateClusterHook(saasClient Client) ClusterHook {
-	return func(ctx context.Context, cluster v1alpha1.Cluster) error {
-		cl := payloads.NewCluster(cluster)
+	return func(ctx context.Context, cluster *v1alpha1.Cluster) error {
+		cl := payloads.NewCluster(*cluster)
 		return saasClient.PutCluster(ctx, cl)
 	}
 }
 
 func DeleteClusterHook(saasClient Client) ClusterHook {
-	return func(ctx context.Context, cluster v1alpha1.Cluster) error {
+	return func(ctx context.Context, cluster *v1alpha1.Cluster) error {
 		return saasClient.DeleteCluster(ctx, cluster.Namespace, cluster.Name)
 	}
 }
 
 func UpdateClusterScanHook(saasClient Client, c ctrlClient.Client) ClusterScanHook {
-	return func(ctx context.Context, clusterScan v1alpha1.ClusterScan) error {
+	return func(ctx context.Context, clusterScan *v1alpha1.ClusterScan) error {
 		scanList, err := getClusterScans(ctx, c, clusterScan.Namespace, clusterScan.Spec.ClusterRef.Name)
 		if err != nil {
 			return err
@@ -51,7 +51,7 @@ func UpdateClusterScanHook(saasClient Client, c ctrlClient.Client) ClusterScanHo
 }
 
 func DeleteClusterScanHook(saasClient Client, c ctrlClient.Client) ClusterScanHook {
-	return func(ctx context.Context, clusterScan v1alpha1.ClusterScan) error {
+	return func(ctx context.Context, clusterScan *v1alpha1.ClusterScan) error {
 		clusterName := clusterScan.Spec.ClusterRef.Name
 		scanList, err := getClusterScans(ctx, c, clusterScan.Namespace, clusterName)
 		if err != nil {
@@ -75,7 +75,7 @@ func getClusterScans(ctx context.Context, c ctrlClient.Client, namespace, cluste
 	return scanList, nil
 }
 
-func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
+func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
 	clusterName := clusterScan.Spec.ClusterRef.Name
 	var lastScanIDs []string
 	for _, cs := range scanList.Items {
@@ -105,5 +105,14 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 	}
 
 	status := payloads.NewScanStatusWithIssues(scanList.Items, issueList.Items)
-	return saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterName, status)
+	if err := saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterName, status); err != nil {
+		if serr, ok := err.(*saasError); ok {
+			clusterScan.SetSaaSStatus(metav1.ConditionFalse, serr.Err, serr.Detail)
+			return nil
+		}
+		clusterScan.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
+		return err
+	}
+	clusterScan.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
+	return nil
 }

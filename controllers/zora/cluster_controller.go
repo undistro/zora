@@ -84,7 +84,7 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		log.Info("the Cluster is being deleted")
 		if controllerutil.ContainsFinalizer(cluster, clusterFinalizer) {
 			if r.OnDelete != nil {
-				if err := r.OnDelete(ctx, *cluster); err != nil {
+				if err := r.OnDelete(ctx, cluster); err != nil {
 					log.Error(err, "error in delete hook")
 				}
 			}
@@ -103,7 +103,7 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	}
 
 	if r.OnUpdate != nil {
-		if err := r.OnUpdate(ctx, *cluster); err != nil {
+		if err := r.OnUpdate(ctx, cluster); err != nil {
 			log.Error(err, "error in update hook")
 		}
 	}

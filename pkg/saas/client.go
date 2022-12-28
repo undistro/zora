@@ -82,7 +82,7 @@ func (r *client) PutCluster(ctx context.Context, cluster v1alpha1.Cluster) error
 		return err
 	}
 	defer res.Body.Close()
-	return validateStatus(res.StatusCode)
+	return validateStatus(res)
 }
 
 func (r *client) DeleteCluster(ctx context.Context, namespace, name string) error {
@@ -96,7 +96,7 @@ func (r *client) DeleteCluster(ctx context.Context, namespace, name string) erro
 		return err
 	}
 	defer res.Body.Close()
-	return validateStatus(res.StatusCode)
+	return validateStatus(res)
 }
 
 func (r *client) PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*v1alpha1.PluginStatus) error {
@@ -115,7 +115,7 @@ func (r *client) PutClusterScan(ctx context.Context, namespace, name string, plu
 		return err
 	}
 	defer res.Body.Close()
-	return validateStatus(res.StatusCode)
+	return validateStatus(res)
 }
 
 func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) error {
@@ -129,7 +129,7 @@ func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) 
 		return err
 	}
 	defer res.Body.Close()
-	return validateStatus(res.StatusCode)
+	return validateStatus(res)
 }
 
 func (r *client) clusterURL(namespace, name string, extra ...string) string {
@@ -157,11 +157,27 @@ func validateURL(u string) (*url.URL, error) {
 	return uri, nil
 }
 
-func validateStatus(status int) error {
+func validateStatus(res *http.Response) error {
 	for _, s := range allowedStatus {
-		if status == s {
+		if res.StatusCode == s {
 			return nil
 		}
 	}
-	return fmt.Errorf("invalid HTTP status: %d", status)
+	if res.StatusCode == http.StatusUnprocessableEntity {
+		serr := &saasError{}
+		if err := json.NewDecoder(res.Body).Decode(serr); err != nil {
+			return fmt.Errorf("failed to decode SaaS error in response body: %v", err)
+		}
+		return serr
+	}
+	return fmt.Errorf("invalid HTTP status: %d", res.StatusCode)
+}
+
+type saasError struct {
+	Err    string `json:"error,omitempty"`
+	Detail string `json:"detail,omitempty"`
+}
+
+func (r saasError) Error() string {
+	return fmt.Sprintf("%s: %s", r.Err, r.Detail)
 }

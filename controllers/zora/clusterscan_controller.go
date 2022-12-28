@@ -25,6 +25,7 @@ import (
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -109,7 +110,7 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Info("the ClusterScan is being deleted")
 		if controllerutil.ContainsFinalizer(clusterscan, clusterscanFinalizer) {
 			if r.OnDelete != nil {
-				if err := r.OnDelete(ctx, *clusterscan); err != nil {
+				if err := r.OnDelete(ctx, clusterscan); err != nil {
 					log.Error(err, "error in delete hook")
 				}
 			}
@@ -123,14 +124,22 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	err := r.reconcile(ctx, clusterscan)
-	if err := r.Status().Update(ctx, clusterscan); err != nil {
-		log.Error(err, "failed to update ClusterScan status")
-	}
 
 	if r.OnUpdate != nil {
-		if err := r.OnUpdate(ctx, *clusterscan); err != nil {
+		if err := r.OnUpdate(ctx, clusterscan); err != nil {
 			log.Error(err, "error in update hook")
 		}
+	} else {
+		clusterscan.SetSaaSStatus(metav1.ConditionUnknown, string(metav1.ConditionUnknown),
+			"Zora SaaS is not configured. You can enable it providing the Helm parameter saas.workspaceID")
+	}
+
+	if err := r.Status().Update(ctx, clusterscan); err != nil {
+		if apierrors.IsConflict(err) {
+			log.Info("requeue after 1s due to conflict on update ClusterScan status", "error", err.Error())
+			return ctrl.Result{RequeueAfter: time.Second}, nil
+		}
+		log.Error(err, "failed to update ClusterScan status")
 	}
 
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
