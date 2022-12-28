@@ -130,7 +130,6 @@ operator:
     # -- Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')
     timeEncoding: rfc3339
 
-
 scan:
   worker:
     image:
@@ -143,12 +142,14 @@ scan:
     - popeye
   plugins:
     popeye:
+      enabled: true
       image:
         # -- popeye plugin image repository
         repository: derailed/popeye
         # -- popeye plugin image tag
         tag: v0.10.0
     kubescape:
+      enabled: false
       image:
         # -- kubescape plugin image repository
         repository: quay.io/armosec/kubescape
