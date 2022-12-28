@@ -239,6 +239,7 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0
 //+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
+//+kubebuilder:printcolumn:name="SaaS",type="string",JSONPath=".status.conditions[?(@.type==\"SaaS\")].reason",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
@@ -262,6 +263,16 @@ func (in *ClusterScan) SetReadyStatus(status bool, reason, msg string) {
 	in.Status.SetCondition(metav1.Condition{
 		Type:               "Ready",
 		Status:             s,
+		ObservedGeneration: in.Generation,
+		Reason:             reason,
+		Message:            msg,
+	})
+}
+
+func (in *ClusterScan) SetSaaSStatus(status metav1.ConditionStatus, reason, msg string) {
+	in.Status.SetCondition(metav1.Condition{
+		Type:               "SaaS",
+		Status:             status,
 		ObservedGeneration: in.Generation,
 		Reason:             reason,
 		Message:            msg,
