@@ -564,14 +564,14 @@
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.3.10" src="https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square&amp;color=38C794" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=38C794" /> <img alt="AppVersion: v0.3.10" src="https://img.shields.io/badge/AppVersion-v0.3.10-informational?style=flat-square&amp;color=38C794" /></p>
+<p><img alt="Version: 0.4.0-alpha5" src="https://img.shields.io/badge/Version-0.4.0--alpha2-informational?style=flat-square&amp;color=38C794" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=38C794" /> <img alt="AppVersion: v0.4.0-alpha5" src="https://img.shields.io/badge/AppVersion-v0.4.0--alpha2-informational?style=flat-square&amp;color=38C794" /></p>
 <p>Zora scans multiple Kubernetes clusters and reports potential issues.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="go">helm repo add undistro https://charts.undistro.io --force-update</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.3.10 \</span>
+<span class="go">  --version 0.4.0-alpha5 \</span>
 <span class="go">  --create-namespace --wait</span>
 </code></pre></div>
 <blockquote>
@@ -630,6 +630,36 @@
 <td>String to fully override fullname template with a string</td>
 </tr>
 <tr>
+<td>saas.workspaceID</td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Your SaaS workspace ID</td>
+</tr>
+<tr>
+<td>saas.server</td>
+<td>string</td>
+<td><code>"https://saas-hml.undistro.io"</code></td>
+<td>SaaS server URL</td>
+</tr>
+<tr>
+<td>saas.hooks.image.repository</td>
+<td>string</td>
+<td><code>"radial/busyboxplus"</code></td>
+<td>SaaS hooks image repository</td>
+</tr>
+<tr>
+<td>saas.hooks.image.tag</td>
+<td>string</td>
+<td><code>"curl"</code></td>
+<td>SaaS hooks image tag</td>
+</tr>
+<tr>
+<td>saas.hooks.installURL</td>
+<td>string</td>
+<td><code>"{{.Values.saas.server}}/zora/api/v1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"</code></td>
+<td>SaaS install hook URL</td>
+</tr>
+<tr>
 <td>imageCredentials.create</td>
 <td>bool</td>
 <td><code>false</code></td>
@@ -658,48 +688,6 @@
 <td>list</td>
 <td><code>[]</code></td>
 <td>Specify docker-registry secret names as an array to be used when <code>imageCredentials.create</code> is false</td>
-</tr>
-<tr>
-<td>ingress.enabled</td>
-<td>bool</td>
-<td><code>false</code></td>
-<td>Specifies whether the ingress should be created</td>
-</tr>
-<tr>
-<td>ingress.className</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Ingress class name</td>
-</tr>
-<tr>
-<td>ingress.annotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to ingress</td>
-</tr>
-<tr>
-<td>ingress.host</td>
-<td>string</td>
-<td><code>"zora.domain"</code></td>
-<td>The host of Zora in ingress rule</td>
-</tr>
-<tr>
-<td>ingress.server</td>
-<td>object</td>
-<td><code>{"path":"/api","pathType":"ImplementationSpecific"}</code></td>
-<td><code>path</code> and <code>pathType</code> of API in ingress rule. <code>path</code> pattern may vary according ingress controller (<code>/api/*</code> for GCE, <code>/api/.*</code> for NCP)</td>
-</tr>
-<tr>
-<td>ingress.ui</td>
-<td>object</td>
-<td><code>{"path":"/","pathType":"ImplementationSpecific"}</code></td>
-<td><code>path</code> and <code>pathType</code> of UI in ingress rule. <code>path</code> pattern may vary according ingress controller (<code>/*</code> for GCE, <code>/.*</code> for NCP)</td>
-</tr>
-<tr>
-<td>ingress.tlsSecretName</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The name of secret which contains keys named: <code>tls.crt</code> - the certificate; <code>tls.key</code> - the private key</td>
 </tr>
 <tr>
 <td>operator.replicaCount</td>
@@ -862,426 +850,6 @@
 <td>string</td>
 <td><code>"rfc3339"</code></td>
 <td>Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')</td>
-</tr>
-<tr>
-<td>server.enabled</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Toggles server deployment</td>
-</tr>
-<tr>
-<td>server.replicaCount</td>
-<td>int</td>
-<td><code>1</code></td>
-<td>Number of replicas desired of Zora server</td>
-</tr>
-<tr>
-<td>server.image.repository</td>
-<td>string</td>
-<td><code>"ghcr.io/undistro/zora/server"</code></td>
-<td>Zora server image repository</td>
-</tr>
-<tr>
-<td>server.image.tag</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Overrides the image tag whose default is the chart appVersion</td>
-</tr>
-<tr>
-<td>server.image.pullPolicy</td>
-<td>string</td>
-<td><code>"IfNotPresent"</code></td>
-<td>Image pull policy</td>
-</tr>
-<tr>
-<td>server.rbac.create</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Specifies whether ClusterRole and ClusterRoleBinding should be created</td>
-</tr>
-<tr>
-<td>server.rbac.serviceAccount.create</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Specifies whether a service account should be created</td>
-</tr>
-<tr>
-<td>server.rbac.serviceAccount.annotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to service account</td>
-</tr>
-<tr>
-<td>server.rbac.serviceAccount.name</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</td>
-</tr>
-<tr>
-<td>server.podAnnotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to pods</td>
-</tr>
-<tr>
-<td>server.podSecurityContext</td>
-<td>object</td>
-<td><code>{"runAsGroup":65533,"runAsNonRoot":true,"runAsUser":65533}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the pod</td>
-</tr>
-<tr>
-<td>server.securityContext</td>
-<td>object</td>
-<td><code>{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the container</td>
-</tr>
-<tr>
-<td>server.service.type</td>
-<td>string</td>
-<td><code>"ClusterIP"</code></td>
-<td>Service type</td>
-</tr>
-<tr>
-<td>server.service.port</td>
-<td>int</td>
-<td><code>8080</code></td>
-<td>Service port</td>
-</tr>
-<tr>
-<td>server.resources</td>
-<td>object</td>
-<td><code>{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to the container</td>
-</tr>
-<tr>
-<td>server.autoscaling.enabled</td>
-<td>bool</td>
-<td><code>false</code></td>
-<td>Enable replica autoscaling settings</td>
-</tr>
-<tr>
-<td>server.autoscaling.minReplicas</td>
-<td>int</td>
-<td><code>1</code></td>
-<td>Minimum replicas for the pod autoscaling</td>
-</tr>
-<tr>
-<td>server.autoscaling.maxReplicas</td>
-<td>int</td>
-<td><code>100</code></td>
-<td>Maximum replicas for the pod autoscaling</td>
-</tr>
-<tr>
-<td>server.autoscaling.targetCPUUtilizationPercentage</td>
-<td>int</td>
-<td><code>80</code></td>
-<td>Percentage of CPU to consider when autoscaling</td>
-</tr>
-<tr>
-<td>server.autoscaling.targetMemoryUtilizationPercentage</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Percentage of Memory to consider when autoscaling</td>
-</tr>
-<tr>
-<td>server.nodeSelector</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
-</tr>
-<tr>
-<td>server.tolerations</td>
-<td>list</td>
-<td><code>[]</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
-</tr>
-<tr>
-<td>server.affinity</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
-</tr>
-<tr>
-<td>server.log.encoding</td>
-<td>string</td>
-<td><code>"json"</code></td>
-<td>Log encoding (one of 'json' or 'console')</td>
-</tr>
-<tr>
-<td>server.log.level</td>
-<td>string</td>
-<td><code>"info"</code></td>
-<td>Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value &gt; 0 which corresponds to custom debug levels of increasing verbosity</td>
-</tr>
-<tr>
-<td>server.log.stacktraceLevel</td>
-<td>string</td>
-<td><code>"error"</code></td>
-<td>Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic')</td>
-</tr>
-<tr>
-<td>server.log.timeEncoding</td>
-<td>string</td>
-<td><code>"rfc3339"</code></td>
-<td>Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')</td>
-</tr>
-<tr>
-<td>ui.enabled</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Toggles UI deployment</td>
-</tr>
-<tr>
-<td>ui.replicaCount</td>
-<td>int</td>
-<td><code>1</code></td>
-<td>Number of replicas desired of Zora UI</td>
-</tr>
-<tr>
-<td>ui.image.repository</td>
-<td>string</td>
-<td><code>"ghcr.io/undistro/zora/ui"</code></td>
-<td>Zora UI image repository</td>
-</tr>
-<tr>
-<td>ui.image.tag</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Overrides the image tag whose default is the chart appVersion</td>
-</tr>
-<tr>
-<td>ui.image.pullPolicy</td>
-<td>string</td>
-<td><code>"IfNotPresent"</code></td>
-<td>Image pull policy</td>
-</tr>
-<tr>
-<td>ui.serviceAccount.create</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Specifies whether a service account should be created</td>
-</tr>
-<tr>
-<td>ui.serviceAccount.annotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to service account</td>
-</tr>
-<tr>
-<td>ui.serviceAccount.name</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</td>
-</tr>
-<tr>
-<td>ui.podAnnotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to pods</td>
-</tr>
-<tr>
-<td>ui.podSecurityContext</td>
-<td>object</td>
-<td><code>{"runAsGroup":1001,"runAsNonRoot":true,"runAsUser":1001}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the pod</td>
-</tr>
-<tr>
-<td>ui.securityContext</td>
-<td>object</td>
-<td><code>{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the container</td>
-</tr>
-<tr>
-<td>ui.service.type</td>
-<td>string</td>
-<td><code>"ClusterIP"</code></td>
-<td>Service type</td>
-</tr>
-<tr>
-<td>ui.service.port</td>
-<td>int</td>
-<td><code>8080</code></td>
-<td>Service port</td>
-</tr>
-<tr>
-<td>ui.resources</td>
-<td>object</td>
-<td><code>{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to the container</td>
-</tr>
-<tr>
-<td>ui.autoscaling.enabled</td>
-<td>bool</td>
-<td><code>false</code></td>
-<td>Enable replica autoscaling settings</td>
-</tr>
-<tr>
-<td>ui.autoscaling.minReplicas</td>
-<td>int</td>
-<td><code>1</code></td>
-<td>Minimum replicas for the pod autoscaling</td>
-</tr>
-<tr>
-<td>ui.autoscaling.maxReplicas</td>
-<td>int</td>
-<td><code>100</code></td>
-<td>Maximum replicas for the pod autoscaling</td>
-</tr>
-<tr>
-<td>ui.autoscaling.targetCPUUtilizationPercentage</td>
-<td>int</td>
-<td><code>80</code></td>
-<td>Percentage of CPU to consider when autoscaling</td>
-</tr>
-<tr>
-<td>ui.autoscaling.targetMemoryUtilizationPercentage</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Percentage of Memory to consider when autoscaling</td>
-</tr>
-<tr>
-<td>ui.nodeSelector</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
-</tr>
-<tr>
-<td>ui.tolerations</td>
-<td>list</td>
-<td><code>[]</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
-</tr>
-<tr>
-<td>ui.affinity</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
-</tr>
-<tr>
-<td>nginx.replicaCount</td>
-<td>int</td>
-<td><code>1</code></td>
-<td>Number of replicas desired of nginx</td>
-</tr>
-<tr>
-<td>nginx.image.repository</td>
-<td>string</td>
-<td><code>"nginx"</code></td>
-<td>NGINX image repository</td>
-</tr>
-<tr>
-<td>nginx.image.tag</td>
-<td>string</td>
-<td><code>"1.20.2-alpine"</code></td>
-<td>NGINX image tag</td>
-</tr>
-<tr>
-<td>nginx.image.pullPolicy</td>
-<td>string</td>
-<td><code>"IfNotPresent"</code></td>
-<td>Image pull policy</td>
-</tr>
-<tr>
-<td>nginx.serviceAccount.create</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Specifies whether a service account should be created</td>
-</tr>
-<tr>
-<td>nginx.serviceAccount.annotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to service account</td>
-</tr>
-<tr>
-<td>nginx.serviceAccount.name</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</td>
-</tr>
-<tr>
-<td>nginx.podAnnotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to pods</td>
-</tr>
-<tr>
-<td>nginx.podSecurityContext</td>
-<td>object</td>
-<td><code>{"fsGroup":10000,"runAsGroup":10000,"runAsNonRoot":true,"runAsUser":10000}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the pod</td>
-</tr>
-<tr>
-<td>nginx.securityContext</td>
-<td>object</td>
-<td><code>{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":false}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the container</td>
-</tr>
-<tr>
-<td>nginx.service.type</td>
-<td>string</td>
-<td><code>"ClusterIP"</code></td>
-<td>Service type</td>
-</tr>
-<tr>
-<td>nginx.service.port</td>
-<td>int</td>
-<td><code>80</code></td>
-<td>Service port</td>
-</tr>
-<tr>
-<td>nginx.resources</td>
-<td>object</td>
-<td><code>{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to the container</td>
-</tr>
-<tr>
-<td>nginx.autoscaling.enabled</td>
-<td>bool</td>
-<td><code>false</code></td>
-<td>Enable replica autoscaling settings</td>
-</tr>
-<tr>
-<td>nginx.autoscaling.minReplicas</td>
-<td>int</td>
-<td><code>1</code></td>
-<td>Minimum replicas for the pod autoscaling</td>
-</tr>
-<tr>
-<td>nginx.autoscaling.maxReplicas</td>
-<td>int</td>
-<td><code>100</code></td>
-<td>Maximum replicas for the pod autoscaling</td>
-</tr>
-<tr>
-<td>nginx.autoscaling.targetCPUUtilizationPercentage</td>
-<td>int</td>
-<td><code>80</code></td>
-<td>Percentage of CPU to consider when autoscaling</td>
-</tr>
-<tr>
-<td>nginx.autoscaling.targetMemoryUtilizationPercentage</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Percentage of Memory to consider when autoscaling</td>
-</tr>
-<tr>
-<td>nginx.nodeSelector</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
-</tr>
-<tr>
-<td>nginx.tolerations</td>
-<td>list</td>
-<td><code>[]</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
-</tr>
-<tr>
-<td>nginx.affinity</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
 </tr>
 <tr>
 <td>scan.worker.image.repository</td>
