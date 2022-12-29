@@ -21,6 +21,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://zora.undistro.io/v0.3/helm-chart/</loc>
+         <lastmod>2022-12-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://zora.undistro.io/v0.3/install/</loc>
          <lastmod>2022-12-29</lastmod>
          <changefreq>daily</changefreq>
