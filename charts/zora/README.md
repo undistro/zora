@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.4.0-alpha5](https://img.shields.io/badge/Version-0.4.0--alpha2-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.4.0-alpha5](https://img.shields.io/badge/AppVersion-v0.4.0--alpha2-informational?style=flat-square&color=38C794)
+![Version: 0.4.0-alpha5](https://img.shields.io/badge/Version-0.4.0--alpha5-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.4.0-alpha5](https://img.shields.io/badge/AppVersion-v0.4.0--alpha5-informational?style=flat-square&color=38C794)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -58,7 +58,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | saas.server | string | `"https://saas-hml.undistro.io"` | SaaS server URL |
 | saas.hooks.image.repository | string | `"radial/busyboxplus"` | SaaS hooks image repository |
 | saas.hooks.image.tag | string | `"curl"` | SaaS hooks image tag |
-| saas.hooks.installURL | string | `"{{.Values.saas.server}}/zora/api/v1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS install hook URL |
+| saas.hooks.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS install hook URL |
 | imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
 | imageCredentials.registry | string | `"ghcr.io"` | Docker registry host |
 | imageCredentials.username | string | `""` | Docker registry username |
@@ -94,8 +94,10 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.repository | string | `"ghcr.io/undistro/zora/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
+| scan.plugins.popeye.enabled | bool | `true` |  |
 | scan.plugins.popeye.image.repository | string | `"derailed/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"v0.10.0"` | popeye plugin image tag |
+| scan.plugins.kubescape.enabled | bool | `false` |  |
 | scan.plugins.kubescape.image.repository | string | `"quay.io/armosec/kubescape"` | kubescape plugin image repository |
 | scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |
 
