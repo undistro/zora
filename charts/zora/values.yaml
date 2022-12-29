@@ -28,7 +28,7 @@ saas:
       repository: radial/busyboxplus
       # -- SaaS hooks image tag
       tag: curl
-    # -- SaaS install hook URL
+    # -- SaaS install hook URL template
     installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
 
 # Credentials for private registries.

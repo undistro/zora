@@ -58,7 +58,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | saas.server | string | `"https://saas-hml.undistro.io"` | SaaS server URL |
 | saas.hooks.image.repository | string | `"radial/busyboxplus"` | SaaS hooks image repository |
 | saas.hooks.image.tag | string | `"curl"` | SaaS hooks image tag |
-| saas.hooks.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS install hook URL |
+| saas.hooks.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS install hook URL template |
 | imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
 | imageCredentials.registry | string | `"ghcr.io"` | Docker registry host |
 | imageCredentials.username | string | `""` | Docker registry username |
