@@ -564,7 +564,7 @@
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.4.0-alpha5" src="https://img.shields.io/badge/Version-0.4.0--alpha2-informational?style=flat-square&amp;color=38C794" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=38C794" /> <img alt="AppVersion: v0.4.0-alpha5" src="https://img.shields.io/badge/AppVersion-v0.4.0--alpha2-informational?style=flat-square&amp;color=38C794" /></p>
+<p><img alt="Version: 0.4.0-alpha5" src="https://img.shields.io/badge/Version-0.4.0--alpha5-informational?style=flat-square&amp;color=38C794" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=38C794" /> <img alt="AppVersion: v0.4.0-alpha5" src="https://img.shields.io/badge/AppVersion-v0.4.0--alpha5-informational?style=flat-square&amp;color=38C794" /></p>
 <p>Zora scans multiple Kubernetes clusters and reports potential issues.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code>:</p>
@@ -656,7 +656,7 @@
 <tr>
 <td>saas.hooks.installURL</td>
 <td>string</td>
-<td><code>"{{.Values.saas.server}}/zora/api/v1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"</code></td>
+<td><code>"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"</code></td>
 <td>SaaS install hook URL</td>
 </tr>
 <tr>
@@ -870,6 +870,12 @@
 <td>Names of the default plugins</td>
 </tr>
 <tr>
+<td>scan.plugins.popeye.enabled</td>
+<td>bool</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+<tr>
 <td>scan.plugins.popeye.image.repository</td>
 <td>string</td>
 <td><code>"derailed/popeye"</code></td>
@@ -880,6 +886,12 @@
 <td>string</td>
 <td><code>"v0.10.0"</code></td>
 <td>popeye plugin image tag</td>
+</tr>
+<tr>
+<td>scan.plugins.kubescape.enabled</td>
+<td>bool</td>
+<td><code>false</code></td>
+<td></td>
 </tr>
 <tr>
 <td>scan.plugins.kubescape.image.repository</td>
