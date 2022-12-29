@@ -423,8 +423,6 @@ spec:
                   type: object
                 description: Information of the last scans of plugins
                 type: object
-              saasStatus:
-                type: string
               suspend:
                 description: Suspend field value from ClusterScan spec
                 type: boolean
@@ -433,7 +431,6 @@ spec:
                   scan
                 type: integer
             required:
-            - saasStatus
             - suspend
             type: object
         type: object
