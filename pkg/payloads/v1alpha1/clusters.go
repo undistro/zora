@@ -221,6 +221,9 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 
 func NewScanStatusWithIssues(scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) map[string]*PluginStatus {
 	pluginStatus, _ := NewScanStatus(scans)
+	if pluginStatus == nil {
+		return nil
+	}
 	for _, i := range issues {
 		pluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
 			pluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,

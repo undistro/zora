@@ -105,6 +105,9 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 	}
 
 	status := payloads.NewScanStatusWithIssues(scanList.Items, issueList.Items)
+	if status == nil {
+		return nil
+	}
 	if err := saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterName, status); err != nil {
 		if serr, ok := err.(*saasError); ok {
 			clusterScan.SetSaaSStatus(metav1.ConditionFalse, serr.Err, serr.Detail)
