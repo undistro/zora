@@ -47,7 +47,7 @@ jobs:
           helm upgrade --install zora undistro/zora \
             -f charts/zora/values-hml.yaml \
             --set imageCredentials.create=true \
-            --set imageCredentials.username='undistro-bot' \
+            --set imageCredentials.username='undistrobot' \
             --set imageCredentials.password='${{ secrets.PACKAGES_READ_TOKEN }}' \
             --set operator.image.tag=$GITHUB_SHA \
             --set server.image.tag=$GITHUB_SHA \
@@ -66,7 +66,7 @@ jobs:
           helm upgrade --install zora undistro/zora \
             -f charts/zora/values-hml.yaml \
             --set imageCredentials.create=true \
-            --set imageCredentials.username='undistro-bot' \
+            --set imageCredentials.username='undistrobot' \
             --set imageCredentials.password='${{ secrets.PACKAGES_READ_TOKEN }}' \
             --set operator.image.tag=$GITHUB_SHA \
             --set server.image.tag=$GITHUB_SHA \
