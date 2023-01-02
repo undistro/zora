@@ -1,15 +1,15 @@
 # Connect the target cluster to Zora
 
-After [preparing](target-cluster) your [target clusters](glossary#target-cluster), you need to connect them directly to Zora by 
+After [preparing](../target-cluster) your [target clusters](../glossary#target-cluster), you need to connect them directly to Zora by 
 following the instructions below.
 
 ## Prerequisites
 
 1. A kubeconfig file with an authentication `token` of the target cluster. 
-   Follow [these instructions](target-cluster) to generate it.
+   Follow [these instructions](../target-cluster) to generate it.
 2. The [api-server](https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver) 
-   of the [target cluster](glossary#target-cluster) 
-   must be reachable by the [management cluster](glossary#management-cluster). 
+   of the [target cluster](../glossary#target-cluster) 
+   must be reachable by the [management cluster](../glossary#management-cluster). 
 
 Without the prerequisites Zora will not be able to connect to the target cluster
 and will set a failure status.
@@ -22,7 +22,7 @@ and will set a failure status.
     For more information about Metrics Server, visit the
     [official documentation](https://github.com/kubernetes-sigs/metrics-server/#readme).
 
-## 1. Access the [management cluster](glossary#management-cluster)
+## 1. Access the [management cluster](../glossary#management-cluster)
 
 First, make sure you are in the context of the **management cluster**.
 You can do this by the following commands:
@@ -120,8 +120,8 @@ This command deletes the `mycluster` Cluster and its scans and issues.
 
 !!! warning "Deleting a Cluster from dashboard (SaaS)"
     If you installed Zora providing a workspace ID (Zora + SaaS) and
-    want to delete your [management cluster](glossary#management-cluster), 
-    please first delete all [target clusters](glossary#target-cluster).
+    want to delete your [management cluster](../glossary#management-cluster), 
+    please first delete all [target clusters](../glossary#target-cluster).
 
     If you delete the management cluster first, 
     you will no longer be able to access or delete your target clusters, 
