@@ -609,15 +609,15 @@ You're not viewing the latest version.
 
 
 <h1 id="connect-the-target-cluster-to-zora">Connect the target cluster to Zora<a class="headerlink" href="#connect-the-target-cluster-to-zora" title="Permanent link">&para;</a></h1>
-<p>After <a href="target-cluster">preparing</a> your <a href="glossary#target-cluster">target clusters</a>, you need to connect them directly to Zora by 
+<p>After <a href="../target-cluster">preparing</a> your <a href="../glossary#target-cluster">target clusters</a>, you need to connect them directly to Zora by 
 following the instructions below.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ol>
 <li>A kubeconfig file with an authentication <code>token</code> of the target cluster. 
-   Follow <a href="target-cluster">these instructions</a> to generate it.</li>
+   Follow <a href="../target-cluster">these instructions</a> to generate it.</li>
 <li>The <a href="https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver">api-server</a> 
-   of the <a href="glossary#target-cluster">target cluster</a> 
-   must be reachable by the <a href="glossary#management-cluster">management cluster</a>. </li>
+   of the <a href="../glossary#target-cluster">target cluster</a> 
+   must be reachable by the <a href="../glossary#management-cluster">management cluster</a>. </li>
 </ol>
 <p>Without the prerequisites Zora will not be able to connect to the target cluster
 and will set a failure status.</p>
@@ -629,7 +629,7 @@ and issues about potential resources over/under allocations won't be reported.</
 <p>For more information about Metrics Server, visit the
 <a href="https://github.com/kubernetes-sigs/metrics-server/#readme">official documentation</a>.</p>
 </div>
-<h2 id="1-access-the-management-cluster">1. Access the <a href="glossary#management-cluster">management cluster</a><a class="headerlink" href="#1-access-the-management-cluster" title="Permanent link">&para;</a></h2>
+<h2 id="1-access-the-management-cluster">1. Access the <a href="../glossary#management-cluster">management cluster</a><a class="headerlink" href="#1-access-the-management-cluster" title="Permanent link">&para;</a></h2>
 <p>First, make sure you are in the context of the <strong>management cluster</strong>.
 You can do this by the following commands:</p>
 <ul>
@@ -720,8 +720,8 @@ See our <a href="https://github.com/undistro/zora/blob/main/CONTRIBUTING.md">con
 <div class="admonition warning">
 <p class="admonition-title">Deleting a Cluster from dashboard (SaaS)</p>
 <p>If you installed Zora providing a workspace ID (Zora + SaaS) and
-want to delete your <a href="glossary#management-cluster">management cluster</a>, 
-please first delete all <a href="glossary#target-cluster">target clusters</a>.</p>
+want to delete your <a href="../glossary#management-cluster">management cluster</a>, 
+please first delete all <a href="../glossary#target-cluster">target clusters</a>.</p>
 <p>If you delete the management cluster first, 
 you will no longer be able to access or delete your target clusters, 
 which will remain on your dashboard

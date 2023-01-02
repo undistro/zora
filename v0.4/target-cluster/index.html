@@ -649,9 +649,9 @@ You're not viewing the latest version.
 
 
 <h1 id="prepare-the-target-cluster">Prepare the target cluster<a class="headerlink" href="#prepare-the-target-cluster" title="Permanent link">&para;</a></h1>
-<p>Follow this guide to create a service account and generate a kubeconfig file from a <a href="glossary#target-cluster">target cluster</a>.
+<p>Follow this guide to create a service account and generate a kubeconfig file from a <a href="../glossary#target-cluster">target cluster</a>.
 These are the only steps required to be performed in the target cluster.</p>
-<p>For manual configuration, go to <a href="target-cluster#manual-configuration">Manual Configuration</a>, otherwise proceed to <a href="target-cluster#setup-script">Setup Script</a>.</p>
+<p>For manual configuration, go to <a href="#manual-configuration">Manual Configuration</a>, otherwise proceed to <a href="#setup-script">Setup Script</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If your target cluster is under a server proxy for external communication, like those present on platforms like <a href="https://www.rancher.com/">Rancher</a>, 
@@ -669,7 +669,7 @@ or
 curl -q https://zora.undistro.io/v0.4/targetcluster.sh | sh
 </code></pre></div></p>
 <p>By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with <code>-kubeconfig.yaml</code>.</p>
-<p>Before finishing, the script will show a command to <a href="connect-cluster">connect the target cluster</a> through the generated kubeconfig, and save a sample <code>Cluster</code> manifest.</p>
+<p>Before finishing, the script will show a command to <a href="../connect-cluster">connect the target cluster</a> through the generated kubeconfig, and save a sample <code>Cluster</code> manifest.</p>
 <p>A complete list of customizable environment variables can be seen on the table below.</p>
 <table>
 <thead>
@@ -740,7 +740,7 @@ curl -q https://zora.undistro.io/v0.4/targetcluster.sh | sh
 <p>The next instructions explain how to manually configure your target clusters.</p>
 <h2 id="manual-configuration">Manual Configuration<a class="headerlink" href="#manual-configuration" title="Permanent link">&para;</a></h2>
 <p>The target cluster can be configured through the steps described in the next sections.</p>
-<h3 id="1-access-the-target-cluster">1. Access the <a href="glossary#target-cluster">target cluster</a><a class="headerlink" href="#1-access-the-target-cluster" title="Permanent link">&para;</a></h3>
+<h3 id="1-access-the-target-cluster">1. Access the <a href="../glossary#target-cluster">target cluster</a><a class="headerlink" href="#1-access-the-target-cluster" title="Permanent link">&para;</a></h3>
 <p>First, make sure you are in the context of the <strong>target cluster</strong>.
 You can do this by the following commands:</p>
 <ul>
@@ -898,7 +898,7 @@ cat<span class="w"> </span><span class="s">&lt;&lt; EOF | kubectl apply -f - </s
 </code></pre></div>
 <h3 id="verify-the-generated-kubeconfig">Verify the generated kubeconfig<a class="headerlink" href="#verify-the-generated-kubeconfig" title="Permanent link">&para;</a></h3>
 <p>These steps create a file in your current working directory called <code>zora-view-kubeconfig.yml</code>.
-The contents of this file are used in <a href="connect-cluster">the next guide</a> to connect this target cluster into Zora.</p>
+The contents of this file are used in <a href="../connect-cluster">the next guide</a> to connect this target cluster into Zora.</p>
 <p>Before using this kubeconfig, you can verify that it is functional by running:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>zora-view-kubeconfig.yml<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>--all-namespaces
 </code></pre></div>
