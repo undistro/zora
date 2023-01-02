@@ -143,7 +143,7 @@ helm-docs:  ## Generate documentation for helm charts
 	@docker run -it --rm \
 		-v ${PWD}:/helm-docs \
 		jnorwood/helm-docs:v1.8.1 \
-		helm-docs -s=file --badge-style="flat-square&color=38C794"
+		helm-docs -s=file --badge-style="flat-square&color=3CA9DD"
 
 preview-docs: helm-docs  ## Run a server to preview the documentation
 	@docker run --name zora-docs-preview --rm -it \
