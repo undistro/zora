@@ -7,20 +7,20 @@ in your Kubernetes clusters in a centralized way, ensuring that the recommended 
 
 Throughout this documentation, we will use the following notation:
 
-- **[Management Cluster](/glossary#management-cluster)** to refer to the only Kubernetes cluster where Zora is installed;
-- **[Target Cluster](/target-cluster)** to refer to all clusters you will connect to Zora to be scanned.
+- **[Management Cluster](glossary#management-cluster)** to refer to the only Kubernetes cluster where Zora is installed;
+- **[Target Cluster](target-cluster)** to refer to all clusters you will connect to Zora to be scanned.
 
 Follow these steps to get started with Zora:
 
-1. [Install Zora](/install) in a [Management Cluster](/glossary#management-cluster)
+1. [Install Zora](install) in a [Management Cluster](glossary#management-cluster)
 
-2. [Prepare the target cluster](/target-cluster) by creating a service account and generating a kubeconfig
+2. [Prepare the target cluster](target-cluster) by creating a service account and generating a kubeconfig
 
-3. [Connect the target cluster to Zora](/connect-cluster)
+3. [Connect the target cluster to Zora](connect-cluster)
 
-4. [Configure a scan for the target cluster](/cluster-scan)
+4. [Configure a scan for the target cluster](cluster-scan)
 
-5. After a successful scan [checkout the potential reported issues](/cluster-scan#list-cluster-issues)
+5. After a successful scan [checkout the potential reported issues](cluster-scan#list-cluster-issues)
 
 All the information about these steps are detailed throughout this documentation.
 
