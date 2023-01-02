@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.4.0-alpha6](https://img.shields.io/badge/Version-0.4.0--alpha6-informational?style=flat-square&color=38C794) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=38C794) ![AppVersion: v0.4.0-alpha6](https://img.shields.io/badge/AppVersion-v0.4.0--alpha6-informational?style=flat-square&color=38C794)
+![Version: 0.4.0-alpha6](https://img.shields.io/badge/Version-0.4.0--alpha6-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.4.0-alpha6](https://img.shields.io/badge/AppVersion-v0.4.0--alpha6-informational?style=flat-square&color=3CA9DD)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
