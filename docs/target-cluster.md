@@ -1,9 +1,9 @@
 # Prepare the target cluster
 
-Follow this guide to create a service account and generate a kubeconfig file from a [target cluster](glossary#target-cluster).
+Follow this guide to create a service account and generate a kubeconfig file from a [target cluster](../glossary#target-cluster).
 These are the only steps required to be performed in the target cluster.
 
-For manual configuration, go to [Manual Configuration](target-cluster#manual-configuration), otherwise proceed to [Setup Script](target-cluster#setup-script).
+For manual configuration, go to [Manual Configuration](#manual-configuration), otherwise proceed to [Setup Script](#setup-script).
 
 !!! note
     If your target cluster is under a server proxy for external communication, like those present on platforms like [Rancher](https://www.rancher.com/), 
@@ -31,7 +31,7 @@ curl -q https://zora.undistro.io/v0.3/targetcluster.sh | sh
 
 By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with `-kubeconfig.yaml`.
 
-Before finishing, the script will show a command to [connect the target cluster](connect-cluster) through the generated kubeconfig, and save a sample `Cluster` manifest.
+Before finishing, the script will show a command to [connect the target cluster](../connect-cluster) through the generated kubeconfig, and save a sample `Cluster` manifest.
 
 A complete list of customizable environment variables can be seen on the table below.
 
@@ -59,7 +59,7 @@ The next instructions explain how to manually configure your target clusters.
 
 The target cluster can be configured through the steps described in the next sections.
 
-### 1. Access the [target cluster](glossary#target-cluster)
+### 1. Access the [target cluster](../glossary#target-cluster)
 
 First, make sure you are in the context of the **target cluster**.
 You can do this by the following commands:
@@ -226,7 +226,7 @@ EOF
 ### Verify the generated kubeconfig
 
 These steps create a file in your current working directory called `zora-view-kubeconfig.yml`.
-The contents of this file are used in [the next guide](connect-cluster) to connect this target cluster into Zora.
+The contents of this file are used in [the next guide](../connect-cluster) to connect this target cluster into Zora.
 
 Before using this kubeconfig, you can verify that it is functional by running:
 
