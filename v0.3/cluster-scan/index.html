@@ -10,8 +10,14 @@
       
         <link rel="canonical" href="https://zora.undistro.io/v0.3/cluster-scan/">
       
-      <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+      
+        <link rel="prev" href="../connect-cluster/">
+      
+      
+        <link rel="next" href="../glossary/">
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.0">
     
     
       
@@ -19,11 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f79797b0.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
-        
       
       
 
@@ -118,8 +123,6 @@
       <form class="md-header__option" data-md-component="palette">
         
           
-          
-          
           <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
           
             <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
@@ -127,8 +130,6 @@
             </label>
           
         
-          
-          
           
           <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
           
@@ -588,10 +589,9 @@
                 
                   
 
-  <a href="https://github.com/undistro/zora/edit/main/docs/cluster-scan.md" title="Edit this page" class="md-content__button md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
-  </a>
+  
+  
+
 
 
 <h1 id="configure-a-cluster-scan">Configure a cluster scan<a class="headerlink" href="#configure-a-cluster-scan" title="Permanent link">&para;</a></h1>
@@ -604,16 +604,16 @@ by creating a <code>ClusterScan</code> in the same namespace as <code>Cluster</c
 written in <a href="https://en.wikipedia.org/wiki/Cron">Cron</a> format.</p>
 <p>Here is a sample configuration that scan <code>mycluster</code> once an hour.
 You can modify putting your desired periodicity.</p>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">cat &lt;&lt; EOF | kubectl apply -f -</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zora.undistro.io/v1alpha1</span><span class="w"></span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterScan</span><span class="w"></span>
-<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycluster</span><span class="w"></span>
-<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">clusterRef</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycluster</span><span class="w"></span>
-<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">*/1</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">EOF</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">cat &lt;&lt; EOF | kubectl apply -f -</span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zora.undistro.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterScan</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycluster</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">clusterRef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycluster</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">*/1</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">EOF</span>
 </code></pre></div>
 <h3 id="cron-schedule-syntax">Cron schedule syntax<a class="headerlink" href="#cron-schedule-syntax" title="Permanent link">&para;</a></h3>
 <p>Cron expression has five fields separated by a space, and each field represents a time unit.</p>
@@ -662,50 +662,50 @@ You can modify putting your desired periodicity.</p>
 <p>You can check the scans status and the reported issues by the following steps:</p>
 <h2 id="list-cluster-scans">List cluster scans<a class="headerlink" href="#list-cluster-scans" title="Permanent link">&para;</a></h2>
 <p>Listing the <code>ClusterScans</code>, the information of the last scans are available:</p>
-<div class="highlight"><pre><span></span><code>kubectl get clusterscan -o wide
-NAME        CLUSTER     SCHEDULE      SUSPEND   PLUGINS   LAST STATUS   LAST SCHEDULE   LAST SUCCESSFUL   ISSUES   READY   AGE   NEXT SCHEDULE
-mycluster   mycluster   <span class="m">0</span> */1 * * *   <span class="nb">false</span>     popeye    Complete      12m             14m               <span class="m">21</span>       True    32d   <span class="m">2022</span>-06-27T23:00:00Z
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>clusterscan<span class="w"> </span>-o<span class="w"> </span>wide
+NAME<span class="w">        </span>CLUSTER<span class="w">     </span>SCHEDULE<span class="w">      </span>SUSPEND<span class="w">   </span>PLUGINS<span class="w">   </span>LAST<span class="w"> </span>STATUS<span class="w">   </span>LAST<span class="w"> </span>SCHEDULE<span class="w">   </span>LAST<span class="w"> </span>SUCCESSFUL<span class="w">   </span>ISSUES<span class="w">   </span>READY<span class="w">   </span>AGE<span class="w">   </span>NEXT<span class="w"> </span>SCHEDULE
+mycluster<span class="w">   </span>mycluster<span class="w">   </span><span class="m">0</span><span class="w"> </span>*/1<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w">   </span><span class="nb">false</span><span class="w">     </span>popeye<span class="w">    </span>Complete<span class="w">      </span>12m<span class="w">             </span>14m<span class="w">               </span><span class="m">21</span><span class="w">       </span>True<span class="w">    </span>32d<span class="w">   </span><span class="m">2022</span>-06-27T23:00:00Z
 </code></pre></div>
 <p>The <code>LAST STATUS</code> column represents the status (Active, Complete or Failed) of the last <strong>scan</strong> 
 that was scheduled at the time represented by <code>LAST SCHEDULE</code> column.</p>
 <h2 id="list-cluster-issues">List cluster issues<a class="headerlink" href="#list-cluster-issues" title="Permanent link">&para;</a></h2>
 <p>Once the cluster is successfully scanned,
 the reported issues are available in <code>ClusterIssue</code> resources:</p>
-<div class="highlight"><pre><span></span><code>kubectl get clusterissues -l <span class="nv">cluster</span><span class="o">=</span>mycluster
-NAME                          CLUSTER      ID         MESSAGE                                                                        SEVERITY   CATEGORY          AGE
-mycluster-pop-102-27557035    mycluster    POP-102    No probes defined                                                              Medium     pods              4m8s
-mycluster-pop-105-27557035    mycluster    POP-105    Liveness probe uses a port#, prefer a named port                               Low        pods              4m8s
-mycluster-pop-106-27557035    mycluster    POP-106    No resources requests/limits defined                                           Medium     daemonsets        4m8s
-mycluster-pop-1100-27557035   mycluster    POP-1100   No pods match service selector                                                 High       services          4m8s
-mycluster-pop-306-27557035    mycluster    POP-306    Container could be running as root user. Check SecurityContext/Image           Medium     pods              4m8s
-mycluster-pop-500-27557035    mycluster    POP-500    Zero scale detected                                                            Medium     deployments       4m8s
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>clusterissues<span class="w"> </span>-l<span class="w"> </span><span class="nv">cluster</span><span class="o">=</span>mycluster
+NAME<span class="w">                          </span>CLUSTER<span class="w">      </span>ID<span class="w">         </span>MESSAGE<span class="w">                                                                        </span>SEVERITY<span class="w">   </span>CATEGORY<span class="w">          </span>AGE
+mycluster-pop-102-27557035<span class="w">    </span>mycluster<span class="w">    </span>POP-102<span class="w">    </span>No<span class="w"> </span>probes<span class="w"> </span>defined<span class="w">                                                              </span>Medium<span class="w">     </span>pods<span class="w">              </span>4m8s
+mycluster-pop-105-27557035<span class="w">    </span>mycluster<span class="w">    </span>POP-105<span class="w">    </span>Liveness<span class="w"> </span>probe<span class="w"> </span>uses<span class="w"> </span>a<span class="w"> </span>port#,<span class="w"> </span>prefer<span class="w"> </span>a<span class="w"> </span>named<span class="w"> </span>port<span class="w">                               </span>Low<span class="w">        </span>pods<span class="w">              </span>4m8s
+mycluster-pop-106-27557035<span class="w">    </span>mycluster<span class="w">    </span>POP-106<span class="w">    </span>No<span class="w"> </span>resources<span class="w"> </span>requests/limits<span class="w"> </span>defined<span class="w">                                           </span>Medium<span class="w">     </span>daemonsets<span class="w">        </span>4m8s
+mycluster-pop-1100-27557035<span class="w">   </span>mycluster<span class="w">    </span>POP-1100<span class="w">   </span>No<span class="w"> </span>pods<span class="w"> </span>match<span class="w"> </span>service<span class="w"> </span>selector<span class="w">                                                 </span>High<span class="w">       </span>services<span class="w">          </span>4m8s
+mycluster-pop-306-27557035<span class="w">    </span>mycluster<span class="w">    </span>POP-306<span class="w">    </span>Container<span class="w"> </span>could<span class="w"> </span>be<span class="w"> </span>running<span class="w"> </span>as<span class="w"> </span>root<span class="w"> </span>user.<span class="w"> </span>Check<span class="w"> </span>SecurityContext/Image<span class="w">           </span>Medium<span class="w">     </span>pods<span class="w">              </span>4m8s
+mycluster-pop-500-27557035<span class="w">    </span>mycluster<span class="w">    </span>POP-500<span class="w">    </span>Zero<span class="w"> </span>scale<span class="w"> </span>detected<span class="w">                                                            </span>Medium<span class="w">     </span>deployments<span class="w">       </span>4m8s
 </code></pre></div>
 <p>It's possible filter issues by cluster, issue ID, severity and category 
 using <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">label selector</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># issues from mycluster</span>
-kubectl get clusterissues -l <span class="nv">cluster</span><span class="o">=</span>mycluster
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterissues<span class="w"> </span>-l<span class="w"> </span><span class="nv">cluster</span><span class="o">=</span>mycluster
 
 <span class="c1"># clusters with issue POP-106</span>
-kubectl get clusterissues -l <span class="nv">id</span><span class="o">=</span>POP-106
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterissues<span class="w"> </span>-l<span class="w"> </span><span class="nv">id</span><span class="o">=</span>POP-106
 
 <span class="c1"># issues from mycluster with high severity</span>
-kubectl get clusterissues -l <span class="nv">cluster</span><span class="o">=</span>mycluster,severity<span class="o">=</span>High
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterissues<span class="w"> </span>-l<span class="w"> </span><span class="nv">cluster</span><span class="o">=</span>mycluster,severity<span class="o">=</span>High
 
 <span class="c1"># only issues reported by the last scan from mycluster</span>
-kubectl get clusterissues -l <span class="nv">cluster</span><span class="o">=</span>mycluster,scanID<span class="o">=</span>fa4e63cc-5236-40f3-aa7f-599e1c83208b
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterissues<span class="w"> </span>-l<span class="w"> </span><span class="nv">cluster</span><span class="o">=</span>mycluster,scanID<span class="o">=</span>fa4e63cc-5236-40f3-aa7f-599e1c83208b
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Why is it an issue?</p>
 <p>The field <code>url</code> in <code>ClusterIssue</code> spec represents a link for a documentation about this issue.
 It is displayed in the UI and you can see by <code>kubectl</code> with the <code>-o=yaml</code> flag or the command below.</p>
-<div class="highlight"><pre><span></span><code>kubectl get clusterissues -o<span class="o">=</span>custom-columns<span class="o">=</span><span class="s2">&quot;NAME:.metadata.name,MESSAGE:.spec.message,URL:.spec.url&quot;</span>
-NAME                          MESSAGE                                                                        URL
-mycluster-pop-102-27557035    No probes defined                                                              https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-mycluster-pop-105-27557035    Liveness probe uses a port#, prefer a named port                               &lt;none&gt;
-mycluster-pop-106-27557035    No resources requests/limits defined                                           https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-mycluster-pop-1100-27557035   No pods match service selector                                                 https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
-mycluster-pop-306-27557035    Container could be running as root user. Check SecurityContext/Image           https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
-mycluster-pop-500-27557035    Zero scale detected                                                            https://kubernetes.io/docs/concepts/workloads/
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>clusterissues<span class="w"> </span>-o<span class="o">=</span>custom-columns<span class="o">=</span><span class="s2">&quot;NAME:.metadata.name,MESSAGE:.spec.message,URL:.spec.url&quot;</span>
+NAME<span class="w">                          </span>MESSAGE<span class="w">                                                                        </span>URL
+mycluster-pop-102-27557035<span class="w">    </span>No<span class="w"> </span>probes<span class="w"> </span>defined<span class="w">                                                              </span>https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+mycluster-pop-105-27557035<span class="w">    </span>Liveness<span class="w"> </span>probe<span class="w"> </span>uses<span class="w"> </span>a<span class="w"> </span>port#,<span class="w"> </span>prefer<span class="w"> </span>a<span class="w"> </span>named<span class="w"> </span>port<span class="w">                               </span>&lt;none&gt;
+mycluster-pop-106-27557035<span class="w">    </span>No<span class="w"> </span>resources<span class="w"> </span>requests/limits<span class="w"> </span>defined<span class="w">                                           </span>https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+mycluster-pop-1100-27557035<span class="w">   </span>No<span class="w"> </span>pods<span class="w"> </span>match<span class="w"> </span>service<span class="w"> </span>selector<span class="w">                                                 </span>https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+mycluster-pop-306-27557035<span class="w">    </span>Container<span class="w"> </span>could<span class="w"> </span>be<span class="w"> </span>running<span class="w"> </span>as<span class="w"> </span>root<span class="w"> </span>user.<span class="w"> </span>Check<span class="w"> </span>SecurityContext/Image<span class="w">           </span>https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
+mycluster-pop-500-27557035<span class="w">    </span>Zero<span class="w"> </span>scale<span class="w"> </span>detected<span class="w">                                                            </span>https://kubernetes.io/docs/concepts/workloads/
 </code></pre></div>
 <p>These docs should help you understand why it's an issue and how to fix it.</p>
 <p>All URLs are available <a href="https://github.com/undistro/zora/blob/main/worker/report/popeye/parse_types.go#L109">here</a> 
@@ -734,42 +734,6 @@ and you can contribute to Zora adding new links. See our <a href="https://github
       
         <footer class="md-footer">
   
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../connect-cluster/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Connect the target cluster to Zora" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Connect the target cluster to Zora
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../glossary/" class="md-footer__link md-footer__link--next" aria-label="Next: Glossary" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Glossary
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
-  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -791,12 +755,11 @@ and you can contribute to Zora adding new links. See our <a href="https://github
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant"], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant"], "search": "../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5cf534bf.min.js"></script>
       
-    
     
   </body>
 </html>
