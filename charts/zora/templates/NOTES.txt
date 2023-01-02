@@ -1,4 +1,4 @@
-1. Connect to a cluster with `kubectl`:
+1. Connect clusters with `kubectl`:
 
   For in-depth information about how to connect a cluster, visit
     https://zora.undistro.io/
