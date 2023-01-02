@@ -648,13 +648,13 @@ we recommend generating a kubeconfig file through your own platform.</p>
 <p>Zora requires read-only access, as described <a href="#2-create-the-rbac-resources">here</a>.</p>
 </div>
 <h2 id="setup-script">Setup Script<a class="headerlink" href="#setup-script" title="Permanent link">&para;</a></h2>
-<p>A <a href="https://zora.undistro.io/targetcluster.sh">script</a> is available to prepare a cluster, which can be executed by any POSIX compliant shell. </p>
+<p>A <a href="https://zora.undistro.io/v0.3/targetcluster.sh">script</a> is available to prepare a cluster, which can be executed by any POSIX compliant shell. </p>
 <p>The target cluster context can be set by exporting the <code>CONTEXT</code> variable or switching via <code>kubectl</code>, before running the script:</p>
-<p><div class="highlight"><pre><span></span><code>curl -q https://zora.undistro.io/targetcluster.sh | CONTEXT=&lt;TARGET_CONTEXT&gt; sh
+<p><div class="highlight"><pre><span></span><code>curl -q https://zora.undistro.io/v0.3/targetcluster.sh | CONTEXT=&lt;TARGET_CONTEXT&gt; sh
 </code></pre></div>
 or
 <div class="highlight"><pre><span></span><code>kubectl config use-context &lt;TARGET_CONTEXT&gt;
-curl -q https://zora.undistro.io/targetcluster.sh | sh
+curl -q https://zora.undistro.io/v0.3/targetcluster.sh | sh
 </code></pre></div></p>
 <p>By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with <code>-kubeconfig.yaml</code>.</p>
 <p>Before finishing, the script will show a command to <a href="/connect-cluster">connect the target cluster</a> through the generated kubeconfig, and save a sample <code>Cluster</code> manifest.</p>
