@@ -23,7 +23,7 @@ theme:
   name: material
   language: en
   logo: assets/logo.png
-  favicon: assets/favicon.png
+  favicon: assets/favicon.ico
   palette:
     - scheme: default
       toggle:
@@ -51,6 +51,10 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 extra:
   version:
     provider: mike
