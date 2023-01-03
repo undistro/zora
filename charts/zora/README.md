@@ -55,7 +55,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
 | saas.workspaceID | string | `""` | Your SaaS workspace ID |
-| saas.server | string | `"https://saas-hml.undistro.io"` | SaaS server URL |
+| saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |
 | saas.hooks.image.repository | string | `"radial/busyboxplus"` | SaaS hooks image repository |
 | saas.hooks.image.tag | string | `"curl"` | SaaS hooks image tag |
 | saas.hooks.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS install hook URL template |
