@@ -30,8 +30,7 @@
  setup-kind \
  delete-kind \
  setup-minikube \
- helm-docs \
- preview-docs
+ helm-docs
 
 
 # The help target prints out all targets with their descriptions organized
@@ -69,6 +68,7 @@ define addlicense-tool
   -ignore "**/*.png" \
   -ignore "**/*.md" \
   -ignore "**/*.css" \
+  -ignore "**/*.html" \
   -ignore ".github/**" \
   -ignore ".idea/**" \
   -v \
