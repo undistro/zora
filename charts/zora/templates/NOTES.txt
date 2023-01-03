@@ -1,7 +1,7 @@
 1. Connect clusters with `kubectl`:
 
   For in-depth information about how to connect a cluster, visit
-    https://zora.undistro.io/
+    https://zora-docs.undistro.io/
 
 {{- if .Values.saas.workspaceID }}
 2. Now you can see your clusters and issues in the SaaS:

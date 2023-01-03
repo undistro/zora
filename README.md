@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<a href="https://zora.undistro.io/" target="_blank">
+<a href="https://zora-docs.undistro.io/" target="_blank">
     <img src="docs/assets/logo-github.png" alt="Zora Logo">
 </a>
 
@@ -22,7 +22,7 @@ Zora is the first product created by Undistro's initiative. Visit our [website](
 
 ## Getting Started
 
-Check out our live [documentation](https://zora.undistro.io) for details about how to install Zora and start to scan your clusters.
+Check out our live [documentation](https://zora-docs.undistro.io) for details about how to install Zora and start to scan your clusters.
 
 ## Contributing
 
