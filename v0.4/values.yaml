@@ -21,7 +21,7 @@ saas:
   # -- Your SaaS workspace ID
   workspaceID: ""
   # -- SaaS server URL
-  server: "https://saas-hml.undistro.io"
+  server: "https://zora-dashboard.undistro.io"
   hooks:
     image:
       # -- SaaS hooks image repository

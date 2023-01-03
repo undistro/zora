@@ -15,7 +15,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.0">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.1">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.f79797b0.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3bd4f189.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
@@ -579,14 +579,14 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.4.0-alpha6" src="https://img.shields.io/badge/Version-0.4.0--alpha6-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.4.0-alpha6" src="https://img.shields.io/badge/AppVersion-v0.4.0--alpha6-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.4.0" src="https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.4.0" src="https://img.shields.io/badge/AppVersion-v0.4.0-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>Zora scans multiple Kubernetes clusters and reports potential issues.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="go">helm repo add undistro https://charts.undistro.io --force-update</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.4.0-alpha6 \</span>
+<span class="go">  --version 0.4.0 \</span>
 <span class="go">  --create-namespace --wait</span>
 </code></pre></div>
 <blockquote>
@@ -653,7 +653,7 @@ You're not viewing the latest version.
 <tr>
 <td>saas.server</td>
 <td>string</td>
-<td><code>"https://saas-hml.undistro.io"</code></td>
+<td><code>"https://zora-dashboard.undistro.io"</code></td>
 <td>SaaS server URL</td>
 </tr>
 <tr>
