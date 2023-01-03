@@ -21,9 +21,11 @@ import (
 	"time"
 
 	"github.com/robfig/cron/v3"
+	"github.com/undistro/zora/pkg/saas"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -44,7 +46,10 @@ import (
 	"github.com/undistro/zora/pkg/plugins/errparse"
 )
 
-const jobOwnerKey = ".metadata.controller"
+const (
+	jobOwnerKey          = ".metadata.controller"
+	clusterscanFinalizer = "clusterscan.zora.undistro.io/finalizer"
+)
 
 // ClusterScanReconciler reconciles a ClusterScan object
 type ClusterScanReconciler struct {
@@ -57,6 +62,8 @@ type ClusterScanReconciler struct {
 	WorkerImage             string
 	ClusterRoleBindingName  string
 	ServiceAccountName      string
+	OnUpdate                saas.ClusterScanHook
+	OnDelete                saas.ClusterScanHook
 }
 
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans,verbs=get;list;watch;create;update;patch;delete
@@ -91,8 +98,47 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Info(fmt.Sprintf("ClusterScan has been reconciled in %v", time.Since(t)))
 	}(time.Now())
 
+	if clusterscan.DeletionTimestamp.IsZero() {
+		if !controllerutil.ContainsFinalizer(clusterscan, clusterscanFinalizer) {
+			controllerutil.AddFinalizer(clusterscan, clusterscanFinalizer)
+			if err := r.Update(ctx, clusterscan); err != nil {
+				log.Error(err, "failed to add finalizer")
+				return ctrl.Result{}, err
+			}
+		}
+	} else {
+		log.Info("the ClusterScan is being deleted")
+		if controllerutil.ContainsFinalizer(clusterscan, clusterscanFinalizer) {
+			if r.OnDelete != nil {
+				if err := r.OnDelete(ctx, clusterscan); err != nil {
+					log.Error(err, "error in delete hook")
+				}
+			}
+			controllerutil.RemoveFinalizer(clusterscan, clusterscanFinalizer)
+			if err := r.Update(ctx, clusterscan); err != nil {
+				log.Error(err, "failed to remove finalizer")
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
+	}
+
 	err := r.reconcile(ctx, clusterscan)
+
+	if r.OnUpdate != nil {
+		if err := r.OnUpdate(ctx, clusterscan); err != nil {
+			log.Error(err, "error in update hook")
+		}
+	} else {
+		clusterscan.SetSaaSStatus(metav1.ConditionUnknown, string(metav1.ConditionUnknown),
+			"Zora SaaS is not configured. You can enable it providing the Helm parameter saas.workspaceID")
+	}
+
 	if err := r.Status().Update(ctx, clusterscan); err != nil {
+		if apierrors.IsConflict(err) {
+			log.Info("requeue after 1s due to conflict on update ClusterScan status", "error", err.Error())
+			return ctrl.Result{RequeueAfter: time.Second}, nil
+		}
 		log.Error(err, "failed to update ClusterScan status")
 	}
 
@@ -178,7 +224,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			KubeconfigSecret:   kubeconfigSecret,
 			WorkerImage:        r.WorkerImage,
 			ServiceAccountName: r.ServiceAccountName,
-			Suspend:            (notReadyErr != nil),
+			Suspend:            notReadyErr != nil,
 		}
 
 		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate())
@@ -195,6 +241,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 
 		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
 		pluginStatus.Suspend = *cronJob.Spec.Suspend
+		pluginStatus.Schedule = cronJob.Spec.Schedule
+
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
 		} else {
@@ -251,13 +299,12 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	}
 
 	clusterscan.Status.SyncStatus()
-	clusterscan.Status.Suspend = (notReadyErr != nil)
+	clusterscan.Status.Suspend = notReadyErr != nil
 	if notReadyErr == nil {
 		clusterscan.Status.Suspend = pointer.BoolDeref(clusterscan.Spec.Suspend, false)
 	}
 	clusterscan.Status.ObservedGeneration = clusterscan.Generation
 	clusterscan.SetReadyStatus(true, "ClusterScanReconciled", fmt.Sprintf("cluster scan successfully configured for plugins: %s", clusterscan.Status.PluginNames))
-
 	return notReadyErr
 }
 

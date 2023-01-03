@@ -1,0 +1,75 @@
+# Copyright 2022 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ClusterScan with all plugins currently Active and last successful scan
+# 21:45 -> Complete (all plugins)
+# 22:45 -> Active (NOW)
+# 23:45 -> Next
+
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  name: myclusterscan
+  namespace: ns
+  labels:
+    cluster: mycluster
+  ownerReferences:
+    - apiVersion: zora.undistro.io/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Cluster
+      name: mycluster
+      uid: 9f8832e8-d20f-4f39-a4e3-c2a2d6e9e114
+spec:
+  clusterRef:
+    name: mycluster
+  schedule: "45 * * * *"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      reason: 'ClusterScanReconciled'
+      lastTransitionTime: '2022-07-05T12:02:54Z'
+      message: 'cluster scan successfully configured for plugins: kubescape,popeye'
+  lastFinishedStatus: Complete
+  lastFinishedTime: "2022-08-04T21:47:00Z"
+  lastScheduleTime: "2022-08-04T22:45:00Z"
+  lastStatus: Active
+  lastSuccessfulTime: "2022-08-04T21:47:00Z"
+  nextScheduleTime: "2022-08-04T23:45:00Z"
+  observedGeneration: 3
+  pluginNames: kubescape,popeye
+  plugins:
+    popeye:
+      lastFinishedStatus: Complete
+      lastFinishedTime: "2022-08-04T21:46:00Z"
+      lastScanID: af8fc113-8b95-4cec-8f6b-b22472652d7b
+      lastSuccessfulScanID: af8fc113-8b95-4cec-8f6b-b22472652d7b
+      lastSuccessfulTime: "2022-08-04T21:46:00Z"
+      lastScheduleTime: "2022-08-04T22:45:00Z"
+      lastStatus: Active
+      nextScheduleTime: "2022-08-04T23:45:00Z"
+      issueCount: 32
+    kubescape:
+      lastFinishedStatus: Complete
+      lastFinishedTime: "2022-08-04T21:47:00Z"
+      lastScanID: b08a1ed0-a0e3-43c8-b99c-8378acfb92ec
+      lastSuccessfulScanID: b08a1ed0-a0e3-43c8-b99c-8378acfb92ec
+      lastSuccessfulTime: "2022-08-04T21:47:00Z"
+      lastScheduleTime: "2022-08-04T22:45:00Z"
+      lastStatus: Active
+      nextScheduleTime: "2022-08-04T23:45:00Z"
+      issueCount: 30
+  suspend: false
+  totalIssues: 62

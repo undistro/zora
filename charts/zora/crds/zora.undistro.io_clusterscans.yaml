@@ -59,6 +59,9 @@ spec:
     - jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
       type: string
+    - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
+      name: SaaS
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
@@ -410,6 +413,9 @@ spec:
                     nextScheduleTime:
                       description: Time when the next job will schedule.
                       format: date-time
+                      type: string
+                    schedule:
+                      description: The Cron schedule of this plugin
                       type: string
                     suspend:
                       description: Suspend field value from ClusterScan spec.plugins.*.suspend

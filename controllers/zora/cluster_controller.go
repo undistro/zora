@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/undistro/zora/pkg/saas"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -28,6 +29,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
@@ -36,17 +38,22 @@ import (
 	"github.com/undistro/zora/pkg/kubeconfig"
 )
 
+const clusterFinalizer = "cluster.zora.undistro.io/finalizer"
+
 // ClusterReconciler reconciles a Cluster object
 type ClusterReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Config   *rest.Config
+	OnUpdate saas.ClusterHook
+	OnDelete saas.ClusterHook
 }
 
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusters/finalizers,verbs=update
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterscans,verbs=list
 //+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -56,7 +63,7 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	cluster := &v1alpha1.Cluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
-		return ctrl.Result{RequeueAfter: 5 * time.Minute}, client.IgnoreNotFound(err)
+		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	log = log.WithValues("resourceVersion", cluster.ResourceVersion)
 	ctx = ctrllog.IntoContext(ctx, log)
@@ -65,9 +72,40 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		log.Info(fmt.Sprintf("Cluster has been reconciled in %v", time.Since(t)))
 	}(time.Now())
 
+	if cluster.DeletionTimestamp.IsZero() {
+		if !controllerutil.ContainsFinalizer(cluster, clusterFinalizer) {
+			controllerutil.AddFinalizer(cluster, clusterFinalizer)
+			if err := r.Update(ctx, cluster); err != nil {
+				log.Error(err, "failed to add finalizer")
+				return ctrl.Result{}, err
+			}
+		}
+	} else {
+		log.Info("the Cluster is being deleted")
+		if controllerutil.ContainsFinalizer(cluster, clusterFinalizer) {
+			if r.OnDelete != nil {
+				if err := r.OnDelete(ctx, cluster); err != nil {
+					log.Error(err, "error in delete hook")
+				}
+			}
+			controllerutil.RemoveFinalizer(cluster, clusterFinalizer)
+			if err := r.Update(ctx, cluster); err != nil {
+				log.Error(err, "failed to remove finalizer")
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
+	}
+
 	err := r.reconcile(ctx, cluster)
 	if err := r.Status().Update(ctx, cluster); err != nil {
 		log.Error(err, "failed to update Cluster status")
+	}
+
+	if r.OnUpdate != nil {
+		if err := r.OnUpdate(ctx, cluster); err != nil {
+			log.Error(err, "error in update hook")
+		}
 	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, err
 }

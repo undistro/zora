@@ -86,7 +86,11 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 		}
 		r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
 		r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
-		r.Existing.Spec.Schedule = firstNonEmptyString(r.PluginRef.Schedule, r.ClusterScan.Spec.Schedule)
+		schedule := r.PluginRef.Schedule
+		if schedule == "" {
+			schedule = r.ClusterScan.Spec.Schedule
+		}
+		r.Existing.Spec.Schedule = schedule
 		r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 		r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
 		r.Existing.Spec.FailedJobsHistoryLimit = r.ClusterScan.Spec.FailedScansHistoryLimit
@@ -221,15 +225,6 @@ func (r *Mutator) workerEnv() []corev1.EnvVar {
 			},
 		},
 	)
-}
-
-func firstNonEmptyString(strings ...string) string {
-	for _, s := range strings {
-		if s != "" {
-			return s
-		}
-	}
-	return ""
 }
 
 func firstNonNilBoolPointer(pointers ...*bool) *bool {

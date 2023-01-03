@@ -217,12 +217,14 @@ type PluginScanStatus struct {
 	// LastErrorMsg contains a plugin error message from the last failed scan.
 	LastErrorMsg string `json:"lastErrorMsg,omitempty"`
 
-	// IssueCount holds the sum of ClusterIssues found in the last successful
-	// scan.
+	// IssueCount holds the sum of ClusterIssues found in the last successful scan.
 	IssueCount *int `json:"issueCount,omitempty"`
 
 	// Suspend field value from ClusterScan spec.plugins.*.suspend
 	Suspend bool `json:"suspend,omitempty"`
+
+	// The Cron schedule of this plugin
+	Schedule string `json:"schedule,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -237,6 +239,7 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0
 //+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
+//+kubebuilder:printcolumn:name="SaaS",type="string",JSONPath=".status.conditions[?(@.type==\"SaaS\")].reason",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
@@ -260,6 +263,16 @@ func (in *ClusterScan) SetReadyStatus(status bool, reason, msg string) {
 	in.Status.SetCondition(metav1.Condition{
 		Type:               "Ready",
 		Status:             s,
+		ObservedGeneration: in.Generation,
+		Reason:             reason,
+		Message:            msg,
+	})
+}
+
+func (in *ClusterScan) SetSaaSStatus(status metav1.ConditionStatus, reason, msg string) {
+	in.Status.SetCondition(metav1.Condition{
+		Type:               "SaaS",
+		Status:             status,
 		ObservedGeneration: in.Generation,
 		Reason:             reason,
 		Message:            msg,

@@ -107,3 +107,23 @@ The cluster list output has the following columns:
     - The quantity of available and in use resources, is a sum of all Nodes.
     - Only one provider is displayed in `PROVIDER` column. Different information can be displayed for multi-cloud clusters.
     - Show detailed description of a cluster, including **events**, running `kubectl describe cluster mycluster`.
+
+## Delete a Cluster
+
+To delete a Cluster, use the following command:
+
+```shell
+kubectl delete cluster mycluster -n zora-system
+```
+
+This command deletes the `mycluster` Cluster and its scans and issues.
+
+!!! warning "Deleting a Cluster from dashboard (SaaS)"
+    If you installed Zora providing a workspace ID (Zora + SaaS) and
+    want to delete your [management cluster](../glossary#management-cluster), 
+    please first delete all [target clusters](../glossary#target-cluster).
+
+    If you delete the management cluster first, 
+    you will no longer be able to access or delete your target clusters, 
+    which will remain on your dashboard
+    until you contact the Undistro team by email: [undistro@getup.io](mailto:undistro@getup.io), so that we can proceed with the deletion.

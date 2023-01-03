@@ -1,0 +1,54 @@
+{
+	"apiVersion": "v1alpha1",
+	"name": "mycluster",
+	"namespace": "ns",
+	"environment": "env",
+	"provider": "aws",
+	"region": "us-east-1",
+	"totalNodes": 2,
+	"version": "v1.24.0",
+	"connection": {
+		"connected": true,
+		"message": "cluster successfully connected, version v1.24.0"
+	},
+	"resources": {
+		"discovered": false,
+		"message": "metrics API not available",
+		"memory": {
+			"available": "2938Mi",
+			"usage": "2047Mi",
+			"usagePercentage": 69
+		},
+		"cpu": {
+			"available": "3860m",
+			"usage": "135m",
+			"usagePercentage": 3
+		}
+	},
+	"creationTimestamp": "2022-05-02T18:36:36Z",
+	"totalIssues": 21,
+	"pluginStatus": {
+		"kubescape": {
+			"scan": {
+				"status": "failed",
+				"message": "failed to discover API server information. error: the server has asked for the client to provide credentials"
+			},
+			"issueCount": null,
+			"issues": null,
+			"lastSuccessfulScanTime": "2022-08-08T21:00:03Z",
+			"lastFinishedScanTime": "2022-08-08T21:00:03Z",
+			"nextScheduleScanTime": "2022-08-08T22:00:00Z"
+		},
+		"popeye": {
+			"scan": {
+				"status": "scanned",
+				"message": "Scan not finished"
+			},
+			"issueCount": 21,
+			"issues": null,
+			"lastSuccessfulScanTime": "2022-08-08T21:00:03Z",
+			"lastFinishedScanTime": "2022-08-08T21:00:03Z",
+			"nextScheduleScanTime": "2022-08-08T22:00:00Z"
+		}
+	}
+}

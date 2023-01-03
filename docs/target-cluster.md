@@ -16,17 +16,17 @@ For manual configuration, go to [Manual Configuration](#manual-configuration), o
 
 ## Setup Script
 
-A [script](https://zora.undistro.io/v0.3/targetcluster.sh) is available to prepare a cluster, which can be executed by any POSIX compliant shell. 
+A [script](https://zora.undistro.io/v0.4/targetcluster.sh) is available to prepare a cluster, which can be executed by any POSIX compliant shell. 
 
 The target cluster context can be set by exporting the `CONTEXT` variable or switching via `kubectl`, before running the script:
 
 ```shel
-curl -q https://zora.undistro.io/v0.3/targetcluster.sh | CONTEXT=<TARGET_CONTEXT> sh
+curl -q https://zora.undistro.io/v0.4/targetcluster.sh | CONTEXT=<TARGET_CONTEXT> sh
 ```
 or
 ```shel
 kubectl config use-context <TARGET_CONTEXT>
-curl -q https://zora.undistro.io/v0.3/targetcluster.sh | sh
+curl -q https://zora.undistro.io/v0.4/targetcluster.sh | sh
 ```
 
 By default, the generated kubeconfig will be named as your current Kubernetes context suffixed with `-kubeconfig.yaml`.

@@ -145,16 +145,6 @@ helm-docs:  ## Generate documentation for helm charts
 		jnorwood/helm-docs:v1.8.1 \
 		helm-docs -s=file --badge-style="flat-square&color=3CA9DD"
 
-preview-docs: helm-docs  ## Run a server to preview the documentation
-	@docker run --name zora-docs-preview --rm -it \
-		-p 8000:8000 \
-		-v ${PWD}/mkdocs.yml:/docs/mkdocs.yml \
-		-v ${PWD}/docs:/docs/docs \
-		-v ${PWD}/charts/zora/README.md:/docs/docs/helm-chart.md \
-		-v ${PWD}/charts/zora/values.yaml:/docs/docs/values.yaml \
-		squidfunk/mkdocs-material:8.3.8
-	@ rm -f docs/helm-chart.md docs/values.yaml
-
 license: addlicense  ## Add license header to source files
 	$(call addlicense-tool,)
 

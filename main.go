@@ -16,12 +16,12 @@ package main
 
 import (
 	"flag"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-	// to ensure that exec-entrypoint and run can make use of them.
+	"github.com/undistro/zora/pkg/saas"
 	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
@@ -59,6 +59,9 @@ func main() {
 	var workerImage string
 	var cronJobClusterRoleBinding string
 	var cronJobServiceAccount string
+	var saasWorkspaceID string
+	var saasServer string
+
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -66,9 +69,11 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "popeye", "Comma separated list of default plugins")
-	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:v0.3.10", "Docker image name of Worker container")
+	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:v0.4.0", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
+	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
 
 	opts := zap.Options{
 		Development: true,
@@ -92,11 +97,28 @@ func main() {
 		os.Exit(1)
 	}
 
+	var onClusterUpdate, onClusterDelete saas.ClusterHook
+	var onClusterScanUpdate, onClusterScanDelete saas.ClusterScanHook
+	if saasWorkspaceID != "" {
+		saasClient, err := saas.NewClient(saasServer, "v1alpha1", saasWorkspaceID, http.DefaultClient)
+		if err != nil {
+			setupLog.Error(err, "unable to create SaaS client", "workspaceID", saasWorkspaceID)
+			os.Exit(1)
+		}
+		setupLog.Info("registering SaaS hooks on reconcilers", "workspaceID", saasWorkspaceID)
+		onClusterUpdate = saas.UpdateClusterHook(saasClient)
+		onClusterDelete = saas.DeleteClusterHook(saasClient)
+		onClusterScanUpdate = saas.UpdateClusterScanHook(saasClient, mgr.GetClient())
+		onClusterScanDelete = saas.DeleteClusterScanHook(saasClient, mgr.GetClient())
+	}
+
 	if err = (&zoracontrollers.ClusterReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
 		Config:   mgr.GetConfig(),
+		OnUpdate: onClusterUpdate,
+		OnDelete: onClusterDelete,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
 		os.Exit(1)
@@ -104,7 +126,7 @@ func main() {
 
 	kcli, err := kubernetes.NewForConfig(mgr.GetConfig())
 	if err != nil {
-		setupLog.Error(err, "Failed to create Kubernetes clientset", "controller", "Cluster")
+		setupLog.Error(err, "unable to create Kubernetes clientset", "controller", "Cluster")
 		os.Exit(1)
 	}
 
@@ -118,10 +140,13 @@ func main() {
 		WorkerImage:             workerImage,
 		ClusterRoleBindingName:  cronJobClusterRoleBinding,
 		ServiceAccountName:      cronJobServiceAccount,
+		OnUpdate:                onClusterScanUpdate,
+		OnDelete:                onClusterScanDelete,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)
 	}
+
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

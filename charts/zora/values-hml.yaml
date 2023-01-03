@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ingress:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-  className: nginx
-  enabled: true
-  host: zora-hml.undistro.io
-  tlsSecretName: zora-cert
 scan:
   defaultPlugins:
     - popeye
