@@ -11,7 +11,7 @@ which are hosted in the [Undistro Organization](https://github.com/undistro) on 
   difference. This is something that everyone can do to help out Zora.
   GitHub stars help the project gain visibility and stand out.
 
-- **Reviewing the [documentation](https://zora.undistro.io/).** 
+- **Reviewing the [documentation](https://zora-docs.undistro.io/).** 
   Most documentation just needs a review for proper spelling and grammar. 
   If you think a document can be improved in any way, 
   feel free to hit the `edit` button at the top of the page.
