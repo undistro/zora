@@ -3,9 +3,10 @@
 <div align="center">
 
 <a href="https://zora-docs.undistro.io/" target="_blank">
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-github-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="docs/assets/logo-github-light.png">
-    <img alt="Zora logo" src="docs/assets/logo-github-dark.png">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-github-dark.png">
+        <img alt="Zora logo" src="docs/assets/logo-github-light.png">
+    </picture>
 </a>
 
 [![build](https://github.com/undistro/zora/actions/workflows/build.yaml/badge.svg)](https://github.com/undistro/zora/actions/workflows/build.yaml)
