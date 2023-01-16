@@ -26,7 +26,8 @@ All the information about these steps are detailed throughout this documentation
 
 ## Architecture
 
-<img src="assets/arch.png" alt="Zora Architecture Diagram">
+![Zora Architecture Diagram](assets/arch.png#only-light)
+![Zora Architecture Diagram](assets/arch-dark.png#only-dark)
 
 ## Zora origins
 
