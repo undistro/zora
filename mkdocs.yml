@@ -36,6 +36,8 @@ theme:
         name: Switch to light mode
   features:
     - content.tabs.link
+    - content.action.edit
+    - content.code.copy
     - navigation.top
     - navigation.tabs
     - navigation.tabs.sticky
