@@ -42,6 +42,7 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.instant
+    - navigation.footer
 plugins:
   - search
   - mike:
