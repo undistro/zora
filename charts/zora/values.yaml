@@ -145,9 +145,9 @@ scan:
       enabled: true
       image:
         # -- popeye plugin image repository
-        repository: derailed/popeye
+        repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: v0.10.0
+        tag: v0.10.2
     kubescape:
       enabled: false
       image:
