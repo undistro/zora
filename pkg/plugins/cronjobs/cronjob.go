@@ -163,8 +163,9 @@ func (r *Mutator) workerContainer() corev1.Container {
 		Name:            workerContainerName,
 		Image:           r.WorkerImage,
 		Env:             r.workerEnv(),
-		ImagePullPolicy: corev1.PullIfNotPresent,
+		Resources:       r.Plugin.Spec.Resources,
 		VolumeMounts:    commonVolumeMounts,
+		ImagePullPolicy: corev1.PullIfNotPresent,
 	}
 }
 

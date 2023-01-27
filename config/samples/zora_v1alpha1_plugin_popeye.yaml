@@ -18,6 +18,10 @@ metadata:
   name: popeye
 spec:
   image: ghcr.io/undistro/popeye:nonroot
+  resources:
+    limits:
+      cpu: 500m
+      memory: 100Mi
   command:
     - /bin/sh
     - -c
