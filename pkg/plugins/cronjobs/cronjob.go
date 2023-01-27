@@ -17,8 +17,6 @@ package cronjobs
 import (
 	"path/filepath"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
-	"github.com/undistro/zora/pkg/kubeconfig"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,6 +24,9 @@ import (
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+
+	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/kubeconfig"
 )
 
 const (
@@ -117,6 +118,9 @@ func (r *Mutator) Mutate() controllerutil.MutateFn {
 				Name:         resultsVolumeName,
 				VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{}},
 			},
+		}
+		r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
+			RunAsNonRoot: pointer.Bool(true),
 		}
 
 		desiredContainers := map[string]corev1.Container{
