@@ -147,7 +147,7 @@ scan:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: v0.10.2
+        tag: nonroot
     kubescape:
       enabled: false
       image:

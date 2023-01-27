@@ -96,7 +96,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
 | scan.plugins.popeye.enabled | bool | `true` |  |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
-| scan.plugins.popeye.image.tag | string | `"v0.10.2"` | popeye plugin image tag |
+| scan.plugins.popeye.image.tag | string | `"nonroot"` | popeye plugin image tag |
 | scan.plugins.kubescape.enabled | bool | `false` |  |
 | scan.plugins.kubescape.image.repository | string | `"quay.io/armosec/kubescape"` | kubescape plugin image repository |
 | scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |
