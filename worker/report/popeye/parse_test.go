@@ -22,6 +22,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
+
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
@@ -201,6 +202,24 @@ func TestParse(t *testing.T) {
 			testrepname: "testdata/test_report_4.json",
 			cispecs:     nil,
 			toerr:       true,
+		},
+		{
+			description: "Popeye report with error",
+			testrepname: "testdata/test_report_5.json",
+			cispecs: []*zorav1a1.ClusterIssueSpec{
+				{
+					ID:       "POP-712",
+					Message:  "Found only one master node",
+					Severity: "Low",
+					Category: "nodes",
+					Resources: map[string][]string{
+						"v1/nodes": {"kind-control-plane"},
+					},
+					TotalResources: 1,
+					Url:            "https://kubernetes.io/docs/concepts/overview/components/",
+				},
+			},
+			toerr: false,
 		},
 	}
 

@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
+
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
@@ -51,6 +52,9 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 	issuesmap := map[string]*zorav1a1.ClusterIssueSpec{}
 	for _, san := range r.Popeye.Sanitizers {
 		for typ, issues := range san.Issues {
+			if typ == "" {
+				continue
+			}
 			for _, iss := range issues {
 				id, msg, err := prepareIdAndMsg(iss.Message)
 				if err != nil {
