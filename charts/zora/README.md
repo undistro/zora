@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.4.0](https://img.shields.io/badge/AppVersion-v0.4.0-informational?style=flat-square&color=3CA9DD)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.4.1](https://img.shields.io/badge/AppVersion-v0.4.1-informational?style=flat-square&color=3CA9DD)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -12,7 +12,7 @@ To install the chart with the release name `zora`:
 helm repo add undistro https://charts.undistro.io --force-update
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.4.0 \
+  --version 0.4.1 \
   --create-namespace --wait
 ```
 
@@ -95,8 +95,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
 | scan.plugins.popeye.enabled | bool | `true` |  |
-| scan.plugins.popeye.image.repository | string | `"derailed/popeye"` | popeye plugin image repository |
-| scan.plugins.popeye.image.tag | string | `"v0.10.0"` | popeye plugin image tag |
+| scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
+| scan.plugins.popeye.image.tag | string | `"nonroot"` | popeye plugin image tag |
 | scan.plugins.kubescape.enabled | bool | `false` |  |
 | scan.plugins.kubescape.image.repository | string | `"quay.io/armosec/kubescape"` | kubescape plugin image repository |
 | scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |

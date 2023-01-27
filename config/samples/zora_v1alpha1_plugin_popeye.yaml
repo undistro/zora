@@ -17,7 +17,11 @@ kind: Plugin
 metadata:
   name: popeye
 spec:
-  image: derailed/popeye:v0.10.0
+  image: ghcr.io/undistro/popeye:nonroot
+  resources:
+    limits:
+      cpu: 500m
+      memory: 100Mi
   command:
     - /bin/sh
     - -c

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{ if .Values.scan.plugins.popeye.enabled -}}
 apiVersion: zora.undistro.io/v1alpha1
 kind: Plugin
 metadata:
@@ -21,6 +20,10 @@ metadata:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 100Mi
   command:
     - /bin/sh
     - -c
@@ -46,4 +49,3 @@ spec:
       end=$(date +%s)
       echo "Scan has finished in $(($end-$start)) seconds with exit code $exitcode"
       exit $exitcode
-{{- end }}
