@@ -22,10 +22,11 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
-	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
-	"github.com/undistro/zora/worker/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+
+	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/worker/config"
 )
 
 func TestParse(t *testing.T) {
@@ -70,7 +71,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelCluster:  "fake_cluster",
 							zorav1a1.LabelSeverity: "Low",
 							zorav1a1.LabelIssueID:  "POP-400",
-							zorav1a1.LabelCategory: "clusterroles",
+							zorav1a1.LabelCategory: "General",
 							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
@@ -78,7 +79,7 @@ func TestParse(t *testing.T) {
 						ID:       "POP-400",
 						Message:  "Used? Unable to locate resource reference",
 						Severity: zorav1a1.ClusterIssueSeverity("Low"),
-						Category: "clusterroles",
+						Category: "General",
 						Resources: map[string][]string{
 							"rbac.authorization.k8s.io/v1/clusterroles": {
 								"capi-kubeadm-control-plane-manager-role",
@@ -140,7 +141,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelCluster:  "super_fake_cluster",
 							zorav1a1.LabelSeverity: "Low",
 							zorav1a1.LabelIssueID:  "POP-400",
-							zorav1a1.LabelCategory: "clusterroles",
+							zorav1a1.LabelCategory: "General",
 							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
@@ -148,7 +149,7 @@ func TestParse(t *testing.T) {
 						ID:       "POP-400",
 						Message:  "Used? Unable to locate resource reference",
 						Severity: zorav1a1.ClusterIssueSeverity("Low"),
-						Category: "clusterroles",
+						Category: "General",
 						Resources: map[string][]string{
 							"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
 						},
@@ -177,7 +178,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelCluster:  "super_fake_cluster",
 							zorav1a1.LabelSeverity: "Medium",
 							zorav1a1.LabelIssueID:  "POP-106",
-							zorav1a1.LabelCategory: "daemonsets",
+							zorav1a1.LabelCategory: "Container",
 							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
@@ -185,7 +186,7 @@ func TestParse(t *testing.T) {
 						ID:       "POP-106",
 						Message:  "No resources requests/limits defined",
 						Severity: zorav1a1.ClusterIssueSeverity("Medium"),
-						Category: "daemonsets",
+						Category: "Container",
 						Resources: map[string][]string{
 							"apps/v1/daemonsets":  {"kube-system/aws-node"},
 							"apps/v1/deployments": {"cert-manager/cert-manager"},
@@ -215,7 +216,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelCluster:  "super_fake_cluster",
 							zorav1a1.LabelSeverity: "Medium",
 							zorav1a1.LabelIssueID:  "POP-107",
-							zorav1a1.LabelCategory: "daemonsets",
+							zorav1a1.LabelCategory: "Container",
 							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
@@ -223,7 +224,7 @@ func TestParse(t *testing.T) {
 						ID:       "POP-107",
 						Message:  "No resource limits defined",
 						Severity: zorav1a1.ClusterIssueSeverity("Medium"),
-						Category: "daemonsets",
+						Category: "Container",
 						Resources: map[string][]string{
 							"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
 						},
@@ -252,7 +253,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelCluster:  "super_fake_cluster",
 							zorav1a1.LabelSeverity: "Low",
 							zorav1a1.LabelIssueID:  "POP-108",
-							zorav1a1.LabelCategory: "deployments",
+							zorav1a1.LabelCategory: "Container",
 							zorav1a1.LabelPlugin:   "popeye",
 						},
 					},
@@ -260,7 +261,7 @@ func TestParse(t *testing.T) {
 						ID:       "POP-108",
 						Message:  "Unnamed port",
 						Severity: zorav1a1.ClusterIssueSeverity("Low"),
-						Category: "deployments",
+						Category: "Container",
 						Resources: map[string][]string{
 							"apps/v1/deployments": {"cert-manager/cert-manager"},
 						},
@@ -347,7 +348,7 @@ func TestParse(t *testing.T) {
 						Severity: "Medium",
 						Category: "deployment",
 						Resources: map[string][]string{
-							"apps/v1/daemonset": []string{
+							"apps/v1/daemonset": {
 								"kube-system/gke-metrics-agent",
 								"kube-system/gke-metrics-agent-scaling-20",
 								"kube-system/fluentbit-gke",
@@ -359,7 +360,7 @@ func TestParse(t *testing.T) {
 								"kube-system/gke-metrics-agent-windows",
 								"kube-system/pdcsi-node",
 							},
-							"apps/v1/deployment": []string{
+							"apps/v1/deployment": {
 								"kube-system/konnectivity-agent",
 								"kube-system/metrics-server-v0.4.5",
 								"kube-system/kube-dns",
@@ -367,7 +368,7 @@ func TestParse(t *testing.T) {
 								"kube-system/kube-dns-autoscaler",
 								"kube-system/konnectivity-agent-autoscaler",
 							},
-							"v1/pod": []string{
+							"v1/pod": {
 								"kube-system/kube-proxy-gke-zora-jzapzzpr-default-pool-b0f7ab4a-sg6t",
 							},
 						},
@@ -421,10 +422,10 @@ func TestParse(t *testing.T) {
 						Severity: "High",
 						Category: "daemonset",
 						Resources: map[string][]string{
-							"apps/v1/daemonset": []string{
+							"apps/v1/daemonset": {
 								"kube-system/kube-proxy",
 							},
-							"apps/v1/deployment": []string{
+							"apps/v1/deployment": {
 								"kube-system/kube-dns",
 							},
 						},
@@ -462,7 +463,7 @@ func TestParse(t *testing.T) {
 						Severity: "Medium",
 						Category: "daemonset",
 						Resources: map[string][]string{
-							"apps/v1/daemonset": []string{
+							"apps/v1/daemonset": {
 								"kube-system/fluentbit-gke",
 								"kube-system/kube-proxy",
 							},
@@ -501,7 +502,7 @@ func TestParse(t *testing.T) {
 						Severity: "Medium",
 						Category: "daemonset",
 						Resources: map[string][]string{
-							"apps/v1/daemonset": []string{
+							"apps/v1/daemonset": {
 								"kube-system/fluentbit-gke",
 								"kube-system/kube-proxy",
 							},
@@ -540,10 +541,10 @@ func TestParse(t *testing.T) {
 						Severity: "Low",
 						Category: "deployment",
 						Resources: map[string][]string{
-							"apps/v1/daemonset": []string{
+							"apps/v1/daemonset": {
 								"kube-system/gke-metrics-agent",
 							},
-							"apps/v1/deployment": []string{
+							"apps/v1/deployment": {
 								"kube-system/konnectivity-agent",
 							},
 						},

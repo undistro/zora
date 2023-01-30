@@ -110,7 +110,7 @@ func TestParse(t *testing.T) {
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
 					Severity: "Low",
-					Category: "clusterroles",
+					Category: "General",
 					Resources: map[string][]string{
 						"rbac.authorization.k8s.io/v1/clusterroles": {
 							"capi-kubeadm-control-plane-manager-role",
@@ -146,7 +146,7 @@ func TestParse(t *testing.T) {
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
 					Severity: "Low",
-					Category: "clusterroles",
+					Category: "General",
 					Resources: map[string][]string{
 						"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
 					},
@@ -157,7 +157,7 @@ func TestParse(t *testing.T) {
 					ID:       "POP-106",
 					Message:  "No resources requests/limits defined",
 					Severity: "Medium",
-					Category: "daemonsets",
+					Category: "Container",
 					Resources: map[string][]string{
 						"apps/v1/daemonsets":  {"kube-system/aws-node"},
 						"apps/v1/deployments": {"cert-manager/cert-manager"},
@@ -169,7 +169,7 @@ func TestParse(t *testing.T) {
 					ID:       "POP-107",
 					Message:  "No resource limits defined",
 					Severity: "Medium",
-					Category: "daemonsets",
+					Category: "Container",
 					Resources: map[string][]string{
 						"apps/v1/daemonsets": {"kube-system/aws-node", "kube-system/kube-proxy"},
 					},
@@ -180,7 +180,7 @@ func TestParse(t *testing.T) {
 					ID:       "POP-108",
 					Message:  "Unnamed port",
 					Severity: "Low",
-					Category: "deployments",
+					Category: "Container",
 					Resources: map[string][]string{
 						"apps/v1/deployments": {"cert-manager/cert-manager"},
 					},
@@ -211,7 +211,7 @@ func TestParse(t *testing.T) {
 					ID:       "POP-712",
 					Message:  "Found only one master node",
 					Severity: "Low",
-					Category: "nodes",
+					Category: "Node",
 					Resources: map[string][]string{
 						"v1/nodes": {"kind-control-plane"},
 					},
