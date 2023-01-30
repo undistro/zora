@@ -16,10 +16,8 @@ package popeye
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
-	"strings"
 
 	"github.com/go-logr/logr"
 
@@ -34,9 +32,9 @@ var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
 func prepareIdAndMsg(msg string) (string, string, error) {
 	s := msgre.FindStringSubmatch(msg)
 	if len(s) != 3 {
-		return "", "", errors.New("Unable to split Popeye error code from message.")
+		return "", "", fmt.Errorf("unable to split Popeye error code from message %s", msg)
 	}
-	if msg, ok := IssueIDtoGenericMsg[s[1][strings.LastIndex(s[1], "-")+1:]]; ok {
+	if msg, ok := IssueIDtoGenericMsg[s[1]]; ok {
 		return s[1], msg, nil
 	}
 	return s[1], s[2], nil
@@ -58,7 +56,7 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 			for _, iss := range issues {
 				id, msg, err := prepareIdAndMsg(iss.Message)
 				if err != nil {
-					return nil, fmt.Errorf("Unable to parse Popeye issue on <%s>: %w", typ, err)
+					return nil, fmt.Errorf("unable to parse Popeye issue on <%s>: %w", typ, err)
 				}
 				if iss.Level == OkLevel {
 					log.Info("Skipping OK level issue", "id", id, "msg", msg)
@@ -72,12 +70,12 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 						ID:       id,
 						Message:  msg,
 						Severity: LevelToIssueSeverity[iss.Level],
-						Category: san.Sanitizer,
+						Category: IssueIDtoCategory[id],
 						Resources: map[string][]string{
 							san.GVR: {typ},
 						},
 						TotalResources: 1,
-						Url:            IssueIDtoUrl[id[strings.LastIndex(id, "-")+1:]],
+						Url:            IssueIDtoUrl[id],
 					}
 				}
 			}
