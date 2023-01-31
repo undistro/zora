@@ -37,6 +37,8 @@ spec:
       start=$(date +%s)
       echo Scanning...
       echo "$SPINACH" > /tmp/spinach.yml
+      sed -i "s+CRONJOB_NAMESPACE+$CRONJOB_NAMESPACE+g" /tmp/spinach.yml
+      sed -i "s+CRONJOB_NAME+$CRONJOB_NAME+g" /tmp/spinach.yml
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
