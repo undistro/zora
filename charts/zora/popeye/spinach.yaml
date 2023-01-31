@@ -28,6 +28,8 @@ popeye:
         codes: [400]
     v1/pods:
       - name: 'rx:^kube-(system|public|node-lease)'
+      - name: 'rx:^zora-system\/zora-operator.*$'
+        codes: [102, 301]
     v1/serviceaccounts:
       - name: 'rx:^kube-(system|public|node-lease)'
       - name: 'rx:^.*\/default$'
