@@ -37,5 +37,7 @@ popeye:
       - name: 'rx:sh\.helm\.release'
     v1/services:
       - name: 'rx:^kube-(system|public|node-lease)'
+      - name: zora-system/zora-metrics
+        codes: [1109]
     policy/v1/poddisruptionbudgets:
       - name: 'rx:^kube-(system|public|node-lease)'
