@@ -21,6 +21,7 @@ popeye:
     v1/configmaps:
       - name: 'rx:^.*\/kube-root-ca.crt$'
       - name: 'rx:^kube-(system|public|node-lease)'
+      # zora leader election
       - name: 'zora-system/e0f4eef4.zora.undistro.io'
     v1/namespaces:
       - name: 'rx:^kube-(system|public|node-lease)'
@@ -28,6 +29,7 @@ popeye:
         codes: [400]
     v1/pods:
       - name: 'rx:^kube-(system|public|node-lease)'
+      # zora-operator connects to API Server and the kube-rbac-proxy container has no probes
       - name: 'rx:^zora-system\/zora-operator.*$'
         codes: [102, 301]
     v1/serviceaccounts:
