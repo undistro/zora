@@ -189,10 +189,20 @@ func (r *Mutator) pluginContainer() corev1.Container {
 func (r *Mutator) pluginEnv() []corev1.EnvVar {
 	p := append(r.Plugin.Spec.Env, r.PluginRef.Env...)
 	p = append(p, commonEnv...)
-	p = append(p, corev1.EnvVar{
-		Name:  "KUBECONFIG",
-		Value: filepath.Join(kubeconfigMountPath, kubeconfigFile),
-	})
+	p = append(p,
+		corev1.EnvVar{
+			Name:  "KUBECONFIG",
+			Value: filepath.Join(kubeconfigMountPath, kubeconfigFile),
+		},
+		corev1.EnvVar{
+			Name:  "CRONJOB_NAMESPACE",
+			Value: r.Existing.ObjectMeta.Namespace,
+		},
+		corev1.EnvVar{
+			Name:  "CRONJOB_NAME",
+			Value: r.Existing.ObjectMeta.Name,
+		},
+	)
 	return p
 }
 
