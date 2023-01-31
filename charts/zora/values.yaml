@@ -147,7 +147,7 @@ scan:
       # If `true` resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces are skipped
       # as well as the kubernetes system reserved RBAC (prefixed with `system:`).
       # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/popeye/spinach.yaml
-      skipInteralResources: false
+      skipInternalResources: false
       image:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
