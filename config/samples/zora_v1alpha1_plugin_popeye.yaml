@@ -59,6 +59,9 @@ spec:
               # zora-operator connects to API Server and the kube-rbac-proxy container has no probes
               - name: 'rx:^zora-system\/zora-operator.*$'
                 codes: [102, 301]
+              # CRONJOB_NAMESPACE and CRONJOB_NAME are replaced by the namespace and name of popeye cronjob
+              - name: 'rx:^CRONJOB_NAMESPACE\/CRONJOB_NAME-'
+                codes: [203, 207, 301]
             v1/serviceaccounts:
               - name: 'rx:^kube-(system|public|node-lease)'
               - name: 'rx:^.*\/default$'
@@ -78,6 +81,8 @@ spec:
     - |
       start=$(date +%s)
       echo "$SPINACH" > /tmp/spinach.yml
+      sed -i "s+CRONJOB_NAMESPACE+$CRONJOB_NAMESPACE+g" /tmp/spinach.yml
+      sed -i "s+CRONJOB_NAME+$CRONJOB_NAME+g" /tmp/spinach.yml
       echo Scanning...
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
