@@ -1,0 +1,40 @@
+popeye:
+  excludes:
+    rbac.authorization.k8s.io/v1/clusterrolebindings:
+      - name: 'rx:^system\:'
+    rbac.authorization.k8s.io/v1/clusterroles:
+      - name: 'rx:^system\:'
+      - name: admin
+      - name: edit
+      - name: view
+      - name: cluster-admin
+    rbac.authorization.k8s.io/v1/rolebindings:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    rbac.authorization.k8s.io/v1/roles:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    apps/v1/daemonsets:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    apps/v1/deployments:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    apps/v1/replicasets:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    v1/configmaps:
+      - name: 'rx:^.*\/kube-root-ca.crt$'
+      - name: 'rx:^kube-(system|public|node-lease)'
+    v1/namespaces:
+      - name: 'rx:^kube-(system|public|node-lease)'
+      - name: default
+        codes: [400]
+    v1/pods:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    v1/serviceaccounts:
+      - name: 'rx:^kube-(system|public|node-lease)'
+      - name: 'rx:^.*\/default$'
+        codes: [400]
+    v1/secrets:
+      - name: 'rx:^kube-(system|public|node-lease)'
+      - name: 'rx:sh\.helm\.release'
+    v1/services:
+      - name: 'rx:^kube-(system|public|node-lease)'
+    policy/v1/poddisruptionbudgets:
+      - name: 'rx:^kube-(system|public|node-lease)'

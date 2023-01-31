@@ -24,16 +24,24 @@ spec:
     limits:
       cpu: 500m
       memory: 100Mi
+{{- if .Values.scan.plugins.popeye.skipInteralResourcesChecks }}
+  env:
+    - name: SPINACH
+      value: |
+{{ (.Files.Get "popeye/spinach.yaml") | indent 8 }}
+{{- end }}
   command:
     - /bin/sh
     - -c
     - |
       start=$(date +%s)
       echo Scanning...
+      echo "$SPINACH" > /tmp/spinach.yml
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
         --kubeconfig $(KUBECONFIG) \
+        -f /tmp/spinach.yml \
         --all-namespaces \
         --force-exit-zero \
         --save \
