@@ -95,7 +95,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
 | scan.plugins.popeye.enabled | bool | `true` |  |
-| scan.plugins.popeye.skipInteralResourcesChecks | bool | `false` | Specifies whether the internal resources should be skipped by `popeye` scans. |
+| scan.plugins.popeye.skipInteralResources | bool | `false` | Specifies whether the internal resources should be skipped by `popeye` scans. |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"nonroot"` | popeye plugin image tag |
 | scan.plugins.kubescape.enabled | bool | `false` |  |

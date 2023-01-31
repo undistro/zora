@@ -144,7 +144,7 @@ scan:
     popeye:
       enabled: true
       # -- Specifies whether the internal resources should be skipped by `popeye` scans.
-      skipInteralResourcesChecks: false
+      skipInteralResources: false
       image:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye

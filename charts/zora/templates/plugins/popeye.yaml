@@ -24,7 +24,7 @@ spec:
     limits:
       cpu: 500m
       memory: 100Mi
-{{- if .Values.scan.plugins.popeye.skipInteralResourcesChecks }}
+{{- if .Values.scan.plugins.popeye.skipInteralResources }}
   env:
     - name: SPINACH
       value: |
