@@ -61,7 +61,7 @@ spec:
                 codes: [102, 301]
               # CRONJOB_NAMESPACE and CRONJOB_NAME are replaced by the namespace and name of popeye cronjob
               - name: 'rx:^CRONJOB_NAMESPACE\/CRONJOB_NAME-'
-                codes: [203, 207, 301]
+                codes: [203, 206, 207, 301]
             v1/serviceaccounts:
               - name: 'rx:^kube-(system|public|node-lease)'
               - name: 'rx:^.*\/default$'
