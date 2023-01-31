@@ -21,6 +21,7 @@ popeye:
     v1/configmaps:
       - name: 'rx:^.*\/kube-root-ca.crt$'
       - name: 'rx:^kube-(system|public|node-lease)'
+      - name: 'zora-system/e0f4eef4.zora.undistro.io'
     v1/namespaces:
       - name: 'rx:^kube-(system|public|node-lease)'
       - name: default
