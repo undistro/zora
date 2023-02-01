@@ -62,6 +62,8 @@ data:
           - name: 'rx:^kube-(system|public|node-lease)'
           - name: 'rx:^.*\/default$'
             codes: [400]
+          - name: 'rx:^zora-system\/'
+            codes: [400]
         v1/secrets:
           - name: 'rx:^kube-(system|public|node-lease)'
           - name: 'rx:sh\.helm\.release'
