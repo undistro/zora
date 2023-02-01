@@ -25,10 +25,10 @@ spec:
       cpu: 500m
       memory: 100Mi
 {{- if .Values.scan.plugins.popeye.skipInternalResources }}
-  env:
-    - name: SPINACH
-      value: |
-{{ (.Files.Get "popeye/spinach.yaml") | indent 8 }}
+  envFrom:
+    - configMapRef:
+        name: popeye-config
+        optional: true
 {{- end }}
   command:
     - /bin/sh
@@ -36,14 +36,18 @@ spec:
     - |
       start=$(date +%s)
       echo Scanning...
+      {{- if .Values.scan.plugins.popeye.skipInternalResources }}
       echo "$SPINACH" > /tmp/spinach.yml
       sed -i "s+CRONJOB_NAMESPACE+$CRONJOB_NAMESPACE+g" /tmp/spinach.yml
       sed -i "s+CRONJOB_NAME+$CRONJOB_NAME+g" /tmp/spinach.yml
+      {{- end }}
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
         --kubeconfig $(KUBECONFIG) \
+        {{- if .Values.scan.plugins.popeye.skipInternalResources }}
         -f /tmp/spinach.yml \
+        {{- end }}
         --all-namespaces \
         --force-exit-zero \
         --save \
