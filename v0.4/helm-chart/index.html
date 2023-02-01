@@ -15,7 +15,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.8">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.9">
     
     
       
@@ -586,14 +586,14 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.4.3" src="https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.4.3" src="https://img.shields.io/badge/AppVersion-v0.4.3-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.4.4" src="https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.4.4" src="https://img.shields.io/badge/AppVersion-v0.4.4-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>Zora scans multiple Kubernetes clusters and reports potential issues.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="go">helm repo add undistro https://charts.undistro.io --force-update</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.4.3 \</span>
+<span class="go">  --version 0.4.4 \</span>
 <span class="go">  --create-namespace --wait</span>
 </code></pre></div>
 <blockquote>
@@ -896,6 +896,12 @@ You're not viewing the latest version.
 <td>bool</td>
 <td><code>true</code></td>
 <td></td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.skipInternalResources</td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Specifies whether the following resources should be skipped by <code>popeye</code> scans. 1. resources from <code>kube-system</code>, <code>kube-public</code> and <code>kube-node-lease</code> namespaces; 2. kubernetes system reserved RBAC (prefixed with <code>system:</code>); 3. <code>kube-root-ca.crt</code> configmaps; 4. <code>default</code> namespace; 5. <code>default</code> serviceaccounts; 6. Helm secrets (prefixed with <code>sh.helm.release</code>); 7. Zora components. See <code>popeye</code> configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml</td>
 </tr>
 <tr>
 <td>scan.plugins.popeye.image.repository</td>
