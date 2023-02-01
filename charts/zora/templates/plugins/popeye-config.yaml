@@ -1,0 +1,76 @@
+# Copyright 2023 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{{ if .Values.scan.plugins.popeye.skipInternalResources -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: popeye-config
+  labels:
+    {{- include "zora.labels" . | nindent 4 }}
+data:
+  SPINACH: |
+    popeye:
+      excludes:
+        rbac.authorization.k8s.io/v1/clusterrolebindings:
+          - name: 'rx:^system\:'
+        rbac.authorization.k8s.io/v1/clusterroles:
+          - name: 'rx:^system\:'
+          - name: admin
+          - name: edit
+          - name: view
+          - name: cluster-admin
+        rbac.authorization.k8s.io/v1/rolebindings:
+          - name: 'rx:^kube-(system|public|node-lease)'
+        rbac.authorization.k8s.io/v1/roles:
+          - name: 'rx:^kube-(system|public|node-lease)'
+        apps/v1/daemonsets:
+          - name: 'rx:^kube-(system|public|node-lease)'
+        apps/v1/deployments:
+          - name: 'rx:^kube-(system|public|node-lease)'
+        apps/v1/replicasets:
+          - name: 'rx:^kube-(system|public|node-lease)'
+        v1/configmaps:
+          - name: 'rx:^.*\/kube-root-ca.crt$'
+          - name: 'rx:^kube-(system|public|node-lease)'
+          # zora leader election
+          - name: 'zora-system/e0f4eef4.zora.undistro.io'
+        v1/namespaces:
+          - name: 'rx:^kube-(system|public|node-lease)'
+          - name: default
+            codes: [400]
+        v1/pods:
+          - name: 'rx:^kube-(system|public|node-lease)'
+          # zora-operator connects to API Server and the kube-rbac-proxy container has no probes
+          - name: 'rx:^zora-system\/zora-operator.*$'
+            codes: [102, 301]
+          # CRONJOB_NAMESPACE and CRONJOB_NAME are replaced by the namespace and name of popeye cronjob
+          - name: 'rx:^CRONJOB_NAMESPACE\/CRONJOB_NAME-'
+            codes: [203, 206, 207, 301]
+        v1/serviceaccounts:
+          - name: 'rx:^kube-(system|public|node-lease)'
+          - name: 'rx:^.*\/default$'
+            codes: [400]
+          - name: 'rx:^zora-system\/'
+            codes: [400]
+        v1/secrets:
+          - name: 'rx:^kube-(system|public|node-lease)'
+          - name: 'rx:sh\.helm\.release'
+        v1/services:
+          - name: 'rx:^kube-(system|public|node-lease)'
+          - name: zora-system/zora-metrics
+            codes: [1109]
+        policy/v1/poddisruptionbudgets:
+          - name: 'rx:^kube-(system|public|node-lease)'
+{{- end }}

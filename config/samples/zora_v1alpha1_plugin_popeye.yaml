@@ -22,11 +22,69 @@ spec:
     limits:
       cpu: 500m
       memory: 100Mi
+  env:
+    - name: SPINACH
+      value: |
+        popeye:
+          excludes:
+            rbac.authorization.k8s.io/v1/clusterrolebindings:
+              - name: 'rx:^system\:'
+            rbac.authorization.k8s.io/v1/clusterroles:
+              - name: 'rx:^system\:'
+              - name: admin
+              - name: edit
+              - name: view
+              - name: cluster-admin
+            rbac.authorization.k8s.io/v1/rolebindings:
+              - name: 'rx:^kube-(system|public|node-lease)'
+            rbac.authorization.k8s.io/v1/roles:
+              - name: 'rx:^kube-(system|public|node-lease)'
+            apps/v1/daemonsets:
+              - name: 'rx:^kube-(system|public|node-lease)'
+            apps/v1/deployments:
+              - name: 'rx:^kube-(system|public|node-lease)'
+            apps/v1/replicasets:
+              - name: 'rx:^kube-(system|public|node-lease)'
+            v1/configmaps:
+              - name: 'rx:^.*\/kube-root-ca.crt$'
+              - name: 'rx:^kube-(system|public|node-lease)'
+              # zora leader election
+              - name: 'zora-system/e0f4eef4.zora.undistro.io'
+            v1/namespaces:
+              - name: 'rx:^kube-(system|public|node-lease)'
+              - name: default
+                codes: [400]
+            v1/pods:
+              - name: 'rx:^kube-(system|public|node-lease)'
+              # zora-operator connects to API Server and the kube-rbac-proxy container has no probes
+              - name: 'rx:^zora-system\/zora-operator.*$'
+                codes: [102, 301]
+              # CRONJOB_NAMESPACE and CRONJOB_NAME are replaced by the namespace and name of popeye cronjob
+              - name: 'rx:^CRONJOB_NAMESPACE\/CRONJOB_NAME-'
+                codes: [203, 206, 207, 301]
+            v1/serviceaccounts:
+              - name: 'rx:^kube-(system|public|node-lease)'
+              - name: 'rx:^.*\/default$'
+                codes: [400]
+              - name: 'rx:^zora-system\/'
+                codes: [400]
+            v1/secrets:
+              - name: 'rx:^kube-(system|public|node-lease)'
+              - name: 'rx:sh\.helm\.release'
+            v1/services:
+              - name: 'rx:^kube-(system|public|node-lease)'
+              - name: zora-system/zora-metrics
+                codes: [1109]
+            policy/v1/poddisruptionbudgets:
+              - name: 'rx:^kube-(system|public|node-lease)'
   command:
     - /bin/sh
     - -c
     - |
       start=$(date +%s)
+      echo "$SPINACH" > /tmp/spinach.yml
+      sed -i "s+CRONJOB_NAMESPACE+$CRONJOB_NAMESPACE+g" /tmp/spinach.yml
+      sed -i "s+CRONJOB_NAME+$CRONJOB_NAME+g" /tmp/spinach.yml
       echo Scanning...
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
@@ -34,6 +92,7 @@ spec:
         --kubeconfig $(KUBECONFIG) \
         --all-namespaces \
         --force-exit-zero \
+        -f /tmp/spinach.yml \
         --save \
         --output-file results.json
       exitcode=$(echo $?)
