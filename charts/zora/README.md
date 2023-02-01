@@ -95,7 +95,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.defaultPlugins | list | `["popeye"]` | Names of the default plugins |
 | scan.plugins.popeye.enabled | bool | `true` |  |
-| scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/popeye/spinach.yaml |
+| scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"nonroot"` | popeye plugin image tag |
 | scan.plugins.kubescape.enabled | bool | `false` |  |

@@ -151,7 +151,7 @@ scan:
       # 5. `default` serviceaccounts;
       # 6. Helm secrets (prefixed with `sh.helm.release`);
       # 7. Zora components.
-      # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/popeye/spinach.yaml
+      # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml
       skipInternalResources: false
       image:
         # -- popeye plugin image repository
