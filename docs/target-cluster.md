@@ -223,6 +223,29 @@ users:
 EOF
 ```
 
+??? info "Example of a generated kubeconfig file"
+
+    ```yaml
+    apiVersion: v1
+    kind: Config
+    current-context: mycluster-prod
+    contexts:
+    - name: mycluster-prod
+      context:
+        cluster: mycluster-prod
+        user: zora-view
+    clusters:
+    - name: mycluster-prod
+      cluster:
+        certificate-authority-data: LS0tLS1CRUdJTiBDRVJU...OMITTED
+        server: https://OMITTED.us-east-1.eks.amazonaws.com
+    users:
+    - name: zora-view
+      user:
+        token: eyJhbGciOiJSUzI1NiIs...OMITTED
+    ```
+
+
 ### Verify the generated kubeconfig
 
 These steps create a file in your current working directory called `zora-view-kubeconfig.yml`.
