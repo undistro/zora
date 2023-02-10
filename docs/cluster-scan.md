@@ -80,12 +80,12 @@ the reported issues are available in `ClusterIssue` resources:
 ```shell
 kubectl get clusterissues -l cluster=mycluster
 NAME                          CLUSTER      ID         MESSAGE                                                                        SEVERITY   CATEGORY          AGE
-mycluster-pop-102-27557035    mycluster    POP-102    No probes defined                                                              Medium     pods              4m8s
-mycluster-pop-105-27557035    mycluster    POP-105    Liveness probe uses a port#, prefer a named port                               Low        pods              4m8s
-mycluster-pop-106-27557035    mycluster    POP-106    No resources requests/limits defined                                           Medium     daemonsets        4m8s
-mycluster-pop-1100-27557035   mycluster    POP-1100   No pods match service selector                                                 High       services          4m8s
-mycluster-pop-306-27557035    mycluster    POP-306    Container could be running as root user. Check SecurityContext/Image           Medium     pods              4m8s
-mycluster-pop-500-27557035    mycluster    POP-500    Zero scale detected                                                            Medium     deployments       4m8s
+mycluster-pop-102-27557035    mycluster    POP-102    No probes defined                                                              Medium     Container         4m8s
+mycluster-pop-105-27557035    mycluster    POP-105    Liveness probe uses a port#, prefer a named port                               Low        Container         4m8s
+mycluster-pop-106-27557035    mycluster    POP-106    No resources requests/limits defined                                           Medium     Container         4m8s
+mycluster-pop-1100-27557035   mycluster    POP-1100   No pods match service selector                                                 High       Service           4m8s
+mycluster-pop-306-27557035    mycluster    POP-306    Container could be running as root user. Check SecurityContext/Image           Medium     Security          4m8s
+mycluster-pop-500-27557035    mycluster    POP-500    Zero scale detected                                                            Medium     Workloads         4m8s
 ```
 
 It's possible filter issues by cluster, issue ID, severity and category 
