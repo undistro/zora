@@ -22,6 +22,7 @@ apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   name: mycluster
+  namespace: zora-system
 spec:
   clusterRef:
     name: mycluster
