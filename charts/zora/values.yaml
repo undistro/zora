@@ -154,9 +154,12 @@ scan:
       # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml
       skipInternalResources: false
       resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
         limits:
           cpu: 500m
-          memory: 300Mi
+          memory: 500Mi
       image:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
