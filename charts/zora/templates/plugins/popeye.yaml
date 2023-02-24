@@ -20,10 +20,10 @@ metadata:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
+  {{- if .Values.scan.plugins.popeye.resources }}
   resources:
-    limits:
-      cpu: 500m
-      memory: 100Mi
+    {{- toYaml .Values.scan.plugins.popeye.resources | nindent 4 }}
+  {{- end }}
 {{- if .Values.scan.plugins.popeye.skipInternalResources }}
   envFrom:
     - configMapRef:
