@@ -54,7 +54,7 @@ var (
 
 		// General
 		"POP-401": "Unable to locate key reference",
-		"POP-402": "No metric-server detected",
+		"POP-402": "No metrics-server detected",
 		"POP-403": "Deprecated API group",
 		"POP-404": "Deprecation check failed",
 
