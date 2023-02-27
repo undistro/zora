@@ -17,7 +17,7 @@ kind: Plugin
 metadata:
   name: popeye
 spec:
-  image: ghcr.io/undistro/popeye:nonroot
+  image: docker.io/derailed/popeye:v0.11.1
   resources:
     limits:
       cpu: 500m

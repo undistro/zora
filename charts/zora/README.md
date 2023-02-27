@@ -97,8 +97,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.popeye.enabled | bool | `true` |  |
 | scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml |
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
-| scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
-| scan.plugins.popeye.image.tag | string | `"nonroot"` | popeye plugin image tag |
+| scan.plugins.popeye.image.repository | string | `"docker.io/derailed/popeye"` | popeye plugin image repository |
+| scan.plugins.popeye.image.tag | string | `"v0.11.1"` | popeye plugin image tag |
 | scan.plugins.kubescape.enabled | bool | `false` |  |
 | scan.plugins.kubescape.image.repository | string | `"quay.io/armosec/kubescape"` | kubescape plugin image repository |
 | scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |
