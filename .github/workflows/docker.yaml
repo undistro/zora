@@ -55,7 +55,7 @@ jobs:
 
       - name: Create Dockerfile for cross-platform support
         run: |
-          sed -e '1 s/\(^FROM\)/FROM --platform=\$$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$$\{BUILDPLATFORM\}/' ${{ matrix.dockerfile }} > ${{ matrix.dockerfile }}.cross
+          sed -e '1 s/\(^FROM\)/FROM --platform=\$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$\{BUILDPLATFORM\}/' ${{ matrix.dockerfile }} > ${{ matrix.dockerfile }}.cross
           cat ${{ matrix.dockerfile }}.cross
 
       - name: Build and push Docker image
