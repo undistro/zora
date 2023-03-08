@@ -23,7 +23,7 @@ COPY worker/ worker/
 COPY apis/ apis/
 COPY pkg/ pkg/
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/worker worker/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/worker worker/main.go
 
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /
