@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/robfig/cron/v3"
-	"github.com/undistro/zora/pkg/saas"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -39,6 +38,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
+
+	"github.com/undistro/zora/pkg/saas"
 
 	"github.com/undistro/zora/apis/zora/v1alpha1"
 	"github.com/undistro/zora/pkg/kubeconfig"
@@ -147,7 +148,6 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
 	var notReadyErr error
-	var cronJob *batchv1.CronJob
 	log := ctrllog.FromContext(ctx)
 
 	cluster := &v1alpha1.Cluster{}
@@ -185,14 +185,6 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		pluginRefs = clusterscan.Spec.Plugins
 	}
 
-	cjlist := &batchv1.CronJobList{}
-	if err := r.List(ctx, cjlist, client.MatchingLabels{
-		cronjobs.LabelClusterScan: clusterscan.Name,
-	}); err != nil {
-		return err
-	}
-	cjmap := mapCjSlice(cjlist.Items)
-
 	for _, ref := range pluginRefs {
 		pluginKey := ref.PluginKey(r.DefaultPluginsNamespace)
 		plugin := &v1alpha1.Plugin{}
@@ -201,20 +193,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
-		if len(cjmap) != 0 {
-			cj, ok := cjmap[plugin.Name]
-			if !ok {
-				return fmt.Errorf("No <CronJob> for plugin <%s>", plugin.Name)
-			}
-			delete(cjmap, plugin.Name)
-			cronJob = cj
-		} else {
-			cronJob = cronjobs.New(
-				fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name),
-				kubeconfigSecret.Namespace,
-			)
-		}
-
+		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
 		cronJobMutator := &cronjobs.Mutator{
 			Scheme:             r.Scheme,
 			Existing:           cronJob,
@@ -227,7 +206,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			Suspend:            notReadyErr != nil,
 		}
 
-		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate())
+		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate)
 		if err != nil {
 			log.Error(err, fmt.Sprintf("failed to apply CronJob %s", cronJob.Name))
 			clusterscan.SetReadyStatus(false, "CronJobApplyError", err.Error())
@@ -277,26 +256,15 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			}
 		}
 	}
-	if len(cjmap) != 0 {
-		r.deleteCjs(ctx, cjmap)
-	}
 
-	if issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...); err != nil {
+	r.deleteOldPlugins(ctx, clusterscan, pluginRefs)
+
+	issues, err := r.getClusterIssues(ctx, clusterscan.Status.LastScanIDs(true)...)
+	if err != nil {
 		clusterscan.SetReadyStatus(false, "ClusterIssueListError", err.Error())
 		return err
-	} else if issues != nil {
-		issc := map[string]int{}
-		for _, i := range issues {
-			issc[i.Labels[v1alpha1.LabelPlugin]]++
-		}
-		for p, c := range issc {
-			if clusterscan.Status.Plugins[p].IssueCount == nil {
-				clusterscan.Status.Plugins[p].IssueCount = new(int)
-			}
-			*clusterscan.Status.Plugins[p].IssueCount = c
-		}
-		clusterscan.Status.TotalIssues = pointer.Int(len(issues))
 	}
+	r.countIssues(issues, clusterscan)
 
 	clusterscan.Status.SyncStatus()
 	clusterscan.Status.Suspend = notReadyErr != nil
@@ -308,25 +276,60 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	return notReadyErr
 }
 
-// Transforms the slice of <Cronjobs> into a map in the form:
-// 		<plugin_name>: <cronjob_pointer>
-func mapCjSlice(cjs []batchv1.CronJob) map[string]*batchv1.CronJob {
-	cjmap := map[string]*batchv1.CronJob{}
-	for c := 0; c < len(cjs); c++ {
-		cjmap[cjs[c].Labels[cronjobs.LabelPlugin]] = &cjs[c]
+// countIssues update the fields IssueCount (for each plugin) and TotalIssues from ClusterScan status based on the given issues
+func (r *ClusterScanReconciler) countIssues(issues []v1alpha1.ClusterIssue, clusterscan *v1alpha1.ClusterScan) {
+	totalIssuesByPlugin := map[string]int{}
+	var totalIssues *int
+	for _, i := range issues {
+		totalIssuesByPlugin[i.Labels[v1alpha1.LabelPlugin]]++
+		if totalIssues == nil {
+			totalIssues = new(int)
+		}
+		*totalIssues++
 	}
-	return cjmap
-}
-
-// Deletes <Cronjobs> in the map parameter. If the deletion fails, the error
-// will be logged.
-func (r *ClusterScanReconciler) deleteCjs(ctx context.Context, cjmap map[string]*batchv1.CronJob) {
-	l := ctrllog.FromContext(ctx)
-	for _, cj := range cjmap {
-		if err := r.Delete(ctx, cj); err != nil {
-			l.Error(err, fmt.Sprintf("Failed to delete dangling <CronJob> <%s/%s>", cj.Namespace, cj.Name))
+	for p, ps := range clusterscan.Status.Plugins {
+		if t, ok := totalIssuesByPlugin[p]; ok {
+			ps.IssueCount = &t
+		} else {
+			ps.IssueCount = nil
 		}
 	}
+	clusterscan.Status.TotalIssues = totalIssues
+}
+
+// deleteOldPlugins deletes the old plugins from ClusterScan Status and their CronJobs
+func (r *ClusterScanReconciler) deleteOldPlugins(ctx context.Context, clusterscan *v1alpha1.ClusterScan, pluginRefs []v1alpha1.PluginReference) {
+	log := ctrllog.FromContext(ctx)
+	oldPlugins := r.getOldPlugins(clusterscan, pluginRefs)
+	for _, plugin := range oldPlugins {
+		cj := &batchv1.CronJob{ObjectMeta: metav1.ObjectMeta{
+			Name:      fmt.Sprintf("%s-%s", clusterscan.Name, plugin),
+			Namespace: clusterscan.Namespace,
+		}}
+		if err := r.Delete(ctx, cj); err != nil {
+			log.Error(err, "failed to delete CronJob", "cronJobName", cj.Name)
+		} else {
+			delete(clusterscan.Status.Plugins, plugin)
+		}
+	}
+}
+
+// getOldPlugins returns the names of the plugins that are in the ClusterScan Status but are not declared (ClusterScan Spec or default)
+func (r *ClusterScanReconciler) getOldPlugins(clusterscan *v1alpha1.ClusterScan, pluginRefs []v1alpha1.PluginReference) []string {
+	var oldPlugins []string
+	for statusPlugin := range clusterscan.Status.Plugins {
+		outdated := false
+		for _, specPlugin := range pluginRefs {
+			if statusPlugin == specPlugin.Name {
+				outdated = true
+				continue
+			}
+		}
+		if !outdated {
+			oldPlugins = append(oldPlugins, statusPlugin)
+		}
+	}
+	return oldPlugins
 }
 
 // Extracts error messages emitted by plugins when their execution fails.
