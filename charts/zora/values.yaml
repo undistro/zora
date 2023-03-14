@@ -25,9 +25,9 @@ saas:
   hooks:
     image:
       # -- SaaS hooks image repository
-      repository: radial/busyboxplus
+      repository: curlimages/curl
       # -- SaaS hooks image tag
-      tag: curl
+      tag: '7.88.1'
     # -- SaaS install hook URL template
     installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
 
