@@ -16,8 +16,10 @@ package popeye
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/go-logr/logr"
 
@@ -51,6 +53,12 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 	for _, san := range r.Popeye.Sanitizers {
 		for typ, issues := range san.Issues {
 			if typ == "" {
+				if len(issues) > 0 {
+					if msg := issues[0].Message; strings.Contains(msg, "forbidden") {
+						log.Info(msg)
+						return nil, errors.New(msg)
+					}
+				}
 				continue
 			}
 			for _, iss := range issues {

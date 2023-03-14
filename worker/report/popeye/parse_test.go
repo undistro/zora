@@ -204,7 +204,7 @@ func TestParse(t *testing.T) {
 			toerr:       true,
 		},
 		{
-			description: "Popeye report with error",
+			description: "Popeye report with one resource not found error",
 			testrepname: "testdata/test_report_5.json",
 			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
@@ -220,6 +220,11 @@ func TestParse(t *testing.T) {
 				},
 			},
 			toerr: false,
+		},
+		{
+			description: "Popeye report with forbidden errors",
+			testrepname: "testdata/test_report_6.json",
+			toerr:       true,
 		},
 	}
 
