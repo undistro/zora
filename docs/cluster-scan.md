@@ -65,6 +65,8 @@ Listing the `ClusterScans`, the information of the last scans are available:
 
 ```shell
 kubectl get clusterscan -o wide
+```
+```
 NAME        CLUSTER     SCHEDULE      SUSPEND   PLUGINS   LAST STATUS   LAST SCHEDULE   LAST SUCCESSFUL   ISSUES   READY   AGE   NEXT SCHEDULE
 mycluster   mycluster   0 */1 * * *   false     popeye    Complete      12m             14m               21       True    32d   2022-06-27T23:00:00Z
 ```
@@ -79,6 +81,8 @@ the reported issues are available in `ClusterIssue` resources:
 
 ```shell
 kubectl get clusterissues -l cluster=mycluster
+```
+```
 NAME                          CLUSTER      ID         MESSAGE                                                                        SEVERITY   CATEGORY          AGE
 mycluster-pop-102-27557035    mycluster    POP-102    No probes defined                                                              Medium     Container         4m8s
 mycluster-pop-105-27557035    mycluster    POP-105    Liveness probe uses a port#, prefer a named port                               Low        Container         4m8s
@@ -112,6 +116,8 @@ kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-59
     
     ```shell
     kubectl get clusterissues -o=custom-columns="NAME:.metadata.name,MESSAGE:.spec.message,URL:.spec.url"
+    ```
+    ```
     NAME                          MESSAGE                                                                        URL
     mycluster-pop-102-27557035    No probes defined                                                              https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
     mycluster-pop-105-27557035    Liveness probe uses a port#, prefer a named port                               <none>
