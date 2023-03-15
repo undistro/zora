@@ -1,0 +1,468 @@
+{
+  "popeye": {
+    "score": 13,
+    "grade": "F",
+    "sanitizers": [
+      {
+        "sanitizer": "cluster",
+        "gvr": "cluster",
+        "tally": {
+          "ok": 1,
+          "info": 0,
+          "warning": 0,
+          "error": 0,
+          "score": 100
+        },
+        "issues": {
+          "Version": [
+            {
+              "group": "__root__",
+              "gvr": "cluster",
+              "level": 0,
+              "message": "[POP-406] K8s version OK"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "clusterroles",
+        "gvr": "rbac.authorization.k8s.io/v1/clusterroles",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "rbac.authorization.k8s.io/v1/clusterroles",
+              "level": 3,
+              "message": "clusterroles.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"clusterroles\" in API group \"rbac.authorization.k8s.io\" at the cluster scope"
+            },
+            {
+              "group": "__root__",
+              "gvr": "rbac.authorization.k8s.io/v1/clusterroles",
+              "level": 1,
+              "message": "[POP-402] No metric-server detected clusterrolebindings.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"clusterrolebindings\" in API group \"rbac.authorization.k8s.io\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "clusterrolebindings",
+        "gvr": "rbac.authorization.k8s.io/v1/clusterrolebindings",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 0,
+          "score": 100
+        }
+      },
+      {
+        "sanitizer": "configmaps",
+        "gvr": "v1/configmaps",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/configmaps",
+              "level": 3,
+              "message": "configmaps is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"configmaps\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "daemonsets",
+        "gvr": "apps/v1/daemonsets",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "apps/v1/daemonsets",
+              "level": 3,
+              "message": "daemonsets.apps is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"daemonsets\" in API group \"apps\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "deployments",
+        "gvr": "apps/v1/deployments",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "apps/v1/deployments",
+              "level": 3,
+              "message": "deployments.apps is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"deployments\" in API group \"apps\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "horizontalpodautoscalers",
+        "gvr": "autoscaling/v2/horizontalpodautoscalers",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "autoscaling/v2/horizontalpodautoscalers",
+              "level": 3,
+              "message": "horizontalpodautoscalers.autoscaling is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"horizontalpodautoscalers\" in API group \"autoscaling\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "ingresses",
+        "gvr": "networking.k8s.io/v1/ingresses",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "networking.k8s.io/v1/ingresses",
+              "level": 3,
+              "message": "ingresses.networking.k8s.io is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"ingresses\" in API group \"networking.k8s.io\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "namespaces",
+        "gvr": "v1/namespaces",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/namespaces",
+              "level": 3,
+              "message": "namespaces is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"namespaces\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "networkpolicies",
+        "gvr": "networking.k8s.io/v1/networkpolicies",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "networking.k8s.io/v1/networkpolicies",
+              "level": 3,
+              "message": "networkpolicies.networking.k8s.io is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"networkpolicies\" in API group \"networking.k8s.io\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "nodes",
+        "gvr": "v1/nodes",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/nodes",
+              "level": 3,
+              "message": "nodes is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"nodes\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "persistentvolumes",
+        "gvr": "v1/persistentvolumes",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/persistentvolumes",
+              "level": 3,
+              "message": "persistentvolumes is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"persistentvolumes\" in API group \"\" at the cluster scope"
+            },
+            {
+              "group": "__root__",
+              "gvr": "v1/persistentvolumes",
+              "level": 3,
+              "message": "pods is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"pods\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "persistentvolumeclaims",
+        "gvr": "v1/persistentvolumeclaims",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/persistentvolumeclaims",
+              "level": 3,
+              "message": "persistentvolumeclaims is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"persistentvolumeclaims\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "pods",
+        "gvr": "v1/pods",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 0,
+          "score": 100
+        }
+      },
+      {
+        "sanitizer": "poddisruptionbudgets",
+        "gvr": "policy/v1/poddisruptionbudgets",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "policy/v1/poddisruptionbudgets",
+              "level": 3,
+              "message": "poddisruptionbudgets.policy is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"poddisruptionbudgets\" in API group \"policy\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "replicasets",
+        "gvr": "apps/v1/replicasets",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "apps/v1/replicasets",
+              "level": 3,
+              "message": "replicasets.apps is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"replicasets\" in API group \"apps\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "roles",
+        "gvr": "rbac.authorization.k8s.io/v1/roles",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "rbac.authorization.k8s.io/v1/roles",
+              "level": 3,
+              "message": "roles.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"roles\" in API group \"rbac.authorization.k8s.io\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "rolebindings",
+        "gvr": "rbac.authorization.k8s.io/v1/rolebindings",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "rbac.authorization.k8s.io/v1/rolebindings",
+              "level": 3,
+              "message": "rolebindings.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"rolebindings\" in API group \"rbac.authorization.k8s.io\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "secrets",
+        "gvr": "v1/secrets",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/secrets",
+              "level": 3,
+              "message": "secrets is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"secrets\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "services",
+        "gvr": "v1/services",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/services",
+              "level": 3,
+              "message": "services is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"services\" in API group \"\" at the cluster scope"
+            },
+            {
+              "group": "__root__",
+              "gvr": "v1/services",
+              "level": 3,
+              "message": "endpoints is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"endpoints\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "serviceaccounts",
+        "gvr": "v1/serviceaccounts",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "v1/serviceaccounts",
+              "level": 3,
+              "message": "serviceaccounts is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"serviceaccounts\" in API group \"\" at the cluster scope"
+            }
+          ]
+        }
+      },
+      {
+        "sanitizer": "statefulsets",
+        "gvr": "apps/v1/statefulsets",
+        "tally": {
+          "ok": 0,
+          "info": 0,
+          "warning": 0,
+          "error": 1,
+          "score": 0
+        },
+        "issues": {
+          "": [
+            {
+              "group": "__root__",
+              "gvr": "apps/v1/statefulsets",
+              "level": 3,
+              "message": "statefulsets.apps is forbidden: User \"system:serviceaccount:default:foo\" cannot list resource \"statefulsets\" in API group \"apps\" at the cluster scope"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
