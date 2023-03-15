@@ -58,7 +58,7 @@ hack/scripts/gen_zora_view_kubeconfig.sh docs/targetcluster.sh: hack/scripts/m4/
 
 script-consitency: hack/scripts/gen_zora_view_kubeconfig.sh docs/targetcluster.sh
 
-generate: controller-gen script-consitency license  ## Generate clientset and code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen script-consitency license  ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	${CONTROLLER_GEN} object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 clientset-gen:  ## Generate clientset
