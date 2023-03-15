@@ -5,6 +5,6 @@
 +  labels:
 +    {{- include "zora.labels" . | nindent 4 }}
  spec:
--  image: docker.io/derailed/popeye:v0.11.1
+-  image: ghcr.io/undistro/popeye:v0.11.1-cross
 +  image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
    command:

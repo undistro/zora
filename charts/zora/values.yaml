@@ -163,9 +163,9 @@ scan:
           memory: 500Mi
       image:
         # -- popeye plugin image repository
-        repository: docker.io/derailed/popeye
+        repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: v0.11.1
+        tag: v0.11.1-cross
     kubescape:
       enabled: false
       image:
