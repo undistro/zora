@@ -78,19 +78,15 @@ clientset-gen:  ## Generate clientset
 
 build: generate fmt vet  ## Build manager binary.
 	go build -o bin/manager main.go
-	go build -o bin/server cmd/server/main.go
 	go build -o bin/worker worker/main.go
 
 run: install manifests generate  ## Run a controller from your host.
 	go run ./main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}
-run-server: install manifests generate  ## Run Zora's server locally.
-	go run ./cmd/server/main.go
 
 docker-build: test  ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
-docker-build-all: docker-build  ## Build Docker images for all components.
+docker-build-worker: docker-build  ## Build Docker images for all components.
 	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
-	${MAKE} IMG=server:${TAG} DOCKERFILE=Dockerfile.server docker-build
 
 
 ##@ Deployment
