@@ -67,6 +67,8 @@ Now you can list them and see the discovered data through `kubectl`:
 
 ```shell
 kubectl get clusters -o wide
+```
+```
 NAME        VERSION               MEM AVAILABLE   MEM USAGE (%)   CPU AVAILABLE   CPU USAGE (%)   NODES   READY   AGE   PROVIDER   REGION   
 mycluster   v1.21.5-eks-bc4871b   10033Mi         3226Mi (32%)    5790m           647m (11%)      3       True    40d   aws        us-east-1
 ```
