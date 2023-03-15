@@ -3,12 +3,10 @@ module github.com/undistro/zora
 go 1.17
 
 require (
-	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-logr/logr v1.2.0
 	github.com/google/go-cmp v0.5.5
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
-	github.com/ory/graceful v0.1.3
 	github.com/robfig/cron/v3 v3.0.1
 	go.uber.org/zap v1.19.1
 	k8s.io/api v0.23.5
