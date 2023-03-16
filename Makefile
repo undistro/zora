@@ -21,10 +21,6 @@ vet:  ## Run go vet against code.
 test: manifests generate fmt vet envtest  ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell ${ENVTEST} use ${ENVTEST_K8S_VERSION} -p path)" go test ./... -coverprofile cover.out
 
-charts/zora/templates/plugins/popeye.yaml: config/samples/zora_v1alpha1_plugin_popeye.yaml
-	@ cp $< $@
-	patch -Nf --no-backup-if-mismatch $@ hack/patches/popeye_plugin.patch
-
 charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
  config/rbac/leader_election_role.yaml \
  config/rbac/role.yaml \
@@ -41,8 +37,7 @@ charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
 		echo "---" >> $@; \
 	done
 
-manifest-consitency: charts/zora/templates/operator/rbac.yaml \
- charts/zora/templates/plugins/popeye.yaml
+manifest-consitency: charts/zora/templates/operator/rbac.yaml
 
 manifests: controller-gen  ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	${CONTROLLER_GEN} rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
