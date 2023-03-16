@@ -15,7 +15,6 @@
 scan:
   defaultPlugins:
     - popeye
-    - kubescape
 ui:
   image:
     # UI private repository
