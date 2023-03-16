@@ -23,8 +23,8 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
+
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
-	"github.com/undistro/zora/worker/report/kubescape"
 	"github.com/undistro/zora/worker/report/popeye"
 )
 
@@ -40,8 +40,7 @@ const (
 
 // PluginParsers correlates plugins with their respective parsing functions.
 var PluginParsers = map[string]func(logr.Logger, []byte) ([]*zorav1a1.ClusterIssueSpec, error){
-	"popeye":    popeye.Parse,
-	"kubescape": kubescape.Parse,
+	"popeye": popeye.Parse,
 }
 
 // Config stores information used by the worker to create a list of

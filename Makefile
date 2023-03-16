@@ -24,9 +24,6 @@ test: manifests generate fmt vet envtest  ## Run tests.
 charts/zora/templates/plugins/popeye.yaml: config/samples/zora_v1alpha1_plugin_popeye.yaml
 	@ cp $< $@
 	patch -Nf --no-backup-if-mismatch $@ hack/patches/popeye_plugin.patch
-charts/zora/templates/plugins/kubescape.yaml: config/samples/zora_v1alpha1_plugin_kubescape.yaml
-	@ cp $< $@
-	patch -Nf --no-backup-if-mismatch $@ hack/patches/kubescape_plugin.patch
 
 charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
  config/rbac/leader_election_role.yaml \
@@ -45,8 +42,7 @@ charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
 	done
 
 manifest-consitency: charts/zora/templates/operator/rbac.yaml \
- charts/zora/templates/plugins/popeye.yaml \
- charts/zora/templates/plugins/kubescape.yaml
+ charts/zora/templates/plugins/popeye.yaml
 
 manifests: controller-gen  ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	${CONTROLLER_GEN} rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
@@ -95,7 +91,6 @@ install: manifests kustomize  ## Install default configuration (RBAC for plugins
 	${KUSTOMIZE} build config/crd | kubectl apply -f -
 	@kubectl apply -f config/rbac/clusterissue_editor_role.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
-	@kubectl apply -f config/samples/zora_v1alpha1_plugin_kubescape.yaml
 	@kubectl create -f config/rbac/plugins_role_binding.yaml || true
 
 uninstall: manifests kustomize  ## Uninstall CRDs from the current cluster.

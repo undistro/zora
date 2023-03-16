@@ -51,7 +51,6 @@ EOF
 
 apply_plugin_crds() {
 	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
-	kubectl -n $CLUSTER_NS apply -f config/samples/zora_v1alpha1_plugin_kubescape.yaml
 }
 
 apply_clusterscan_crd() {
