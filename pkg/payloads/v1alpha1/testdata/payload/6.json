@@ -28,7 +28,7 @@
 	"creationTimestamp": "2022-05-02T18:36:36Z",
 	"totalIssues": 62,
 	"pluginStatus": {
-		"kubescape": {
+		"plugin2": {
 			"scan": {
 				"status": "scanned",
 				"message": ""

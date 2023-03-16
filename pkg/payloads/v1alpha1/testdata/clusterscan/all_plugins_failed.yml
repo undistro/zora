@@ -16,7 +16,7 @@
 # 21:45 -> Failed (all)
 # 22:45 ->
 #     22:46 -> popeye -> Failed
-#     22:47 -> kubescape -> Failed    (LAST FINISHED SCAN + NOW)
+#     22:47 -> plugin2 -> Failed    (LAST FINISHED SCAN + NOW)
 # 23:45 -> Next
 
 apiVersion: zora.undistro.io/v1alpha1
@@ -43,14 +43,14 @@ status:
       status: "True"
       reason: 'ClusterScanReconciled'
       lastTransitionTime: '2022-07-05T12:02:54Z'
-      message: 'cluster scan successfully configured for plugins: kubescape,popeye'
+      message: 'cluster scan successfully configured for plugins: plugin2,popeye'
   lastFinishedStatus: Failed
   lastFinishedTime: "2022-08-04T22:47:00Z"
   lastScheduleTime: "2022-08-04T22:45:00Z"
   lastStatus: Failed
   nextScheduleTime: "2022-08-04T23:45:00Z"
   observedGeneration: 3
-  pluginNames: kubescape,popeye
+  pluginNames: plugin2,popeye
   plugins:
     popeye:
       lastFinishedStatus: Failed
@@ -60,7 +60,7 @@ status:
       lastStatus: Failed
       nextScheduleTime: "2022-08-04T23:45:00Z"
       lastErrorMsg: 'Get "http://localhost:8081/version?timeout=30s": dial tcp 127.0.0.1:8081: connect: connection refused'
-    kubescape:
+    plugin2:
       lastFinishedStatus: Failed
       lastFinishedTime: "2022-08-04T22:47:00Z"
       lastScanID: b08a1ed0-a0e3-43c8-b99c-8378acfb92ec

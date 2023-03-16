@@ -28,7 +28,7 @@
 	"creationTimestamp": "2022-05-02T18:36:36Z",
 	"totalIssues": 21,
 	"pluginStatus": {
-		"kubescape": {
+		"plugin2": {
 			"scan": {
 				"status": "failed",
 				"message": "failed to discover API server information. error: the server has asked for the client to provide credentials"

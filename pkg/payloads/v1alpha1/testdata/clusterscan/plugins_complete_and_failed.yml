@@ -15,7 +15,7 @@
 # ClusterScan with Complete and Failed plugins
 # 21:00 ->
 #     21:03 -> popeye -> Complete   (LAST SUCCESSFUL SCAN)
-#     21:03 -> kubescape -> Failed  (LAST FINISHED SCAN)
+#     21:03 -> plugin2 -> Failed  (LAST FINISHED SCAN)
 # 22:00 -> Next
 
 apiVersion: zora.undistro.io/v1alpha1
@@ -32,7 +32,7 @@ spec:
 status:
   conditions:
     - lastTransitionTime: "2022-06-28T12:56:38Z"
-      message: 'cluster scan successfully configured for plugins: kubescape,popeye'
+      message: 'cluster scan successfully configured for plugins: plugin2,popeye'
       observedGeneration: 3
       reason: ClusterScanReconciled
       status: "True"
@@ -44,7 +44,7 @@ status:
   lastSuccessfulTime: "2022-08-08T21:00:03Z"
   nextScheduleTime: "2022-08-08T22:00:00Z"
   observedGeneration: 3
-  pluginNames: kubescape,popeye
+  pluginNames: plugin2,popeye
   plugins:
     popeye:
       lastFinishedStatus: Complete
@@ -56,7 +56,7 @@ status:
       lastSuccessfulTime: "2022-08-08T21:00:03Z"
       nextScheduleTime: "2022-08-08T22:00:00Z"
       issueCount: 21
-    kubescape:
+    plugin2:
       lastFinishedStatus: Failed
       lastFinishedTime: "2022-08-08T21:00:03Z"
       lastScanID: ce34e6fc-768d-49d0-91b5-65df89ed147d
