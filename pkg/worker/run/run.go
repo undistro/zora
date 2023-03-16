@@ -22,14 +22,13 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/undistro/zora/pkg/clientset/versioned"
-	"github.com/undistro/zora/worker/config"
-	"github.com/undistro/zora/worker/report"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/clientset/versioned"
+	"github.com/undistro/zora/pkg/worker/config"
+	"github.com/undistro/zora/pkg/worker/report"
 )
 
 // CreateClusterIssues creates instances of <ClusterIssue> on the Kubernetes

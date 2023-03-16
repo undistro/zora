@@ -233,7 +233,7 @@ func TestParse(t *testing.T) {
 			return cis[i].ID > cis[j].ID
 		})
 		for c := 0; c < len(cis); c++ {
-			for r, _ := range cis[c].Resources {
+			for r := range cis[c].Resources {
 				sort.Strings(cis[c].Resources[r])
 			}
 		}

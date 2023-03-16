@@ -25,7 +25,7 @@ import (
 	"github.com/go-logr/logr"
 
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
-	"github.com/undistro/zora/worker/report/popeye"
+	"github.com/undistro/zora/pkg/worker/report/popeye"
 )
 
 const (

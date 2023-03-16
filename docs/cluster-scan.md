@@ -129,5 +129,5 @@ kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-59
     
     These docs should help you understand why it's an issue and how to fix it.
     
-    All URLs are available [here](https://github.com/undistro/zora/blob/main/worker/report/popeye/parse_types.go#L109) 
+    All URLs are available [here](https://github.com/undistro/zora/blob/main/pkg/worker/report/popeye/parse_types.go#L109) 
     and you can contribute to Zora adding new links. See our [contribution guidelines](https://github.com/undistro/zora/blob/main/CONTRIBUTING.md).

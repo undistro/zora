@@ -69,7 +69,7 @@ clientset-gen:  ## Generate clientset
 
 build: generate fmt vet  ## Build manager binary.
 	go build -o bin/manager main.go
-	go build -o bin/worker worker/main.go
+	go build -o bin/worker cmd/worker/main.go
 
 run: install manifests generate  ## Run a controller from your host.
 	go run ./main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}

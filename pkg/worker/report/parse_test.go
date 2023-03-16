@@ -26,7 +26,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
-	"github.com/undistro/zora/worker/config"
+	"github.com/undistro/zora/pkg/worker/config"
 )
 
 func TestParse(t *testing.T) {
