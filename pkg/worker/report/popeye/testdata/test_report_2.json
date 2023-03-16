@@ -12,7 +12,7 @@
               "message": "[POP-400] Used? Unable to locate resource reference"
             }
           ],
-          "undistro-metrics-reader": [
+          "metrics-reader": [
             {
               "level": 1,
               "message": "[POP-400] Used? Unable to locate resource reference"

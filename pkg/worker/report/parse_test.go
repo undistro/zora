@@ -86,7 +86,7 @@ func TestParse(t *testing.T) {
 								"cert-manager-edit",
 								"system:certificates.k8s.io:kube-apiserver-client-kubelet-approver",
 								"system:persistent-volume-provisioner",
-								"undistro-metrics-reader",
+								"metrics-reader",
 								"cert-manager-view",
 								"system:heapster",
 								"system:kube-aggregator",
@@ -151,7 +151,7 @@ func TestParse(t *testing.T) {
 						Severity: zorav1a1.ClusterIssueSeverity("Low"),
 						Category: "General",
 						Resources: map[string][]string{
-							"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
+							"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "metrics-reader"},
 						},
 						TotalResources: 2,
 						Cluster:        "super_fake_cluster",

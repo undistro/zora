@@ -110,7 +110,7 @@
               "message": "[POP-400] Used? Unable to locate resource reference"
             }
           ],
-          "undistro-metrics-reader": [
+          "metrics-reader": [
             {
               "group": "__root__",
               "level": 1,
