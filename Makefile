@@ -107,13 +107,6 @@ gen-zora-view-kubeconfig:  ## Create a service account and config RBAC for it.
 setup-zora-view: install  ## Create and apply view secret.
 	./hack/scripts/setup_zora_view.sh
 
-setup-kind:  ## Start Kind and a local Docker registry.
-	kind create cluster
-kind-load:  ## Load Docker image into Kind.
-	kind load docker-image ${IMG}
-del-kind:  ## Delete Kind node.
-	kind delete cluster
-
 ##@ Documentation
 
 helm-docs:  ## Generate documentation for helm charts
