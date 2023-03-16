@@ -20,7 +20,7 @@ jobs:
         include:
           - dockerfile: Dockerfile
             image: operator
-          - dockerfile: Dockerfile.worker
+          - dockerfile: cmd/worker/Dockerfile
             image: worker
     steps:
       - name: Checkout repository

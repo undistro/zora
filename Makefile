@@ -77,7 +77,7 @@ run: install manifests generate  ## Run a controller from your host.
 docker-build: test  ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
 docker-build-worker: docker-build  ## Build Docker images for all components.
-	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
+	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=cmd/worker/Dockerfile docker-build
 
 
 ##@ Deployment
