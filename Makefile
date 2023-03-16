@@ -106,12 +106,9 @@ gen-zora-view-kubeconfig:  ## Create a service account and config RBAC for it.
 	./hack/scripts/gen_zora_view_kubeconfig.sh
 setup-zora-view: install  ## Create and apply view secret.
 	./hack/scripts/setup_zora_view.sh
-setup-region-label:  ## Add label used by Zora to detect the cluster region.
-	./hack/scripts/setup_region_label.sh
 
 setup-kind:  ## Start Kind and a local Docker registry.
 	kind create cluster
-	${MAKE} setup-region-label
 kind-load:  ## Load Docker image into Kind.
 	kind load docker-image ${IMG}
 del-kind:  ## Delete Kind node.
@@ -121,7 +118,6 @@ setup-minikube:  ## Start Minikube with an inner Docker registry.
 	minikube start --driver=docker \
 		--container-runtime=containerd \
 		--cni=kindnet
-	${MAKE} setup-region-label
 minikube-load:  ## Load Docker image into Minikube.
 	minikube image load ${IMG}
 del-minikube:  ## Delete Minikube node.

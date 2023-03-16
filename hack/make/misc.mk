@@ -24,7 +24,6 @@
  undeploy \
  gen-zora-view-kubeconfig \
  setup-zora-view \
- setup-region-label \
  setup-local-registry \
  setup-kind \
  delete-kind \
