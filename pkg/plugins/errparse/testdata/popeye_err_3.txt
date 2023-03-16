@@ -7,5 +7,5 @@
                                                   [38;5;196m       `----;  |     [0m
 
 
-Boom! 💥 [38;5;196minvalid configuration: context was not found for specified context: gke_undistro-dev_us-east1-a_zored[0m
+Boom! 💥 [38;5;196minvalid configuration: context was not found for specified context: ctx[0m
 

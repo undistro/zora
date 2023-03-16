@@ -44,7 +44,7 @@ func TestParse(t *testing.T) {
 			description: "Invalid cluster context",
 			plugin:      "popeye",
 			testfile:    "testdata/popeye_err_3.txt",
-			errmsg:      "invalid configuration: context was not found for specified context: gke_undistro-dev_us-east1-a_zored",
+			errmsg:      "invalid configuration: context was not found for specified context: ctx",
 		},
 		{
 			description: "Incorrect flag",
