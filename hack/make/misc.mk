@@ -27,7 +27,6 @@
  setup-local-registry \
  setup-kind \
  delete-kind \
- setup-minikube \
  helm-docs
 
 

@@ -114,16 +114,6 @@ kind-load:  ## Load Docker image into Kind.
 del-kind:  ## Delete Kind node.
 	kind delete cluster
 
-setup-minikube:  ## Start Minikube with an inner Docker registry.
-	minikube start --driver=docker \
-		--container-runtime=containerd \
-		--cni=kindnet
-minikube-load:  ## Load Docker image into Minikube.
-	minikube image load ${IMG}
-del-minikube:  ## Delete Minikube node.
-	minikube delete
-
-
 ##@ Documentation
 
 helm-docs:  ## Generate documentation for helm charts
