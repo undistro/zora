@@ -18,11 +18,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/undistro/zora/pkg/apis"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+
+	"github.com/undistro/zora/pkg/apis"
 )
 
 // ClusterScanSpec defines the desired state of ClusterScan
@@ -127,48 +128,54 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 	return in.Plugins[name]
 }
 
-// SyncStatus fills ClusterScan status and time fields based on PluginStatus
+// SyncStatus updates ClusterScan status and time fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
-	var names []string
-	var failed, active, complete int
-	in.NextScheduleTime = nil
-	for n, p := range in.Plugins {
-		names = append(names, n)
-		if in.LastScheduleTime == nil || in.LastScheduleTime.Before(p.LastScheduleTime) {
-			in.LastScheduleTime = p.LastScheduleTime
+	var names, failed, active, complete []string
+	var sechedule, finishedTime, successful, next *metav1.Time
+	for name, plugin := range in.Plugins {
+		names = append(names, name)
+		if sechedule == nil || sechedule.Before(plugin.LastScheduleTime) {
+			sechedule = plugin.LastScheduleTime
 		}
-		if in.LastFinishedTime == nil || in.LastFinishedTime.Before(p.LastFinishedTime) {
-			in.LastFinishedTime = p.LastFinishedTime
+		if finishedTime == nil || finishedTime.Before(plugin.LastFinishedTime) {
+			finishedTime = plugin.LastFinishedTime
 		}
-		if in.LastSuccessfulTime == nil || in.LastSuccessfulTime.Before(p.LastSuccessfulTime) {
-			in.LastSuccessfulTime = p.LastSuccessfulTime
+		if successful == nil || successful.Before(plugin.LastSuccessfulTime) {
+			successful = plugin.LastSuccessfulTime
 		}
-		if in.NextScheduleTime == nil || p.NextScheduleTime.Before(in.NextScheduleTime) {
-			in.NextScheduleTime = p.NextScheduleTime
+		if next == nil || plugin.NextScheduleTime.Before(next) {
+			next = plugin.NextScheduleTime
 		}
-		if p.LastStatus == "Active" {
-			active++
+		if plugin.LastStatus == "Active" {
+			active = append(active, name)
 		}
-		switch p.LastFinishedStatus {
+		switch plugin.LastFinishedStatus {
 		case string(batchv1.JobFailed):
-			failed++
+			failed = append(failed, name)
 		case string(batchv1.JobComplete):
-			complete++
+			complete = append(complete, name)
 		}
 	}
+	var finishedStatus, status string
 
-	if failed > 0 {
-		in.LastFinishedStatus = string(batchv1.JobFailed)
-		in.LastStatus = string(batchv1.JobFailed)
+	if len(failed) > 0 {
+		finishedStatus = string(batchv1.JobFailed)
+		status = string(batchv1.JobFailed)
 	}
-	if failed == 0 && complete > 0 {
-		in.LastFinishedStatus = string(batchv1.JobComplete)
-		in.LastStatus = string(batchv1.JobComplete)
+	if len(failed) == 0 && len(complete) > 0 {
+		finishedStatus = string(batchv1.JobComplete)
+		status = string(batchv1.JobComplete)
 	}
-	if active > 0 {
-		in.LastStatus = "Active"
+	if len(active) > 0 {
+		status = "Active"
 	}
 
+	in.LastScheduleTime = sechedule
+	in.LastFinishedTime = finishedTime
+	in.LastSuccessfulTime = successful
+	in.NextScheduleTime = next
+	in.LastFinishedStatus = finishedStatus
+	in.LastStatus = status
 	sort.Strings(names)
 	in.PluginNames = strings.Join(names, ",")
 }
