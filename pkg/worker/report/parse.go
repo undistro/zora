@@ -20,8 +20,10 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
+
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
-	"github.com/undistro/zora/worker/config"
+	"github.com/undistro/zora/pkg/worker/config"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )

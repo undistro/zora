@@ -41,18 +41,18 @@ status:
       status: "True"
       reason: 'ClusterScanReconciled'
       lastTransitionTime: '2022-07-05T12:02:54Z'
-      message: 'cluster scan successfully configured for plugins: kubescape,popeye'
+      message: 'cluster scan successfully configured for plugins: plugin2,popeye'
   lastScheduleTime: "2022-08-04T22:45:00Z"
   lastStatus: Active
   nextScheduleTime: "2022-08-04T23:45:00Z"
   observedGeneration: 3
-  pluginNames: kubescape,popeye
+  pluginNames: plugin2,popeye
   plugins:
     popeye:
       lastScheduleTime: "2022-08-04T22:45:00Z"
       lastStatus: Active
       nextScheduleTime: "2022-08-04T23:45:00Z"
-    kubescape:
+    plugin2:
       lastScheduleTime: "2022-08-04T22:45:00Z"
       lastStatus: Active
       nextScheduleTime: "2022-08-04T23:45:00Z"

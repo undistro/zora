@@ -21,15 +21,15 @@ COPY go.mod go.mod
 COPY go.sum go.sum
 RUN go mod download
 
-COPY worker/ worker/
+COPY cmd/worker/main.go cmd/worker/main.go
 COPY apis/ apis/
 COPY pkg/ pkg/
 
-RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o bin/worker worker/main.go
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o worker cmd/worker/main.go
 
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /
-COPY --from=builder /workspace/bin/worker /usr/local/bin/
-USER 65534:65534
+COPY --from=builder /workspace/worker .
+USER 65532:65532
 
-ENTRYPOINT ["/usr/local/bin/worker"]
+ENTRYPOINT ["/worker"]

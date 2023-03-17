@@ -117,7 +117,7 @@ func TestParse(t *testing.T) {
 							"cert-manager-edit",
 							"system:certificates.k8s.io:kube-apiserver-client-kubelet-approver",
 							"system:persistent-volume-provisioner",
-							"undistro-metrics-reader",
+							"metrics-reader",
 							"cert-manager-view",
 							"system:heapster",
 							"system:kube-aggregator",
@@ -148,7 +148,7 @@ func TestParse(t *testing.T) {
 					Severity: "Low",
 					Category: "General",
 					Resources: map[string][]string{
-						"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "undistro-metrics-reader"},
+						"rbac.authorization.k8s.io/v1/clusterroles": {"system:node-bootstrapper", "metrics-reader"},
 					},
 					TotalResources: 2,
 					Url:            "",
@@ -233,7 +233,7 @@ func TestParse(t *testing.T) {
 			return cis[i].ID > cis[j].ID
 		})
 		for c := 0; c < len(cis); c++ {
-			for r, _ := range cis[c].Resources {
+			for r := range cis[c].Resources {
 				sort.Strings(cis[c].Resources[r])
 			}
 		}

@@ -45,7 +45,7 @@ func TestSyncStatus(t *testing.T) {
 					LastStatus:           string(batchv1.JobComplete),
 					LastFinishedStatus:   string(batchv1.JobComplete),
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:     mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:     mustParseTime("2022-08-08T21:00:03Z"),
 					LastSuccessfulTime:   mustParseTime("2022-08-08T21:00:03Z"),
@@ -63,7 +63,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         string(batchv1.JobComplete),
 				LastFinishedStatus: string(batchv1.JobComplete),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -79,7 +79,7 @@ func TestSyncStatus(t *testing.T) {
 					LastSuccessfulScanID: "9da315be-b5a1-4f1a-952b-915cc19fe446",
 					LastFinishedStatus:   string(batchv1.JobComplete),
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:     mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:     mustParseTime("2022-08-08T21:00:03Z"),
 					LastSuccessfulTime:   mustParseTime("2022-08-08T21:00:03Z"),
@@ -97,7 +97,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         "Active",
 				LastFinishedStatus: string(batchv1.JobComplete),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -113,7 +113,7 @@ func TestSyncStatus(t *testing.T) {
 					LastSuccessfulScanID: "9da315be-b5a1-4f1a-952b-915cc19fe446",
 					LastFinishedStatus:   string(batchv1.JobComplete),
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:     mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:     mustParseTime("2022-08-08T20:00:03Z"),
 					LastSuccessfulTime:   mustParseTime("2022-08-08T20:00:03Z"),
@@ -131,7 +131,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         "Active",
 				LastFinishedStatus: string(batchv1.JobComplete),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -143,7 +143,7 @@ func TestSyncStatus(t *testing.T) {
 					NextScheduleTime: mustParseTime("2022-08-08T22:00:00Z"),
 					LastScanID:       "9da315be-b5a1-4f1a-952b-915cc19fe446",
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime: mustParseTime("2022-08-08T21:00:00Z"),
 					NextScheduleTime: mustParseTime("2022-08-08T22:00:00Z"),
 					LastScanID:       "ce34e6fc-768d-49d0-91b5-65df89ed147d",
@@ -154,7 +154,7 @@ func TestSyncStatus(t *testing.T) {
 				LastScheduleTime: mustParseTime("2022-08-08T21:00:00Z"),
 				NextScheduleTime: mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:       "Active",
-				PluginNames:      "kubescape,popeye",
+				PluginNames:      "plugin2,popeye",
 			},
 		},
 		{
@@ -170,7 +170,7 @@ func TestSyncStatus(t *testing.T) {
 					LastSuccessfulScanID: "9da315be-b5a1-4f1a-952b-915cc19fe446",
 					LastFinishedStatus:   string(batchv1.JobComplete),
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:   mustParseTime("2022-08-08T20:00:03Z"),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
@@ -187,7 +187,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         "Active",
 				LastFinishedStatus: string(batchv1.JobFailed),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -202,7 +202,7 @@ func TestSyncStatus(t *testing.T) {
 					LastScanID:         "9da315be-b5a1-4f1a-952b-915cc19fe446",
 					LastErrorMsg:       `Get "http://localhost:8081/version?timeout=30s": dial tcp 127.0.0.1:8081: connect: connection refused`,
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:   mustParseTime("2022-08-08T20:00:03Z"),
 					LastStatus:         "Active",
@@ -218,7 +218,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         "Active",
 				LastFinishedStatus: string(batchv1.JobFailed),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -234,7 +234,7 @@ func TestSyncStatus(t *testing.T) {
 					LastStatus:           string(batchv1.JobComplete),
 					LastFinishedStatus:   string(batchv1.JobComplete),
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:   mustParseTime("2022-08-08T20:00:03Z"),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
@@ -251,7 +251,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         "Active",
 				LastFinishedStatus: string(batchv1.JobFailed),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -263,7 +263,7 @@ func TestSyncStatus(t *testing.T) {
 					NextScheduleTime: mustParseTime("2022-08-08T22:00:00Z"),
 					LastScanID:       "9da315be-b5a1-4f1a-952b-915cc19fe446",
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:     mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:     mustParseTime("2022-08-08T21:00:03Z"),
 					LastSuccessfulTime:   mustParseTime("2022-08-08T21:00:03Z"),
@@ -281,7 +281,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastStatus:         "Active",
 				LastFinishedStatus: string(batchv1.JobComplete),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -297,7 +297,7 @@ func TestSyncStatus(t *testing.T) {
 					LastStatus:           string(batchv1.JobComplete),
 					LastFinishedStatus:   string(batchv1.JobComplete),
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:   mustParseTime("2022-08-08T21:00:06Z"),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
@@ -314,7 +314,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastFinishedStatus: string(batchv1.JobFailed),
 				LastStatus:         string(batchv1.JobFailed),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{
@@ -331,7 +331,7 @@ func TestSyncStatus(t *testing.T) {
 					LastFinishedStatus:   string(batchv1.JobFailed),
 					LastErrorMsg:         "the server has asked for the client to provide credentials",
 				},
-				"kubescape": {
+				"plugin2": {
 					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
 					LastFinishedTime:   mustParseTime("2022-08-08T21:00:06Z"),
 					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
@@ -348,7 +348,7 @@ func TestSyncStatus(t *testing.T) {
 				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
 				LastFinishedStatus: string(batchv1.JobFailed),
 				LastStatus:         string(batchv1.JobFailed),
-				PluginNames:        "kubescape,popeye",
+				PluginNames:        "plugin2,popeye",
 			},
 		},
 		{

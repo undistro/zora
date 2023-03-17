@@ -21,13 +21,6 @@ vet:  ## Run go vet against code.
 test: manifests generate fmt vet envtest  ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell ${ENVTEST} use ${ENVTEST_K8S_VERSION} -p path)" go test ./... -coverprofile cover.out
 
-charts/zora/templates/plugins/popeye.yaml: config/samples/zora_v1alpha1_plugin_popeye.yaml
-	@ cp $< $@
-	patch -Nf --no-backup-if-mismatch $@ hack/patches/popeye_plugin.patch
-charts/zora/templates/plugins/kubescape.yaml: config/samples/zora_v1alpha1_plugin_kubescape.yaml
-	@ cp $< $@
-	patch -Nf --no-backup-if-mismatch $@ hack/patches/kubescape_plugin.patch
-
 charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
  config/rbac/leader_election_role.yaml \
  config/rbac/role.yaml \
@@ -44,9 +37,7 @@ charts/zora/templates/operator/rbac.yaml: config/rbac/service_account.yaml \
 		echo "---" >> $@; \
 	done
 
-manifest-consitency: charts/zora/templates/operator/rbac.yaml \
- charts/zora/templates/plugins/popeye.yaml \
- charts/zora/templates/plugins/kubescape.yaml
+manifest-consitency: charts/zora/templates/operator/rbac.yaml
 
 manifests: controller-gen  ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	${CONTROLLER_GEN} rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
@@ -78,7 +69,7 @@ clientset-gen:  ## Generate clientset
 
 build: generate fmt vet  ## Build manager binary.
 	go build -o bin/manager main.go
-	go build -o bin/worker worker/main.go
+	go build -o bin/worker cmd/worker/main.go
 
 run: install manifests generate  ## Run a controller from your host.
 	go run ./main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}
@@ -86,7 +77,7 @@ run: install manifests generate  ## Run a controller from your host.
 docker-build: test  ## Build manager docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
 docker-build-worker: docker-build  ## Build Docker images for all components.
-	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=Dockerfile.worker docker-build
+	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=cmd/worker/Dockerfile docker-build
 
 
 ##@ Deployment
@@ -95,7 +86,6 @@ install: manifests kustomize  ## Install default configuration (RBAC for plugins
 	${KUSTOMIZE} build config/crd | kubectl apply -f -
 	@kubectl apply -f config/rbac/clusterissue_editor_role.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
-	@kubectl apply -f config/samples/zora_v1alpha1_plugin_kubescape.yaml
 	@kubectl create -f config/rbac/plugins_role_binding.yaml || true
 
 uninstall: manifests kustomize  ## Uninstall CRDs from the current cluster.
@@ -111,27 +101,6 @@ gen-zora-view-kubeconfig:  ## Create a service account and config RBAC for it.
 	./hack/scripts/gen_zora_view_kubeconfig.sh
 setup-zora-view: install  ## Create and apply view secret.
 	./hack/scripts/setup_zora_view.sh
-setup-region-label:  ## Add label used by Zora to detect the cluster region.
-	./hack/scripts/setup_region_label.sh
-
-setup-kind:  ## Start Kind and a local Docker registry.
-	kind create cluster
-	${MAKE} setup-region-label
-kind-load:  ## Load Docker image into Kind.
-	kind load docker-image ${IMG}
-del-kind:  ## Delete Kind node.
-	kind delete cluster
-
-setup-minikube:  ## Start Minikube with an inner Docker registry.
-	minikube start --driver=docker \
-		--container-runtime=containerd \
-		--cni=kindnet
-	${MAKE} setup-region-label
-minikube-load:  ## Load Docker image into Minikube.
-	minikube image load ${IMG}
-del-minikube:  ## Delete Minikube node.
-	minikube delete
-
 
 ##@ Documentation
 

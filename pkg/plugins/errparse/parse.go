@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"io"
 	"regexp"
-	"strings"
 )
 
 // The message patterns are ordered by priority.
@@ -26,13 +25,6 @@ var patterns = map[string][]*regexp.Regexp{
 	"popeye": {
 		regexp.MustCompile(`panic:\s+.{3}\[38;5;196m(.*).\[0m\n`),
 		regexp.MustCompile(`Boom!\s+.{3}\[38;5;196m(.*).\[0m\n`),
-	},
-	"kubescape": {
-		regexp.MustCompile(`panic:\s+(.*)\n`),
-		regexp.MustCompile(`\[error\]\s(.*)\n`),
-		regexp.MustCompile(`\{"level":"error","ts":"\S+","msg":"(.*)"\}`),
-		regexp.MustCompile(`\[fatal\]\s(.*)\n`),
-		regexp.MustCompile(`\{"level":"fatal","ts":"\S+","msg":"(.*)"\}`),
 	},
 }
 
@@ -50,11 +42,7 @@ func Parse(r io.Reader, plug string) (string, error) {
 	for _, p := range patterns[plug] {
 		mats := p.FindSubmatch(fc)
 		if len(mats) >= 2 {
-			if plug == "kubescape" {
-				return strings.ReplaceAll(string(mats[1]), `\"`, `"`), nil
-			} else {
-				return string(mats[1]), nil
-			}
+			return string(mats[1]), nil
 		}
 	}
 	return "", fmt.Errorf("Unable to match on <%s> error output", plug)

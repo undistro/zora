@@ -99,9 +99,6 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"v0.11.1-cross"` | popeye plugin image tag |
-| scan.plugins.kubescape.enabled | bool | `false` |  |
-| scan.plugins.kubescape.image.repository | string | `"quay.io/armosec/kubescape"` | kubescape plugin image repository |
-| scan.plugins.kubescape.image.tag | string | `"v2.0.163"` | kubescape plugin image tag |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

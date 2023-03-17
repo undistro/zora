@@ -15,20 +15,14 @@
  build \
  run \
  docker-build \
+ docker-build-worker \
  docker-push \
- docker-build-operator-worker \
- docker-push-operator-worker \
  install \
  uninstall \
  deploy \
  undeploy \
  gen-zora-view-kubeconfig \
  setup-zora-view \
- setup-region-label \
- setup-local-registry \
- setup-kind \
- delete-kind \
- setup-minikube \
  helm-docs
 
 

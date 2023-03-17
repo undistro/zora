@@ -166,10 +166,3 @@ scan:
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
         tag: v0.11.1-cross
-    kubescape:
-      enabled: false
-      image:
-        # -- kubescape plugin image repository
-        repository: quay.io/armosec/kubescape
-        # -- kubescape plugin image tag
-        tag: v2.0.163
