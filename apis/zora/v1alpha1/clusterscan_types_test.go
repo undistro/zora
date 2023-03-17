@@ -376,6 +376,59 @@ func TestSyncStatus(t *testing.T) {
 				PluginNames:        "brutus",
 			},
 		},
+		{
+			name: "active + failed",
+			plugins: map[string]*PluginScanStatus{
+				"popeye": {
+					LastScheduleTime: mustParseTime("2022-08-08T21:00:00Z"),
+					LastStatus:       "Active",
+					NextScheduleTime: mustParseTime("2022-08-08T22:00:00Z"),
+					LastScanID:       "9da315be-b5a1-4f1a-952b-915cc19fe446",
+				},
+				"brutus": {
+					LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
+					LastFinishedTime:   mustParseTime("2022-08-08T21:00:03Z"),
+					NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
+					LastScanID:         "ce34e6fc-768d-49d0-91b5-65df89ed147d",
+					LastStatus:         string(batchv1.JobFailed),
+					LastFinishedStatus: string(batchv1.JobFailed),
+				},
+			},
+			want: &ClusterScanStatus{
+				LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
+				LastFinishedTime:   mustParseTime("2022-08-08T21:00:03Z"),
+				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
+				LastStatus:         "Active",
+				LastFinishedStatus: string(batchv1.JobFailed),
+				PluginNames:        "brutus,popeye",
+			},
+		},
+		{
+			name: "single plugin has been replaced (popeye to brutus)",
+			currentStatus: &ClusterScanStatus{
+				LastScheduleTime:   mustParseTime("2022-08-08T21:00:00Z"),
+				LastFinishedTime:   mustParseTime("2022-08-08T21:00:03Z"),
+				LastSuccessfulTime: mustParseTime("2022-08-08T21:00:03Z"),
+				NextScheduleTime:   mustParseTime("2022-08-08T22:00:00Z"),
+				LastStatus:         string(batchv1.JobComplete),
+				LastFinishedStatus: string(batchv1.JobComplete),
+				PluginNames:        "popeye",
+			},
+			plugins: map[string]*PluginScanStatus{
+				"brutus": {
+					NextScheduleTime: mustParseTime("2022-08-12T14:00:00Z"),
+				},
+			},
+			want: &ClusterScanStatus{
+				LastScheduleTime:   nil,
+				LastFinishedTime:   nil,
+				LastSuccessfulTime: nil,
+				NextScheduleTime:   mustParseTime("2022-08-12T14:00:00Z"),
+				LastFinishedStatus: "",
+				LastStatus:         "",
+				PluginNames:        "brutus",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

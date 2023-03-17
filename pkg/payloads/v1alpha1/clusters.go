@@ -225,10 +225,11 @@ func NewScanStatusWithIssues(scans []v1alpha1.ClusterScan, issues []v1alpha1.Clu
 		return nil
 	}
 	for _, i := range issues {
-		pluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
-			pluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
-			NewResourcedIssue(i),
-		)
+		plugin := i.Labels[v1alpha1.LabelPlugin]
+		if _, ok := pluginStatus[plugin]; ok {
+			pluginStatus[plugin].Issues = append(pluginStatus[plugin].Issues, NewResourcedIssue(i))
+		}
+
 	}
 	return pluginStatus
 }
