@@ -20,8 +20,6 @@ jobs:
         include:
           - dockerfile: Dockerfile
             image: operator
-          - dockerfile: Dockerfile.server
-            image: server
           - dockerfile: Dockerfile.worker
             image: worker
     steps:

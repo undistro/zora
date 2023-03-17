@@ -14,7 +14,6 @@
  clientset-gen \
  build \
  run \
- run-server \
  docker-build \
  docker-push \
  docker-build-operator-worker \
