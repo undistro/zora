@@ -140,6 +140,7 @@ scan:
   # -- Names of the default plugins
   defaultPlugins:
     - popeye
+    - marvin
   plugins:
     marvin:
       # -- Specifies whether the marvin plugin should be created
