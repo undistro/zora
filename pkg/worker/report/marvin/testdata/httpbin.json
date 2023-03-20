@@ -1,0 +1,511 @@
+{
+    "kubeVersion": {
+        "major": "1",
+        "minor": "25",
+        "gitVersion": "v1.25.3",
+        "gitCommit": "434bfd82814af038ad94d62ebe59b133fcb50506",
+        "gitTreeState": "clean",
+        "buildDate": "2022-10-25T19:35:11Z",
+        "goVersion": "go1.19.2",
+        "compiler": "gc",
+        "platform": "linux/amd64"
+    },
+    "checks": [
+        {
+            "id": "capabilities",
+            "message": "Not allowed added/dropped capabilities",
+            "severity": "Low",
+            "builtin": true,
+            "path": "pss/restricted/06_capabilities.yml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
+            "id": "ssh-server",
+            "message": "SSH server running inside container",
+            "severity": "Low",
+            "builtin": true,
+            "path": "mitre/ssh.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ],
+                "v1/Service": [
+                    "httpbin/httpbin"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 3,
+            "totalSkipped": 0
+        },
+        {
+            "id": "host-process",
+            "message": "Privileged access to the Windows node",
+            "severity": "High",
+            "builtin": true,
+            "path": "pss/baseline/01_host_process.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "capabilities-added",
+            "message": "Insecure capabilities",
+            "severity": "High",
+            "builtin": true,
+            "path": "pss/baseline/04_capabilities.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "proc-mount",
+            "message": "Forbidden proc mount type",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/baseline/09_proc_mount.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "sysctls",
+            "message": "Unsafe sysctls",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/baseline/11_sysctls.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "run-as-non-root",
+            "message": "Container could be running as root user",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/restricted/03_run_as_non_root.yml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
+            "id": "seccomp-restricted",
+            "message": "Not allowed seccomp profile",
+            "severity": "Low",
+            "builtin": true,
+            "path": "pss/restricted/05_seccomp.yml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
+            "id": "app-credentials",
+            "message": "Application credentials stored in configuration files",
+            "severity": "High",
+            "builtin": true,
+            "path": "mitre/app_credentials.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ],
+                "v1/ConfigMap": [
+                    "httpbin/kube-root-ca.crt"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 3,
+            "totalSkipped": 0
+        },
+        {
+            "id": "auto-mount-sa-token",
+            "message": "Automounted service account token",
+            "severity": "Low",
+            "builtin": true,
+            "path": "mitre/auto_mount_service_account.yml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
+            "id": "read-only-root-fs",
+            "message": "Root filesystem write allowed",
+            "severity": "Low",
+            "builtin": true,
+            "path": "nsa/read_only_root_filesystem.yml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
+            "id": "host-namespaces",
+            "message": "Host namespaces",
+            "severity": "High",
+            "builtin": true,
+            "path": "pss/baseline/02_host_namespaces.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "host-ports",
+            "message": "Not allowed hostPort",
+            "severity": "High",
+            "builtin": true,
+            "path": "pss/baseline/06_host_ports.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "apparmor",
+            "message": "Forbidden AppArmor profile",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/baseline/07_apparmor.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "selinux",
+            "message": "Forbidden SELinux options",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/baseline/08_selinux.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "privileged-containers",
+            "message": "Privileged container",
+            "severity": "High",
+            "builtin": true,
+            "path": "pss/baseline/03_privileged_containers.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "host-path-volumes",
+            "message": "HostPath volume",
+            "severity": "High",
+            "builtin": true,
+            "path": "pss/baseline/05_host_path_volumes.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "run-as-user",
+            "message": "Container running as root UID",
+            "severity": "Low",
+            "builtin": true,
+            "path": "pss/restricted/04_run_as_user.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "image-registry",
+            "message": "Image registry not allowed",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "mitre/allowed_registries.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "seccomp-baseline",
+            "message": "Forbidden seccomp profile",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/baseline/10_seccomp.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "volume-types",
+            "message": "Not allowed volume type",
+            "severity": "Low",
+            "builtin": true,
+            "path": "pss/restricted/01_volume_types.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        },
+        {
+            "id": "privilege-escalation",
+            "message": "Allowed privilege escalation",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "pss/restricted/02_privilege_escalation.yml",
+            "status": "Passed",
+            "failed": {},
+            "passed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 0,
+            "totalPassed": 2,
+            "totalSkipped": 0
+        }
+    ],
+    "gvrs": {
+        "apps/v1/Deployment": "apps/v1/deployments",
+        "apps/v1/ReplicaSet": "apps/v1/replicasets",
+        "v1/ConfigMap": "v1/configmaps",
+        "v1/Service": "v1/services"
+    }
+}
