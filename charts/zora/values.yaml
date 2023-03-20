@@ -141,7 +141,25 @@ scan:
   defaultPlugins:
     - popeye
   plugins:
+    marvin:
+      # -- Specifies whether the marvin plugin should be created
+      enabled: true
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+      image:
+        # -- marvin plugin image repository
+        repository: ghcr.io/undistro/marvin
+        # -- marvin plugin image tag
+        tag: v0.1.2
+
     popeye:
+      # -- Specifies whether the popeye plugin should be created
       enabled: true
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
