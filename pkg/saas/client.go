@@ -27,8 +27,9 @@ import (
 )
 
 const (
-	workspacePathF = "zora/api/%s/workspaces/%s"
+	workspacePathF = "zora/api/v1alpha1/workspaces/%s"
 	clusterPathF   = "namespaces/%s/clusters/%s"
+	versionHeader  = "x-zora-version"
 )
 
 var allowedStatus = []int{
@@ -57,7 +58,7 @@ func NewClient(baseURL, version, workspaceID string, httpclient *http.Client) (C
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path.Join(u.Path, fmt.Sprintf(workspacePathF, version, workspaceID))
+	u.Path = path.Join(u.Path, fmt.Sprintf(workspacePathF, workspaceID))
 	return &client{
 		version:     version,
 		baseURL:     u,
@@ -77,6 +78,7 @@ func (r *client) PutCluster(ctx context.Context, cluster v1alpha1.Cluster) error
 		return err
 	}
 	req.Header.Set("content-type", "application/json")
+	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
 	if err != nil {
 		return err
@@ -91,6 +93,7 @@ func (r *client) DeleteCluster(ctx context.Context, namespace, name string) erro
 	if err != nil {
 		return err
 	}
+	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
 	if err != nil {
 		return err
@@ -110,6 +113,7 @@ func (r *client) PutClusterScan(ctx context.Context, namespace, name string, plu
 		return err
 	}
 	req.Header.Set("content-type", "application/json")
+	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
 	if err != nil {
 		return err
@@ -125,6 +129,7 @@ func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) 
 		return err
 	}
 	res, err := r.client.Do(req)
+	req.Header.Set(versionHeader, r.version)
 	if err != nil {
 		return err
 	}
