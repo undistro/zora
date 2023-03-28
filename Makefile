@@ -74,9 +74,9 @@ build: generate fmt vet  ## Build manager binary.
 run: install manifests generate  ## Run a controller from your host.
 	go run ./main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}
 
-docker-build: test  ## Build manager docker image.
+docker-build: test  ## Build manager Docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
-docker-build-worker: docker-build  ## Build Docker images for all components.
+docker-build-worker: ## Build worker Docker image.
 	${MAKE} IMG=${WORKER_IMG} DOCKERFILE=cmd/worker/Dockerfile docker-build
 
 
