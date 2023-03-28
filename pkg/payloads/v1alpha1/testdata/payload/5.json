@@ -25,30 +25,5 @@
 			"usagePercentage": 3
 		}
 	},
-	"creationTimestamp": "2022-05-02T18:36:36Z",
-	"totalIssues": 62,
-	"pluginStatus": {
-		"plugin2": {
-			"scan": {
-				"status": "scanned",
-				"message": ""
-			},
-			"issueCount": 30,
-			"issues": null,
-			"lastSuccessfulScanTime": "2022-08-04T22:46:00Z",
-			"lastFinishedScanTime": "2022-08-04T22:46:00Z",
-			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
-		},
-		"popeye": {
-			"scan": {
-				"status": "scanned",
-				"message": ""
-			},
-			"issueCount": 32,
-			"issues": null,
-			"lastSuccessfulScanTime": "2022-08-04T22:46:00Z",
-			"lastFinishedScanTime": "2022-08-04T22:46:00Z",
-			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
-		}
-	}
+	"creationTimestamp": "2022-05-02T18:36:36Z"
 }

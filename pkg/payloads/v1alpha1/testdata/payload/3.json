@@ -17,30 +17,5 @@
 		"memory": null,
 		"cpu": null
 	},
-	"creationTimestamp": "2022-05-02T18:36:36Z",
-	"totalIssues": null,
-	"pluginStatus": {
-		"plugin2": {
-			"scan": {
-				"status": "unknown",
-				"message": "Scan not finished"
-			},
-			"issueCount": null,
-			"issues": null,
-			"lastSuccessfulScanTime": null,
-			"lastFinishedScanTime": null,
-			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
-		},
-		"popeye": {
-			"scan": {
-				"status": "unknown",
-				"message": "Scan not finished"
-			},
-			"issueCount": null,
-			"issues": null,
-			"lastSuccessfulScanTime": null,
-			"lastFinishedScanTime": null,
-			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
-		}
-	}
+	"creationTimestamp": "2022-05-02T18:36:36Z"
 }
