@@ -26,7 +26,13 @@ import (
 	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
 )
 
-var msgre = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
+var (
+	msgre              = regexp.MustCompile(`^\[(POP-\d+)\]\s*(.*)$`)
+	clusterScopedTypes = map[string]bool{
+		"Metrics": true,
+		"Version": true,
+	}
+)
 
 // Extracts Popeye's issue code and description from the original issue
 // message, ensuring the returned description doesn't contain specific data
@@ -61,6 +67,7 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 				}
 				continue
 			}
+			clusterScoped := clusterScopedTypes[typ]
 			for _, iss := range issues {
 				id, msg, err := prepareIdAndMsg(iss.Message)
 				if err != nil {
@@ -74,17 +81,20 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 					ci.Resources[san.GVR] = append(ci.Resources[san.GVR], typ)
 					ci.TotalResources++
 				} else {
-					issuesmap[id] = &zorav1a1.ClusterIssueSpec{
-						ID:       id,
-						Message:  msg,
-						Severity: LevelToIssueSeverity[iss.Level],
-						Category: IssueIDtoCategory[id],
-						Resources: map[string][]string{
-							san.GVR: {typ},
-						},
-						TotalResources: 1,
+					spec := &zorav1a1.ClusterIssueSpec{
+						ID:             id,
+						Message:        msg,
+						Severity:       LevelToIssueSeverity[iss.Level],
+						Category:       IssueIDtoCategory[id],
 						Url:            IssueIDtoUrl[id],
+						Resources:      map[string][]string{},
+						TotalResources: 0,
 					}
+					if !clusterScoped {
+						spec.TotalResources = 1
+						spec.Resources = map[string][]string{san.GVR: {typ}}
+					}
+					issuesmap[id] = spec
 				}
 			}
 		}

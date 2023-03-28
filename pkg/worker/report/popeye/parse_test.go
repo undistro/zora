@@ -226,6 +226,30 @@ func TestParse(t *testing.T) {
 			testrepname: "testdata/test_report_6.json",
 			toerr:       true,
 		},
+		{
+			description: "metrics-server issue",
+			testrepname: "testdata/test_report_7.json",
+			cispecs: []*zorav1a1.ClusterIssueSpec{
+				{
+					ID:             "POP-402",
+					Message:        "No metrics-server detected",
+					Severity:       "Low",
+					Category:       "General",
+					Resources:      map[string][]string{},
+					TotalResources: 0,
+					Url:            "https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#metrics-server",
+				},
+				{
+					ID:             "POP-405",
+					Message:        "Is this a jurassic cluster? Might want to upgrade K8s a bit",
+					Severity:       "Medium",
+					Category:       "General",
+					Resources:      map[string][]string{},
+					TotalResources: 0,
+					Url:            "https://kubernetes.io/docs/tasks/administer-cluster/cluster-upgrade/",
+				},
+			},
+		},
 	}
 
 	sfun := func(cis []*zorav1a1.ClusterIssueSpec) {
