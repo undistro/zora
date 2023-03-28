@@ -165,4 +165,4 @@ scan:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: v0.11.1-cross
+        tag: pr252
