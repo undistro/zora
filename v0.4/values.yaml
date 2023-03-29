@@ -25,9 +25,9 @@ saas:
   hooks:
     image:
       # -- SaaS hooks image repository
-      repository: radial/busyboxplus
+      repository: curlimages/curl
       # -- SaaS hooks image tag
-      tag: curl
+      tag: '7.88.1'
     # -- SaaS install hook URL template
     installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
 
@@ -153,15 +153,16 @@ scan:
       # 7. Zora components.
       # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml
       skipInternalResources: false
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
       image:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: nonroot
-    kubescape:
-      enabled: false
-      image:
-        # -- kubescape plugin image repository
-        repository: quay.io/armosec/kubescape
-        # -- kubescape plugin image tag
-        tag: v2.0.163
+        tag: v0.11.1-cross
