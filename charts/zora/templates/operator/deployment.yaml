@@ -76,6 +76,7 @@ spec:
             - --cronjob-serviceaccount-name=zora-plugins
             - --saas-workspace-id={{ .Values.saas.workspaceID }}
             - --saas-server={{ .Values.saas.server }}
+            - --version={{ .Chart.Version }}
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           ports:
