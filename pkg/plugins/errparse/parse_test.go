@@ -15,80 +15,101 @@
 package errparse
 
 import (
+	"io"
 	"os"
 	"testing"
 )
 
 func TestParse(t *testing.T) {
-	cases := []struct {
-		description string
-		plugin      string
-		testfile    string
-		toerr       bool
-		errmsg      string
+	type args struct {
+		file   string
+		plugin string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
 	}{
-		// Popeye
 		{
-			description: "Invalid authentication token",
-			plugin:      "popeye",
-			testfile:    "testdata/popeye_err_1.txt",
-			errmsg:      "the server has asked for the client to provide credentials",
+			name:    "invalid plugin",
+			args:    args{plugin: "foo"},
+			wantErr: true,
 		},
 		{
-			description: "Invalid cluster server address",
-			plugin:      "popeye",
-			testfile:    "testdata/popeye_err_2.txt",
-			errmsg:      `Get "http://localhost:8080/version?timeout=30s": dial tcp 127.0.0.1:8080: connect: connection refused`,
+			name:    "no plugin",
+			args:    args{plugin: ""},
+			wantErr: true,
 		},
 		{
-			description: "Invalid cluster context",
-			plugin:      "popeye",
-			testfile:    "testdata/popeye_err_3.txt",
-			errmsg:      "invalid configuration: context was not found for specified context: ctx",
+			name:    "no file",
+			args:    args{plugin: "popeye", file: ""},
+			wantErr: true,
 		},
 		{
-			description: "Incorrect flag",
-			plugin:      "popeye",
-			testfile:    "testdata/popeye_err_4.txt",
-			errmsg:      "Exec failed unknown flag: --brokenflag",
+			name:    "empty file",
+			args:    args{plugin: "popeye", file: "testdata/dummy_err_1.txt"},
+			wantErr: true,
 		},
 		{
-			description: "Non existent error data source",
-			plugin:      "popeye",
-			toerr:       true,
+			name: "popeye invalid credentials",
+			args: args{plugin: "popeye", file: "testdata/popeye_err_1.txt"},
+			want: "the server has asked for the client to provide credentials",
 		},
 		{
-			description: "Non existent error data",
-			plugin:      "popeye",
-			testfile:    "testdata/dummy_err_1.txt",
-			toerr:       true,
-		},
-
-		// Generic
-		{
-			description: "Invalid plugin",
-			plugin:      "invalid_plug",
-			toerr:       true,
+			name: "popeye invalid cluster",
+			args: args{plugin: "popeye", file: "testdata/popeye_err_2.txt"},
+			want: `Get "http://localhost:8080/version?timeout=30s": dial tcp 127.0.0.1:8080: connect: connection refused`,
 		},
 		{
-			description: "No plugin informed",
-			toerr:       true,
+			name: "popeye invalid context",
+			args: args{plugin: "popeye", file: "testdata/popeye_err_3.txt"},
+			want: "invalid configuration: context was not found for specified context: ctx",
+		},
+		{
+			name: "popeye unknown flag",
+			args: args{plugin: "popeye", file: "testdata/popeye_err_4.txt"},
+			want: "Exec failed unknown flag: --brokenflag",
+		},
+		{
+			name: "marvin invalid cluster",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_1.txt"},
+			want: `server version error: Get "http://localhost:8080/version?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused`,
+		},
+		{
+			name: "marvin invalid kubeconfig file",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_2.txt"},
+			want: "dynamic client error: stat foo: no such file or directory",
+		},
+		{
+			name: "marvin unknown flag",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_3.txt"},
+			want: "unknown flag: --foo",
+		},
+		{
+			name: "marvin invalid credentials",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_4.txt"},
+			want: "server version error: the server has asked for the client to provide credentials",
 		},
 	}
-
-	for _, c := range cases {
-		f, err := os.Open(c.testfile)
-		if err != nil && !os.IsNotExist(err) && !os.IsPermission(err) {
-			t.Errorf("Setup failed on case: %s\n", c.description)
-			t.Fatal(err)
-		}
-		if errmsg, err := Parse(f, c.plugin); (err != nil) != c.toerr || c.errmsg != errmsg {
-			if err != nil {
-				t.Error(err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var r io.Reader
+			if tt.args.file != "" {
+				f, err := os.Open(tt.args.file)
+				if err != nil {
+					t.Fatal(err)
+				}
+				r = f
 			}
-			t.Errorf("Case: %s\n", c.description)
-			t.Errorf("Expected:\n\t<%s>\nBut got: \n\t<%s>", c.errmsg, errmsg)
-		}
-		f.Close()
+			got, err := Parse(r, tt.args.plugin)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Parse() got = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

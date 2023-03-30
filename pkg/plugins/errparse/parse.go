@@ -26,24 +26,30 @@ var patterns = map[string][]*regexp.Regexp{
 		regexp.MustCompile(`panic:\s+.{3}\[38;5;196m(.*).\[0m\n`),
 		regexp.MustCompile(`Boom!\s+.{3}\[38;5;196m(.*).\[0m\n`),
 	},
+	"marvin": {
+		regexp.MustCompile(`Error:\s(.*)\n`),
+	},
 }
 
 // Parse extracts an error message from a given <io.Reader> pointing to a Zora
 // plugin error output. It uses regular expressions as heuristics to find the
 // message, whereby the first match is returned.
-func Parse(r io.Reader, plug string) (string, error) {
-	if _, ok := patterns[plug]; !ok {
-		return "", fmt.Errorf("Invalid plugin: <%s>", plug)
+func Parse(r io.Reader, plugin string) (string, error) {
+	if _, ok := patterns[plugin]; !ok {
+		return "", fmt.Errorf("invalid plugin: <%s>", plugin)
+	}
+	if r == nil {
+		return "", fmt.Errorf("invalid reader")
 	}
 	fc, err := io.ReadAll(r)
 	if err != nil {
-		return "", fmt.Errorf("Unable to read <%s> error data: %w", plug, err)
+		return "", fmt.Errorf("unable to read <%s> error data: %w", plugin, err)
 	}
-	for _, p := range patterns[plug] {
+	for _, p := range patterns[plugin] {
 		mats := p.FindSubmatch(fc)
 		if len(mats) >= 2 {
 			return string(mats[1]), nil
 		}
 	}
-	return "", fmt.Errorf("Unable to match on <%s> error output", plug)
+	return "", fmt.Errorf("unable to match on <%s> error output", plugin)
 }
