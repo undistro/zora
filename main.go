@@ -62,6 +62,7 @@ func main() {
 	var cronJobServiceAccount string
 	var saasWorkspaceID string
 	var saasServer string
+	var version string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -70,11 +71,12 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "marvin,popeye", "Comma separated list of default plugins")
-	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:v0.4.4", "Docker image name of Worker container")
+	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:v0.4.5", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
 	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
+	flag.StringVar(&version, "version", "v0.4.5", "Zora version")
 
 	opts := zap.Options{
 		Development: true,
@@ -101,7 +103,7 @@ func main() {
 	var onClusterUpdate, onClusterDelete saas.ClusterHook
 	var onClusterScanUpdate, onClusterScanDelete saas.ClusterScanHook
 	if saasWorkspaceID != "" {
-		saasClient, err := saas.NewClient(saasServer, "v1alpha1", saasWorkspaceID, http.DefaultClient)
+		saasClient, err := saas.NewClient(saasServer, version, saasWorkspaceID, http.DefaultClient)
 		if err != nil {
 			setupLog.Error(err, "unable to create SaaS client", "workspaceID", saasWorkspaceID)
 			os.Exit(1)
