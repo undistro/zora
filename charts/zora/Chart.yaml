@@ -17,7 +17,7 @@ name: zora
 description: Zora scans multiple Kubernetes clusters and reports potential issues.
 icon: https://zora-docs.undistro.io/assets/logo.png
 type: application
-version: 0.5.0-alpha2
-appVersion: "v0.5.0-alpha2"
+version: 0.5.0-alpha3
+appVersion: "v0.5.0-alpha3"
 sources:
   - https://github.com/undistro/zora
