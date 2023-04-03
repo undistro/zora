@@ -17,7 +17,7 @@ kind: Plugin
 metadata:
   name: marvin
 spec:
-  image: ghcr.io/undistro/marvin:v0.1.2
+  image: ghcr.io/undistro/marvin:v0.1.3
   resources:
     limits:
       cpu: 500m
@@ -28,7 +28,7 @@ spec:
     - |
       start=$(date +%s)
       echo Scanning...
-      /marvin scan --disable-annotation-skip -o json --kubeconfig $(KUBECONFIG) > $(DONE_DIR)/results.json
+      /marvin scan --disable-annotation-skip -o json -v 2 --kubeconfig $(KUBECONFIG) > $(DONE_DIR)/results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error
