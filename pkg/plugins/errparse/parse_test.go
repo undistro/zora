@@ -91,6 +91,16 @@ func TestParse(t *testing.T) {
 			args: args{plugin: "marvin", file: "testdata/marvin_err_4.txt"},
 			want: "server version error: the server has asked for the client to provide credentials",
 		},
+		{
+			name: "marvin invalid flags",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_5.txt"},
+			want: "please set '--checks/-f' or keep 'disable-builtin' 'false'",
+		},
+		{
+			name: "marvin compile error",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_6.txt"},
+			want: "compile error",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

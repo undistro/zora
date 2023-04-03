@@ -23,11 +23,12 @@ import (
 // The message patterns are ordered by priority.
 var patterns = map[string][]*regexp.Regexp{
 	"popeye": {
-		regexp.MustCompile(`panic:\s+.{3}\[38;5;196m(.*).\[0m\n`),
-		regexp.MustCompile(`Boom!\s+.{3}\[38;5;196m(.*).\[0m\n`),
+		regexp.MustCompile(`(?m)^panic:\s+.{3}\[38;5;196m(.*).\[0m\n`),
+		regexp.MustCompile(`(?m)^Boom!\s+.{3}\[38;5;196m(.*).\[0m\n`),
 	},
 	"marvin": {
-		regexp.MustCompile(`Error:\s(.*)\n`),
+		regexp.MustCompile(`(?m)^Error:\s(.*)\n`),
+		regexp.MustCompile(`(?m)^E.*]\s*"msg"="(.*)"\s*"error"=`),
 	},
 }
 
@@ -41,12 +42,12 @@ func Parse(r io.Reader, plugin string) (string, error) {
 	if r == nil {
 		return "", fmt.Errorf("invalid reader")
 	}
-	fc, err := io.ReadAll(r)
+	b, err := io.ReadAll(r)
 	if err != nil {
 		return "", fmt.Errorf("unable to read <%s> error data: %w", plugin, err)
 	}
 	for _, p := range patterns[plugin] {
-		mats := p.FindSubmatch(fc)
+		mats := p.FindSubmatch(b)
 		if len(mats) >= 2 {
 			return string(mats[1]), nil
 		}

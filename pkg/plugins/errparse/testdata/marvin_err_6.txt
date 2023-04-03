@@ -1,0 +1,4 @@
+I0331 16:37:08.005181   74213 scan.go:266]  "msg"="v1/pods loaded from kubernetes" "check"="M-001" "total"=16
+I0331 16:37:08.241835   74213 scan.go:266]  "msg"="apps/v1/deployments loaded from kubernetes" "check"="M-001" "total"=9
+E0331 16:37:09.960786   74213 scan.go:212]  "msg"="compile error" "error"="type-check error on validation 0: ERROR: <input>:1:5: Syntax error: mismatched input 'allContainers' expecting <EOF>\n | foo allContainers.all(container,\n | ....^" "check"="M-002"
+I0331 16:37:10.046914   74213 scan.go:180]  "msg"="scan finished with errors"
