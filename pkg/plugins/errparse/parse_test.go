@@ -99,7 +99,17 @@ func TestParse(t *testing.T) {
 		{
 			name: "marvin compile error",
 			args: args{plugin: "marvin", file: "testdata/marvin_err_6.txt"},
-			want: "compile error",
+			want: `failed to compile check M-002: type-check error on validation 0: ERROR: <input>:1:5: Syntax error: mismatched input 'allContainers' expecting <EOF>\n | foo allContainers.all(container,\n | ....^`,
+		},
+		{
+			name: "marvin multiples errors",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_7.txt"},
+			want: `failed to compile check M-001: cel expression must evaluate to a bool on validation 0`,
+		},
+		{
+			name: "marvin list error",
+			args: args{plugin: "marvin", file: "testdata/marvin_err_8.txt"},
+			want: `failed to list v1/podx: the server could not find the requested resource`,
 		},
 	}
 	for _, tt := range tests {
