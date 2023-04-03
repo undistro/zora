@@ -12,7 +12,7 @@
     },
     "checks": [
         {
-            "id": "capabilities",
+            "id": "M-116",
             "message": "Not allowed added/dropped capabilities",
             "severity": "Low",
             "builtin": true,
@@ -34,7 +34,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "ssh-server",
+            "id": "M-203",
             "message": "SSH server running inside container",
             "severity": "Low",
             "builtin": true,
@@ -59,7 +59,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "host-process",
+            "id": "M-100",
             "message": "Privileged access to the Windows node",
             "severity": "High",
             "builtin": true,
@@ -81,7 +81,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "capabilities-added",
+            "id": "M-103",
             "message": "Insecure capabilities",
             "severity": "High",
             "builtin": true,
@@ -103,7 +103,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "proc-mount",
+            "id": "M-108",
             "message": "Forbidden proc mount type",
             "severity": "Medium",
             "builtin": true,
@@ -125,7 +125,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "sysctls",
+            "id": "M-110",
             "message": "Unsafe sysctls",
             "severity": "Medium",
             "builtin": true,
@@ -147,7 +147,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "run-as-non-root",
+            "id": "M-113",
             "message": "Container could be running as root user",
             "severity": "Medium",
             "builtin": true,
@@ -169,7 +169,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "seccomp-restricted",
+            "id": "M-115",
             "message": "Not allowed seccomp profile",
             "severity": "Low",
             "builtin": true,
@@ -191,7 +191,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "app-credentials",
+            "id": "M-201",
             "message": "Application credentials stored in configuration files",
             "severity": "High",
             "builtin": true,
@@ -216,7 +216,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "auto-mount-sa-token",
+            "id": "M-202",
             "message": "Automounted service account token",
             "severity": "Low",
             "builtin": true,
@@ -238,7 +238,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "read-only-root-fs",
+            "id": "M-300",
             "message": "Root filesystem write allowed",
             "severity": "Low",
             "builtin": true,
@@ -260,7 +260,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "host-namespaces",
+            "id": "M-101",
             "message": "Host namespaces",
             "severity": "High",
             "builtin": true,
@@ -282,7 +282,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "host-ports",
+            "id": "M-105",
             "message": "Not allowed hostPort",
             "severity": "High",
             "builtin": true,
@@ -304,7 +304,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "apparmor",
+            "id": "M-106",
             "message": "Forbidden AppArmor profile",
             "severity": "Medium",
             "builtin": true,
@@ -326,7 +326,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "selinux",
+            "id": "M-107",
             "message": "Forbidden SELinux options",
             "severity": "Medium",
             "builtin": true,
@@ -348,7 +348,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "privileged-containers",
+            "id": "M-102",
             "message": "Privileged container",
             "severity": "High",
             "builtin": true,
@@ -370,7 +370,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "host-path-volumes",
+            "id": "M-104",
             "message": "HostPath volume",
             "severity": "High",
             "builtin": true,
@@ -392,7 +392,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "run-as-user",
+            "id": "M-114",
             "message": "Container running as root UID",
             "severity": "Low",
             "builtin": true,
@@ -414,7 +414,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "image-registry",
+            "id": "M-200",
             "message": "Image registry not allowed",
             "severity": "Medium",
             "builtin": true,
@@ -436,7 +436,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "seccomp-baseline",
+            "id": "M-109",
             "message": "Forbidden seccomp profile",
             "severity": "Medium",
             "builtin": true,
@@ -458,7 +458,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "volume-types",
+            "id": "M-111",
             "message": "Not allowed volume type",
             "severity": "Low",
             "builtin": true,
@@ -480,7 +480,7 @@
             "totalSkipped": 0
         },
         {
-            "id": "privilege-escalation",
+            "id": "M-112",
             "message": "Allowed privilege escalation",
             "severity": "Medium",
             "builtin": true,
