@@ -68,6 +68,6 @@ func clusterIssueSpec(report *Report, check CheckResult) *v1alpha1.ClusterIssueS
 		Category:       "Security",
 		Resources:      resources,
 		TotalResources: 0,
-		Url:            "",
+		Url:            urls[check.ID],
 	}
 }
