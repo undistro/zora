@@ -20,30 +20,55 @@ import (
 	"regexp"
 )
 
+type pluginPattern struct {
+	regexp regexp.Regexp
+	msgf   func([][]byte) string
+}
+
 // The message patterns are ordered by priority.
-var patterns = map[string][]*regexp.Regexp{
+var patterns = map[string][]pluginPattern{
 	"popeye": {
-		regexp.MustCompile(`panic:\s+.{3}\[38;5;196m(.*).\[0m\n`),
-		regexp.MustCompile(`Boom!\s+.{3}\[38;5;196m(.*).\[0m\n`),
+		{regexp: *regexp.MustCompile(`(?m)^panic:\s+.{3}\[38;5;196m(.*).\[0m\n`), msgf: firstGroup},
+		{regexp: *regexp.MustCompile(`(?m)^Boom!\s+.{3}\[38;5;196m(.*).\[0m\n`), msgf: firstGroup},
+	},
+	"marvin": {
+		{regexp: *regexp.MustCompile(`(?m)^Error:\s(.*)\n`), msgf: firstGroup},
+		{
+			regexp: *regexp.MustCompile(`(?m)^E.*]\s*"msg"="(.*)"\s*"error"="(.*?)"`),
+			msgf: func(matches [][]byte) string {
+				var err string
+				if len(matches) >= 3 {
+					err = ": " + string(matches[2])
+				}
+				return string(matches[1]) + err
+			},
+		},
 	},
 }
 
 // Parse extracts an error message from a given <io.Reader> pointing to a Zora
 // plugin error output. It uses regular expressions as heuristics to find the
 // message, whereby the first match is returned.
-func Parse(r io.Reader, plug string) (string, error) {
-	if _, ok := patterns[plug]; !ok {
-		return "", fmt.Errorf("Invalid plugin: <%s>", plug)
+func Parse(r io.Reader, plugin string) (string, error) {
+	if _, ok := patterns[plugin]; !ok {
+		return "", fmt.Errorf("invalid plugin: <%s>", plugin)
 	}
-	fc, err := io.ReadAll(r)
+	if r == nil {
+		return "", fmt.Errorf("invalid reader")
+	}
+	b, err := io.ReadAll(r)
 	if err != nil {
-		return "", fmt.Errorf("Unable to read <%s> error data: %w", plug, err)
+		return "", fmt.Errorf("unable to read <%s> error data: %w", plugin, err)
 	}
-	for _, p := range patterns[plug] {
-		mats := p.FindSubmatch(fc)
-		if len(mats) >= 2 {
-			return string(mats[1]), nil
+	for _, p := range patterns[plugin] {
+		matches := p.regexp.FindSubmatch(b)
+		if len(matches) >= 2 {
+			return p.msgf(matches), nil
 		}
 	}
-	return "", fmt.Errorf("Unable to match on <%s> error output", plug)
+	return "", fmt.Errorf("unable to match on <%s> error output", plugin)
+}
+
+func firstGroup(matches [][]byte) string {
+	return string(matches[1])
 }

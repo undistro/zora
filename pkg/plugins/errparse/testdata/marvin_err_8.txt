@@ -1,0 +1,3 @@
+I0403 10:30:38.225726   34612 scan.go:266]  "msg"="v1/pods loaded from kubernetes" "check"="M-001" "total"=16
+E0403 10:30:39.857694   34612 scan.go:262]  "msg"="failed to list v1/podx" "error"="the server could not find the requested resource" "check"="M-001"
+I0403 10:30:40.354419   34612 scan.go:180]  "msg"="scan finished with errors"

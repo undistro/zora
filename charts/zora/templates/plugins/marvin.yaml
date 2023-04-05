@@ -1,4 +1,4 @@
-# Copyright 2022 Undistro Authors
+# Copyright 2023 Undistro Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,51 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{ if .Values.scan.plugins.popeye.enabled -}}
+{{ if .Values.scan.plugins.marvin.enabled -}}
 apiVersion: zora.undistro.io/v1alpha1
 kind: Plugin
 metadata:
-  name: popeye
+  name: marvin
   labels:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
-  image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
-  {{- if .Values.scan.plugins.popeye.resources }}
+  image: "{{ .Values.scan.plugins.marvin.image.repository }}:{{ .Values.scan.plugins.marvin.image.tag }}"
+  {{- if .Values.scan.plugins.marvin.resources }}
   resources:
-    {{- toYaml .Values.scan.plugins.popeye.resources | nindent 4 }}
+    {{- toYaml .Values.scan.plugins.marvin.resources | nindent 4 }}
   {{- end }}
-{{- if .Values.scan.plugins.popeye.skipInternalResources }}
-  envFrom:
-    - configMapRef:
-        name: popeye-config
-        optional: true
-{{- end }}
   command:
     - /bin/sh
     - -c
     - |
       start=$(date +%s)
       echo Scanning...
-      {{- if .Values.scan.plugins.popeye.skipInternalResources }}
-      echo "$SPINACH" > /tmp/spinach.yml
-      sed -i "s+CRONJOB_NAMESPACE+$CRONJOB_NAMESPACE+g" /tmp/spinach.yml
-      sed -i "s+CRONJOB_NAME+$CRONJOB_NAME+g" /tmp/spinach.yml
-      {{- end }}
-      POPEYE_REPORT_DIR=$(DONE_DIR) \
-      /bin/popeye \
-        -o json \
-        --kubeconfig $(KUBECONFIG) \
-        {{- if .Values.scan.plugins.popeye.skipInternalResources }}
-        -f /tmp/spinach.yml \
-        {{- end }}
-        --all-namespaces \
-        --force-exit-zero \
-        --save \
-        --output-file results.json
+      /marvin scan --disable-annotation-skip -o json -v 2 --kubeconfig $(KUBECONFIG) > $(DONE_DIR)/results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error
-        cat /tmp/popeye.log
       else
         echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
       fi

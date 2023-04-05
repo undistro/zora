@@ -86,6 +86,7 @@ install: manifests kustomize  ## Install default configuration (RBAC for plugins
 	${KUSTOMIZE} build config/crd | kubectl apply -f -
 	@kubectl apply -f config/rbac/clusterissue_editor_role.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
+	@kubectl apply -f config/samples/zora_v1alpha1_plugin_marvin.yaml
 	@kubectl create -f config/rbac/plugins_role_binding.yaml || true
 
 uninstall: manifests kustomize  ## Uninstall CRDs from the current cluster.
