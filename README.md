@@ -11,7 +11,7 @@
 
 [![build](https://github.com/undistro/zora/actions/workflows/build.yaml/badge.svg)](https://github.com/undistro/zora/actions/workflows/build.yaml)
 [![license](https://img.shields.io/github/license/undistro/zora)](https://github.com/undistro/zora/blob/main/LICENSE)
-[![version](https://img.shields.io/github/v/tag/undistro/zora?sort=semver)](https://github.com/undistro/zora/tags)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/undistro/zora?display_name=tag&sort=semver&color=blue)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fundistro%2Fzora.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fundistro%2Fzora?ref=badge_shield)
 
 </div>
