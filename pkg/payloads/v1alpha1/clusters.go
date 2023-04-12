@@ -15,8 +15,6 @@
 package v1alpha1
 
 import (
-	"strings"
-
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -59,14 +57,9 @@ type PluginStatus struct {
 	Schedule               string           `json:"schedule"`
 }
 
-type NsName struct {
+type NamespacedName struct {
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
-}
-
-type ResourcedIssue struct {
-	Issue     `json:",inline"`
-	Resources map[string][]NsName `json:"resources"`
 }
 
 type Resources struct {
@@ -136,27 +129,6 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	}
 
 	return cl
-}
-
-//NewClusterWithScans returns a Cluster with pluginStatus and without issues
-func NewClusterWithScans(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan) Cluster {
-	cl := NewCluster(cluster)
-	ps, totalIssues := NewScanStatus(scans)
-	cl.PluginStatus = ps
-	cl.TotalIssues = totalIssues
-	return cl
-}
-
-//NewClusterWithIssues returns a Cluster with pluginStatus and their issues
-func NewClusterWithIssues(cluster v1alpha1.Cluster, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) Cluster {
-	c := NewClusterWithScans(cluster, scans)
-	for _, i := range issues {
-		c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues = append(
-			c.PluginStatus[i.Labels[v1alpha1.LabelPlugin]].Issues,
-			NewResourcedIssue(i),
-		)
-	}
-	return c
 }
 
 func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
@@ -232,33 +204,4 @@ func NewScanStatusWithIssues(scans []v1alpha1.ClusterScan, issues []v1alpha1.Clu
 
 	}
 	return pluginStatus
-}
-
-func NewResourcedIssue(i v1alpha1.ClusterIssue) ResourcedIssue {
-	ri := ResourcedIssue{}
-	ri.Issue = NewIssue(i)
-	for r, narr := range i.Spec.Resources {
-		for _, nspacedn := range narr {
-			ns := strings.Split(nspacedn, "/")
-			if len(ns) == 1 {
-				ns = append([]string{""}, ns[0])
-			}
-			if ri.Resources == nil {
-				ri.Resources = map[string][]NsName{
-					r: {{
-						Name:      ns[1],
-						Namespace: ns[0],
-					}},
-				}
-			} else {
-				ri.Resources[r] = append(ri.Resources[r],
-					NsName{
-						Name:      ns[1],
-						Namespace: ns[0],
-					},
-				)
-			}
-		}
-	}
-	return ri
 }

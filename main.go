@@ -76,7 +76,7 @@ func main() {
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
 	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
 	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
-	flag.StringVar(&version, "version", "0.5.0", "Zora version")
+	flag.StringVar(&version, "version", "0.5.1", "Zora version")
 
 	opts := zap.Options{
 		Development: true,

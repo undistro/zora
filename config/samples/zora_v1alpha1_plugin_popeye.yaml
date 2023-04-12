@@ -17,7 +17,7 @@ kind: Plugin
 metadata:
   name: popeye
 spec:
-  image: ghcr.io/undistro/popeye:v0.11.1-cross
+  image: ghcr.io/undistro/popeye:pr252
   resources:
     limits:
       cpu: 500m

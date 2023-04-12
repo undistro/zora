@@ -1,0 +1,37 @@
+{
+  "popeye": {
+    "score": 13,
+    "grade": "F",
+    "sanitizers": [
+      {
+        "sanitizer": "cluster",
+        "gvr": "cluster",
+        "tally": {
+          "ok": 1,
+          "info": 0,
+          "warning": 0,
+          "error": 0,
+          "score": 100
+        },
+        "issues": {
+          "Metrics": [
+            {
+              "group": "__root__",
+              "gvr": "cluster",
+              "level": 1,
+              "message": "[POP-402] No metrics-server detected"
+            }
+          ],
+          "Version": [
+            {
+              "group": "__root__",
+              "gvr": "cluster",
+              "level": 2,
+              "message": "[POP-405] Is this a jurassic cluster? Might want to upgrade K8s a bit"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

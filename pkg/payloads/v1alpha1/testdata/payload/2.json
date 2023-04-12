@@ -17,30 +17,5 @@
 		"memory": null,
 		"cpu": null
 	},
-	"creationTimestamp": null,
-	"totalIssues": null,
-	"pluginStatus": {
-		"plugin2": {
-			"scan": {
-				"status": "failed",
-				"message": "failed to discover API server information. error: Get \"https://35.236.51.220/version?timeout=32s\": x509: certificate signed by unknown authority"
-			},
-			"issueCount": null,
-			"issues": null,
-			"lastSuccessfulScanTime": null,
-			"lastFinishedScanTime": "2022-08-04T22:47:00Z",
-			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
-		},
-		"popeye": {
-			"scan": {
-				"status": "failed",
-				"message": "Get \"http://localhost:8081/version?timeout=30s\": dial tcp 127.0.0.1:8081: connect: connection refused"
-			},
-			"issueCount": null,
-			"issues": null,
-			"lastSuccessfulScanTime": null,
-			"lastFinishedScanTime": "2022-08-04T22:47:00Z",
-			"nextScheduleScanTime": "2022-08-04T23:45:00Z"
-		}
-	}
+	"creationTimestamp": null
 }

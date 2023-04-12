@@ -13,7 +13,5 @@
 	"resources": {
 		"discovered": false,
 		"message": "metrics API not available"
-	},
-	"totalIssues": null,
-	"pluginStatus": null
+	}
 }
