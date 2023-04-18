@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version (e.g. "v0.4")'
+        description: 'Version (e.g. "v0.5")'
         type: string
         required: true
       latest:
