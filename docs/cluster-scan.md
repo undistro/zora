@@ -90,7 +90,7 @@ Both plugins are used by default in `ClusterScans`.
 
 Marvin is the official [Undistro](https://undistro.io) plugin that scans a k8s cluster 
 by performing [CEL (Common Expression Language)](https://github.com/google/cel-spec) expressions. 
-And Popeye is a widely used open-source tool for Kubernetes cluster scanning.
+Similarly, Popeye is a widely used open-source tool for k8s cluster scanning.
 
 ## List cluster issues
 
