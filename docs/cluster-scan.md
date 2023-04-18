@@ -74,6 +74,24 @@ mycluster   mycluster   0 * * * *   false     marvin,popeye   Complete      13s 
 The `LAST STATUS` column represents the status (`Active`, `Complete` or `Failed`) of the last **scan** 
 that was scheduled at the time represented by `LAST SCHEDULE` column.
 
+## Scanner plugins
+
+Zora uses CLI tools as plugins to scan the clusters.
+
+Currently, there are two available plugins: 
+[Marvin](https://github.com/undistro/marvin) and [Popeye](https://github.com/derailed/popeye).
+Both plugins are used by default in `ClusterScans`.
+
+!!! info 
+    To list the available plugins, run the following command:
+    ```
+    kubectl get plugins -n zora-system
+    ```
+
+Marvin is the official [Undistro](https://undistro.io) plugin that scans a k8s cluster 
+by performing [CEL (Common Expression Language)](https://github.com/google/cel-spec) expressions. 
+And Popeye is a widely used open-source tool for Kubernetes cluster scanning.
+
 ## List cluster issues
 
 Once the cluster is successfully scanned,
