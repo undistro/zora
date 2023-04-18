@@ -26,7 +26,7 @@ metadata:
 spec:
   clusterRef:
     name: mycluster
-  schedule: "0 */1 * * *"
+  schedule: "0 * * * *"  # at minute 0 past every hour
 EOF
 ```
 
@@ -67,11 +67,11 @@ Listing the `ClusterScans`, the information of the last scans are available:
 kubectl get clusterscan -o wide
 ```
 ```
-NAME        CLUSTER     SCHEDULE      SUSPEND   PLUGINS   LAST STATUS   LAST SCHEDULE   LAST SUCCESSFUL   ISSUES   READY   AGE   NEXT SCHEDULE
-mycluster   mycluster   0 */1 * * *   false     popeye    Complete      12m             14m               21       True    32d   2022-06-27T23:00:00Z
+NAME        CLUSTER     SCHEDULE    SUSPEND   PLUGINS         LAST STATUS   LAST SCHEDULE   LAST SUCCESSFUL   ISSUES   READY   SAAS   AGE   NEXT SCHEDULE
+mycluster   mycluster   0 * * * *   false     marvin,popeye   Complete      13s             1s                34       True    OK     39s   2023-04-18T14:00:00Z
 ```
 
-The `LAST STATUS` column represents the status (Active, Complete or Failed) of the last **scan** 
+The `LAST STATUS` column represents the status (`Active`, `Complete` or `Failed`) of the last **scan** 
 that was scheduled at the time represented by `LAST SCHEDULE` column.
 
 ## List cluster issues
@@ -83,13 +83,21 @@ the reported issues are available in `ClusterIssue` resources:
 kubectl get clusterissues -l cluster=mycluster
 ```
 ```
-NAME                          CLUSTER      ID         MESSAGE                                                                        SEVERITY   CATEGORY          AGE
-mycluster-pop-102-27557035    mycluster    POP-102    No probes defined                                                              Medium     Container         4m8s
-mycluster-pop-105-27557035    mycluster    POP-105    Liveness probe uses a port#, prefer a named port                               Low        Container         4m8s
-mycluster-pop-106-27557035    mycluster    POP-106    No resources requests/limits defined                                           Medium     Container         4m8s
-mycluster-pop-1100-27557035   mycluster    POP-1100   No pods match service selector                                                 High       Service           4m8s
-mycluster-pop-306-27557035    mycluster    POP-306    Container could be running as root user. Check SecurityContext/Image           Medium     Security          4m8s
-mycluster-pop-500-27557035    mycluster    POP-500    Zero scale detected                                                            Medium     Workloads         4m8s
+NAME                              CLUSTER     ID         MESSAGE                                                                             SEVERITY   CATEGORY                  AGE
+mycluster-m-102-18e887d99ccb      mycluster   M-102      Privileged container                                                                High       Security                  100s
+mycluster-m-103-18e887d99ccb      mycluster   M-103      Insecure capabilities                                                               High       Security                  100s
+mycluster-m-104-18e887d99ccb      mycluster   M-104      HostPath volume                                                                     High       Security                  100s
+mycluster-m-105-18e887d99ccb      mycluster   M-105      Not allowed hostPort                                                                High       Security                  100s
+mycluster-m-111-18e887d99ccb      mycluster   M-111      Not allowed volume type                                                             Low        Security                  100s
+mycluster-m-112-18e887d99ccb      mycluster   M-112      Allowed privilege escalation                                                        Medium     Security                  100s
+mycluster-m-113-18e887d99ccb      mycluster   M-113      Container could be running as root user                                             Medium     Security                  100s
+mycluster-m-115-18e887d99ccb      mycluster   M-115      Not allowed seccomp profile                                                         Low        Security                  100s
+mycluster-m-201-18e887d99ccb      mycluster   M-201      Application credentials stored in configuration files                               High       Security                  100s
+mycluster-m-300-18e887d99ccb      mycluster   M-300      Root filesystem write allowed                                                       Low        Security                  100s
+mycluster-pop-102-c6d6b0eefab4    mycluster   POP-102    No probes defined                                                                   Medium     Container                 103s
+mycluster-pop-106-c6d6b0eefab4    mycluster   POP-106    No resources requests/limits defined                                                Medium     Container                 103s
+mycluster-pop-605-c6d6b0eefab4    mycluster   POP-605    If ALL HPAs are triggered, cluster memory capacity will match or exceed threshold   Medium     HorizontalPodAutoscaler   103s
+mycluster-pop-710-c6d6b0eefab4    mycluster   POP-710    Node Memory threshold reached                                                       Medium     Node                      103s
 ```
 
 It's possible filter issues by cluster, issue ID, severity and category 
@@ -107,6 +115,9 @@ kubectl get clusterissues -l cluster=mycluster,severity=High
 
 # only issues reported by the last scan from mycluster
 kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-599e1c83208b
+
+# issues reported from marvin plugin
+kubectl get clusterissues -l plugin=marvin
 ```
 
 !!! tip "Why is it an issue?"
