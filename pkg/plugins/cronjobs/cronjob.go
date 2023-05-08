@@ -24,7 +24,7 @@ import (
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 	"github.com/undistro/zora/pkg/kubeconfig"
 )
 

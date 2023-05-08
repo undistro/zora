@@ -17,7 +17,7 @@ package v1alpha1
 import (
 	"strings"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 type Issue struct {

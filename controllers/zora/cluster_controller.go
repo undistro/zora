@@ -20,7 +20,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/undistro/zora/pkg/saas"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -33,7 +32,9 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/pkg/saas"
+
+	"github.com/undistro/zora/api/zora/v1alpha1"
 	"github.com/undistro/zora/pkg/discovery"
 	"github.com/undistro/zora/pkg/kubeconfig"
 )

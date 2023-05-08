@@ -21,7 +21,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 func TestNewResourcedIssue(t *testing.T) {

@@ -34,7 +34,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	zorav1alpha1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
 	zoracontrollers "github.com/undistro/zora/controllers/zora"
 	//+kubebuilder:scaffold:imports
 )

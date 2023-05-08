@@ -22,7 +22,7 @@ COPY go.sum go.sum
 RUN go mod download
 
 COPY main.go main.go
-COPY apis/ apis/
+COPY api/ api/
 COPY controllers/ controllers/
 COPY pkg/ pkg/
 

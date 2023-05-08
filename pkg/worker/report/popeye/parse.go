@@ -23,7 +23,7 @@ import (
 
 	"github.com/go-logr/logr"
 
-	zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
+	zorav1a1 "github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 var (

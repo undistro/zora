@@ -41,7 +41,7 @@ import (
 
 	"github.com/undistro/zora/pkg/saas"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 	"github.com/undistro/zora/pkg/kubeconfig"
 	"github.com/undistro/zora/pkg/plugins/cronjobs"
 	"github.com/undistro/zora/pkg/plugins/errparse"

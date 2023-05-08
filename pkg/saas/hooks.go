@@ -17,10 +17,11 @@ package saas
 import (
 	"context"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
-	payloads "github.com/undistro/zora/pkg/payloads/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrlClient "sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/undistro/zora/api/zora/v1alpha1"
+	payloads "github.com/undistro/zora/pkg/payloads/v1alpha1"
 )
 
 type ClusterHook func(ctx context.Context, cluster *v1alpha1.Cluster) error

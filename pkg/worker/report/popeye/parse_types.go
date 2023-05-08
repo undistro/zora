@@ -14,7 +14,7 @@
 
 package popeye
 
-import zorav1a1 "github.com/undistro/zora/apis/zora/v1alpha1"
+import zorav1a1 "github.com/undistro/zora/api/zora/v1alpha1"
 
 var (
 	// LevelToIssueSeverity maps Popeye's <Level> type to Zora's
