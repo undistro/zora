@@ -21,21 +21,20 @@ import (
 	"strings"
 	"time"
 
-	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
-	"github.com/undistro/zora/pkg/saas"
 
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
-	zoracontrollers "github.com/undistro/zora/controllers/zora"
+	zoracontroller "github.com/undistro/zora/internal/controller/zora"
+	"github.com/undistro/zora/pkg/saas"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -115,7 +114,7 @@ func main() {
 		onClusterScanDelete = saas.DeleteClusterScanHook(saasClient, mgr.GetClient())
 	}
 
-	if err = (&zoracontrollers.ClusterReconciler{
+	if err = (&zoracontroller.ClusterReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
@@ -133,7 +132,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&zoracontrollers.ClusterScanReconciler{
+	if err = (&zoracontroller.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
 		K8sClient:               kcli,
 		Scheme:                  mgr.GetScheme(),
@@ -149,7 +148,6 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)
 	}
-
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
