@@ -2,7 +2,7 @@
 TAG ?= latest
 IMG ?= operator:${TAG}
 WORKER_IMG ?= worker:${TAG}
-DOCKERFILE ?= Dockerfile
+DOCKERFILE ?= cmd/manager/Dockerfile
 
 # Commands
 # Requirement for 'setup-envtest.sh' in the test target.

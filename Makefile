@@ -68,11 +68,11 @@ clientset-gen:  ## Generate clientset
 ##@ Build and Execution
 
 build: generate fmt vet  ## Build manager binary.
-	go build -o bin/manager main.go
+	go build -o bin/manager cmd/manager/main.go
 	go build -o bin/worker cmd/worker/main.go
 
 run: install manifests generate  ## Run a controller from your host.
-	go run ./main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}
+	go run ./cmd/manager/main.go -default-plugins-names ${PLUGINS} -worker-image ${WORKER_IMG}
 
 docker-build: test  ## Build manager Docker image.
 	docker build -t ${IMG} -f ${DOCKERFILE} .
