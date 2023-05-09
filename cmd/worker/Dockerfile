@@ -22,7 +22,7 @@ COPY go.sum go.sum
 RUN go mod download
 
 COPY cmd/worker/main.go cmd/worker/main.go
-COPY apis/ apis/
+COPY api/ api/
 COPY pkg/ pkg/
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o worker cmd/worker/main.go
