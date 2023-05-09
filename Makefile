@@ -38,7 +38,7 @@ help: ## Display this help.
 ##@ Development
 
 .PHONY: manifests
-manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+manifests: controller-gen addlicense ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore ".github/**" -ignore ".idea/**" -ignore "dist/**" -ignore "site/**" -ignore "config/**" .
