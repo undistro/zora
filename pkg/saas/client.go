@@ -22,8 +22,6 @@ import (
 	"net/http"
 	"net/url"
 	"path"
-
-	"github.com/undistro/zora/pkg/payloads/v1alpha1"
 )
 
 const (
@@ -40,9 +38,9 @@ var allowedStatus = []int{
 }
 
 type Client interface {
-	PutCluster(ctx context.Context, cluster v1alpha1.Cluster) error
+	PutCluster(ctx context.Context, cluster Cluster) error
 	DeleteCluster(ctx context.Context, namespace, name string) error
-	PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*v1alpha1.PluginStatus) error
+	PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 	DeleteClusterScan(ctx context.Context, namespace, name string) error
 }
 
@@ -67,7 +65,7 @@ func NewClient(baseURL, version, workspaceID string, httpclient *http.Client) (C
 	}, nil
 }
 
-func (r *client) PutCluster(ctx context.Context, cluster v1alpha1.Cluster) error {
+func (r *client) PutCluster(ctx context.Context, cluster Cluster) error {
 	u := r.clusterURL(cluster.Namespace, cluster.Name)
 	b, err := json.Marshal(cluster)
 	if err != nil {
@@ -102,7 +100,7 @@ func (r *client) DeleteCluster(ctx context.Context, namespace, name string) erro
 	return validateStatus(res)
 }
 
-func (r *client) PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*v1alpha1.PluginStatus) error {
+func (r *client) PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error {
 	u := r.clusterURL(namespace, name, "scan")
 	b, err := json.Marshal(pluginStatus)
 	if err != nil {

@@ -21,7 +21,6 @@ import (
 	ctrlClient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
-	payloads "github.com/undistro/zora/pkg/payloads/v1alpha1"
 )
 
 type ClusterHook func(ctx context.Context, cluster *v1alpha1.Cluster) error
@@ -30,7 +29,7 @@ type ClusterScanHook func(ctx context.Context, clusterScan *v1alpha1.ClusterScan
 
 func UpdateClusterHook(saasClient Client) ClusterHook {
 	return func(ctx context.Context, cluster *v1alpha1.Cluster) error {
-		cl := payloads.NewCluster(*cluster)
+		cl := NewCluster(*cluster)
 		return saasClient.PutCluster(ctx, cl)
 	}
 }
@@ -105,7 +104,7 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 		return err
 	}
 
-	status := payloads.NewScanStatusWithIssues(scanList.Items, issueList.Items)
+	status := NewScanStatusWithIssues(scanList.Items, issueList.Items)
 	if status == nil {
 		return nil
 	}
