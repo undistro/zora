@@ -64,8 +64,8 @@ type ClusterIssueStatus struct {
 //+kubebuilder:printcolumn:name="Total",type="integer",JSONPath=".spec.totalResources",priority=1
 
 // ClusterIssue is the Schema for the clusterissues API
-//+genclient
-//+genclient:noStatus
+// +genclient
+// +genclient:noStatus
 type ClusterIssue struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

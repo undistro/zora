@@ -86,7 +86,7 @@ type ConnectionStatus struct {
 	Message   string `json:"message"`
 }
 
-//NewCluster returns a Cluster without pluginStatus and issues
+// NewCluster returns a Cluster without pluginStatus and issues
 func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	cl := Cluster{
 		ApiVersion:        "v1alpha1",

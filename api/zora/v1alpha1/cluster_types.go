@@ -15,12 +15,12 @@
 package v1alpha1
 
 import (
-	"github.com/undistro/zora/pkg/apis"
-	"github.com/undistro/zora/pkg/discovery"
-	"github.com/undistro/zora/pkg/formats"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+
+	"github.com/undistro/zora/pkg/discovery"
+	"github.com/undistro/zora/pkg/formats"
 )
 
 const (
@@ -39,7 +39,7 @@ type ClusterSpec struct {
 
 // ClusterStatus defines the observed state of Cluster
 type ClusterStatus struct {
-	apis.Status           `json:",inline"`
+	Status                `json:",inline"`
 	discovery.ClusterInfo `json:",inline"`
 
 	// KubernetesVersion is the server's kubernetes version (git version).
@@ -91,9 +91,9 @@ func (in *ClusterStatus) SetResources(res discovery.ClusterResources) {
 //+kubebuilder:printcolumn:name="Region",type="string",priority=1,JSONPath=".status.region"
 
 // Cluster is the Schema for the clusters API
-//+genclient
-//+genclient:onlyVerbs=list,get
-//+genclient:noStatus
+// +genclient
+// +genclient:onlyVerbs=list,get
+// +genclient:noStatus
 type Cluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

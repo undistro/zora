@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apis
+package v1alpha1
 
 import (
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -20,17 +20,12 @@ import (
 )
 
 // Status is the minimally expected status subresource.
-// +k8s:deepcopy-gen=true
 type Status struct {
 	// ObservedGeneration is the 'Generation' of the resource that
 	// was last processed by the controller.
-	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// Conditions the latest available observations of a resource's current state.
-	// +optional
-	// +patchMergeKey=type
-	// +patchStrategy=merge
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
@@ -45,9 +40,9 @@ func (s *Status) ConditionIsTrue(t string) bool {
 }
 
 // SetCondition sets the newCondition in conditions.
-// 1. if the condition of the specified type already exists, all fields of the existing condition are updated to
-//    newCondition, LastTransitionTime is set to now if the new status differs from the old status
-// 2. if a condition of the specified type does not exist, LastTransitionTime is set to now() if unset and newCondition is appended
+//  1. if the condition of the specified type already exists, all fields of the existing condition are updated to
+//     newCondition, LastTransitionTime is set to now if the new status differs from the old status
+//  2. if a condition of the specified type does not exist, LastTransitionTime is set to now() if unset and newCondition is appended
 func (s *Status) SetCondition(newCondition metav1.Condition) {
 	if s.Conditions == nil {
 		s.Conditions = []metav1.Condition{}

@@ -22,8 +22,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-
-	"github.com/undistro/zora/pkg/apis"
 )
 
 // ClusterScanSpec defines the desired state of ClusterScan
@@ -84,7 +82,7 @@ func (in *PluginReference) PluginKey(defaultNamespace string) types.NamespacedNa
 
 // ClusterScanStatus defines the observed state of ClusterScan
 type ClusterScanStatus struct {
-	apis.Status `json:",inline"`
+	Status `json:",inline"`
 
 	// Information of the last scans of plugins
 	Plugins map[string]*PluginScanStatus `json:"plugins,omitempty"`
@@ -195,7 +193,6 @@ func (in *ClusterScanStatus) LastScanIDs(successful bool) []string {
 	return lastScans
 }
 
-// +k8s:deepcopy-gen=true
 type PluginScanStatus struct {
 	// Information when was the last time the job was scheduled.
 	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
@@ -251,9 +248,9 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
 // ClusterScan is the Schema for the clusterscans API
-//+genclient
-//+genclient:onlyVerbs=list,get
-//+genclient:noStatus
+// +genclient
+// +genclient:onlyVerbs=list,get
+// +genclient:noStatus
 type ClusterScan struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
