@@ -22,7 +22,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/undistro/zora/pkg/worker/run"
+	"github.com/undistro/zora/pkg/worker"
 )
 
 var log = ctrl.Log.WithName("worker")
@@ -35,7 +35,7 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	log.Info("Starting worker")
-	if err := run.Run(log); err != nil {
+	if err := worker.Run(log); err != nil {
 		log.Info("Worker crashed")
 		panic(err)
 	}
