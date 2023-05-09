@@ -62,7 +62,7 @@ generate-client:  ## Generate client
 		quay.io/slok/kube-code-generator:v1.26.0
 
 .PHONY: generate-helm-docs
-generate-helm-docs: ## Generate documentation for helm chart.
+generate-helm-docs: helm-docs ## Generate documentation for helm chart.
 	$(HELM_DOCS) -s=file --badge-style="flat-square&color=3CA9DD"
 
 .PHONY: fmt
@@ -196,6 +196,7 @@ $(ADDLICENSE): $(LOCALBIN)
 	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@latest
 
 .PHONY: helm-docs
-helm-docs: $(HELM_DOCS) ## Download addlicense if necessary
+helm-docs: $(HELM_DOCS) ## Download helm-docs if necessary
+$(HELM_DOCS): $(LOCALBIN)
 	test -s $(LOCALBIN)/helm-docs || GOBIN=$(LOCALBIN) go install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.8.1
 
