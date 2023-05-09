@@ -36,7 +36,7 @@ spec:
       labels:
         control-plane: controller-manager
     spec:
-      # TODO(user): Uncomment the following code to configure the nodeAffinity expression
+      # Uncomment the following code to configure the nodeAffinity expression
       # according to the platforms which are supported by your solution.
       # It is considered best practice to support multiple architectures. You can
       # build your manager image using the makefile target docker-buildx.
@@ -58,7 +58,7 @@ spec:
       #               - linux
       securityContext:
         runAsNonRoot: true
-        # TODO(user): For common cases that do not require escalating privileges
+        # For common cases that do not require escalating privileges
         # it is recommended to ensure that all your Pods/Containers are restrictive.
         # More info: https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
         # Please uncomment the following code if your project does NOT have to work on old Kubernetes
@@ -89,8 +89,6 @@ spec:
             port: 8081
           initialDelaySeconds: 5
           periodSeconds: 10
-        # TODO(user): Configure the resources accordingly based on the project requirements.
-        # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
         resources:
           limits:
             cpu: 500m
