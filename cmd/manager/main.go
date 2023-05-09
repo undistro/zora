@@ -34,7 +34,7 @@ import (
 
 	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
 	zoracontroller "github.com/undistro/zora/internal/controller/zora"
-	"github.com/undistro/zora/pkg/saas"
+	"github.com/undistro/zora/internal/saas"
 	//+kubebuilder:scaffold:imports
 )
 

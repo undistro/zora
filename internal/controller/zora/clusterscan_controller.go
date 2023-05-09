@@ -40,9 +40,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/internal/saas"
 	"github.com/undistro/zora/pkg/kubeconfig"
 	"github.com/undistro/zora/pkg/plugins"
-	"github.com/undistro/zora/pkg/saas"
 )
 
 const (

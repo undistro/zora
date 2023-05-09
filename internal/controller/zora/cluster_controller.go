@@ -32,9 +32,8 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/undistro/zora/pkg/saas"
-
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/internal/saas"
 	"github.com/undistro/zora/pkg/discovery"
 	"github.com/undistro/zora/pkg/kubeconfig"
 )
