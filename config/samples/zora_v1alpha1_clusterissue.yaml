@@ -1,44 +1,24 @@
-# Copyright 2022 Undistro Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterIssue
 metadata:
-  name: mycluster-pop-106
   labels:
+    category: Security
     cluster: mycluster
-    id: POP-106
-    severity: Medium
-    category: Container
+    id: M-102
+    plugin: marvin
+    scanID: b8622b8b-8be0-444c-8aaa-d67d3ac7bfd3
+    severity: High
+  name: mycluster-m-102-d67d3ac7bfd3
+  namespace: zora-system
 spec:
+  category: Security
   cluster: mycluster
-  id: POP-106
-  message: No resources requests/limits defined
-  severity: Medium
-  category: Container
-  totalResources: 10
+  id: M-102
+  message: Privileged container
   resources:
     apps/v1/daemonsets:
-      - kube-system/aws-node
-    apps/v1/deployments:
-      - kube-system/cluster-autoscaler-aws-cluster-autoscaler
-      - cert-manager/cert-manager
-      - cert-manager/cert-manager-cainjector
-      - cert-manager/cert-manager-webhook
-      - kube-system/metrics-server
+      - kube-system/kube-proxy
     v1/pods:
-      - kube-system/aws-node-xls4r
-      - kube-system/cluster-autoscaler-aws-cluster-autoscaler-6549789d78-bfjdp
-      - kube-system/metrics-server-694d47d564-zxpwb
-      - kube-system/aws-node-5qb87
+      - kube-system/kube-proxy-ggxqd
+  severity: High
+  url: https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
