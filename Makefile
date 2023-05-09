@@ -58,11 +58,11 @@ clientset-gen:  ## Generate clientset
 		-v ${PWD}:/go/src/${PROJECT_PACKAGE} \
 		-e PROJECT_PACKAGE=${PROJECT_PACKAGE} \
 		-e CLIENT_GENERATOR_OUT=${PROJECT_PACKAGE}/pkg \
-		-e APIS_ROOT=${PROJECT_PACKAGE}/apis \
+		-e APIS_ROOT=${PROJECT_PACKAGE}/api \
 		-e GROUPS_VERSION="zora:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
 		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		quay.io/slok/kube-code-generator:v1.23.0
+		quay.io/slok/kube-code-generator:v1.26.0
 
 
 ##@ Build and Execution
