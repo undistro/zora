@@ -1,4 +1,4 @@
-name: Update docs
+name: docs
 on:
   workflow_dispatch:
     inputs:
@@ -12,49 +12,51 @@ on:
       dev:
         description: 'dev'
         type: boolean
+
 env:
   GIT_USER: "github-actions"
   GIT_EMAIL: "github-actions@github.com"
+
 jobs:
   docs:
-    name: Update docs ${{ inputs.version }}
+    name: update docs ${{ inputs.version }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: setup python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Set up Go
+      - name: setup go
         uses: actions/setup-go@v3
 
-      - name: Install MkDocs and Mike
+      - name: install mkdocs and mike
         run: pip install mkdocs-material mike
 
-      - name: Set 'latest' alias
+      - name: set 'latest' alias
         if: inputs.latest
         run: echo 'alias=latest' >> $GITHUB_ENV
 
-      - name: Set 'dev' alias
+      - name: set 'dev' alias
         if: inputs.dev
         run: echo 'alias=dev' >> $GITHUB_ENV
 
-      - name: Fetch gh-pages branch
+      - name: fetch gh-pages branch
         run: |
           git config --global user.email "$GIT_EMAIL"
           git config --global user.name "$GIT_USER"
           git fetch origin gh-pages --depth=1
 
-      - name: Mike deploy
+      - name: mike deploy
         run: |
           cp -f charts/zora/README.md docs/helm-chart.md
           cp -f charts/zora/values.yaml docs/values.yaml
           mike deploy --update-aliases ${{ inputs.version }} ${{ env.alias }}
 
-      - name: Update titles and push
+      - name: update titles and push
         run: |
           git checkout gh-pages
           go run update_titles.go

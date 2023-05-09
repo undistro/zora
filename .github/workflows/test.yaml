@@ -1,0 +1,27 @@
+name: test
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+          cache: true
+
+      - name: test
+        run: make test
+
+      - name: check license headers
+        run: make check-license
+
+      - name: build
+        run: make build

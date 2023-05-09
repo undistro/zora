@@ -1,4 +1,4 @@
-name: Publish Docker images and Helm chart
+name: release
 on:
   workflow_dispatch:
   push:
@@ -22,24 +22,24 @@ jobs:
     secrets: inherit
 
   goreleaser:
-    name: Create GitHub release
     runs-on: ubuntu-latest
     needs: [docker]
     steps:
-      - name: Checkout repository
+      - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Fetch tags
+      - name: fetch tags
         run: git fetch --force --tags
 
-      - name: Set up Go
+      - name: setup go
         uses: actions/setup-go@v4
         with:
           go-version: stable
+          cache: true
 
-      - name: Release
+      - name: release
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
@@ -49,16 +49,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   helm:
-    name: Update Helm repository
     runs-on: ubuntu-latest
     needs: [goreleaser]
     steps:
-      - name: Checkout repository
+      - name: checkout
         uses: actions/checkout@v3
         with:
           path: main
 
-      - name: Checkout charts repository
+      - name: checkout charts
         uses: actions/checkout@v3
         with:
           repository: undistro/charts.undistro.io
@@ -67,10 +66,10 @@ jobs:
           token: ${{ secrets.BOT_TOKEN }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
           path: ${{ env.CHARTS_REPOSITORY_PATH }}
 
-      - name: Sync charts
+      - name: sync
         run: rsync -avh --delete main/$CHART_PATH/ ${{ env.CHARTS_REPOSITORY_PATH }}/$CHART_PATH
 
-      - name: Commit and push
+      - name: commit and push
         working-directory: ${{ env.CHARTS_REPOSITORY_PATH }}
         run: |
           git config --global user.email "$GIT_EMAIL"
