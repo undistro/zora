@@ -39,12 +39,10 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/undistro/zora/pkg/saas"
-
 	"github.com/undistro/zora/api/zora/v1alpha1"
 	"github.com/undistro/zora/pkg/kubeconfig"
-	"github.com/undistro/zora/pkg/plugins/cronjobs"
-	"github.com/undistro/zora/pkg/plugins/errparse"
+	"github.com/undistro/zora/pkg/plugins"
+	"github.com/undistro/zora/pkg/saas"
 )
 
 const (
@@ -193,8 +191,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
-		cronJob := cronjobs.New(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
-		cronJobMutator := &cronjobs.Mutator{
+		cronJob := plugins.NewCronJob(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
+		cronJobMutator := &plugins.CronJobMutator{
 			Scheme:             r.Scheme,
 			Existing:           cronJob,
 			Plugin:             plugin,
@@ -354,7 +352,7 @@ func (r *ClusterScanReconciler) pluginErrorMsg(ctx context.Context, ps *v1alpha1
 	}
 
 	defer lr.Close()
-	ps.LastErrorMsg, err = errparse.Parse(lr, p.Name)
+	ps.LastErrorMsg, err = plugins.ParseError(lr, p.Name)
 	if err != nil {
 		log.Error(err, fmt.Sprintf("Failed to extract <%s> error message", p.Name))
 	}

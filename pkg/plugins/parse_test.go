@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package errparse
+package plugins
 
 import (
 	"io"
@@ -122,13 +122,13 @@ func TestParse(t *testing.T) {
 				}
 				r = f
 			}
-			got, err := Parse(r, tt.args.plugin)
+			got, err := ParseError(r, tt.args.plugin)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ParseError() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("Parse() got = %v, want %v", got, tt.want)
+				t.Errorf("ParseError() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

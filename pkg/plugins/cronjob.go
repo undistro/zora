@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cronjobs
+package plugins
 
 import (
 	"path/filepath"
@@ -62,11 +62,11 @@ var (
 	})
 )
 
-func New(name, namespace string) *batchv1.CronJob {
+func NewCronJob(name, namespace string) *batchv1.CronJob {
 	return &batchv1.CronJob{ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: namespace}}
 }
 
-type Mutator struct {
+type CronJobMutator struct {
 	Scheme             *runtime.Scheme
 	Existing           *batchv1.CronJob
 	Plugin             *v1alpha1.Plugin
@@ -79,7 +79,7 @@ type Mutator struct {
 }
 
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
-func (r *Mutator) Mutate() error {
+func (r *CronJobMutator) Mutate() error {
 	if r.Existing.ObjectMeta.Labels == nil {
 		r.Existing.ObjectMeta.Labels = make(map[string]string)
 	}
@@ -155,7 +155,7 @@ func (r *Mutator) Mutate() error {
 }
 
 // workerContainer returns a Container for Worker
-func (r *Mutator) workerContainer() corev1.Container {
+func (r *CronJobMutator) workerContainer() corev1.Container {
 	return corev1.Container{
 		Name:            workerContainerName,
 		Image:           r.WorkerImage,
@@ -167,7 +167,7 @@ func (r *Mutator) workerContainer() corev1.Container {
 }
 
 // pluginContainer returns a Container for Plugin
-func (r *Mutator) pluginContainer() corev1.Container {
+func (r *CronJobMutator) pluginContainer() corev1.Container {
 	return corev1.Container{
 		Name:            r.Plugin.Name,
 		Image:           r.Plugin.Spec.Image,
@@ -183,7 +183,7 @@ func (r *Mutator) pluginContainer() corev1.Container {
 }
 
 // pluginEnv returns a list of environment variables to set in the Plugin container
-func (r *Mutator) pluginEnv() []corev1.EnvVar {
+func (r *CronJobMutator) pluginEnv() []corev1.EnvVar {
 	p := append(r.Plugin.Spec.Env, r.PluginRef.Env...)
 	p = append(p, commonEnv...)
 	p = append(p,
@@ -204,7 +204,7 @@ func (r *Mutator) pluginEnv() []corev1.EnvVar {
 }
 
 // workerEnv returns a list of environment variables to set in the Worker container
-func (r *Mutator) workerEnv() []corev1.EnvVar {
+func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 	return append(commonEnv,
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",

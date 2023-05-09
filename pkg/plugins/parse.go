@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package errparse
+package plugins
 
 import (
 	"fmt"
@@ -46,10 +46,10 @@ var patterns = map[string][]pluginPattern{
 	},
 }
 
-// Parse extracts an error message from a given <io.Reader> pointing to a Zora
+// ParseError extracts an error message from a given <io.Reader> pointing to a Zora
 // plugin error output. It uses regular expressions as heuristics to find the
 // message, whereby the first match is returned.
-func Parse(r io.Reader, plugin string) (string, error) {
+func ParseError(r io.Reader, plugin string) (string, error) {
 	if _, ok := patterns[plugin]; !ok {
 		return "", fmt.Errorf("invalid plugin: <%s>", plugin)
 	}
