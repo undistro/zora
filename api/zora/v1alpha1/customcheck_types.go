@@ -16,28 +16,43 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // CustomCheckSpec defines the desired state of CustomCheck
 type CustomCheckSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Match       CheckMatch                `json:"match"`
+	Validations []CheckValidation         `json:"validations"`
+	Params      unstructured.Unstructured `json:"params,omitempty"`
+	Severity    string                    `json:"severity"`
+	Message     string                    `json:"message"`
+}
 
-	// Foo is an example field of CustomCheck. Edit customcheck_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+type CheckMatch struct {
+	Resources []ResourceRule `json:"resources"`
+}
+
+type ResourceRule struct {
+	Group    string `json:"group,omitempty"`
+	Version  string `json:"version"`
+	Resource string `json:"resource"`
+}
+
+type CheckValidation struct {
+	Expression string `json:"expression"`
+	Message    string `json:"message,omitempty"`
 }
 
 // CustomCheckStatus defines the observed state of CustomCheck
 type CustomCheckStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Status `json:",inline"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Message",type="string",JSONPath=".spec.message",priority=0
+//+kubebuilder:printcolumn:name="Severity",type="string",JSONPath=".spec.severity",priority=0
+//+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
 
 // CustomCheck is the Schema for the customchecks API
 type CustomCheck struct {
