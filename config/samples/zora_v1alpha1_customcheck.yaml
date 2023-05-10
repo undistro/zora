@@ -1,0 +1,12 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: CustomCheck
+metadata:
+  labels:
+    app.kubernetes.io/name: customcheck
+    app.kubernetes.io/instance: customcheck-sample
+    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: zora
+  name: customcheck-sample
+spec:
+  # TODO(user): Add fields here
