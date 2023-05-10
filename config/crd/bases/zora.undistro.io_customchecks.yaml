@@ -69,6 +69,10 @@ spec:
               params:
                 type: object
               severity:
+                enum:
+                - Low
+                - Medium
+                - High
                 type: string
               validations:
                 items:

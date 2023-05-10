@@ -17,31 +17,25 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+
+	marvin "github.com/undistro/marvin/pkg/types"
 )
 
 // CustomCheckSpec defines the desired state of CustomCheck
 type CustomCheckSpec struct {
-	Match       CheckMatch                `json:"match"`
-	Validations []CheckValidation         `json:"validations"`
+	Match       Match                     `json:"match"`
+	Validations []Validation              `json:"validations"`
 	Params      unstructured.Unstructured `json:"params,omitempty"`
-	Severity    string                    `json:"severity"`
 	Message     string                    `json:"message"`
+
+	//+kubebuilder:validation:Type=string
+	//+kubebuilder:validation:Enum=Low;Medium;High
+	Severity string `json:"severity"`
 }
 
-type CheckMatch struct {
-	Resources []ResourceRule `json:"resources"`
-}
+type Match marvin.Match
 
-type ResourceRule struct {
-	Group    string `json:"group,omitempty"`
-	Version  string `json:"version"`
-	Resource string `json:"resource"`
-}
-
-type CheckValidation struct {
-	Expression string `json:"expression"`
-	Message    string `json:"message,omitempty"`
-}
+type Validation marvin.Validation
 
 // CustomCheckStatus defines the observed state of CustomCheck
 type CustomCheckStatus struct {
