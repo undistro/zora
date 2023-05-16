@@ -61,6 +61,8 @@ type ClusterScanReconciler struct {
 	WorkerImage             string
 	ClusterRoleBindingName  string
 	ServiceAccountName      string
+	KubexnsImage            string
+	ChecksConfigMap         string
 	OnUpdate                saas.ClusterScanHook
 	OnDelete                saas.ClusterScanHook
 }
@@ -202,6 +204,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			WorkerImage:        r.WorkerImage,
 			ServiceAccountName: r.ServiceAccountName,
 			Suspend:            notReadyErr != nil,
+			KubexnsImage:       r.KubexnsImage,
+			ChecksConfigMap:    r.ChecksConfigMap,
 		}
 
 		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate)

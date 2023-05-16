@@ -16,6 +16,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -150,6 +151,8 @@ func main() {
 		ServiceAccountName:      cronJobServiceAccount,
 		OnUpdate:                onClusterScanUpdate,
 		OnDelete:                onClusterScanDelete,
+		KubexnsImage:            kubexnsImage,
+		ChecksConfigMap:         fmt.Sprintf("%s/%s", checksConfigMapNamespace, checksConfigMapName),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
 		os.Exit(1)

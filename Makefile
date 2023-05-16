@@ -131,7 +131,7 @@ install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_marvin.yaml
-	@kubectl apply -f config/rbac/zora_clusterissue_editor_role.yaml
+	@kubectl apply -f config/rbac/zora_plugins_role.yaml
 	@kubectl create -f config/rbac/zora_plugins_role_binding.yaml || true
 
 .PHONY: uninstall
