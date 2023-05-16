@@ -18,25 +18,26 @@ import (
 	"encoding/json"
 
 	"github.com/go-logr/logr"
+	marvin "github.com/undistro/marvin/pkg/types"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
-var marvinToZoraSeverity = map[string]v1alpha1.ClusterIssueSeverity{
-	"Low":      v1alpha1.SeverityLow,
-	"Medium":   v1alpha1.SeverityMedium,
-	"High":     v1alpha1.SeverityHigh,
-	"Critical": v1alpha1.SeverityHigh,
+var marvinToZoraSeverity = map[marvin.Severity]v1alpha1.ClusterIssueSeverity{
+	marvin.SeverityLow:      v1alpha1.SeverityLow,
+	marvin.SeverityMedium:   v1alpha1.SeverityMedium,
+	marvin.SeverityHigh:     v1alpha1.SeverityHigh,
+	marvin.SeverityCritical: v1alpha1.SeverityHigh,
 }
 
 func Parse(log logr.Logger, bs []byte) ([]*v1alpha1.ClusterIssueSpec, error) {
-	report := &Report{}
+	report := &marvin.Report{}
 	if err := json.Unmarshal(bs, report); err != nil {
 		return nil, err
 	}
 	var css []*v1alpha1.ClusterIssueSpec
 	for _, check := range report.Checks {
-		if check.Status != "Failed" {
+		if check.Status != marvin.StatusFailed {
 			continue
 		}
 		if len(check.Errors) > 0 {
@@ -48,7 +49,7 @@ func Parse(log logr.Logger, bs []byte) ([]*v1alpha1.ClusterIssueSpec, error) {
 	return css, nil
 }
 
-func clusterIssueSpec(report *Report, check CheckResult) *v1alpha1.ClusterIssueSpec {
+func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) *v1alpha1.ClusterIssueSpec {
 	resources := map[string][]string{}
 	for gvk, objs := range check.Failed {
 		for _, obj := range objs {
@@ -69,5 +70,6 @@ func clusterIssueSpec(report *Report, check CheckResult) *v1alpha1.ClusterIssueS
 		Resources:      resources,
 		TotalResources: 0,
 		Url:            urls[check.ID],
+		Custom:         !check.Builtin,
 	}
 }
