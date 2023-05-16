@@ -1,6 +1,6 @@
 domain: undistro.io
 layout:
-- go.kubebuilder.io/v3
+- go.kubebuilder.io/v4
 multigroup: true
 projectName: zora
 repo: github.com/undistro/zora
@@ -20,7 +20,7 @@ resources:
   domain: undistro.io
   group: zora
   kind: Plugin
-  path: github.com/undistro/zora/apis/zora/v1alpha1
+  path: github.com/undistro/zora/api/zora/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -28,7 +28,7 @@ resources:
   domain: undistro.io
   group: zora
   kind: ClusterIssue
-  path: github.com/undistro/zora/apis/zora/v1alpha1
+  path: github.com/undistro/zora/api/zora/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -37,6 +37,6 @@ resources:
   domain: undistro.io
   group: zora
   kind: ClusterScan
-  path: github.com/undistro/zora/apis/zora/v1alpha1
+  path: github.com/undistro/zora/api/zora/v1alpha1
   version: v1alpha1
 version: "3"

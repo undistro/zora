@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +kubebuilder:object:generate=true
 package discovery
 
 import (
@@ -24,13 +25,13 @@ import (
 
 var MeasuredResources = []corev1.ResourceName{corev1.ResourceCPU, corev1.ResourceMemory}
 
+// +kubebuilder:object:generate=false
 type ClusterDiscoverer interface {
 	Info(context.Context) (*ClusterInfo, error)
 	Resources(ctx context.Context) (ClusterResources, error)
 	Version() (string, error)
 }
 
-// +k8s:deepcopy-gen=true
 type ClusterInfo struct {
 	// total of Nodes
 	TotalNodes *int `json:"totalNodes,omitempty"`
@@ -64,7 +65,6 @@ type NodeInfo struct {
 	CreationTimestamp metav1.Time `json:"-"`
 }
 
-// +k8s:deepcopy-gen=true
 type Resources struct {
 	// Quantity of resources available for scheduling
 	Available resource.Quantity `json:"available,omitempty"`
@@ -76,5 +76,4 @@ type Resources struct {
 	UsagePercentage int32 `json:"usagePercentage,omitempty"`
 }
 
-// +k8s:deepcopy-gen=true
 type ClusterResources map[corev1.ResourceName]Resources

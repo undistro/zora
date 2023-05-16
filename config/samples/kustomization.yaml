@@ -1,0 +1,7 @@
+## Append samples of your project ##
+resources:
+- zora_v1alpha1_cluster.yaml
+- zora_v1alpha1_plugin.yaml
+- zora_v1alpha1_clusterissue.yaml
+- zora_v1alpha1_clusterscan.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

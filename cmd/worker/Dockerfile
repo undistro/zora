@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.17 as builder
+FROM golang:1.19 as builder
 ARG TARGETOS
 ARG TARGETARCH
 
@@ -22,7 +22,7 @@ COPY go.sum go.sum
 RUN go mod download
 
 COPY cmd/worker/main.go cmd/worker/main.go
-COPY apis/ apis/
+COPY api/ api/
 COPY pkg/ pkg/
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o worker cmd/worker/main.go

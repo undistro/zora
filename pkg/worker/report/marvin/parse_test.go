@@ -22,7 +22,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 func TestParse(t *testing.T) {

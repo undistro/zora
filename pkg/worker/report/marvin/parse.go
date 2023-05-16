@@ -19,7 +19,7 @@ import (
 
 	"github.com/go-logr/logr"
 
-	"github.com/undistro/zora/apis/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 var marvinToZoraSeverity = map[string]v1alpha1.ClusterIssueSeverity{
