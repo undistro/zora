@@ -15,6 +15,8 @@
 package v1alpha1
 
 import (
+	"fmt"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
@@ -55,6 +57,39 @@ type CustomCheck struct {
 
 	Spec   CustomCheckSpec   `json:"spec,omitempty"`
 	Status CustomCheckStatus `json:"status,omitempty"`
+}
+
+func (r *CustomCheck) FileName() string {
+	return fmt.Sprintf("%s.yaml", r.Name)
+}
+
+func (r *CustomCheck) ToMarvin() *marvin.Check {
+	mv := make([]marvin.Validation, len(r.Spec.Validations))
+	for i, v := range r.Spec.Validations {
+		mv[i] = marvin.Validation(v)
+	}
+	return &marvin.Check{
+		ID:          r.Name,
+		Match:       marvin.Match(r.Spec.Match),
+		Validations: mv,
+		Params:      r.Spec.Params.Object,
+		Severity:    marvin.ParseSeverity(r.Spec.Severity),
+		Message:     r.Spec.Message,
+	}
+}
+
+func (r *CustomCheck) SetReadyStatus(ready bool, reason, msg string) {
+	status := metav1.ConditionFalse
+	if ready {
+		status = metav1.ConditionTrue
+	}
+	r.Status.SetCondition(metav1.Condition{
+		Type:               "Ready",
+		Status:             status,
+		ObservedGeneration: r.Generation,
+		Reason:             reason,
+		Message:            msg,
+	})
 }
 
 //+kubebuilder:object:root=true

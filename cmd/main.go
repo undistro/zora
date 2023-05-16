@@ -62,6 +62,9 @@ func main() {
 	var saasWorkspaceID string
 	var saasServer string
 	var version string
+	var checksConfigMapNamespace string
+	var checksConfigMapName string
+	var kubexnsImage string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -76,6 +79,9 @@ func main() {
 	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
 	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
 	flag.StringVar(&version, "version", "0.5.1", "Zora version")
+	flag.StringVar(&checksConfigMapNamespace, "checks-configmap-namespace", "zora-system", "Namespace of custom checks ConfigMap")
+	flag.StringVar(&checksConfigMapName, "checks-configmap-name", "zora-custom-checks", "Name of custom checks ConfigMap")
+	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:v0.1.1", "kubexns image")
 
 	opts := zap.Options{
 		Development: true,
@@ -149,8 +155,10 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&zoracontroller.CustomCheckReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:             mgr.GetClient(),
+		Scheme:             mgr.GetScheme(),
+		ConfigMapNamespace: checksConfigMapNamespace,
+		ConfigMapName:      checksConfigMapName,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "CustomCheck")
 		os.Exit(1)
