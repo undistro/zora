@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: marvin
 spec:
-  image: ghcr.io/undistro/marvin:v0.1.4
+  image: ghcr.io/undistro/marvin:v0.1.6
   resources:
     limits:
       cpu: 500m
