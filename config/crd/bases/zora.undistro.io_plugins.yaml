@@ -226,6 +226,10 @@ spec:
                   Defaults to Always if :latest tag is specified, or IfNotPresent
                   otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images'
                 type: string
+              mountCustomChecksVolume:
+                description: MountCustomChecksVolume specifies whether a volume with
+                  the custom checks should be mounted
+                type: boolean
               resources:
                 description: 'Compute Resources required by this container. Cannot
                   be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
