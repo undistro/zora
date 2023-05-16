@@ -8,7 +8,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.6.0
 	github.com/onsi/gomega v1.24.1
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/undistro/marvin v0.1.5
+	github.com/undistro/marvin v0.1.6
 	go.uber.org/zap v1.24.0
 	k8s.io/api v0.26.3
 	k8s.io/apimachinery v0.26.3
