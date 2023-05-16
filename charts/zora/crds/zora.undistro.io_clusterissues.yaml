@@ -78,6 +78,8 @@ spec:
                 type: string
               cluster:
                 type: string
+              custom:
+                type: boolean
               id:
                 type: string
               message:

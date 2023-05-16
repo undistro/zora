@@ -46,6 +46,7 @@ type ClusterIssueSpec struct {
 	Resources      map[string][]string  `json:"resources,omitempty"`
 	TotalResources int                  `json:"totalResources,omitempty"`
 	Url            string               `json:"url,omitempty"`
+	Custom         bool                 `json:"custom,omitempty"`
 }
 
 // ClusterIssueStatus defines the observed state of ClusterIssue
