@@ -29,6 +29,8 @@ type CustomCheckSpec struct {
 	Validations []Validation              `json:"validations"`
 	Params      unstructured.Unstructured `json:"params,omitempty"`
 	Message     string                    `json:"message"`
+	Category    string                    `json:"category"`
+	URL         string                    `json:"url,omitempty"`
 
 	//+kubebuilder:validation:Type=string
 	//+kubebuilder:validation:Enum=Low;Medium;High
@@ -46,6 +48,7 @@ type CustomCheckStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName="checks"
 //+kubebuilder:printcolumn:name="Message",type="string",JSONPath=".spec.message",priority=0
 //+kubebuilder:printcolumn:name="Severity",type="string",JSONPath=".spec.severity",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
@@ -75,6 +78,7 @@ func (r *CustomCheck) ToMarvin() *marvin.Check {
 		Params:      r.Spec.Params.Object,
 		Severity:    marvin.ParseSeverity(r.Spec.Severity),
 		Message:     r.Spec.Message,
+		Labels:      map[string]string{"category": r.Spec.Category, "url": r.Spec.URL},
 	}
 }
 

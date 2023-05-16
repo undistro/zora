@@ -62,14 +62,23 @@ func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) *v1alpha
 			}
 		}
 	}
+	custom := !check.Builtin
+	category := "Security"
+	if c, ok := check.Labels["category"]; ok && custom {
+		category = c
+	}
+	url := urls[check.ID]
+	if u, ok := check.Labels["url"]; ok && custom {
+		url = u
+	}
 	return &v1alpha1.ClusterIssueSpec{
 		ID:             check.ID,
 		Message:        check.Message,
 		Severity:       marvinToZoraSeverity[check.Severity],
-		Category:       "Security",
+		Category:       category,
 		Resources:      resources,
 		TotalResources: 0,
-		Url:            urls[check.ID],
-		Custom:         !check.Builtin,
+		Url:            url,
+		Custom:         custom,
 	}
 }

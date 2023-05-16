@@ -11,6 +11,7 @@ metadata:
 spec:
   message: "Replicas limit"
   severity: Medium
+  category: Custom
   match:
     resources:
       - group: apps

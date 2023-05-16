@@ -26,6 +26,8 @@ spec:
     kind: CustomCheck
     listKind: CustomCheckList
     plural: customchecks
+    shortNames:
+    - checks
     singular: customcheck
   scope: Namespaced
   versions:
@@ -59,6 +61,8 @@ spec:
           spec:
             description: CustomCheckSpec defines the desired state of CustomCheck
             properties:
+              category:
+                type: string
               match:
                 properties:
                   resources:
@@ -88,6 +92,8 @@ spec:
                 - Medium
                 - High
                 type: string
+              url:
+                type: string
               validations:
                 items:
                   properties:
@@ -100,6 +106,7 @@ spec:
                   type: object
                 type: array
             required:
+            - category
             - match
             - message
             - severity
