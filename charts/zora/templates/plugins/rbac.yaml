@@ -15,7 +15,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: clusterissues-editor
+  name: zora-plugins
 rules:
   - apiGroups:
       - zora.undistro.io
@@ -35,6 +35,13 @@ rules:
       - clusterissues/status
     verbs:
       - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
 ---
 {{ $crb := (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "zora-plugins") }}
 apiVersion: rbac.authorization.k8s.io/v1
@@ -44,7 +51,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: clusterissues-editor
+  name: zora-plugins
 {{- if $crb }}
 subjects:
   {{- range $s := $crb.subjects }}
