@@ -77,6 +77,9 @@ spec:
             - --saas-workspace-id={{ .Values.saas.workspaceID }}
             - --saas-server={{ .Values.saas.server }}
             - --version={{ .Chart.Version }}
+            - --checks-configmap-namespace={{ .Release.Namespace }}
+            - --checks-configmap-name={{ .Values.customChecksConfigMap }}
+            - --kubexns-image={{ printf "%s:%s" .Values.kubexnsImage.repository .Values.kubexnsImage.tag }}
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           ports:
