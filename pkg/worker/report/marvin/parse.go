@@ -54,12 +54,7 @@ func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) *v1alpha
 	for gvk, objs := range check.Failed {
 		for _, obj := range objs {
 			gvr := report.GVRs[gvk]
-			_, ok := resources[gvr]
-			if ok {
-				resources[gvr] = []string{obj}
-			} else {
-				resources[gvr] = append(resources[gvr], obj)
-			}
+			resources[gvr] = append(resources[gvr], obj)
 		}
 	}
 	custom := !check.Builtin

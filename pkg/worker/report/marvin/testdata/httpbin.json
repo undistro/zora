@@ -158,7 +158,8 @@
                     "httpbin/httpbin"
                 ],
                 "apps/v1/ReplicaSet": [
-                    "httpbin/httpbin-5978c9d878"
+                    "httpbin/httpbin-5978c9d878",
+                    "httpbin/httpbin-6089d0e989"
                 ]
             },
             "passed": {},
