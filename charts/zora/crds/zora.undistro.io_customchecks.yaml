@@ -85,7 +85,8 @@ spec:
               message:
                 type: string
               params:
-                type: object
+                description: Parameters to be used in validations
+                x-kubernetes-preserve-unknown-fields: true
               severity:
                 enum:
                 - Low

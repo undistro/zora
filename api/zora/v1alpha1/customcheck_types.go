@@ -15,26 +15,36 @@
 package v1alpha1
 
 import (
+	"encoding/json"
 	"fmt"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
 	marvin "github.com/undistro/marvin/pkg/types"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // CustomCheckSpec defines the desired state of CustomCheck
 type CustomCheckSpec struct {
-	Match       Match                     `json:"match"`
-	Validations []Validation              `json:"validations"`
-	Params      unstructured.Unstructured `json:"params,omitempty"`
-	Message     string                    `json:"message"`
-	Category    string                    `json:"category"`
-	URL         string                    `json:"url,omitempty"`
+	Match       Match        `json:"match"`
+	Validations []Validation `json:"validations"`
+	Message     string       `json:"message"`
+	Category    string       `json:"category"`
+	URL         string       `json:"url,omitempty"`
+
+	// Parameters to be used in validations
+	Params *apiextensionsv1.JSON `json:"params,omitempty"`
 
 	//+kubebuilder:validation:Type=string
 	//+kubebuilder:validation:Enum=Low;Medium;High
 	Severity string `json:"severity"`
+}
+
+func (r *CustomCheck) GetParams() map[string]interface{} {
+	var values map[string]interface{}
+	if r.Spec.Params != nil {
+		_ = json.Unmarshal(r.Spec.Params.Raw, &values)
+	}
+	return values
 }
 
 type Match marvin.Match
@@ -75,7 +85,7 @@ func (r *CustomCheck) ToMarvin() *marvin.Check {
 		ID:          r.Name,
 		Match:       marvin.Match(r.Spec.Match),
 		Validations: mv,
-		Params:      r.Spec.Params.Object,
+		Params:      r.GetParams(),
 		Severity:    marvin.ParseSeverity(r.Spec.Severity),
 		Message:     r.Spec.Message,
 		Labels:      map[string]string{"category": r.Spec.Category, "url": r.Spec.URL},
