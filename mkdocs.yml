@@ -63,6 +63,13 @@ markdown_extensions:
 extra:
   version:
     provider: mike
+  social:
+    - icon: fontawesome/brands/slack
+      link: https://join.slack.com/t/undistrocommunity/shared_invite/zt-1h5i4earm-IjOpQeKNby09YzoOcvXqQQ
+    - icon: fontawesome/brands/github
+      link: https://github.com/undistro/zora
+
+copyright: Copyright &copy; 2022 - 2023 Undistro Authors
 
 nav:
   - Documentation:
