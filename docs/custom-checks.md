@@ -1,6 +1,6 @@
 # Custom checks
 
-Zora offers a declarative way to create your own checks using the `CustomCheck` API.
+Zora offers a declarative way to create your own checks using the `CustomCheck` API, introduced in version 0.6.
 
 Custom checks use the [Common Expression Language (CEL)](https://github.com/google/cel-spec) 
 to declare the validation rules and are performed by the [Marvin](https://github.com/undistro/marvin) plugin, 
