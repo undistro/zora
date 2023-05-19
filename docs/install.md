@@ -10,14 +10,27 @@ So it is recommended to keep it separated from any application workload.
 Zora's management cluster requires these programs in order to be installed and configured:
 
 - Kubernetes >= 1.21.0
-- Helm >= 3.4.0
-- Kubectl
+- [Helm](https://helm.sh/) >= 3.4.0
+- [Kubectl](https://kubernetes.io/docs/reference/kubectl/)
 - Awk
 - Cat
 - POSIX shell
 
-
 ## Install with Helm
+
+!!! warning "Migrating to version 0.6"
+    If you already have Zora installed and want to migrate to zora 0.6, 
+    you need to follow some additional steps.
+    
+    Before running the `helm upgrade` command, it is necessary to apply the modified CRDs.
+    ```shell
+    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.0-rc3/charts/zora/crds/zora.undistro.io_clusterissues.yaml
+    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.0-rc3/charts/zora/crds/zora.undistro.io_customchecks.yaml
+    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.0-rc3/charts/zora/crds/zora.undistro.io_plugins.yaml
+    ```
+    These commands ensure that the modified Custom Resource Definitions (CRDs) are applied correctly.
+    
+    By default, Helm does not upgrade CRDs automatically, which is why this manual step is necessary.
 
 1. To install Zora using [Helm](https://helm.sh/docs/) follow these commands:
 
@@ -38,6 +51,7 @@ Zora's management cluster requires these programs in order to be installed and c
     helm upgrade --install zora undistro/zora \
       --set saas.workspaceID='<YOUR WORKSPACE ID>'
       -n zora-system \
+      --version 0.6.0-rc3 \
       --create-namespace --wait
     ```
 
@@ -50,6 +64,7 @@ Zora's management cluster requires these programs in order to be installed and c
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
       -n zora-system \
+      --version 0.6.0-rc3 \
       --create-namespace --wait
     ```
 
