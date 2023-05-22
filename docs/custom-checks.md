@@ -152,7 +152,7 @@ Some examples of Marvin built-in checks expressions:
   ```
 
 Marvin's checks and Zora's `CustomCheck` API are inspired in 
-[Kubernetes ValidatingAdmissionPolicy](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/#validation-expression) API, 
+[Kubernetes ValidatingAdmissionPolicy](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy) API, 
 introduced in version 1.26 as an alpha feature. 
 Below, the table of [validation expression examples](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/#validation-expression-examples) from Kubernetes documentation.
 
