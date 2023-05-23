@@ -17,7 +17,7 @@
         <link rel="next" href="../target-cluster/">
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.13">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.14">
     
     
       
@@ -618,6 +618,14 @@ You're not viewing the latest version.
     </a>
   
   
+    
+      
+    
+    <a href="https://github.com/undistro/zora/raw/main/docs/install.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
 
 
 <h1 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h1>
@@ -641,9 +649,9 @@ So it is recommended to keep it separated from any application workload.</p>
 <p>If you already have Zora installed and want to migrate to zora 0.6, 
 you need to follow some additional steps.</p>
 <p>Before running the <code>helm upgrade</code> command, it is necessary to apply the modified CRDs.
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0-rc3/charts/zora/crds/zora.undistro.io_clusterissues.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0-rc3/charts/zora/crds/zora.undistro.io_customchecks.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0-rc3/charts/zora/crds/zora.undistro.io_plugins.yaml
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0/charts/zora/crds/zora.undistro.io_clusterissues.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0/charts/zora/crds/zora.undistro.io_customchecks.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0/charts/zora/crds/zora.undistro.io_plugins.yaml
 </code></pre></div>
 These commands ensure that the modified Custom Resource Definitions (CRDs) are applied correctly.</p>
 <p>By default, Helm does not upgrade CRDs automatically, which is why this manual step is necessary.</p>
@@ -666,7 +674,7 @@ helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> <
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span><span class="s1">&#39;&lt;YOUR WORKSPACE ID&gt;&#39;</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.0-rc3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.0<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--create-namespace<span class="w"> </span>--wait
 </code></pre></div>
 </div>
@@ -676,7 +684,7 @@ helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class=
 helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> </span>undistro
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.0-rc3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.0<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--create-namespace<span class="w"> </span>--wait
 </code></pre></div>
 </div>
@@ -813,7 +821,7 @@ kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span clas
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>

@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/cluster-scan/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/connect-cluster/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/custom-checks/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/glossary/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/helm-chart/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/install/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.6/target-cluster/</loc>
-         <lastmod>2023-05-19</lastmod>
+         <lastmod>2023-05-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
