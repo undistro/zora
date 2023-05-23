@@ -29,6 +29,8 @@ import (
 )
 
 const (
+	checksVolumeName     = "custom-checks"
+	checksPath           = "/custom-checks"
 	workerContainerName  = "worker"
 	kubeconfigVolumeName = "kubeconfig"
 	kubeconfigMountPath  = "/etc/zora"
@@ -47,19 +49,22 @@ var (
 			Value: resultsDir,
 		},
 	}
-	// commonVolumeMounts volume mounts to be used in worker and plugin containers
+	// commonVolumeMounts represents the volume mounts to be used in worker and plugin containers
 	commonVolumeMounts = []corev1.VolumeMount{
 		{
 			Name:      resultsVolumeName,
 			MountPath: resultsDir,
 		},
 	}
-	// pluginVolumeMounts volume mounts to be used in plugin container
-	pluginVolumeMounts = append(commonVolumeMounts, corev1.VolumeMount{
+	// pluginVolumes represents the volume mounts to be used in plugin container
+	pluginVolumes = append(commonVolumeMounts, corev1.VolumeMount{
 		Name:      kubeconfigVolumeName,
 		ReadOnly:  true,
 		MountPath: kubeconfigMountPath,
 	})
+
+	// customChecksVolume represents the volume mount to be used in the init container
+	customChecksVolume = corev1.VolumeMount{Name: checksVolumeName, MountPath: checksPath}
 )
 
 func NewCronJob(name, namespace string) *batchv1.CronJob {
@@ -76,6 +81,8 @@ type CronJobMutator struct {
 	WorkerImage        string
 	ServiceAccountName string
 	Suspend            bool
+	KubexnsImage       string
+	ChecksConfigMap    string
 }
 
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
@@ -116,9 +123,27 @@ func (r *CronJobMutator) Mutate() error {
 			Name:         resultsVolumeName,
 			VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{}},
 		},
+		{
+			Name:         checksVolumeName,
+			VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{}},
+		},
 	}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
 		RunAsNonRoot: pointer.Bool(true),
+	}
+
+	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
+		initContainer := r.initContainer()
+		if len(r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers) == 0 {
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers = []corev1.Container{initContainer}
+		} else {
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers[0].Name = initContainer.Name
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers[0].Image = initContainer.Image
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers[0].Env = initContainer.Env
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers[0].VolumeMounts = initContainer.VolumeMounts
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers[0].ImagePullPolicy = initContainer.ImagePullPolicy
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.InitContainers[0].Resources = initContainer.Resources
+		}
 	}
 
 	desiredContainers := map[string]corev1.Container{
@@ -168,7 +193,7 @@ func (r *CronJobMutator) workerContainer() corev1.Container {
 
 // pluginContainer returns a Container for Plugin
 func (r *CronJobMutator) pluginContainer() corev1.Container {
-	return corev1.Container{
+	c := corev1.Container{
 		Name:            r.Plugin.Name,
 		Image:           r.Plugin.Spec.Image,
 		Command:         r.Plugin.Spec.Command,
@@ -178,7 +203,27 @@ func (r *CronJobMutator) pluginContainer() corev1.Container {
 		Resources:       r.Plugin.Spec.Resources,
 		ImagePullPolicy: r.Plugin.Spec.GetImagePullPolicy(),
 		SecurityContext: r.Plugin.Spec.SecurityContext,
-		VolumeMounts:    pluginVolumeMounts,
+		VolumeMounts:    pluginVolumes,
+	}
+	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
+		c.VolumeMounts = append(c.VolumeMounts, customChecksVolume)
+	}
+	return c
+}
+
+// initContainer returns an init container to mount custom checks
+func (r *CronJobMutator) initContainer() corev1.Container {
+	return corev1.Container{
+		Name:  "checks",
+		Image: r.KubexnsImage,
+		Env: []corev1.EnvVar{
+			{Name: "DIR", Value: checksPath},
+			{Name: "CONFIGMAPS", Value: r.ChecksConfigMap},
+			{Name: "IGNORE_NOT_FOUND", Value: "true"},
+		},
+		VolumeMounts:    []corev1.VolumeMount{customChecksVolume},
+		ImagePullPolicy: corev1.PullIfNotPresent,
+		Resources:       r.Plugin.Spec.Resources,
 	}
 }
 
@@ -200,6 +245,9 @@ func (r *CronJobMutator) pluginEnv() []corev1.EnvVar {
 			Value: r.Existing.ObjectMeta.Name,
 		},
 	)
+	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
+		p = append(p, corev1.EnvVar{Name: "CUSTOM_CHECKS_PATH", Value: checksVolumeName})
+	}
 	return p
 }
 

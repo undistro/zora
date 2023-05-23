@@ -73,6 +73,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelIssueID:  "POP-400",
 							zorav1a1.LabelCategory: "General",
 							zorav1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelCustom:   "false",
 						},
 					},
 					Spec: zorav1a1.ClusterIssueSpec{
@@ -143,6 +144,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelIssueID:  "POP-400",
 							zorav1a1.LabelCategory: "General",
 							zorav1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelCustom:   "false",
 						},
 					},
 					Spec: zorav1a1.ClusterIssueSpec{
@@ -180,6 +182,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelIssueID:  "POP-106",
 							zorav1a1.LabelCategory: "Container",
 							zorav1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelCustom:   "false",
 						},
 					},
 					Spec: zorav1a1.ClusterIssueSpec{
@@ -218,6 +221,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelIssueID:  "POP-107",
 							zorav1a1.LabelCategory: "Container",
 							zorav1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelCustom:   "false",
 						},
 					},
 					Spec: zorav1a1.ClusterIssueSpec{
@@ -255,6 +259,7 @@ func TestParse(t *testing.T) {
 							zorav1a1.LabelIssueID:  "POP-108",
 							zorav1a1.LabelCategory: "Container",
 							zorav1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelCustom:   "false",
 						},
 					},
 					Spec: zorav1a1.ClusterIssueSpec{

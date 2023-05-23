@@ -73,6 +73,9 @@ type PluginSpec struct {
 	// If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext.
 	// More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty"`
+
+	// MountCustomChecksVolume specifies whether a volume with the custom checks should be mounted
+	MountCustomChecksVolume *bool `json:"mountCustomChecksVolume,omitempty"`
 }
 
 func (in *PluginSpec) GetImagePullPolicy() corev1.PullPolicy {

@@ -160,7 +160,7 @@ scan:
         # -- marvin plugin image repository
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
-        tag: v0.1.4
+        tag: v0.1.6
 
     popeye:
       # -- Specifies whether the popeye plugin should be created
@@ -188,3 +188,12 @@ scan:
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
         tag: pr252
+
+kubexnsImage:
+  # -- kubexns image repository
+  repository: ghcr.io/undistro/kubexns
+  # -- kubexns image tag
+  tag: v0.1.1
+
+# -- Custom checks ConfigMap name
+customChecksConfigMap: zora-custom-checks

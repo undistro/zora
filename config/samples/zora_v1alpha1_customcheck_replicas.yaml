@@ -1,0 +1,23 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: CustomCheck
+metadata:
+  labels:
+    app.kubernetes.io/name: customcheck
+    app.kubernetes.io/instance: custom-001
+    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: zora
+  name: custom-001
+spec:
+  message: "Replicas limit"
+  severity: Medium
+  category: Custom
+  match:
+    resources:
+      - group: apps
+        version: v1
+        resource: deployments
+  validations:
+    - expression: >
+        object.spec.replicas <= 5
+      message: "Deployment with more than 5 replicas"

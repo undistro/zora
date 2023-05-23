@@ -1,0 +1,31 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: CustomCheck
+metadata:
+  labels:
+    app.kubernetes.io/name: customcheck
+    app.kubernetes.io/instance: custom-002
+    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: zora
+  name: custom-002
+spec:
+  message: "Required labels"
+  severity: Low
+  category: Custom
+  match:
+    resources:
+      - group: ""
+        version: v1
+        resource: pods
+  params:
+    requiredLabels:
+      - app
+  validations:
+    - expression: >
+        has(object.metadata.labels) &&
+        !object.metadata.labels.all(label, 
+          params.requiredLabels.all(
+            req, req != label
+          )
+        )
+      message: "Pod without required labels"

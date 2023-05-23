@@ -37,6 +37,7 @@ theme:
   features:
     - content.tabs.link
     - content.action.edit
+    - content.action.view
     - content.code.copy
     - navigation.top
     - navigation.tabs
@@ -63,6 +64,13 @@ markdown_extensions:
 extra:
   version:
     provider: mike
+  social:
+    - icon: fontawesome/brands/slack
+      link: https://join.slack.com/t/undistrocommunity/shared_invite/zt-1h5i4earm-IjOpQeKNby09YzoOcvXqQQ
+    - icon: fontawesome/brands/github
+      link: https://github.com/undistro/zora
+
+copyright: Copyright &copy; 2022 - 2023 Undistro Authors
 
 nav:
   - Documentation:
@@ -71,6 +79,7 @@ nav:
       - Prepare the target cluster: target-cluster.md
       - Connect the target cluster to Zora: connect-cluster.md
       - Configure a cluster scan: cluster-scan.md
+      - Create your own check: custom-checks.md
       - Glossary: glossary.md
   - Helm Chart:
       - Zora Helm Chart: helm-chart.md

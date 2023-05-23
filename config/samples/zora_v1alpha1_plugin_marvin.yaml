@@ -9,18 +9,21 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: marvin
 spec:
-  image: ghcr.io/undistro/marvin:v0.1.4
+  image: ghcr.io/undistro/marvin:v0.1.6
   resources:
     limits:
       cpu: 500m
       memory: 100Mi
+  mountCustomChecksVolume: true
   command:
     - /bin/sh
     - -c
     - |
       start=$(date +%s)
+      mkdir -p $(CUSTOM_CHECKS_PATH)
+      ls -lh $(CUSTOM_CHECKS_PATH)
       echo Scanning...
-      /marvin scan --disable-annotation-skip -o json -v 2 --kubeconfig $(KUBECONFIG) > $(DONE_DIR)/results.json
+      /marvin scan --disable-annotation-skip -f $(CUSTOM_CHECKS_PATH) -o json -v 2 --kubeconfig $(KUBECONFIG) > $(DONE_DIR)/results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error

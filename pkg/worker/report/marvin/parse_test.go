@@ -54,7 +54,7 @@ func TestParse(t *testing.T) {
 					Category: "Security",
 					Resources: map[string][]string{
 						"apps/v1/deployments": {"httpbin/httpbin"},
-						"apps/v1/replicasets": {"httpbin/httpbin-5978c9d878"},
+						"apps/v1/replicasets": {"httpbin/httpbin-5978c9d878", "httpbin/httpbin-6089d0e989"},
 					},
 					Url: pssRestrictedURL,
 				},

@@ -34,6 +34,7 @@ const (
 	LabelIssueID  = "id"
 	LabelCategory = "category"
 	LabelPlugin   = "plugin"
+	LabelCustom   = "custom"
 )
 
 // ClusterIssueSpec defines the desired state of ClusterIssue
@@ -46,6 +47,7 @@ type ClusterIssueSpec struct {
 	Resources      map[string][]string  `json:"resources,omitempty"`
 	TotalResources int                  `json:"totalResources,omitempty"`
 	Url            string               `json:"url,omitempty"`
+	Custom         bool                 `json:"custom,omitempty"`
 }
 
 // ClusterIssueStatus defines the observed state of ClusterIssue

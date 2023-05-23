@@ -89,6 +89,7 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 						Url:            IssueIDtoUrl[id],
 						Resources:      map[string][]string{},
 						TotalResources: 0,
+						Custom:         false,
 					}
 					if !clusterScoped {
 						spec.TotalResources = 1

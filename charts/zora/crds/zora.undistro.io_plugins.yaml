@@ -240,6 +240,10 @@ spec:
                   Defaults to Always if :latest tag is specified, or IfNotPresent
                   otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images'
                 type: string
+              mountCustomChecksVolume:
+                description: MountCustomChecksVolume specifies whether a volume with
+                  the custom checks should be mounted
+                type: boolean
               resources:
                 description: 'Compute Resources required by this container. Cannot
                   be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
@@ -248,7 +252,8 @@ spec:
                     description: "Claims lists the names of resources, defined in
                       spec.resourceClaims, that are used by this container. \n This
                       is an alpha field and requires enabling the DynamicResourceAllocation
-                      feature gate. \n This field is immutable."
+                      feature gate. \n This field is immutable. It can only be set
+                      for containers."
                     items:
                       description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                       properties:

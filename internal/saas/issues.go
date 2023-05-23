@@ -29,6 +29,7 @@ type Issue struct {
 	Plugin        string `json:"plugin"`
 	Url           string `json:"url"`
 	ClusterScoped bool   `json:"clusterScoped"`
+	Custom        bool   `json:"custom"`
 }
 
 type ResourcedIssue struct {
@@ -52,6 +53,7 @@ func NewIssue(clusterIssue v1alpha1.ClusterIssue) Issue {
 		Plugin:        clusterIssue.Labels[v1alpha1.LabelPlugin],
 		Url:           clusterIssue.Spec.Url,
 		ClusterScoped: len(clusterIssue.Spec.Resources) <= 0,
+		Custom:        clusterIssue.Spec.Custom,
 	}
 }
 

@@ -71,6 +71,18 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
   - pods
   - pods/log
   verbs:
@@ -215,6 +227,32 @@ rules:
   - zora.undistro.io
   resources:
   - clusterscans/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - customchecks
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - customchecks/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - customchecks/status
   verbs:
   - get
   - patch

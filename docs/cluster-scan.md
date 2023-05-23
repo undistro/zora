@@ -136,6 +136,9 @@ kubectl get clusterissues -l cluster=mycluster,scanID=fa4e63cc-5236-40f3-aa7f-59
 
 # issues reported from marvin plugin
 kubectl get clusterissues -l plugin=marvin
+
+# issues reported from a custom check
+kubectl get clusterissues -l custom=true
 ```
 
 !!! tip "Why is it an issue?"
