@@ -133,8 +133,9 @@ endif
 .PHONY: install
 install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
-	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye.yaml
+	@kubectl apply -f config/samples/zora_v1alpha1_plugin_popeye_all.yaml
 	@kubectl apply -f config/samples/zora_v1alpha1_plugin_marvin.yaml
+	@kubectl apply -f config/samples/zora_v1alpha1_customcheck_labels.yaml
 	@kubectl apply -f config/rbac/zora_plugins_role.yaml
 	@kubectl create -f config/rbac/zora_plugins_role_binding.yaml || true
 

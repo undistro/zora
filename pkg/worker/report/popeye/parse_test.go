@@ -139,7 +139,7 @@ func TestParse(t *testing.T) {
 		},
 
 		{
-			description: "Four <ClusterIssueSpec> instance with many resources",
+			description: "Five <ClusterIssueSpec> instance with many resources",
 			testrepname: "testdata/test_report_2.json",
 			cispecs: []*zorav1a1.ClusterIssueSpec{
 				{
@@ -186,6 +186,17 @@ func TestParse(t *testing.T) {
 					},
 					TotalResources: 1,
 					Url:            "",
+				},
+				{
+					ID:             "POP-306",
+					Message:        "Container could be running as root user. Check SecurityContext/Image",
+					Severity:       "Medium",
+					Category:       "Security",
+					TotalResources: 1,
+					Url:            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
+					Resources: map[string][]string{
+						"v1/pods": {"kube-system/cilium-jxncv"},
+					},
 				},
 			},
 			toerr: false,

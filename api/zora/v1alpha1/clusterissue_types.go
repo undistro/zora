@@ -50,6 +50,19 @@ type ClusterIssueSpec struct {
 	Custom         bool                 `json:"custom,omitempty"`
 }
 
+// AddResource appends the given resource to the Resources map, if it does not exist
+func (r *ClusterIssueSpec) AddResource(gvr, resource string) {
+	if res, ok := r.Resources[gvr]; ok {
+		for _, re := range res {
+			if re == resource {
+				return
+			}
+		}
+	}
+	r.Resources[gvr] = append(r.Resources[gvr], resource)
+	r.TotalResources++
+}
+
 // ClusterIssueStatus defines the observed state of ClusterIssue
 type ClusterIssueStatus struct {
 }
