@@ -1,0 +1,41 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: Plugin
+metadata:
+  labels:
+    app.kubernetes.io/name: plugin
+    app.kubernetes.io/instance: popeye
+    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: zora
+  name: popeye
+spec:
+  image: ghcr.io/undistro/popeye:pr252
+  resources:
+    limits:
+      cpu: 500m
+      memory: 100Mi
+  command:
+    - /bin/sh
+    - -c
+    - |
+      start=$(date +%s)
+      echo Scanning...
+      POPEYE_REPORT_DIR=$(DONE_DIR) \
+      /bin/popeye \
+        -o json \
+        --kubeconfig $(KUBECONFIG) \
+        --all-namespaces \
+        --force-exit-zero \
+        --save \
+        --output-file results.json
+      exitcode=$(echo $?)
+      if [ $exitcode -ne 0 ]; then
+        echo "ERROR" > $(DONE_DIR)/error
+        cat /tmp/popeye.log
+      else
+        echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
+      fi
+      ls -lh $(DONE_DIR)/
+      end=$(date +%s)
+      echo "Scan has finished in $(($end-$start)) seconds with exit code $exitcode"
+      exit $exitcode
