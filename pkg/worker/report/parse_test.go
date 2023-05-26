@@ -111,7 +111,7 @@ func TestParse(t *testing.T) {
 		},
 
 		{
-			description: "Four Popeye <ClusterIssue> instances with many resources",
+			description: "Five Popeye <ClusterIssue> instances with many resources",
 			testrepname: "popeye/testdata/test_report_2.json",
 			config: &config.Config{
 				DonePath:        "_",
@@ -273,6 +273,43 @@ func TestParse(t *testing.T) {
 						TotalResources: 1,
 						Cluster:        "super_fake_cluster",
 						Url:            "",
+					},
+				},
+				{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "ClusterIssue",
+						APIVersion: zorav1a1.SchemeGroupVersion.String(),
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "super_fake_cluster-pop-306-666",
+						Namespace: "super_fake_ns",
+						OwnerReferences: []metav1.OwnerReference{{
+							APIVersion: "batch/v1",
+							Kind:       "Job",
+							Name:       "super_fake_job_id",
+							UID:        types.UID("super_fake_job_uid-666-666"),
+						}},
+						Labels: map[string]string{
+							zorav1a1.LabelScanID:   "super_fake_job_uid-666-666",
+							zorav1a1.LabelCluster:  "super_fake_cluster",
+							zorav1a1.LabelSeverity: "Medium",
+							zorav1a1.LabelIssueID:  "POP-306",
+							zorav1a1.LabelCategory: "Security",
+							zorav1a1.LabelPlugin:   "popeye",
+							zorav1a1.LabelCustom:   "false",
+						},
+					},
+					Spec: zorav1a1.ClusterIssueSpec{
+						ID:       "POP-306",
+						Message:  "Container could be running as root user. Check SecurityContext/Image",
+						Severity: zorav1a1.ClusterIssueSeverity("Medium"),
+						Category: "Security",
+						Resources: map[string][]string{
+							"v1/pods": {"kube-system/cilium-jxncv"},
+						},
+						TotalResources: 1,
+						Cluster:        "super_fake_cluster",
+						Url:            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
 					},
 				},
 			},

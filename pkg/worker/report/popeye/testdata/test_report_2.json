@@ -71,6 +71,50 @@
             }
           ]
         }
+      },
+      {
+        "sanitizer": "pods",
+        "gvr": "v1/pods",
+        "issues": {
+          "kube-system/cilium-jxncv": [
+            {
+              "group": "delay-cilium-for-ccm",
+              "gvr": "containers",
+              "level": 2,
+              "message": "[POP-306] Container could be running as root user. Check SecurityContext/Image"
+            },
+            {
+              "group": "mount-cgroup",
+              "gvr": "containers",
+              "level": 2,
+              "message": "[POP-306] Container could be running as root user. Check SecurityContext/Image"
+            },
+            {
+              "group": "apply-sysctl-overwrites",
+              "gvr": "containers",
+              "level": 2,
+              "message": "[POP-306] Container could be running as root user. Check SecurityContext/Image"
+            },
+            {
+              "group": "clean-cilium-state",
+              "gvr": "containers",
+              "level": 2,
+              "message": "[POP-306] Container could be running as root user. Check SecurityContext/Image"
+            },
+            {
+              "group": "install-cni-binaries",
+              "gvr": "containers",
+              "level": 2,
+              "message": "[POP-306] Container could be running as root user. Check SecurityContext/Image"
+            },
+            {
+              "group": "cilium-agent",
+              "gvr": "containers",
+              "level": 2,
+              "message": "[POP-306] Container could be running as root user. Check SecurityContext/Image"
+            }
+          ]
+        }
       }
     ]
   }
