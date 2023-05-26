@@ -78,8 +78,7 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 					continue
 				}
 				if ci, ok := issuesmap[id]; ok {
-					ci.Resources[san.GVR] = append(ci.Resources[san.GVR], typ)
-					ci.TotalResources++
+					ci.AddResource(san.GVR, typ)
 				} else {
 					spec := &zorav1a1.ClusterIssueSpec{
 						ID:             id,
