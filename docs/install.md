@@ -51,7 +51,7 @@ Zora's management cluster requires these programs in order to be installed and c
     helm upgrade --install zora undistro/zora \
       --set saas.workspaceID='<YOUR WORKSPACE ID>'
       -n zora-system \
-      --version 0.6.0 \
+      --version 0.6.1-rc1 \
       --create-namespace --wait
     ```
 
@@ -64,7 +64,7 @@ Zora's management cluster requires these programs in order to be installed and c
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
       -n zora-system \
-      --version 0.6.0 \
+      --version 0.6.1-rc1 \
       --create-namespace --wait
     ```
 
