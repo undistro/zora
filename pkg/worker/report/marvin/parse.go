@@ -57,23 +57,28 @@ func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) *v1alpha
 			resources[gvr] = append(resources[gvr], obj)
 		}
 	}
-	custom := !check.Builtin
-	category := "Security"
-	if c, ok := check.Labels["category"]; ok && custom {
-		category = c
-	}
-	url := urls[check.ID]
-	if u, ok := check.Labels["url"]; ok && custom {
-		url = u
-	}
 	return &v1alpha1.ClusterIssueSpec{
 		ID:             check.ID,
 		Message:        check.Message,
 		Severity:       marvinToZoraSeverity[check.Severity],
-		Category:       category,
+		Category:       getCategory(check),
 		Resources:      resources,
 		TotalResources: 0,
-		Url:            url,
-		Custom:         custom,
+		Url:            getURL(check),
+		Custom:         !check.Builtin,
+	}
+}
+
+func getCategory(check *marvin.CheckResult) string {
+	if c, ok := check.Labels["category"]; ok && !check.Builtin {
+		return c
+	}
+	switch check.ID {
+	case "M-400", "M-401":
+		return "Best Practices"
+	case "M-402", "M-403", "M-404", "M-405", "M-406", "M-407":
+		return "Reliability"
+	default:
+		return "Security"
 	}
 }

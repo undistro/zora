@@ -14,9 +14,12 @@
 
 package marvin
 
+import marvin "github.com/undistro/marvin/pkg/types"
+
 const (
 	pssBaselineURL   = "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline"
 	pssRestrictedURL = "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted"
+	k8sResourcesURL  = "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
 )
 
 var urls = map[string]string{
@@ -39,9 +42,25 @@ var urls = map[string]string{
 	"M-115": pssRestrictedURL,
 	"M-116": pssRestrictedURL,
 
-	"M-300": "https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF#page=50",
-
 	"M-201": "https://microsoft.github.io/Threat-Matrix-for-Kubernetes/mitigations/MS-M9026%20Avoid%20using%20plain%20text%20credentials%20in%20configuration%20files/",
 	"M-202": "https://microsoft.github.io/Threat-Matrix-for-Kubernetes/mitigations/MS-M9025%20Disable%20Service%20Account%20Auto%20Mount/",
 	"M-203": "https://microsoft.github.io/Threat-Matrix-for-Kubernetes/mitigations/MS-M9015%20Avoid%20Running%20Management%20Interface%20on%20Containers/",
+
+	"M-300": "https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF#page=50",
+
+	"M-400": "https://kubernetes.io/docs/concepts/containers/images/#image-names",
+	"M-401": "https://kubernetes.io/docs/concepts/configuration/overview/#naked-pods-vs-replicasets-deployments-and-jobs",
+	"M-402": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+	"M-403": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+	"M-404": k8sResourcesURL,
+	"M-405": k8sResourcesURL,
+	"M-406": k8sResourcesURL,
+	"M-407": k8sResourcesURL,
+}
+
+func getURL(check *marvin.CheckResult) string {
+	if u, ok := check.Labels["url"]; ok && !check.Builtin {
+		return u
+	}
+	return urls[check.ID]
 }

@@ -12,6 +12,50 @@
     },
     "checks": [
         {
+            "id": "M-400",
+            "message": "Image tagged latest",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "general/M-400_image_tag_latest.yaml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
+            "id": "M-407",
+            "message": "CPU not limited",
+            "severity": "Medium",
+            "builtin": true,
+            "path": "general/M-407_cpu_limit.yaml",
+            "status": "Failed",
+            "failed": {
+                "apps/v1/Deployment": [
+                    "httpbin/httpbin"
+                ],
+                "apps/v1/ReplicaSet": [
+                    "httpbin/httpbin-5978c9d878"
+                ]
+            },
+            "passed": {},
+            "skipped": {},
+            "errors": [],
+            "totalFailed": 2,
+            "totalPassed": 0,
+            "totalSkipped": 0
+        },
+        {
             "id": "M-116",
             "message": "Not allowed added/dropped capabilities",
             "severity": "Low",
