@@ -37,6 +37,28 @@ func TestParse(t *testing.T) {
 			filename: "httpbin.json",
 			want: []*v1alpha1.ClusterIssueSpec{
 				{
+					ID:       "M-400",
+					Message:  "Image tagged latest",
+					Severity: v1alpha1.SeverityMedium,
+					Category: "Best Practices",
+					Resources: map[string][]string{
+						"apps/v1/deployments": {"httpbin/httpbin"},
+						"apps/v1/replicasets": {"httpbin/httpbin-5978c9d878"},
+					},
+					Url: "https://kubernetes.io/docs/concepts/containers/images/#image-names",
+				},
+				{
+					ID:       "M-407",
+					Message:  "CPU not limited",
+					Severity: v1alpha1.SeverityMedium,
+					Category: "Reliability",
+					Resources: map[string][]string{
+						"apps/v1/deployments": {"httpbin/httpbin"},
+						"apps/v1/replicasets": {"httpbin/httpbin-5978c9d878"},
+					},
+					Url: k8sResourcesURL,
+				},
+				{
 					ID:       "M-116",
 					Message:  "Not allowed added/dropped capabilities",
 					Severity: v1alpha1.SeverityLow,
