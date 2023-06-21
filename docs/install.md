@@ -24,9 +24,9 @@ Zora's management cluster requires these programs in order to be installed and c
     
     Before running the `helm upgrade` command, it is necessary to apply the modified CRDs.
     ```shell
-    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.1/charts/zora/crds/zora.undistro.io_clusterissues.yaml
-    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.1/charts/zora/crds/zora.undistro.io_customchecks.yaml
-    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.1/charts/zora/crds/zora.undistro.io_plugins.yaml
+    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.2-rc1/charts/zora/crds/zora.undistro.io_clusterissues.yaml
+    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.2-rc1/charts/zora/crds/zora.undistro.io_customchecks.yaml
+    kubectl apply -f https://raw.githubusercontent.com/undistro/zora/v0.6.2-rc1/charts/zora/crds/zora.undistro.io_plugins.yaml
     ```
     These commands ensure that the modified Custom Resource Definitions (CRDs) are applied correctly.
     
@@ -51,7 +51,7 @@ Zora's management cluster requires these programs in order to be installed and c
     helm upgrade --install zora undistro/zora \
       --set saas.workspaceID='<YOUR WORKSPACE ID>'
       -n zora-system \
-      --version 0.6.1 \
+      --version 0.6.2-rc1 \
       --create-namespace --wait
     ```
 
@@ -64,7 +64,7 @@ Zora's management cluster requires these programs in order to be installed and c
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
       -n zora-system \
-      --version 0.6.1 \
+      --version 0.6.2-rc1 \
       --create-namespace --wait
     ```
 
