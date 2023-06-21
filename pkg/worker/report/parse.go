@@ -48,7 +48,7 @@ func NewClusterIssue(c *config.Config, cispec *zorav1a1.ClusterIssueSpec, orefs 
 				zorav1a1.LabelCluster:  c.Cluster,
 				zorav1a1.LabelSeverity: string(cispec.Severity),
 				zorav1a1.LabelIssueID:  cispec.ID,
-				zorav1a1.LabelCategory: cispec.Category,
+				zorav1a1.LabelCategory: strings.ReplaceAll(cispec.Category, " ", ""),
 				zorav1a1.LabelPlugin:   c.Plugin,
 				zorav1a1.LabelCustom:   strconv.FormatBool(cispec.Custom),
 			},
