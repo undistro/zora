@@ -17,7 +17,7 @@
         <link rel="next" href="../target-cluster/">
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.14">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
     
     
       
@@ -25,10 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.85bb2934.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a6bdf11c.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -649,9 +649,9 @@ So it is recommended to keep it separated from any application workload.</p>
 <p>If you already have Zora installed and want to migrate to zora 0.6, 
 you need to follow some additional steps.</p>
 <p>Before running the <code>helm upgrade</code> command, it is necessary to apply the modified CRDs.
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0/charts/zora/crds/zora.undistro.io_clusterissues.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0/charts/zora/crds/zora.undistro.io_customchecks.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.0/charts/zora/crds/zora.undistro.io_plugins.yaml
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.2/charts/zora/crds/zora.undistro.io_clusterissues.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.2/charts/zora/crds/zora.undistro.io_customchecks.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/undistro/zora/v0.6.2/charts/zora/crds/zora.undistro.io_plugins.yaml
 </code></pre></div>
 These commands ensure that the modified Custom Resource Definitions (CRDs) are applied correctly.</p>
 <p>By default, Helm does not upgrade CRDs automatically, which is why this manual step is necessary.</p>
@@ -674,7 +674,7 @@ helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> <
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span><span class="s1">&#39;&lt;YOUR WORKSPACE ID&gt;&#39;</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.2<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--create-namespace<span class="w"> </span>--wait
 </code></pre></div>
 </div>
@@ -684,7 +684,7 @@ helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class=
 helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> </span>undistro
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.6.2<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--create-namespace<span class="w"> </span>--wait
 </code></pre></div>
 </div>
@@ -824,7 +824,7 @@ kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span clas
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../assets/javascripts/bundle.b425cdc4.min.js"></script>
       
     
   </body>
