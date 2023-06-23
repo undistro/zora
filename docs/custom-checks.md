@@ -120,6 +120,8 @@ mycluster-mycheck-4edd75cb85a4   mycluster   mycheck   Required labels   Low    
 All Marvin checks are similar to the `CustomCheck` API. 
 You can see them in the [`internal/builtins`](https://github.com/undistro/marvin/tree/main/internal/builtins) folder for examples.
 
+If you want to quickly test CEL expressions from your browser, check out the [CEL Playground](https://playcel.undistro.io/).
+
 Some examples of Marvin built-in checks expressions:
 
 - [HostPath volumes must be forbidden](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-104_host_path_volumes.yml)
