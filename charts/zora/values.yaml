@@ -98,7 +98,7 @@ operator:
       # -- `kube-rbac-proxy` image repository
       repository: gcr.io/kubebuilder/kube-rbac-proxy
       # -- `kube-rbac-proxy` image tag
-      tag: v0.13.1
+      tag: v0.14.1
       # -- Image pull policy
       pullPolicy: IfNotPresent
     # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container
