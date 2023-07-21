@@ -108,6 +108,7 @@ func (r *CronJobMutator) Mutate() error {
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
+	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{"kubectl.kubernetes.io/default-container": r.Plugin.Name}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
 		{
 			Name: kubeconfigVolumeName,
