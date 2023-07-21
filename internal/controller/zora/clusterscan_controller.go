@@ -162,12 +162,16 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		log.Error(notReadyErr, "Cluster is not ready")
 		clusterscan.SetReadyStatus(false, "ClusterNotReady", notReadyErr.Error())
 	}
-	kubeconfigKey := cluster.KubeconfigRefKey()
-	kubeconfigSecret, err := kubeconfig.SecretFromRef(ctx, r.Client, *kubeconfigKey)
-	if err != nil {
-		log.Error(err, fmt.Sprintf("failed to get kubeconfig secret %s", kubeconfigKey.String()))
-		clusterscan.SetReadyStatus(false, "ClusterKubeconfigError", err.Error())
-		return err
+	var kubeconfigSecret *corev1.Secret
+	if cluster.Spec.KubeconfigRef != nil {
+		key := cluster.KubeconfigRefKey()
+		sec, err := kubeconfig.SecretFromRef(ctx, r.Client, *key)
+		if err != nil {
+			log.Error(err, fmt.Sprintf("failed to get kubeconfig secret %s", key.String()))
+			clusterscan.SetReadyStatus(false, "ClusterKubeconfigError", err.Error())
+			return err
+		}
+		kubeconfigSecret = sec
 	}
 
 	if err := r.setControllerReference(ctx, clusterscan, cluster); err != nil {
@@ -193,7 +197,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
-		cronJob := plugins.NewCronJob(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), kubeconfigSecret.Namespace)
+		cronJob := plugins.NewCronJob(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), clusterscan.Namespace)
 		cronJobMutator := &plugins.CronJobMutator{
 			Scheme:             r.Scheme,
 			Existing:           cronJob,
@@ -441,7 +445,7 @@ func (r *ClusterScanReconciler) defaultPlugins() []v1alpha1.PluginReference {
 	return p
 }
 
-// applyRBAC Create or Update a ServiceAccount (with ClusterScan as Owner) and append it to ClusterRoleBinding
+// applyRBAC Create or Update a ServiceAccount in the ClusterScan namespace (with ClusterScan as Owner) and append it to ClusterRoleBinding
 func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1alpha1.ClusterScan) error {
 	log := ctrllog.FromContext(ctx)
 
