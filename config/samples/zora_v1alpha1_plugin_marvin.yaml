@@ -23,7 +23,7 @@ spec:
       mkdir -p $(CUSTOM_CHECKS_PATH)
       ls -lh $(CUSTOM_CHECKS_PATH)
       echo Scanning...
-      /marvin scan --disable-annotation-skip -f $(CUSTOM_CHECKS_PATH) -o json -v 2 --kubeconfig $(KUBECONFIG) > $(DONE_DIR)/results.json
+      /marvin scan --disable-annotation-skip -f $(CUSTOM_CHECKS_PATH) -o json -v 2 > $(DONE_DIR)/results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error
