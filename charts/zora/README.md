@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.7.0-rc1](https://img.shields.io/badge/Version-0.7.0--rc1-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.7.0-rc1](https://img.shields.io/badge/AppVersion-v0.7.0--rc1-informational?style=flat-square&color=3CA9DD)
+![Version: 0.7.0-rc2](https://img.shields.io/badge/Version-0.7.0--rc2-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.7.0-rc2](https://img.shields.io/badge/AppVersion-v0.7.0--rc2-informational?style=flat-square&color=3CA9DD)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -12,7 +12,7 @@ To install the chart with the release name `zora`:
 helm repo add undistro https://charts.undistro.io --force-update
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.7.0-rc1 \
+  --version 0.7.0-rc2 \
   --create-namespace --wait
 ```
 
@@ -55,7 +55,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
 | agent | bool | `false` | Specifies whether Zora should be installed in `agent` mode |
-| clusterName | string | `""` | Cluster name |
+| clusterName | string | `""` | Cluster name. Required if `agent` is `true`. Should be set by `kubectl config current-context`. |
 | scanSchedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format |
 | saas.workspaceID | string | `""` | Your SaaS workspace ID |
 | saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |

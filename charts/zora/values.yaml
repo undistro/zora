@@ -20,7 +20,7 @@ fullnameOverride: ""
 # -- Specifies whether Zora should be installed in `agent` mode
 agent: false
 
-# -- Cluster name
+# -- Cluster name. Required if `agent` is `true`. Should be set by `kubectl config current-context`.
 clusterName: ""
 
 # -- Cluster scan schedule in Cron format

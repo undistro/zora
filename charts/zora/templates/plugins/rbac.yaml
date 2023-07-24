@@ -87,13 +87,12 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: zora-plugins
-{{- if $crb }}
 subjects:
+  - kind: ServiceAccount
+    name: {{ include "zora.operatorServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
   {{- range $s := $crb.subjects }}
   - kind: {{ $s.kind }}
     name: {{ $s.name }}
     namespace: {{ $s.namespace }}
   {{- end }}
-{{- else }}
-subjects: []
-{{- end }}
