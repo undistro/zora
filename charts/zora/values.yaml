@@ -17,6 +17,16 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+# -- Specifies whether Zora should be installed in `agent` mode
+agent: false
+
+# -- Cluster name
+clusterName: ""
+
+# -- Cluster scan schedule in Cron format
+# @default -- Cron expression for every hour at the current minute + 5 minutes
+scanSchedule: ""
+
 saas:
   # -- Your SaaS workspace ID
   workspaceID: ""
