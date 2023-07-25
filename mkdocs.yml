@@ -69,6 +69,9 @@ extra:
       link: https://join.slack.com/t/undistrocommunity/shared_invite/zt-1h5i4earm-IjOpQeKNby09YzoOcvXqQQ
     - icon: fontawesome/brands/github
       link: https://github.com/undistro/zora
+  analytics:
+    provider: google
+    property: G-D6NENTNM1P
 
 copyright: Copyright &copy; 2022 - 2023 Undistro Authors
 
