@@ -1,5 +1,3 @@
-# Zora (Alpha Release)
-
 <div align="center">
 
 <a href="https://zora-docs.undistro.io/" target="_blank">
