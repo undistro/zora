@@ -131,9 +131,6 @@ func (r *CronJobMutator) Mutate() error {
 			},
 		})
 	}
-	r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
-		RunAsNonRoot: pointer.Bool(true),
-	}
 
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
 		initContainer := r.initContainer()

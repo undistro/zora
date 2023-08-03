@@ -26,6 +26,9 @@ spec:
     {{- toYaml .Values.scan.plugins.marvin.resources | nindent 4 }}
   {{- end }}
   mountCustomChecksVolume: true
+  securityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
   command:
     - /bin/sh
     - -c

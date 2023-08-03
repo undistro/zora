@@ -69,6 +69,8 @@ spec:
                 codes: [1109]
             policy/v1/poddisruptionbudgets:
               - name: 'rx:^kube-(system|public|node-lease)'
+  securityContext:
+    runAsNonRoot: true
   command:
     - /bin/sh
     - -c

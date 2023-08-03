@@ -15,6 +15,9 @@ spec:
       cpu: 500m
       memory: 100Mi
   mountCustomChecksVolume: true
+  securityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
   command:
     - /bin/sh
     - -c
