@@ -1,0 +1,25 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: Plugin
+metadata:
+  labels:
+    app.kubernetes.io/name: plugin
+    app.kubernetes.io/instance: trivy
+    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: zora
+  name: trivy
+spec:
+  image: ghcr.io/aquasecurity/trivy:0.43.1
+  command:
+    - /bin/sh
+    - -c
+    - |
+      time trivy k8s --debug -A --scanners=vuln --report=summary -f=json cluster -o $(DONE_DIR)/results.json
+      exitcode=$(echo $?)
+      if [ $exitcode -ne 0 ]; then
+        echo "ERROR" > $(DONE_DIR)/error
+      else
+        echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
+      fi
+      ls -lh $(DONE_DIR)/
+      exit $exitcode
