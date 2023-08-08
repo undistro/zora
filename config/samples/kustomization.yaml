@@ -5,4 +5,5 @@ resources:
 - zora_v1alpha1_clusterissue.yaml
 - zora_v1alpha1_clusterscan.yaml
 - zora_v1alpha1_customcheck.yaml
+- zora_v1alpha1_vulnerabilityreport.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
