@@ -65,11 +65,11 @@ var (
 		},
 	}
 	// pluginVolumes represents the volume mounts to be used in plugin container
-	pluginVolumes = append(commonVolumeMounts, corev1.VolumeMount{
+	kubeconfigVolumeMount = corev1.VolumeMount{
 		Name:      kubeconfigVolumeName,
 		ReadOnly:  true,
 		MountPath: kubeconfigMountPath,
-	})
+	}
 
 	// customChecksVolume represents the volume mount to be used in the init container
 	customChecksVolume = corev1.VolumeMount{Name: checksVolumeName, MountPath: checksPath}
@@ -116,17 +116,8 @@ func (r *CronJobMutator) Mutate() error {
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
+	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{"kubectl.kubernetes.io/default-container": r.Plugin.Name}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
-		{
-			Name: kubeconfigVolumeName,
-			VolumeSource: corev1.VolumeSource{
-				Secret: &corev1.SecretVolumeSource{
-					SecretName:  r.KubeconfigSecret.Name,
-					DefaultMode: pointer.Int32(0644),
-					Items:       []corev1.KeyToPath{{Key: kubeconfig.SecretField, Path: kubeconfigFile}},
-				},
-			},
-		},
 		{
 			Name:         resultsVolumeName,
 			VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{}},
@@ -135,6 +126,18 @@ func (r *CronJobMutator) Mutate() error {
 			Name:         checksVolumeName,
 			VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{}},
 		},
+	}
+	if r.KubeconfigSecret != nil {
+		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
+			Name: kubeconfigVolumeName,
+			VolumeSource: corev1.VolumeSource{
+				Secret: &corev1.SecretVolumeSource{
+					SecretName:  r.KubeconfigSecret.Name,
+					DefaultMode: pointer.Int32(0644),
+					Items:       []corev1.KeyToPath{{Key: kubeconfig.SecretField, Path: kubeconfigFile}},
+				},
+			},
+		})
 	}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
 		RunAsNonRoot: pointer.Bool(true),
@@ -211,7 +214,10 @@ func (r *CronJobMutator) pluginContainer() corev1.Container {
 		Resources:       r.Plugin.Spec.Resources,
 		ImagePullPolicy: r.Plugin.Spec.GetImagePullPolicy(),
 		SecurityContext: r.Plugin.Spec.SecurityContext,
-		VolumeMounts:    pluginVolumes,
+		VolumeMounts:    commonVolumeMounts,
+	}
+	if r.KubeconfigSecret != nil {
+		c.VolumeMounts = append(c.VolumeMounts, kubeconfigVolumeMount)
 	}
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
 		c.VolumeMounts = append(c.VolumeMounts, customChecksVolume)
@@ -241,10 +247,6 @@ func (r *CronJobMutator) pluginEnv() []corev1.EnvVar {
 	p = append(p, commonEnv...)
 	p = append(p,
 		corev1.EnvVar{
-			Name:  "KUBECONFIG",
-			Value: filepath.Join(kubeconfigMountPath, kubeconfigFile),
-		},
-		corev1.EnvVar{
 			Name:  "CRONJOB_NAMESPACE",
 			Value: r.Existing.ObjectMeta.Namespace,
 		},
@@ -253,6 +255,12 @@ func (r *CronJobMutator) pluginEnv() []corev1.EnvVar {
 			Value: r.Existing.ObjectMeta.Name,
 		},
 	)
+	if r.KubeconfigSecret != nil {
+		p = append(p, corev1.EnvVar{
+			Name:  "KUBECONFIG",
+			Value: filepath.Join(kubeconfigMountPath, kubeconfigFile),
+		})
+	}
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
 		p = append(p, corev1.EnvVar{Name: "CUSTOM_CHECKS_PATH", Value: checksVolumeName})
 	}

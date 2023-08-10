@@ -17,6 +17,13 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+# -- Cluster name. Should be set by `kubectl config current-context`.
+clusterName: ""
+
+# -- Cluster scan schedule in Cron format
+# @default -- Cron expression for every hour at the current minute + 5 minutes
+scanSchedule: ""
+
 saas:
   # -- Your SaaS workspace ID
   workspaceID: ""

@@ -45,7 +45,6 @@ spec:
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
-        --kubeconfig $(KUBECONFIG) \
         {{- if .Values.scan.plugins.popeye.skipInternalResources }}
         -f /tmp/spinach.yml \
         {{- end }}

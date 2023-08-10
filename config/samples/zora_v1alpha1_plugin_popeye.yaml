@@ -81,7 +81,6 @@ spec:
       POPEYE_REPORT_DIR=$(DONE_DIR) \
       /bin/popeye \
         -o json \
-        --kubeconfig $(KUBECONFIG) \
         --all-namespaces \
         --force-exit-zero \
         -f /tmp/spinach.yml \

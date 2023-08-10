@@ -24,28 +24,63 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: zora-plugins
 rules:
-  - apiGroups:
-      - zora.undistro.io
+  - apiGroups: [ "zora.undistro.io" ]
     resources:
       - clusterissues
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - zora.undistro.io
+    verbs: [ "create", "delete", "get", "list", "patch", "update", "watch" ]
+  - apiGroups: [ "zora.undistro.io" ]
     resources:
       - clusterissues/status
-    verbs:
-      - get
-  - apiGroups:
-      - ""
+    verbs: [ "get" ]
+  - apiGroups: [ "" ]
     resources:
       - configmaps
-    verbs:
-      - get
-      - list
+      - endpoints
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumes
+      - persistentvolumeclaims
+      - pods
+      - secrets
+      - serviceaccounts
+      - services
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "apps" ]
+    resources:
+      - daemonsets
+      - deployments
+      - statefulsets
+      - replicasets
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "autoscaling" ]
+    resources:
+      - horizontalpodautoscalers
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "networking.k8s.io" ]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "policy" ]
+    resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "rbac.authorization.k8s.io" ]
+    resources:
+      - clusterroles
+      - clusterrolebindings
+      - roles
+      - rolebindings
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "metrics.k8s.io" ]
+    resources:
+      - pods
+      - nodes
+    verbs: [ "get", "list" ]
+  - apiGroups: [ batch ]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: [ "get", "list" ]

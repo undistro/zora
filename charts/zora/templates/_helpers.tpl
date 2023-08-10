@@ -82,3 +82,11 @@ Create the name of the service account to use in Operator
 {{- printf "{\"auths\":{\"%s\":{\"auth\":\"%s\"}}}" .registry (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
+
+{{- define "clusterName" }}
+{{- regexReplaceAll "\\W+" (required "clusterName is required" .Values.clusterName) "-" }}
+{{- end }}
+
+{{- define "scanSchedule"}}
+{{- default (printf "%d * * * *" (add 5 (now | date "04"))) .Values.scanSchedule }}
+{{- end }}
