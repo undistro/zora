@@ -15,7 +15,9 @@
 package marvin
 
 import (
+	"context"
 	"encoding/json"
+	"io"
 
 	"github.com/go-logr/logr"
 	marvin "github.com/undistro/marvin/pkg/types"
@@ -30,12 +32,13 @@ var marvinToZoraSeverity = map[marvin.Severity]v1alpha1.ClusterIssueSeverity{
 	marvin.SeverityCritical: v1alpha1.SeverityHigh,
 }
 
-func Parse(log logr.Logger, bs []byte) ([]*v1alpha1.ClusterIssueSpec, error) {
+func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.ClusterIssueSpec, error) {
+	log := logr.FromContextOrDiscard(ctx)
 	report := &marvin.Report{}
-	if err := json.Unmarshal(bs, report); err != nil {
+	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
-	var css []*v1alpha1.ClusterIssueSpec
+	var css []v1alpha1.ClusterIssueSpec
 	for _, check := range report.Checks {
 		if check.Status != marvin.StatusFailed {
 			continue
@@ -49,7 +52,7 @@ func Parse(log logr.Logger, bs []byte) ([]*v1alpha1.ClusterIssueSpec, error) {
 	return css, nil
 }
 
-func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) *v1alpha1.ClusterIssueSpec {
+func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) v1alpha1.ClusterIssueSpec {
 	resources := map[string][]string{}
 	for gvk, objs := range check.Failed {
 		for _, obj := range objs {
@@ -57,7 +60,7 @@ func clusterIssueSpec(report *marvin.Report, check *marvin.CheckResult) *v1alpha
 			resources[gvr] = append(resources[gvr], obj)
 		}
 	}
-	return &v1alpha1.ClusterIssueSpec{
+	return v1alpha1.ClusterIssueSpec{
 		ID:             check.ID,
 		Message:        check.Message,
 		Severity:       marvinToZoraSeverity[check.Severity],
