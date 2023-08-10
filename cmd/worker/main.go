@@ -15,30 +15,32 @@
 package main
 
 import (
+	"context"
+	"flag"
+	"os"
 	"time"
 
+	"github.com/go-logr/logr"
 	"go.uber.org/zap/zapcore"
 
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	"github.com/undistro/zora/pkg/worker"
 )
-
-var log = ctrl.Log.WithName("worker")
 
 func main() {
 	opts := zap.Options{
 		Development: true,
 		TimeEncoder: zapcore.TimeEncoderOfLayout(time.RFC3339),
 	}
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+	opts.BindFlags(flag.CommandLine)
+	log := zap.New(zap.UseFlagOptions(&opts)).WithName("worker")
+	ctx := logr.NewContext(context.Background(), log)
 
-	log.Info("Starting worker")
-	if err := worker.Run(log); err != nil {
-		log.Info("Worker crashed")
-		panic(err)
+	log.Info("starting worker")
+	if err := worker.Run(ctx); err != nil {
+		log.Error(err, "failed to run worker")
+		os.Exit(1)
 	}
-	log.Info("Worker finished successfully")
-	log.Info("Stopping worker")
+	log.Info("worker finished successfully")
 }

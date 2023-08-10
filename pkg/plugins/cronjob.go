@@ -48,6 +48,14 @@ var (
 			Name:  "DONE_DIR",
 			Value: resultsDir,
 		},
+		{
+			Name:  "DONE_FILE",
+			Value: filepath.Join(resultsDir, "done"),
+		},
+		{
+			Name:  "ERROR_FILE",
+			Value: filepath.Join(resultsDir, "error"),
+		},
 	}
 	// commonVolumeMounts represents the volume mounts to be used in worker and plugin containers
 	commonVolumeMounts = []corev1.VolumeMount{
@@ -267,8 +275,10 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 			Value: r.ClusterScan.Spec.ClusterRef.Name,
 		},
 		corev1.EnvVar{
-			Name:  "CLUSTER_ISSUES_NAMESPACE",
-			Value: r.ClusterScan.Namespace,
+			Name: "NAMESPACE",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.namespace", APIVersion: "v1"},
+			},
 		},
 		corev1.EnvVar{
 			Name:  "PLUGIN_NAME",
