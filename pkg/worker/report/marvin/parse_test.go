@@ -15,11 +15,11 @@
 package marvin
 
 import (
+	"context"
 	"os"
 	"reflect"
 	"testing"
 
-	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
@@ -29,13 +29,13 @@ func TestParse(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
-		want     []*v1alpha1.ClusterIssueSpec
+		want     []v1alpha1.ClusterIssueSpec
 		wantErr  bool
 	}{
 		{
 			name:     "OK",
 			filename: "httpbin.json",
-			want: []*v1alpha1.ClusterIssueSpec{
+			want: []v1alpha1.ClusterIssueSpec{
 				{
 					ID:       "M-400",
 					Message:  "Image tagged latest",
@@ -119,11 +119,11 @@ func TestParse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bs, err := os.ReadFile("testdata/" + tt.filename)
+			bs, err := os.Open("testdata/" + tt.filename)
 			if err != nil {
 				t.Errorf("Read testdata file error = %v", err)
 			}
-			got, err := Parse(logr.Discard(), bs)
+			got, err := Parse(context.TODO(), bs)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return

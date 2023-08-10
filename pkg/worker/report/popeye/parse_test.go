@@ -15,12 +15,12 @@
 package popeye
 
 import (
+	"context"
 	"os"
 	"reflect"
 	"sort"
 	"testing"
 
-	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
 
 	zorav1a1 "github.com/undistro/zora/api/zora/v1alpha1"
@@ -99,13 +99,13 @@ func TestParse(t *testing.T) {
 	cases := []struct {
 		description string
 		testrepname string
-		cispecs     []*zorav1a1.ClusterIssueSpec
+		cispecs     []zorav1a1.ClusterIssueSpec
 		toerr       bool
 	}{
 		{
 			description: "Single <ClusterIssueSpec> instance with many resources",
 			testrepname: "testdata/test_report_1.json",
-			cispecs: []*zorav1a1.ClusterIssueSpec{
+			cispecs: []zorav1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
@@ -141,7 +141,7 @@ func TestParse(t *testing.T) {
 		{
 			description: "Five <ClusterIssueSpec> instance with many resources",
 			testrepname: "testdata/test_report_2.json",
-			cispecs: []*zorav1a1.ClusterIssueSpec{
+			cispecs: []zorav1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-400",
 					Message:  "Used? Unable to locate resource reference",
@@ -217,7 +217,7 @@ func TestParse(t *testing.T) {
 		{
 			description: "Popeye report with one resource not found error",
 			testrepname: "testdata/test_report_5.json",
-			cispecs: []*zorav1a1.ClusterIssueSpec{
+			cispecs: []zorav1a1.ClusterIssueSpec{
 				{
 					ID:       "POP-712",
 					Message:  "Found only one master node",
@@ -240,7 +240,7 @@ func TestParse(t *testing.T) {
 		{
 			description: "metrics-server issue",
 			testrepname: "testdata/test_report_7.json",
-			cispecs: []*zorav1a1.ClusterIssueSpec{
+			cispecs: []zorav1a1.ClusterIssueSpec{
 				{
 					ID:             "POP-402",
 					Message:        "No metrics-server detected",
@@ -263,7 +263,7 @@ func TestParse(t *testing.T) {
 		},
 	}
 
-	sfun := func(cis []*zorav1a1.ClusterIssueSpec) {
+	sfun := func(cis []zorav1a1.ClusterIssueSpec) {
 		sort.Slice(cis, func(i, j int) bool {
 			return cis[i].ID > cis[j].ID
 		})
@@ -274,12 +274,12 @@ func TestParse(t *testing.T) {
 		}
 	}
 	for _, c := range cases {
-		rep, err := os.ReadFile(c.testrepname)
+		rep, err := os.Open(c.testrepname)
 		if err != nil {
 			t.Errorf("Setup failed on case: %s\n", c.description)
 			t.Fatal(err)
 		}
-		cispecs, err := Parse(logr.Discard(), rep)
+		cispecs, err := Parse(context.TODO(), rep)
 		sfun(c.cispecs)
 		sfun(cispecs)
 		if (err != nil) != c.toerr || !reflect.DeepEqual(c.cispecs, cispecs) {
