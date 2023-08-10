@@ -38,8 +38,6 @@ rules:
       - secrets
       - serviceaccounts
       - services
-      - replicationcontrollers
-      - resourcequotas
     verbs: [ "get", "list" ]
   - apiGroups: [ "apps" ]
     resources:

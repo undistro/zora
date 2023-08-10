@@ -54,8 +54,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 |-----|------|---------|-------------|
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
-| agent | bool | `false` | Specifies whether Zora should be installed in `agent` mode |
-| clusterName | string | `""` | Cluster name. Required if `agent` is `true`. Should be set by `kubectl config current-context`. |
+| clusterName | string | `""` | Cluster name. Should be set by `kubectl config current-context`. |
 | scanSchedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format |
 | saas.workspaceID | string | `""` | Your SaaS workspace ID |
 | saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |

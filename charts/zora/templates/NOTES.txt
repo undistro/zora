@@ -1,9 +1,16 @@
-1. Connect clusters with `kubectl`:
+Thank you for installing {{ .Chart.Name | title }} version {{ .Chart.Version }}.
 
-  For in-depth information about how to connect a cluster, visit
-    https://zora-docs.undistro.io/
+{{ if .Values.clusterName -}}
+Cluster `{{ .Values.clusterName }}` is scheduled to be scanned. Check it by running:
+    kubectl get cluster,clusterscan -o wide -n {{ .Release.Namespace }}
 
-{{- if .Values.saas.workspaceID }}
-2. Now you can see your clusters and issues in the SaaS:
-     {{ .Values.saas.server }}
+Once a cluster is successfully scanned, you can check issues by running:
+    kubectl get clusterissues -n {{ .Release.Namespace }}
+
+{{ end -}}
+
+Visit our documentation for in-depth information: https://zora-docs.undistro.io
+
+{{ if .Values.saas.workspaceID -}}
+You can see your clusters and issues in SaaS: {{ .Values.saas.server }}
 {{- end }}

@@ -15,15 +15,17 @@
 package popeye
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"regexp"
 	"strings"
 
 	"github.com/go-logr/logr"
 
-	zorav1a1 "github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 var (
@@ -50,14 +52,15 @@ func prepareIdAndMsg(msg string) (string, string, error) {
 
 // Parse transforms a Popeye report into a slice of <ClusterIssueSpec>. This
 // function is called by the <report> package when a Popeye plugin is used.
-func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
-	r := &Report{}
-	if err := json.Unmarshal(popr, r); err != nil {
+func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.ClusterIssueSpec, error) {
+	log := logr.FromContextOrDiscard(ctx)
+	report := &Report{}
+	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
-	issuesmap := map[string]*zorav1a1.ClusterIssueSpec{}
-	for _, san := range r.Popeye.Sanitizers {
-		for typ, issues := range san.Issues {
+	issuesByID := map[string]*v1alpha1.ClusterIssueSpec{}
+	for _, sanitizer := range report.Popeye.Sanitizers {
+		for typ, issues := range sanitizer.Issues {
 			if typ == "" {
 				if len(issues) > 0 {
 					if msg := issues[0].Message; strings.Contains(msg, "forbidden") {
@@ -77,10 +80,10 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 					log.Info("Skipping OK level issue", "id", id, "msg", msg)
 					continue
 				}
-				if ci, ok := issuesmap[id]; ok {
-					ci.AddResource(san.GVR, typ)
+				if ci, ok := issuesByID[id]; ok {
+					ci.AddResource(sanitizer.GVR, typ)
 				} else {
-					spec := &zorav1a1.ClusterIssueSpec{
+					spec := &v1alpha1.ClusterIssueSpec{
 						ID:             id,
 						Message:        msg,
 						Severity:       LevelToIssueSeverity[iss.Level],
@@ -92,17 +95,17 @@ func Parse(log logr.Logger, popr []byte) ([]*zorav1a1.ClusterIssueSpec, error) {
 					}
 					if !clusterScoped {
 						spec.TotalResources = 1
-						spec.Resources = map[string][]string{san.GVR: {typ}}
+						spec.Resources = map[string][]string{sanitizer.GVR: {typ}}
 					}
-					issuesmap[id] = spec
+					issuesByID[id] = spec
 				}
 			}
 		}
 	}
 
-	res := []*zorav1a1.ClusterIssueSpec{}
-	for _, ci := range issuesmap {
-		res = append(res, ci)
+	res := make([]v1alpha1.ClusterIssueSpec, 0, len(issuesByID))
+	for _, ci := range issuesByID {
+		res = append(res, *ci)
 	}
 	return res, nil
 }

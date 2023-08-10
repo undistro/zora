@@ -38,14 +38,14 @@ type Issue struct {
 
 // Sanitizer represents a Popeye sanitizer.
 type Sanitizer struct {
-	Sanitizer string              `json:"sanitizer"`
-	GVR       string              `json:"gvr"`
-	Issues    map[string][]*Issue `json:"issues"`
+	Sanitizer string             `json:"sanitizer"`
+	GVR       string             `json:"gvr"`
+	Issues    map[string][]Issue `json:"issues"`
 }
 
 // Popeye represents a Popeye report.
 type Popeye struct {
-	Sanitizers []*Sanitizer `json:"sanitizers"`
+	Sanitizers []Sanitizer `json:"sanitizers"`
 }
 
 // Report wraps a Popeye report.
