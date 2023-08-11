@@ -24,7 +24,6 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	zora "github.com/undistro/zora/pkg/clientset/versioned"
@@ -44,16 +43,11 @@ func Run(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("failed to gather results: %v", err)
 	}
-	issues, err := parseResults(ctx, cfg, results)
-	if err != nil {
-		return err
-	}
-	for _, issue := range issues {
-		issue, err := client.ZoraV1alpha1().ClusterIssues(cfg.Namespace).Create(ctx, &issue, metav1.CreateOptions{})
-		if err != nil {
-			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
-		}
-		log.Info(fmt.Sprintf("cluster issue %q successfully created", issue.Name), "resource version", issue.ResourceVersion)
+	switch cfg.PluginType {
+	case "misconfiguration":
+		return handleMisconfiguration(ctx, cfg, results, client)
+	case "vulnerability":
+		log.Info("vuln")
 	}
 	return nil
 }

@@ -29,7 +29,7 @@ import (
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
-func TestParseResults(t *testing.T) {
+func TestParseMiscResults(t *testing.T) {
 	type args struct {
 		cfg      *config
 		filename string
@@ -331,20 +331,20 @@ func TestParseResults(t *testing.T) {
 			if tt.args.filename != "" {
 				f, err := os.Open(tt.args.filename)
 				if err != nil {
-					t.Errorf("parseResults() setup error = %v", err)
+					t.Errorf("parseMiscResults() setup error = %v", err)
 					return
 				}
 				r = f
 			}
-			got, err := parseResults(context.TODO(), tt.args.cfg, r)
+			got, err := parseMiscResults(context.TODO(), tt.args.cfg, r)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseResults() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("parseMiscResults() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			sortClusterIssues(got)
 			sortClusterIssues(tt.want)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseResults() got unexpect result, diff = %v", cmp.Diff(got, tt.want))
+				t.Errorf("parseMiscResults() got unexpect result, diff = %v", cmp.Diff(got, tt.want))
 			}
 		})
 	}

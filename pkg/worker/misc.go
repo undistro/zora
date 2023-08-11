@@ -22,17 +22,19 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/go-logr/logr"
 	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	zora "github.com/undistro/zora/pkg/clientset/versioned"
 	"github.com/undistro/zora/pkg/worker/report/marvin"
 	"github.com/undistro/zora/pkg/worker/report/popeye"
 )
 
-// pluginParsers maps parse function by plugin name
-var pluginParsers = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.ClusterIssueSpec, error){
+// miscPlugins maps parse function by misc plugin name
+var miscPlugins = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.ClusterIssueSpec, error){
 	"popeye": popeye.Parse,
 	"marvin": marvin.Parse,
 }
@@ -42,9 +44,25 @@ var clusterIssueTypeMeta = metav1.TypeMeta{
 	APIVersion: v1alpha1.SchemeGroupVersion.String(),
 }
 
-// parseResults converts the given results into ClusterIssues
-func parseResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
-	parseFunc, ok := pluginParsers[cfg.PluginName]
+func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader, client *zora.Clientset) error {
+	log := logr.FromContextOrDiscard(ctx)
+	issues, err := parseMiscResults(ctx, cfg, results)
+	if err != nil {
+		return err
+	}
+	for _, issue := range issues {
+		issue, err := client.ZoraV1alpha1().ClusterIssues(cfg.Namespace).Create(ctx, &issue, metav1.CreateOptions{})
+		if err != nil {
+			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
+		}
+		log.Info(fmt.Sprintf("cluster issue %q successfully created", issue.Name), "resource version", issue.ResourceVersion)
+	}
+	return nil
+}
+
+// parseMiscResults converts the given results into ClusterIssues
+func parseMiscResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
+	parseFunc, ok := miscPlugins[cfg.PluginName]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
 	}
