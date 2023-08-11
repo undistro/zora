@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: marvin
 spec:
+  type: misconfiguration
   image: ghcr.io/undistro/marvin:v0.2.0
   resources:
     limits:

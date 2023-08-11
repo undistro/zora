@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: trivy
 spec:
+  type: vulnerability
   image: ghcr.io/aquasecurity/trivy:0.44.1
   securityContext:
     allowPrivilegeEscalation: false

@@ -20,6 +20,7 @@ metadata:
   labels:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
+  type: misconfiguration
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
   {{- if .Values.scan.plugins.popeye.resources }}
   resources:

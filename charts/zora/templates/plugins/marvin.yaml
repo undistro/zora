@@ -20,6 +20,7 @@ metadata:
   labels:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
+  type: misconfiguration
   image: "{{ .Values.scan.plugins.marvin.image.repository }}:{{ .Values.scan.plugins.marvin.image.tag }}"
   {{- if .Values.scan.plugins.marvin.resources }}
   resources:

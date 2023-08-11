@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: popeye
 spec:
+  type: misconfiguration
   image: ghcr.io/undistro/popeye:pr252
   resources:
     limits:
