@@ -18,6 +18,7 @@ spec:
   securityContext:
     runAsNonRoot: true
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c

@@ -33,6 +33,7 @@ spec:
 {{- end }}
   securityContext:
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c

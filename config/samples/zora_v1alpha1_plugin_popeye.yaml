@@ -71,6 +71,7 @@ spec:
               - name: 'rx:^kube-(system|public|node-lease)'
   securityContext:
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c

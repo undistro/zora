@@ -16,6 +16,7 @@ spec:
       memory: 100Mi
   securityContext:
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c
