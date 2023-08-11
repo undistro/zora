@@ -9,7 +9,9 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: trivy
 spec:
-  image: ghcr.io/aquasecurity/trivy:0.43.1
+  image: ghcr.io/aquasecurity/trivy:0.44.1
+  securityContext:
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c
