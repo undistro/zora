@@ -242,6 +242,10 @@ func (r *CronJobMutator) initContainer() corev1.Container {
 		VolumeMounts:    []corev1.VolumeMount{customChecksVolume},
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		Resources:       r.Plugin.Spec.Resources,
+		SecurityContext: &corev1.SecurityContext{
+			RunAsNonRoot:             pointer.Bool(true),
+			AllowPrivilegeEscalation: pointer.Bool(false),
+		},
 	}
 }
 
