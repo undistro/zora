@@ -36,6 +36,7 @@ func TestConfigFromEnv(t *testing.T) {
 			name: "required only",
 			env: map[string]string{
 				"PLUGIN_NAME":  "plugin",
+				"PLUGIN_TYPE":  "misconfiguration",
 				"CLUSTER_NAME": "cluster",
 				"NAMESPACE":    "ns",
 				"JOB_NAME":     "cluster-plugin-28140229",
@@ -46,6 +47,7 @@ func TestConfigFromEnv(t *testing.T) {
 				DoneFile:     "/tmp/zora/results/done",
 				ErrorFile:    "/tmp/zora/results/error",
 				PluginName:   "plugin",
+				PluginType:   "misconfiguration",
 				ClusterName:  "cluster",
 				Namespace:    "ns",
 				JobName:      "cluster-plugin-28140229",
@@ -59,6 +61,7 @@ func TestConfigFromEnv(t *testing.T) {
 			name: "one required env missing",
 			env: map[string]string{
 				//"PLUGIN_NAME":  "plugin",
+				"PLUGIN_TYPE":  "misconfiguration",
 				"CLUSTER_NAME": "cluster",
 				"NAMESPACE":    "ns",
 				"JOB_NAME":     "cluster-plugin-28140229",
@@ -71,6 +74,7 @@ func TestConfigFromEnv(t *testing.T) {
 			name: "all",
 			env: map[string]string{
 				"PLUGIN_NAME":   "plugin",
+				"PLUGIN_TYPE":   "vulnerability",
 				"CLUSTER_NAME":  "cluster",
 				"NAMESPACE":     "ns",
 				"JOB_NAME":      "cluster-plugin-28140229",
@@ -84,6 +88,7 @@ func TestConfigFromEnv(t *testing.T) {
 				DoneFile:     "/done",
 				ErrorFile:    "/error",
 				PluginName:   "plugin",
+				PluginType:   "vulnerability",
 				ClusterName:  "cluster",
 				Namespace:    "ns",
 				JobName:      "cluster-plugin-28140229",

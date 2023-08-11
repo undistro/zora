@@ -290,6 +290,10 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 			Value: r.Plugin.Name,
 		},
 		corev1.EnvVar{
+			Name:  "PLUGIN_TYPE",
+			Value: r.Plugin.Spec.Type,
+		},
+		corev1.EnvVar{
 			Name: "JOB_NAME",
 			ValueFrom: &corev1.EnvVarSource{
 				FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.labels['job-name']", APIVersion: "v1"},

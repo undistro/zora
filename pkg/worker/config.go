@@ -26,6 +26,7 @@ type config struct {
 	DoneFile     string        `env:"DONE_FILE" envDefault:"/tmp/zora/results/done"`
 	ErrorFile    string        `env:"ERROR_FILE" envDefault:"/tmp/zora/results/error"`
 	PluginName   string        `env:"PLUGIN_NAME,required"`
+	PluginType   string        `env:"PLUGIN_TYPE,required"`
 	ClusterName  string        `env:"CLUSTER_NAME,required"`
 	Namespace    string        `env:"NAMESPACE,required"`
 	JobName      string        `env:"JOB_NAME,required"`
