@@ -19,6 +19,9 @@ spec:
     - jsonPath: .spec.image
       name: Image
       type: string
+    - jsonPath: .spec.type
+      name: Type
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
@@ -440,8 +443,16 @@ spec:
                         type: string
                     type: object
                 type: object
+              type:
+                default: misconfiguration
+                description: Indicates what this plugin reports
+                enum:
+                - misconfiguration
+                - vulnerability
+                type: string
             required:
             - image
+            - type
             type: object
           status:
             description: PluginStatus defines the observed state of Plugin

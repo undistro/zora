@@ -21,6 +21,12 @@ import (
 
 // PluginSpec defines the desired state of Plugin
 type PluginSpec struct {
+
+	// Indicates what this plugin reports
+	// +kubebuilder:validation:Enum=misconfiguration;vulnerability
+	// +kubebuilder:default=misconfiguration
+	Type string `json:"type"`
+
 	// Docker image name.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	Image string `json:"image"`
@@ -92,6 +98,7 @@ type PluginStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="Image",type="string",JSONPath=".spec.image"
+//+kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // Plugin is the Schema for the plugins API
