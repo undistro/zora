@@ -42,6 +42,8 @@ rules:
       - persistentvolumes
       - persistentvolumeclaims
       - pods
+      - replicationcontrollers
+      - resourcequotas
       - secrets
       - serviceaccounts
       - services
