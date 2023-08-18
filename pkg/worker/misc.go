@@ -23,9 +23,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
 	zora "github.com/undistro/zora/pkg/clientset/versioned"
@@ -55,7 +53,7 @@ func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader,
 		if err != nil {
 			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
 		}
-		log.Info(fmt.Sprintf("cluster issue %q successfully created", issue.Name), "resource version", issue.ResourceVersion)
+		log.Info(fmt.Sprintf("cluster issue %q successfully created", issue.Name), "resourceVersion", issue.ResourceVersion)
 	}
 	return nil
 }
@@ -70,12 +68,7 @@ func parseMiscResults(ctx context.Context, cfg *config, results io.Reader) ([]v1
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse %q results: %v", cfg.PluginName, err)
 	}
-	owner := metav1.OwnerReference{
-		APIVersion: batchv1.SchemeGroupVersion.String(),
-		Kind:       "Job",
-		Name:       cfg.JobName,
-		UID:        types.UID(cfg.JobUID),
-	}
+	owner := ownerReference(cfg)
 	issues := make([]v1alpha1.ClusterIssue, len(specs))
 	for i := 0; i < len(specs); i++ {
 		issues[i] = newClusterIssue(cfg, specs[i], owner)
@@ -95,10 +88,10 @@ func newClusterIssue(cfg *config, spec v1alpha1.ClusterIssueSpec, owner metav1.O
 			Labels: map[string]string{
 				v1alpha1.LabelScanID:   cfg.JobUID,
 				v1alpha1.LabelCluster:  cfg.ClusterName,
+				v1alpha1.LabelPlugin:   cfg.PluginName,
 				v1alpha1.LabelSeverity: string(spec.Severity),
 				v1alpha1.LabelIssueID:  spec.ID,
 				v1alpha1.LabelCategory: strings.ReplaceAll(spec.Category, " ", ""),
-				v1alpha1.LabelPlugin:   cfg.PluginName,
 				v1alpha1.LabelCustom:   strconv.FormatBool(spec.Custom),
 			},
 		},
