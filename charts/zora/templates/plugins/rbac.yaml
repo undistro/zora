@@ -20,10 +20,12 @@ rules:
   - apiGroups: [ "zora.undistro.io" ]
     resources:
       - clusterissues
+      - vulnerabilityreports
     verbs: [ "create", "delete", "get", "list", "patch", "update", "watch" ]
   - apiGroups: [ "zora.undistro.io" ]
     resources:
       - clusterissues/status
+      - vulnerabilityreports/status
     verbs: [ "get" ]
   - apiGroups: [ "" ]
     resources:
