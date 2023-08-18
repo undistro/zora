@@ -73,6 +73,8 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=plugins,verbs=get;list;watch
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=get
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch

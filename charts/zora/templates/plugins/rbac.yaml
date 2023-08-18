@@ -80,7 +80,6 @@ rules:
       - cronjobs
     verbs: [ "get", "list" ]
 ---
-{{ $crb := (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "zora-plugins-rolebinding") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -93,6 +92,7 @@ subjects:
   - kind: ServiceAccount
     name: {{ include "zora.operatorServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
+  {{- $crb := (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "zora-plugins-rolebinding") }}
   {{- range $s := $crb.subjects }}
   - kind: {{ $s.kind }}
     name: {{ $s.name }}
