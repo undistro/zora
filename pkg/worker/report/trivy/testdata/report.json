@@ -1,0 +1,916 @@
+{
+  "ClusterName": "kind-kind",
+  "Findings": [
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Namespace": "foo",
+      "Kind": "Deployment",
+      "Name": "bar",
+      "Error": "scan error: unable to initialize a scanner: unable to initialize a docker scanner: 4 errors occurred:\n\t* unable to inspect the image (ghcr.io/myorg/bar:5b815c4e78fd89811a9f2c5f7653120379c80d8b): Error response from daemon: No such image: ghcr.io/myorg/bar:5b815c4e78fd89811a9f2c5f7653120379c80d8b\n\t* failed to initialize a containerd client: failed to dial \"/run/containerd/containerd.sock\": connection error: desc = \"transport: error while dialing: dial unix /run/containerd/containerd.sock: connect: permission denied\"\n\t* unable to initialize Podman client: no podman socket found: stat /run/user/1000/podman/podman.sock: no such file or directory\n\t* GET https://ghcr.io/token?scope=repository%3Amyorg%2Fbar%3Apull\u0026service=ghcr.io: UNAUTHORIZED: authentication required\n\n"
+    },
+    {
+      "Namespace": "kube-system",
+      "Kind": "Deployment",
+      "Name": "coredns",
+      "Results": [
+        {
+          "Target": "coredns",
+          "Class": "lang-pkgs",
+          "Type": "gobinary",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2022-1996",
+              "PkgName": "github.com/emicklei/go-restful",
+              "InstalledVersion": "v2.9.5+incompatible",
+              "FixedVersion": "2.16.0",
+              "Status": "fixed",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-1996",
+              "Title": "Authorization Bypass Through User-Controlled Key",
+              "Description": "Authorization Bypass Through User-Controlled Key in GitHub repository emicklei/go-restful prior to v3.8.0.",
+              "Severity": "CRITICAL"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Namespace": "kube-system",
+      "Kind": "Pod",
+      "Name": "kube-apiserver-kind-control-plane",
+      "Results": [
+        {
+          "Target": "registry.k8s.io/kube-apiserver:v1.25.3 (debian 11.5)",
+          "Class": "os-pkgs",
+          "Type": "debian"
+        },
+        {
+          "Target": "usr/local/bin/kube-apiserver",
+          "Class": "lang-pkgs",
+          "Type": "gobinary",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2022-41723",
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.0.0-20220722155237-a158d28d115b",
+              "FixedVersion": "0.7.0",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:b913ed5667fbc0c07d41f42c8dbecc16ae6850a370e8a9d1047ac8bfb68c82e7",
+                "DiffID": "sha256:1eb50537ffcc3bc68ac7394d729f2a60b36d943af6ee1a6eabc8641a84811726"
+              },
+              "SeveritySource": "ghsa",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-41723",
+              "DataSource": {
+                "ID": "ghsa",
+                "Name": "GitHub Security Advisory Go",
+                "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Ago"
+              },
+              "Title": "avoid quadratic complexity in HPACK decoding",
+              "Description": "A maliciously crafted HTTP/2 stream could cause excessive CPU consumption in the HPACK decoder, sufficient to cause a denial of service from a small number of small requests.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-400"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/security/cve/CVE-2022-41723",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-41723",
+                "https://github.com/advisories/GHSA-vvpx-j8f3-3w6h",
+                "https://go.dev/cl/468135",
+                "https://go.dev/cl/468295",
+                "https://go.dev/issue/57855",
+                "https://groups.google.com/g/golang-announce/c/V0aBFqaFs_E",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4MA5XS5DAOJ5PKKNG5TUXKPQOFHT5VBC/",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RGW7GE2Z32ZT47UFAQFDRQE33B7Q7LMT/",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RLBQ3A7ROLEQXQLXFDLNJ7MYPKG5GULE/",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XX3IMUTZKRQ73PBZM4E2JP4BKYH4C6XE/",
+                "https://nvd.nist.gov/vuln/detail/CVE-2022-41723",
+                "https://pkg.go.dev/vuln/GO-2023-1571",
+                "https://vuln.go.dev/ID/GO-2023-1571.json",
+                "https://www.cve.org/CVERecord?id=CVE-2022-41723"
+              ],
+              "PublishedDate": "2023-02-28T18:15:00Z",
+              "LastModifiedDate": "2023-05-16T10:50:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Namespace": "apps",
+      "Kind": "Deployment",
+      "Name": "app1",
+      "Results": [
+        {
+          "Target": "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0 (debian 9.12)",
+          "Class": "os-pkgs",
+          "Type": "debian",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "DLA-3051-1",
+              "VendorIDs": [
+                "DLA-3051-1"
+              ],
+              "PkgID": "tzdata@2019c-0+deb9u1",
+              "PkgName": "tzdata",
+              "InstalledVersion": "2019c-0+deb9u1",
+              "FixedVersion": "2021a-0+deb9u4",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:7d2977b12acb33f192e3f20b7e15a467cc8f3f5124a15d975a6d4afe5fa3d258",
+                "DiffID": "sha256:333e2cb4c707229901f45d7f5e4e3caf5a983229da7fefb0605975ff3a1eaf6f"
+              },
+              "DataSource": {
+                "ID": "debian",
+                "Name": "Debian Security Tracker",
+                "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+              },
+              "Title": "tzdata - new timezone database",
+              "Severity": "UNKNOWN"
+            },
+            {
+              "VulnerabilityID": "CVE-2016-2779",
+              "PkgID": "bsdutils@1:2.29.2-1+deb9u1",
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.29.2-1+deb9u1",
+              "Status": "affected",
+              "Layer": {
+                "Digest": "sha256:7d2977b12acb33f192e3f20b7e15a467cc8f3f5124a15d975a6d4afe5fa3d258",
+                "DiffID": "sha256:333e2cb4c707229901f45d7f5e4e3caf5a983229da7fefb0605975ff3a1eaf6f"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2016-2779",
+              "DataSource": {
+                "ID": "debian",
+                "Name": "Debian Security Tracker",
+                "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+              },
+              "Title": "util-linux: runuser tty hijack via TIOCSTI ioctl",
+              "Description": "runuser in util-linux allows local users to escape to the parent session via a crafted TIOCSTI ioctl call, which pushes characters to the terminal's input buffer.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-264"
+              ],
+              "CVSS": {
+                "nvd": {
+                  "V2Vector": "AV:L/AC:L/Au:N/C:C/I:C/A:C",
+                  "V3Vector": "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                  "V2Score": 7.2,
+                  "V3Score": 7.8
+                },
+                "redhat": {
+                  "V2Vector": "AV:L/AC:H/Au:N/C:C/I:C/A:C",
+                  "V3Vector": "CVSS:3.0/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+                  "V2Score": 6.2,
+                  "V3Score": 8.6
+                }
+              },
+              "References": [
+                "http://www.openwall.com/lists/oss-security/2016/02/27/1",
+                "http://www.openwall.com/lists/oss-security/2016/02/27/2",
+                "https://access.redhat.com/security/cve/CVE-2016-2779",
+                "https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=815922",
+                "https://nvd.nist.gov/vuln/detail/CVE-2016-2779",
+                "https://www.cve.org/CVERecord?id=CVE-2016-2779"
+              ],
+              "PublishedDate": "2017-02-07T15:59:00Z",
+              "LastModifiedDate": "2019-01-04T14:14:00Z"
+            }
+          ]
+        },
+        {
+          "Target": "Node.js",
+          "Class": "lang-pkgs",
+          "Type": "node-pkg",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "GHSA-jmqm-f2gx-4fjv",
+              "PkgID": "npm-registry-fetch@4.0.4",
+              "PkgName": "npm-registry-fetch",
+              "PkgPath": "usr/local/lib/node_modules/npm/node_modules/npm-registry-fetch/package.json",
+              "InstalledVersion": "4.0.4",
+              "FixedVersion": "8.1.1, 4.0.5",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:a0b03ba934df0a8901b50182c763d4ecd985ef4087f06ea223b796831b82622d",
+                "DiffID": "sha256:98b7d0c5ef14f59e0a17429a6430028b12c5ea3c6312c4bbc1d99c4a6cd62538"
+              },
+              "SeveritySource": "ghsa",
+              "PrimaryURL": "https://github.com/advisories/GHSA-jmqm-f2gx-4fjv",
+              "DataSource": {
+                "ID": "ghsa",
+                "Name": "GitHub Security Advisory Npm",
+                "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anpm"
+              },
+              "Title": "Sensitive information exposure through logs in npm-registry-fetch",
+              "Description": "Affected versions of `npm-registry-fetch` are vulnerable to an information exposure vulnerability through log files. The cli supports URLs like `\u003cprotocol\u003e://[\u003cuser\u003e[:\u003cpassword\u003e]@]\u003chostname\u003e[:\u003cport\u003e][:][/]\u003cpath\u003e`. The password value is not redacted and is printed to stdout and also to any generated log files.",
+              "Severity": "MEDIUM",
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                  "V3Score": 5.3
+                }
+              },
+              "References": [
+                "https://github.com/advisories/GHSA-jmqm-f2gx-4fjv",
+                "https://github.com/npm/npm-registry-fetch/commit/18bf9b97fb1deecdba01ffb05580370846255c88",
+                "https://github.com/npm/npm-registry-fetch/pull/29",
+                "https://github.com/npm/npm-registry-fetch/security/advisories/GHSA-jmqm-f2gx-4fjv",
+                "https://snyk.io/vuln/SNYK-JS-NPMREGISTRYFETCH-575432"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Namespace": "apps",
+      "Kind": "Deployment",
+      "Name": "app1",
+      "Results": [
+        {
+          "Target": "quay.io/kiwigrid/k8s-sidecar:1.22.0 (alpine 3.16.3)",
+          "Class": "os-pkgs",
+          "Type": "alpine",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2022-4450",
+              "PkgID": "libssl1.1@1.1.1s-r0",
+              "PkgName": "libssl1.1",
+              "InstalledVersion": "1.1.1s-r0",
+              "FixedVersion": "1.1.1t-r0",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:ca7dd9ec2225f2385955c43b2379305acd51543c28cf1d4e94522b3d94cce3ce",
+                "DiffID": "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-4450",
+              "DataSource": {
+                "ID": "alpine",
+                "Name": "Alpine Secdb",
+                "URL": "https://secdb.alpinelinux.org/"
+              },
+              "Title": "double free after calling PEM_read_bio_ex",
+              "Description": "The function PEM_read_bio_ex() reads a PEM file from a BIO and parses and decodes the \"name\" (e.g. \"CERTIFICATE\"), any header data and the payload data. If the function succeeds then the \"name_out\", \"header\" and \"data\" arguments are populated with pointers to buffers containing the relevant decoded data. The caller is responsible for freeing those buffers. It is possible to construct a PEM file that results in 0 bytes of payload data. In this case PEM_read_bio_ex() will return a failure code but will populate the header argument with a pointer to a buffer that has already been freed. If the caller also frees this buffer then a double free will occur. This will most likely lead to a crash. This could be exploited by an attacker who has the ability to supply malicious PEM files for parsing to achieve a denial of service attack. The functions PEM_read_bio() and PEM_read() are simple wrappers around PEM_read_bio_ex() and therefore these functions are also directly affected. These functions are also called indirectly by a number of other OpenSSL functions including PEM_X509_INFO_read_bio_ex() and SSL_CTX_use_serverinfo_file() which are also vulnerable. Some OpenSSL internal uses of these functions are not vulnerable because the caller does not free the header argument if PEM_read_bio_ex() returns a failure code. These locations include the PEM_read_bio_TYPE() functions as well as the decoders introduced in OpenSSL 3.0. The OpenSSL asn1parse command line application is also impacted by this issue.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-415"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/errata/RHSA-2023:2165",
+                "https://access.redhat.com/security/cve/CVE-2022-4450",
+                "https://bugzilla.redhat.com/1960321",
+                "https://bugzilla.redhat.com/2164440",
+                "https://bugzilla.redhat.com/2164487",
+                "https://bugzilla.redhat.com/2164492",
+                "https://bugzilla.redhat.com/2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144000",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144003",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144006",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144008",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144010",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144012",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144015",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144017",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144019",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2145170",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2158412",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164440",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164487",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164488",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164492",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164497",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164499",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164500",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4203",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4304",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4450",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0215",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0216",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0217",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0286",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0401",
+                "https://errata.almalinux.org/9/ALSA-2023-2165.html",
+                "https://errata.rockylinux.org/RLSA-2023:0946",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=63bcf189be73a9cc1264059bed6f57974be74a83",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=bbcf509bd046b34cca19c766bbddc31683d0858b",
+                "https://github.com/advisories/GHSA-v5w6-wcm8-jm4q",
+                "https://linux.oracle.com/cve/CVE-2022-4450.html",
+                "https://linux.oracle.com/errata/ELSA-2023-2932.html",
+                "https://nvd.nist.gov/vuln/detail/CVE-2022-4450",
+                "https://rustsec.org/advisories/RUSTSEC-2023-0010.html",
+                "https://ubuntu.com/security/notices/USN-5844-1",
+                "https://www.cve.org/CVERecord?id=CVE-2022-4450",
+                "https://www.openssl.org/news/secadv/20230207.txt"
+              ],
+              "PublishedDate": "2023-02-08T20:15:00Z",
+              "LastModifiedDate": "2023-07-19T00:57:00Z"
+            },
+            {
+              "VulnerabilityID": "CVE-2022-4450",
+              "PkgID": "libcrypto1.1@1.1.1s-r0",
+              "PkgName": "libcrypto1.1",
+              "InstalledVersion": "1.1.1s-r0",
+              "FixedVersion": "1.1.1t-r0",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:ca7dd9ec2225f2385955c43b2379305acd51543c28cf1d4e94522b3d94cce3ce",
+                "DiffID": "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-4450",
+              "DataSource": {
+                "ID": "alpine",
+                "Name": "Alpine Secdb",
+                "URL": "https://secdb.alpinelinux.org/"
+              },
+              "Title": "double free after calling PEM_read_bio_ex",
+              "Description": "The function PEM_read_bio_ex() reads a PEM file from a BIO and parses and decodes the \"name\" (e.g. \"CERTIFICATE\"), any header data and the payload data. If the function succeeds then the \"name_out\", \"header\" and \"data\" arguments are populated with pointers to buffers containing the relevant decoded data. The caller is responsible for freeing those buffers. It is possible to construct a PEM file that results in 0 bytes of payload data. In this case PEM_read_bio_ex() will return a failure code but will populate the header argument with a pointer to a buffer that has already been freed. If the caller also frees this buffer then a double free will occur. This will most likely lead to a crash. This could be exploited by an attacker who has the ability to supply malicious PEM files for parsing to achieve a denial of service attack. The functions PEM_read_bio() and PEM_read() are simple wrappers around PEM_read_bio_ex() and therefore these functions are also directly affected. These functions are also called indirectly by a number of other OpenSSL functions including PEM_X509_INFO_read_bio_ex() and SSL_CTX_use_serverinfo_file() which are also vulnerable. Some OpenSSL internal uses of these functions are not vulnerable because the caller does not free the header argument if PEM_read_bio_ex() returns a failure code. These locations include the PEM_read_bio_TYPE() functions as well as the decoders introduced in OpenSSL 3.0. The OpenSSL asn1parse command line application is also impacted by this issue.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-415"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/errata/RHSA-2023:2165",
+                "https://access.redhat.com/security/cve/CVE-2022-4450",
+                "https://bugzilla.redhat.com/1960321",
+                "https://bugzilla.redhat.com/2164440",
+                "https://bugzilla.redhat.com/2164487",
+                "https://bugzilla.redhat.com/2164492",
+                "https://bugzilla.redhat.com/2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144000",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144003",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144006",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144008",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144010",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144012",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144015",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144017",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144019",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2145170",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2158412",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164440",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164487",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164488",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164492",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164497",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164499",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164500",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4203",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4304",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4450",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0215",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0216",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0217",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0286",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0401",
+                "https://errata.almalinux.org/9/ALSA-2023-2165.html",
+                "https://errata.rockylinux.org/RLSA-2023:0946",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=63bcf189be73a9cc1264059bed6f57974be74a83",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=bbcf509bd046b34cca19c766bbddc31683d0858b",
+                "https://github.com/advisories/GHSA-v5w6-wcm8-jm4q",
+                "https://linux.oracle.com/cve/CVE-2022-4450.html",
+                "https://linux.oracle.com/errata/ELSA-2023-2932.html",
+                "https://nvd.nist.gov/vuln/detail/CVE-2022-4450",
+                "https://rustsec.org/advisories/RUSTSEC-2023-0010.html",
+                "https://ubuntu.com/security/notices/USN-5844-1",
+                "https://www.cve.org/CVERecord?id=CVE-2022-4450",
+                "https://www.openssl.org/news/secadv/20230207.txt"
+              ],
+              "PublishedDate": "2023-02-08T20:15:00Z",
+              "LastModifiedDate": "2023-07-19T00:57:00Z"
+            }
+          ]
+        },
+        {
+          "Target": "Python",
+          "Class": "lang-pkgs",
+          "Type": "python-pkg",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2023-37920",
+              "PkgName": "certifi",
+              "PkgPath": "app/.venv/lib/python3.11/site-packages/certifi-2022.12.7.dist-info/METADATA",
+              "InstalledVersion": "2022.12.7",
+              "FixedVersion": "2023.7.22",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:4546a550c1814d1af6f74b7960c4e0ebcf5c5c85080a3b2fe35e9ca3397a4259",
+                "DiffID": "sha256:ce34393fe7243a48e39beea73159b7b4ee007a57463f3bf5d4deff2b05220841"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-37920",
+              "DataSource": {
+                "ID": "osv",
+                "Name": "Python Packaging Advisory Database",
+                "URL": "https://github.com/pypa/advisory-db"
+              },
+              "Title": "Removal of e-Tugra root certificate",
+              "Description": "Certifi is a curated collection of Root Certificates for validating the trustworthiness of SSL certificates while verifying the identity of TLS hosts. Certifi prior to version 2023.07.22 recognizes \"e-Tugra\" root certificates. e-Tugra's root certificates were subject to an investigation prompted by reporting of security issues in their systems. Certifi 2023.07.22 removes root certificates from \"e-Tugra\" from the root store.",
+              "Severity": "CRITICAL",
+              "CweIDs": [
+                "CWE-345"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                  "V3Score": 9.8
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/security/cve/CVE-2023-37920",
+                "https://github.com/advisories/GHSA-xqr8-7jwr-rhp7",
+                "https://github.com/certifi/python-certifi/commit/8fb96ed81f71e7097ed11bc4d9b19afd7ea5c909",
+                "https://github.com/certifi/python-certifi/security/advisories/GHSA-xqr8-7jwr-rhp7",
+                "https://github.com/pypa/advisory-database/tree/main/vulns/certifi/PYSEC-2023-135.yaml",
+                "https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/C-HrP1SEq1A",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5EX6NG7WUFNUKGFHLM35KHHU3GAKXRTG/",
+                "https://nvd.nist.gov/vuln/detail/CVE-2023-37920",
+                "https://www.cve.org/CVERecord?id=CVE-2023-37920"
+              ],
+              "PublishedDate": "2023-07-25T21:15:00Z",
+              "LastModifiedDate": "2023-08-12T06:16:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    },
+    {
+      "Namespace": "apps",
+      "Kind": "Deployment",
+      "Name": "app2",
+      "Results": [
+        {
+          "Target": "quay.io/kiwigrid/k8s-sidecar:1.22.0 (alpine 3.16.3)",
+          "Class": "os-pkgs",
+          "Type": "alpine",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2022-4450",
+              "PkgID": "libssl1.1@1.1.1s-r0",
+              "PkgName": "libssl1.1",
+              "InstalledVersion": "1.1.1s-r0",
+              "FixedVersion": "1.1.1t-r0",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:ca7dd9ec2225f2385955c43b2379305acd51543c28cf1d4e94522b3d94cce3ce",
+                "DiffID": "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-4450",
+              "DataSource": {
+                "ID": "alpine",
+                "Name": "Alpine Secdb",
+                "URL": "https://secdb.alpinelinux.org/"
+              },
+              "Title": "double free after calling PEM_read_bio_ex",
+              "Description": "The function PEM_read_bio_ex() reads a PEM file from a BIO and parses and decodes the \"name\" (e.g. \"CERTIFICATE\"), any header data and the payload data. If the function succeeds then the \"name_out\", \"header\" and \"data\" arguments are populated with pointers to buffers containing the relevant decoded data. The caller is responsible for freeing those buffers. It is possible to construct a PEM file that results in 0 bytes of payload data. In this case PEM_read_bio_ex() will return a failure code but will populate the header argument with a pointer to a buffer that has already been freed. If the caller also frees this buffer then a double free will occur. This will most likely lead to a crash. This could be exploited by an attacker who has the ability to supply malicious PEM files for parsing to achieve a denial of service attack. The functions PEM_read_bio() and PEM_read() are simple wrappers around PEM_read_bio_ex() and therefore these functions are also directly affected. These functions are also called indirectly by a number of other OpenSSL functions including PEM_X509_INFO_read_bio_ex() and SSL_CTX_use_serverinfo_file() which are also vulnerable. Some OpenSSL internal uses of these functions are not vulnerable because the caller does not free the header argument if PEM_read_bio_ex() returns a failure code. These locations include the PEM_read_bio_TYPE() functions as well as the decoders introduced in OpenSSL 3.0. The OpenSSL asn1parse command line application is also impacted by this issue.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-415"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/errata/RHSA-2023:2165",
+                "https://access.redhat.com/security/cve/CVE-2022-4450",
+                "https://bugzilla.redhat.com/1960321",
+                "https://bugzilla.redhat.com/2164440",
+                "https://bugzilla.redhat.com/2164487",
+                "https://bugzilla.redhat.com/2164492",
+                "https://bugzilla.redhat.com/2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144000",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144003",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144006",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144008",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144010",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144012",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144015",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144017",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144019",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2145170",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2158412",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164440",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164487",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164488",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164492",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164497",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164499",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164500",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4203",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4304",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4450",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0215",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0216",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0217",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0286",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0401",
+                "https://errata.almalinux.org/9/ALSA-2023-2165.html",
+                "https://errata.rockylinux.org/RLSA-2023:0946",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=63bcf189be73a9cc1264059bed6f57974be74a83",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=bbcf509bd046b34cca19c766bbddc31683d0858b",
+                "https://github.com/advisories/GHSA-v5w6-wcm8-jm4q",
+                "https://linux.oracle.com/cve/CVE-2022-4450.html",
+                "https://linux.oracle.com/errata/ELSA-2023-2932.html",
+                "https://nvd.nist.gov/vuln/detail/CVE-2022-4450",
+                "https://rustsec.org/advisories/RUSTSEC-2023-0010.html",
+                "https://ubuntu.com/security/notices/USN-5844-1",
+                "https://www.cve.org/CVERecord?id=CVE-2022-4450",
+                "https://www.openssl.org/news/secadv/20230207.txt"
+              ],
+              "PublishedDate": "2023-02-08T20:15:00Z",
+              "LastModifiedDate": "2023-07-19T00:57:00Z"
+            },
+            {
+              "VulnerabilityID": "CVE-2022-4450",
+              "PkgID": "libcrypto1.1@1.1.1s-r0",
+              "PkgName": "libcrypto1.1",
+              "InstalledVersion": "1.1.1s-r0",
+              "FixedVersion": "1.1.1t-r0",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:ca7dd9ec2225f2385955c43b2379305acd51543c28cf1d4e94522b3d94cce3ce",
+                "DiffID": "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-4450",
+              "DataSource": {
+                "ID": "alpine",
+                "Name": "Alpine Secdb",
+                "URL": "https://secdb.alpinelinux.org/"
+              },
+              "Title": "double free after calling PEM_read_bio_ex",
+              "Description": "The function PEM_read_bio_ex() reads a PEM file from a BIO and parses and decodes the \"name\" (e.g. \"CERTIFICATE\"), any header data and the payload data. If the function succeeds then the \"name_out\", \"header\" and \"data\" arguments are populated with pointers to buffers containing the relevant decoded data. The caller is responsible for freeing those buffers. It is possible to construct a PEM file that results in 0 bytes of payload data. In this case PEM_read_bio_ex() will return a failure code but will populate the header argument with a pointer to a buffer that has already been freed. If the caller also frees this buffer then a double free will occur. This will most likely lead to a crash. This could be exploited by an attacker who has the ability to supply malicious PEM files for parsing to achieve a denial of service attack. The functions PEM_read_bio() and PEM_read() are simple wrappers around PEM_read_bio_ex() and therefore these functions are also directly affected. These functions are also called indirectly by a number of other OpenSSL functions including PEM_X509_INFO_read_bio_ex() and SSL_CTX_use_serverinfo_file() which are also vulnerable. Some OpenSSL internal uses of these functions are not vulnerable because the caller does not free the header argument if PEM_read_bio_ex() returns a failure code. These locations include the PEM_read_bio_TYPE() functions as well as the decoders introduced in OpenSSL 3.0. The OpenSSL asn1parse command line application is also impacted by this issue.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-415"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/errata/RHSA-2023:2165",
+                "https://access.redhat.com/security/cve/CVE-2022-4450",
+                "https://bugzilla.redhat.com/1960321",
+                "https://bugzilla.redhat.com/2164440",
+                "https://bugzilla.redhat.com/2164487",
+                "https://bugzilla.redhat.com/2164492",
+                "https://bugzilla.redhat.com/2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144000",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144003",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144006",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144008",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144010",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144012",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144015",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144017",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2144019",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2145170",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2158412",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164440",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164487",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164488",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164492",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164494",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164497",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164499",
+                "https://bugzilla.redhat.com/show_bug.cgi?id=2164500",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4203",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4304",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4450",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0215",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0216",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0217",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0286",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-0401",
+                "https://errata.almalinux.org/9/ALSA-2023-2165.html",
+                "https://errata.rockylinux.org/RLSA-2023:0946",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=63bcf189be73a9cc1264059bed6f57974be74a83",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=bbcf509bd046b34cca19c766bbddc31683d0858b",
+                "https://github.com/advisories/GHSA-v5w6-wcm8-jm4q",
+                "https://linux.oracle.com/cve/CVE-2022-4450.html",
+                "https://linux.oracle.com/errata/ELSA-2023-2932.html",
+                "https://nvd.nist.gov/vuln/detail/CVE-2022-4450",
+                "https://rustsec.org/advisories/RUSTSEC-2023-0010.html",
+                "https://ubuntu.com/security/notices/USN-5844-1",
+                "https://www.cve.org/CVERecord?id=CVE-2022-4450",
+                "https://www.openssl.org/news/secadv/20230207.txt"
+              ],
+              "PublishedDate": "2023-02-08T20:15:00Z",
+              "LastModifiedDate": "2023-07-19T00:57:00Z"
+            }
+          ]
+        },
+        {
+          "Target": "Python",
+          "Class": "lang-pkgs",
+          "Type": "python-pkg",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2023-37920",
+              "PkgName": "certifi",
+              "PkgPath": "app/.venv/lib/python3.11/site-packages/certifi-2022.12.7.dist-info/METADATA",
+              "InstalledVersion": "2022.12.7",
+              "FixedVersion": "2023.7.22",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:4546a550c1814d1af6f74b7960c4e0ebcf5c5c85080a3b2fe35e9ca3397a4259",
+                "DiffID": "sha256:ce34393fe7243a48e39beea73159b7b4ee007a57463f3bf5d4deff2b05220841"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-37920",
+              "DataSource": {
+                "ID": "osv",
+                "Name": "Python Packaging Advisory Database",
+                "URL": "https://github.com/pypa/advisory-db"
+              },
+              "Title": "Removal of e-Tugra root certificate",
+              "Description": "Certifi is a curated collection of Root Certificates for validating the trustworthiness of SSL certificates while verifying the identity of TLS hosts. Certifi prior to version 2023.07.22 recognizes \"e-Tugra\" root certificates. e-Tugra's root certificates were subject to an investigation prompted by reporting of security issues in their systems. Certifi 2023.07.22 removes root certificates from \"e-Tugra\" from the root store.",
+              "Severity": "CRITICAL",
+              "CweIDs": [
+                "CWE-345"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                  "V3Score": 9.8
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                  "V3Score": 7.5
+                }
+              },
+              "References": [
+                "https://access.redhat.com/security/cve/CVE-2023-37920",
+                "https://github.com/advisories/GHSA-xqr8-7jwr-rhp7",
+                "https://github.com/certifi/python-certifi/commit/8fb96ed81f71e7097ed11bc4d9b19afd7ea5c909",
+                "https://github.com/certifi/python-certifi/security/advisories/GHSA-xqr8-7jwr-rhp7",
+                "https://github.com/pypa/advisory-database/tree/main/vulns/certifi/PYSEC-2023-135.yaml",
+                "https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/C-HrP1SEq1A",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5EX6NG7WUFNUKGFHLM35KHHU3GAKXRTG/",
+                "https://nvd.nist.gov/vuln/detail/CVE-2023-37920",
+                "https://www.cve.org/CVERecord?id=CVE-2023-37920"
+              ],
+              "PublishedDate": "2023-07-25T21:15:00Z",
+              "LastModifiedDate": "2023-08-12T06:16:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Namespace": "apps",
+      "Kind": "Deployment",
+      "Name": "app2",
+      "Results": [
+        {
+          "Target": "docker.io/istio/examples-bookinfo-details-v1:1.17.0 (debian 10.5)",
+          "Class": "os-pkgs",
+          "Type": "debian",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2016-2781",
+              "PkgID": "coreutils@8.30-3",
+              "PkgName": "coreutils",
+              "InstalledVersion": "8.30-3",
+              "Status": "will_not_fix",
+              "Layer": {
+                "Digest": "sha256:d121f8d1c4128ebc1e95e5bfad90a0189b84eadbbb2fbaad20cbb26d20b2c8a2",
+                "DiffID": "sha256:07cab433985205f29909739f511777a810f4a9aff486355b71308bb654cdc868"
+              },
+              "SeveritySource": "debian",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2016-2781",
+              "DataSource": {
+                "ID": "debian",
+                "Name": "Debian Security Tracker",
+                "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+              },
+              "Title": "coreutils: Non-privileged session can escape to the parent session in chroot",
+              "Description": "chroot in GNU coreutils, when used with --userspec, allows local users to escape to the parent session via a crafted TIOCSTI ioctl call, which pushes characters to the terminal's input buffer.",
+              "Severity": "LOW",
+              "CweIDs": [
+                "CWE-20"
+              ],
+              "CVSS": {
+                "nvd": {
+                  "V2Vector": "AV:L/AC:L/Au:N/C:N/I:P/A:N",
+                  "V3Vector": "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:N",
+                  "V2Score": 2.1,
+                  "V3Score": 6.5
+                },
+                "redhat": {
+                  "V2Vector": "AV:L/AC:H/Au:N/C:C/I:C/A:C",
+                  "V3Vector": "CVSS:3.0/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+                  "V2Score": 6.2,
+                  "V3Score": 8.6
+                }
+              },
+              "References": [
+                "http://seclists.org/oss-sec/2016/q1/452",
+                "http://www.openwall.com/lists/oss-security/2016/02/28/2",
+                "http://www.openwall.com/lists/oss-security/2016/02/28/3",
+                "https://access.redhat.com/security/cve/CVE-2016-2781",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-2781",
+                "https://lists.apache.org/thread.html/rf9fa47ab66495c78bb4120b0754dd9531ca2ff0430f6685ac9b07772@%3Cdev.mina.apache.org%3E",
+                "https://lore.kernel.org/patchwork/patch/793178/",
+                "https://nvd.nist.gov/vuln/detail/CVE-2016-2781",
+                "https://www.cve.org/CVERecord?id=CVE-2016-2781"
+              ],
+              "PublishedDate": "2017-02-07T15:59:00Z",
+              "LastModifiedDate": "2021-02-25T17:15:00Z"
+            }
+          ]
+        },
+        {
+          "Target": "Ruby",
+          "Class": "lang-pkgs",
+          "Type": "gemspec",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2023-28755",
+              "PkgName": "uri",
+              "PkgPath": "usr/local/lib/ruby/gems/2.7.0/specifications/default/uri-0.10.0.gemspec",
+              "InstalledVersion": "0.10.0",
+              "FixedVersion": "~\u003e 0.10.0.1, ~\u003e 0.10.2, ~\u003e 0.11.1, \u003e= 0.12.1",
+              "Status": "fixed",
+              "Layer": {
+                "Digest": "sha256:026a6f0bbb704596202b0d24ad1fc1d0d7349cc72e4c89b6438a7aec82b1523c",
+                "DiffID": "sha256:3ef556e0d9e2bd857ebdd209ef980f7b78c351f3180ad4359ff98bf1909a6046"
+              },
+              "SeveritySource": "ruby-advisory-db",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-28755",
+              "DataSource": {
+                "ID": "ruby-advisory-db",
+                "Name": "Ruby Advisory Database",
+                "URL": "https://github.com/rubysec/ruby-advisory-db"
+              },
+              "Title": "ReDoS vulnerability in URI",
+              "Description": "A ReDoS issue was discovered in the URI component through 0.12.0 in Ruby through 3.2.1. The URI parser mishandles invalid URLs that have specific characters. It causes an increase in execution time for parsing strings to URI objects. The fixed versions are 0.12.1, 0.11.1, 0.10.2 and 0.10.0.1.",
+              "Severity": "HIGH",
+              "CweIDs": [
+                "CWE-1333"
+              ],
+              "CVSS": {
+                "ghsa": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "V3Score": 7.5
+                },
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                  "V3Score": 5.3
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                  "V3Score": 5.3
+                }
+              },
+              "References": [
+                "https://access.redhat.com/errata/RHSA-2023:3821",
+                "https://access.redhat.com/security/cve/CVE-2023-28755",
+                "https://bugzilla.redhat.com/2149706",
+                "https://bugzilla.redhat.com/2184059",
+                "https://bugzilla.redhat.com/2184061",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-28755",
+                "https://errata.almalinux.org/8/ALSA-2023-3821.html",
+                "https://github.com/advisories/GHSA-hv5j-3h9f-99c2",
+                "https://github.com/ruby/ruby/commit/8ce4ab146498879b65e22f1be951b25eebb79300",
+                "https://github.com/ruby/uri/releases/",
+                "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/uri/CVE-2023-28755.yml",
+                "https://linux.oracle.com/cve/CVE-2023-28755.html",
+                "https://linux.oracle.com/errata/ELSA-2023-3821.html",
+                "https://lists.debian.org/debian-lts-announce/2023/04/msg00033.html",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FFZANOQA4RYX7XCB42OO3P24DQKWHEKA/",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/G76GZG3RAGYF4P75YY7J7TGYAU7Z5E2T/",
+                "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WMIOPLBAAM3FEQNAXA2L7BDKOGSVUT5Z/",
+                "https://nvd.nist.gov/vuln/detail/CVE-2023-28755",
+                "https://security.netapp.com/advisory/ntap-20230526-0003/",
+                "https://ubuntu.com/security/notices/USN-6055-1",
+                "https://ubuntu.com/security/notices/USN-6055-2",
+                "https://ubuntu.com/security/notices/USN-6087-1",
+                "https://ubuntu.com/security/notices/USN-6181-1",
+                "https://ubuntu.com/security/notices/USN-6219-1",
+                "https://www.cve.org/CVERecord?id=CVE-2023-28755",
+                "https://www.ruby-lang.org/en/downloads/releases/",
+                "https://www.ruby-lang.org/en/news/2022/12/25/ruby-3-2-0-released/",
+                "https://www.ruby-lang.org/en/news/2023/03/28/redos-in-uri-cve-2023-28755/"
+              ],
+              "PublishedDate": "2023-03-31T04:15:00Z",
+              "LastModifiedDate": "2023-05-30T17:17:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Kind": "",
+      "Name": ""
+    }
+  ]
+}
