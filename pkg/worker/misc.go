@@ -42,6 +42,8 @@ var clusterIssueTypeMeta = metav1.TypeMeta{
 	APIVersion: v1alpha1.SchemeGroupVersion.String(),
 }
 
+var createOpts = metav1.CreateOptions{}
+
 func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader, client *zora.Clientset) error {
 	log := logr.FromContextOrDiscard(ctx)
 	issues, err := parseMiscResults(ctx, cfg, results)
@@ -49,7 +51,7 @@ func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader,
 		return err
 	}
 	for _, issue := range issues {
-		issue, err := client.ZoraV1alpha1().ClusterIssues(cfg.Namespace).Create(ctx, &issue, metav1.CreateOptions{})
+		issue, err := client.ZoraV1alpha1().ClusterIssues(cfg.Namespace).Create(ctx, &issue, createOpts)
 		if err != nil {
 			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
 		}
