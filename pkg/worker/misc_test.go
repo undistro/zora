@@ -42,12 +42,12 @@ func TestParseMiscResults(t *testing.T) {
 	}{
 		{
 			name:    "invalid plugin",
-			args:    args{cfg: &config{PluginName: "foo"}},
+			args:    args{cfg: &config{PluginName: "trivy"}}, // trivy is not a misconfiguration plugin
 			want:    nil,
 			wantErr: true,
 		},
 		{
-			name: "reader of a directory",
+			name: "directory reader",
 			args: args{
 				cfg:      &config{PluginName: "marvin"},
 				filename: t.TempDir(),
@@ -344,7 +344,7 @@ func TestParseMiscResults(t *testing.T) {
 			sortClusterIssues(got)
 			sortClusterIssues(tt.want)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseMiscResults() got unexpect result, diff = %v", cmp.Diff(got, tt.want))
+				t.Errorf("parseMiscResults() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
 		})
 	}

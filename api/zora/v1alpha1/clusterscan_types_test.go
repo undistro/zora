@@ -440,7 +440,7 @@ func TestSyncStatus(t *testing.T) {
 			css.Plugins = tt.plugins
 			css.SyncStatus()
 			if !reflect.DeepEqual(css, tt.want) {
-				t.Errorf("SyncStatus() = %s", cmp.Diff(css, tt.want))
+				t.Errorf("SyncStatus() mismatch (-want +got):\n%s", cmp.Diff(tt.want, css))
 			}
 		})
 	}

@@ -129,7 +129,7 @@ func TestParse(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Parse() = %s", cmp.Diff(got, tt.want))
+				t.Errorf("Parse() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
 		})
 	}
