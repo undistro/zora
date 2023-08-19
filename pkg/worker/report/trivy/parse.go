@@ -17,7 +17,6 @@ package trivy
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -45,7 +44,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 			continue
 		}
 		if len(f.Error) > 0 {
-			log.Error(errors.New(f.Error), fmt.Sprintf("trivy error for %s %s/%s", f.Kind, f.Namespace, f.Name))
+			log.Info(fmt.Sprintf("trivy error for %q \"%s/%s\": %s", f.Kind, f.Namespace, f.Name, f.Error))
 			continue
 		}
 		img := getImage(f)
