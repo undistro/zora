@@ -31,6 +31,21 @@ import (
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
+var labels = map[string]string{
+	v1alpha1.LabelScanID:  "50c8957e-c9e1-493a-9fa4-d0786deea017",
+	v1alpha1.LabelCluster: "cluster",
+	v1alpha1.LabelPlugin:  "trivy",
+}
+
+var owners = []metav1.OwnerReference{
+	{
+		APIVersion: batchv1.SchemeGroupVersion.String(),
+		Kind:       "Job",
+		Name:       "cluster-trivy-28140229",
+		UID:        types.UID("50c8957e-c9e1-493a-9fa4-d0786deea017"),
+	},
+}
+
 func TestParseVulnResults(t *testing.T) {
 	type args struct {
 		cfg      *config
@@ -75,33 +90,17 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "cluster-registry-k8s-io-kube-apiserver-v1-25-3-h9kcn",
-						Namespace: "ns",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								APIVersion: batchv1.SchemeGroupVersion.String(),
-								Kind:       "Job",
-								Name:       "cluster-trivy-28140229",
-								UID:        types.UID("50c8957e-c9e1-493a-9fa4-d0786deea017"),
-							},
-						},
-						Labels: map[string]string{
-							v1alpha1.LabelScanID:  "50c8957e-c9e1-493a-9fa4-d0786deea017",
-							v1alpha1.LabelCluster: "cluster",
-							v1alpha1.LabelPlugin:  "trivy",
-						},
+						Name:            "cluster-registry-k8s-io-kube-apiserver-v1-25-3-h9kcn",
+						Namespace:       "ns",
+						OwnerReferences: owners,
+						Labels:          labels,
 					},
 					Spec: v1alpha1.VulnerabilityReportSpec{
-						Cluster: "cluster",
-						Image:   "registry.k8s.io/kube-apiserver:v1.25.3",
-						Resources: map[string][]string{
-							"Pod": {"kube-system/kube-apiserver-kind-control-plane"},
-						},
+						Cluster:        "cluster",
+						Image:          "registry.k8s.io/kube-apiserver:v1.25.3",
+						Resources:      map[string][]string{"Pod": {"kube-system/kube-apiserver-kind-control-plane"}},
 						TotalResources: 1,
-						Summary: v1alpha1.VulnerabilitySummary{
-							Total: 1,
-							High:  1,
-						},
+						Summary:        v1alpha1.VulnerabilitySummary{Total: 1, High: 1},
 						Vulnerabilities: []v1alpha1.Vulnerability{
 							{
 								ID:          "CVE-2022-41723",
@@ -121,37 +120,17 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "cluster-quay-io-kiwigrid-k8s-sidecar-1-22-0-h9kcn",
-						Namespace: "ns",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								APIVersion: batchv1.SchemeGroupVersion.String(),
-								Kind:       "Job",
-								Name:       "cluster-trivy-28140229",
-								UID:        types.UID("50c8957e-c9e1-493a-9fa4-d0786deea017"),
-							},
-						},
-						Labels: map[string]string{
-							v1alpha1.LabelScanID:  "50c8957e-c9e1-493a-9fa4-d0786deea017",
-							v1alpha1.LabelCluster: "cluster",
-							v1alpha1.LabelPlugin:  "trivy",
-						},
+						Name:            "cluster-quay-io-kiwigrid-k8s-sidecar-1-22-0-h9kcn",
+						Namespace:       "ns",
+						OwnerReferences: owners,
+						Labels:          labels,
 					},
 					Spec: v1alpha1.VulnerabilityReportSpec{
-						Cluster: "cluster",
-						Image:   "quay.io/kiwigrid/k8s-sidecar:1.22.0",
-						Resources: map[string][]string{
-							"Deployment": {
-								"apps/app1",
-								"apps/app2",
-							},
-						},
+						Cluster:        "cluster",
+						Image:          "quay.io/kiwigrid/k8s-sidecar:1.22.0",
+						Resources:      map[string][]string{"Deployment": {"apps/app1", "apps/app2"}},
 						TotalResources: 2,
-						Summary: v1alpha1.VulnerabilitySummary{
-							Total:    3,
-							Critical: 1,
-							High:     2,
-						},
+						Summary:        v1alpha1.VulnerabilitySummary{Total: 3, Critical: 1, High: 2},
 						Vulnerabilities: []v1alpha1.Vulnerability{
 							{
 								ID:          "CVE-2022-4450",
@@ -195,35 +174,17 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "cluster-docker-io-istio-examples-bookinfo-ratings-v1-1-17-0-h9kcn",
-						Namespace: "ns",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								APIVersion: batchv1.SchemeGroupVersion.String(),
-								Kind:       "Job",
-								Name:       "cluster-trivy-28140229",
-								UID:        types.UID("50c8957e-c9e1-493a-9fa4-d0786deea017"),
-							},
-						},
-						Labels: map[string]string{
-							v1alpha1.LabelScanID:  "50c8957e-c9e1-493a-9fa4-d0786deea017",
-							v1alpha1.LabelCluster: "cluster",
-							v1alpha1.LabelPlugin:  "trivy",
-						},
+						Name:            "cluster-docker-io-istio-examples-bookinfo-ratings-v1-1-17-0-h9kcn",
+						Namespace:       "ns",
+						OwnerReferences: owners,
+						Labels:          labels,
 					},
 					Spec: v1alpha1.VulnerabilityReportSpec{
-						Cluster: "cluster",
-						Image:   "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0",
-						Resources: map[string][]string{
-							"Deployment": {"apps/app1"},
-						},
+						Cluster:        "cluster",
+						Image:          "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0",
+						Resources:      map[string][]string{"Deployment": {"apps/app1"}},
 						TotalResources: 1,
-						Summary: v1alpha1.VulnerabilitySummary{
-							Total:   3,
-							High:    1,
-							Medium:  1,
-							Unknown: 1,
-						},
+						Summary:        v1alpha1.VulnerabilitySummary{Total: 3, High: 1, Medium: 1, Unknown: 1},
 						Vulnerabilities: []v1alpha1.Vulnerability{
 							{
 								ID:          "DLA-3051-1",
@@ -266,34 +227,17 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "cluster-docker-io-istio-examples-bookinfo-details-v1-1-17-0-h9kcn",
-						Namespace: "ns",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								APIVersion: batchv1.SchemeGroupVersion.String(),
-								Kind:       "Job",
-								Name:       "cluster-trivy-28140229",
-								UID:        types.UID("50c8957e-c9e1-493a-9fa4-d0786deea017"),
-							},
-						},
-						Labels: map[string]string{
-							v1alpha1.LabelScanID:  "50c8957e-c9e1-493a-9fa4-d0786deea017",
-							v1alpha1.LabelCluster: "cluster",
-							v1alpha1.LabelPlugin:  "trivy",
-						},
+						Name:            "cluster-docker-io-istio-examples-bookinfo-details-v1-1-17-0-h9kcn",
+						Namespace:       "ns",
+						OwnerReferences: owners,
+						Labels:          labels,
 					},
 					Spec: v1alpha1.VulnerabilityReportSpec{
-						Cluster: "cluster",
-						Image:   "docker.io/istio/examples-bookinfo-details-v1:1.17.0",
-						Resources: map[string][]string{
-							"Deployment": {"apps/app2"},
-						},
+						Cluster:        "cluster",
+						Image:          "docker.io/istio/examples-bookinfo-details-v1:1.17.0",
+						Resources:      map[string][]string{"Deployment": {"apps/app2"}},
 						TotalResources: 1,
-						Summary: v1alpha1.VulnerabilitySummary{
-							Total: 2,
-							High:  1,
-							Low:   1,
-						},
+						Summary:        v1alpha1.VulnerabilitySummary{Total: 2, High: 1, Low: 1},
 						Vulnerabilities: []v1alpha1.Vulnerability{
 							{
 								ID:          "CVE-2016-2781",
@@ -320,6 +264,36 @@ func TestParseVulnResults(t *testing.T) {
 								Score:       "5.3",
 							},
 						},
+					},
+				},
+				{
+					TypeMeta: vulnReportTypeMeta,
+					ObjectMeta: metav1.ObjectMeta{
+						Name:            "cluster-nginx-sha256-af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305-h9kcn",
+						Namespace:       "ns",
+						OwnerReferences: owners,
+						Labels:          labels,
+					},
+					Spec: v1alpha1.VulnerabilityReportSpec{
+						Cluster:        "cluster",
+						Image:          "nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305",
+						TotalResources: 1,
+						Resources:      map[string][]string{"Deployment": {"default/nginx"}},
+						Vulnerabilities: []v1alpha1.Vulnerability{
+							{
+								ID:          "CVE-2023-3446",
+								Severity:    "MEDIUM",
+								Description: "Excessive time spent checking DH keys and parameters",
+								Package:     "openssl",
+								Version:     "1.1.1n-0+deb11u4",
+								FixVersion:  "",
+								URL:         "https://avd.aquasec.com/nvd/cve-2023-3446",
+								Status:      "fix_deferred",
+								Type:        "debian",
+								Score:       "5.3",
+							},
+						},
+						Summary: v1alpha1.VulnerabilitySummary{Total: 1, Medium: 1},
 					},
 				},
 			},

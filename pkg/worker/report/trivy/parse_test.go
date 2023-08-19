@@ -40,10 +40,8 @@ func TestParse(t *testing.T) {
 			wantErr:  false,
 			want: []v1alpha1.VulnerabilityReportSpec{
 				{
-					Image: "registry.k8s.io/kube-apiserver:v1.25.3",
-					Resources: map[string][]string{
-						"Pod": {"kube-system/kube-apiserver-kind-control-plane"},
-					},
+					Image:          "registry.k8s.io/kube-apiserver:v1.25.3",
+					Resources:      map[string][]string{"Pod": {"kube-system/kube-apiserver-kind-control-plane"}},
 					TotalResources: 1,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
@@ -59,19 +57,11 @@ func TestParse(t *testing.T) {
 							Score:       "7.5",
 						},
 					},
-					Summary: v1alpha1.VulnerabilitySummary{
-						Total: 1,
-						High:  1,
-					},
+					Summary: v1alpha1.VulnerabilitySummary{Total: 1, High: 1},
 				},
 				{
-					Image: "quay.io/kiwigrid/k8s-sidecar:1.22.0",
-					Resources: map[string][]string{
-						"Deployment": {
-							"apps/app1",
-							"apps/app2",
-						},
-					},
+					Image:          "quay.io/kiwigrid/k8s-sidecar:1.22.0",
+					Resources:      map[string][]string{"Deployment": {"apps/app1", "apps/app2"}},
 					TotalResources: 2,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
@@ -111,17 +101,11 @@ func TestParse(t *testing.T) {
 							Score:       "9.8",
 						},
 					},
-					Summary: v1alpha1.VulnerabilitySummary{
-						Total:    3,
-						Critical: 1,
-						High:     2,
-					},
+					Summary: v1alpha1.VulnerabilitySummary{Total: 3, Critical: 1, High: 2},
 				},
 				{
-					Image: "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0",
-					Resources: map[string][]string{
-						"Deployment": {"apps/app1"},
-					},
+					Image:          "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0",
+					Resources:      map[string][]string{"Deployment": {"apps/app1"}},
 					TotalResources: 1,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
@@ -160,18 +144,11 @@ func TestParse(t *testing.T) {
 							Score:       "5.3",
 						},
 					},
-					Summary: v1alpha1.VulnerabilitySummary{
-						Total:   3,
-						High:    1,
-						Medium:  1,
-						Unknown: 1,
-					},
+					Summary: v1alpha1.VulnerabilitySummary{Total: 3, High: 1, Medium: 1, Unknown: 1},
 				},
 				{
-					Image: "docker.io/istio/examples-bookinfo-details-v1:1.17.0",
-					Resources: map[string][]string{
-						"Deployment": {"apps/app2"},
-					},
+					Image:          "docker.io/istio/examples-bookinfo-details-v1:1.17.0",
+					Resources:      map[string][]string{"Deployment": {"apps/app2"}},
 					TotalResources: 1,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
@@ -199,11 +176,27 @@ func TestParse(t *testing.T) {
 							Score:       "5.3",
 						},
 					},
-					Summary: v1alpha1.VulnerabilitySummary{
-						Total: 2,
-						High:  1,
-						Low:   1,
+					Summary: v1alpha1.VulnerabilitySummary{Total: 2, High: 1, Low: 1},
+				},
+				{
+					Image:          "nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305",
+					TotalResources: 1,
+					Resources:      map[string][]string{"Deployment": {"default/nginx"}},
+					Vulnerabilities: []v1alpha1.Vulnerability{
+						{
+							ID:          "CVE-2023-3446",
+							Severity:    "MEDIUM",
+							Description: "Excessive time spent checking DH keys and parameters",
+							Package:     "openssl",
+							Version:     "1.1.1n-0+deb11u4",
+							FixVersion:  "",
+							URL:         "https://avd.aquasec.com/nvd/cve-2023-3446",
+							Status:      "fix_deferred",
+							Type:        "debian",
+							Score:       "5.3",
+						},
 					},
+					Summary: v1alpha1.VulnerabilitySummary{Total: 1, Medium: 1},
 				},
 			},
 		},

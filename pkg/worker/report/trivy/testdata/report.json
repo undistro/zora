@@ -911,6 +911,72 @@
     {
       "Kind": "",
       "Name": ""
+    },
+    {
+      "Namespace": "default",
+      "Kind": "Deployment",
+      "Name": "nginx",
+      "Results": [
+        {
+          "Target": "nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305 (debian 11.7)",
+          "Class": "os-pkgs",
+          "Type": "debian",
+          "Vulnerabilities": [
+            {
+              "VulnerabilityID": "CVE-2023-3446",
+              "PkgID": "openssl@1.1.1n-0+deb11u4",
+              "PkgName": "openssl",
+              "InstalledVersion": "1.1.1n-0+deb11u4",
+              "Status": "fix_deferred",
+              "Layer": {
+                "DiffID": "sha256:4b8862fe7056d8a3c2c0910eb38ebb8fc08785eaa1f9f53b2043bf7ca8adbafb"
+              },
+              "SeveritySource": "nvd",
+              "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-3446",
+              "DataSource": {
+                "ID": "debian",
+                "Name": "Debian Security Tracker",
+                "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+              },
+              "Title": "Excessive time spent checking DH keys and parameters",
+              "Description": "Issue summary: Checking excessively long DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_check(), DH_check_ex()\nor EVP_PKEY_param_check() to check a DH key or DH parameters may experience long\ndelays. Where the key or parameters that are being checked have been obtained\nfrom an untrusted source this may lead to a Denial of Service.\n\nThe function DH_check() performs various checks on DH parameters. One of those\nchecks confirms that the modulus ('p' parameter) is not too large. Trying to use\na very large modulus is slow and OpenSSL will not normally use a modulus which\nis over 10,000 bits in length.\n\nHowever the DH_check() function checks numerous aspects of the key or parameters\nthat have been supplied. Some of those checks use the supplied modulus value\neven if it has already been found to be too large.\n\nAn application that calls DH_check() and supplies a key or parameters obtained\nfrom an untrusted source could be vulernable to a Denial of Service attack.\n\nThe function DH_check() is itself called by a number of other OpenSSL functions.\nAn application calling any of those other functions may similarly be affected.\nThe other functions affected by this are DH_check_ex() and\nEVP_PKEY_param_check().\n\nAlso vulnerable are the OpenSSL dhparam and pkeyparam command line applications\nwhen using the '-check' option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue.",
+              "Severity": "MEDIUM",
+              "CweIDs": [
+                "CWE-1333"
+              ],
+              "CVSS": {
+                "nvd": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                  "V3Score": 5.3
+                },
+                "redhat": {
+                  "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                  "V3Score": 5.3
+                }
+              },
+              "References": [
+                "http://www.openwall.com/lists/oss-security/2023/07/19/4",
+                "http://www.openwall.com/lists/oss-security/2023/07/19/5",
+                "http://www.openwall.com/lists/oss-security/2023/07/19/6",
+                "http://www.openwall.com/lists/oss-security/2023/07/31/1",
+                "https://access.redhat.com/security/cve/CVE-2023-3446",
+                "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-3446",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=1fa20cf2f506113c761777127a38bce5068740eb",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8780a896543a654e757db1b9396383f9d8095528",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9a0a4d3c1e7138915563c0df4fe6a3f9377b839c",
+                "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=fc9867c1e03c22ebf56943be205202e576aabf23",
+                "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html",
+                "https://nvd.nist.gov/vuln/detail/CVE-2023-3446",
+                "https://security.netapp.com/advisory/ntap-20230803-0011/",
+                "https://www.cve.org/CVERecord?id=CVE-2023-3446",
+                "https://www.openssl.org/news/secadv/20230719.txt"
+              ],
+              "PublishedDate": "2023-07-19T12:15:00Z",
+              "LastModifiedDate": "2023-08-16T08:15:00Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
