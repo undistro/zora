@@ -90,7 +90,7 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:            "cluster-registry-k8s-io-kube-apiserver-v1-25-3-h9kcn",
+						Name:            "cluster-registryk8siokubeapiserverv1253-h9kcn",
 						Namespace:       "ns",
 						OwnerReferences: owners,
 						Labels:          labels,
@@ -120,7 +120,7 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:            "cluster-quay-io-kiwigrid-k8s-sidecar-1-22-0-h9kcn",
+						Name:            "cluster-quayiokiwigridk8ssidecar1220-h9kcn",
 						Namespace:       "ns",
 						OwnerReferences: owners,
 						Labels:          labels,
@@ -174,7 +174,7 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:            "cluster-docker-io-istio-examples-bookinfo-ratings-v1-1-17-0-h9kcn",
+						Name:            "cluster-dockerioistioexamplesbookinforatingsv11170-h9kcn",
 						Namespace:       "ns",
 						OwnerReferences: owners,
 						Labels:          labels,
@@ -227,7 +227,7 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:            "cluster-docker-io-istio-examples-bookinfo-details-v1-1-17-0-h9kcn",
+						Name:            "cluster-dockerioistioexamplesbookinfodetailsv11170-h9kcn",
 						Namespace:       "ns",
 						OwnerReferences: owners,
 						Labels:          labels,
@@ -269,7 +269,7 @@ func TestParseVulnResults(t *testing.T) {
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
-						Name:            "cluster-nginx-sha256-af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305-h9kcn",
+						Name:            "cluster-nginxsha256af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305-h9kcn",
 						Namespace:       "ns",
 						OwnerReferences: owners,
 						Labels:          labels,

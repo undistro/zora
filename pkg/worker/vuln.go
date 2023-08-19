@@ -93,5 +93,5 @@ func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner met
 }
 
 func cleanString(s string) string {
-	return nonAlphanumericRegex.ReplaceAllString(s, "-")
+	return nonAlphanumericRegex.ReplaceAllString(s, "")
 }
