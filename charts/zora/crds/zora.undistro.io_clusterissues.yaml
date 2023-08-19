@@ -27,7 +27,11 @@ spec:
     listKind: ClusterIssueList
     plural: clusterissues
     shortNames:
-    - ci
+    - issue
+    - issues
+    - misc
+    - miscs
+    - misconfigurations
     singular: clusterissue
   scope: Namespaced
   versions:
