@@ -13,7 +13,8 @@ spec:
     listKind: ClusterScanList
     plural: clusterscans
     shortNames:
-    - cscan
+    - scan
+    - scans
     singular: clusterscan
   scope: Namespaced
   versions:
@@ -45,12 +46,13 @@ spec:
     - jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
       type: string
-    - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
-      name: SaaS
-      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
+    - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
+      name: SaaS
+      priority: 1
+      type: string
     - jsonPath: .status.nextScheduleTime
       name: Next Schedule
       priority: 1

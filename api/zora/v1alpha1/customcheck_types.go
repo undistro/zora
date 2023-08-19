@@ -58,7 +58,7 @@ type CustomCheckStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:resource:shortName="checks"
+//+kubebuilder:resource:shortName={check,checks}
 //+kubebuilder:printcolumn:name="Message",type="string",JSONPath=".spec.message",priority=0
 //+kubebuilder:printcolumn:name="Severity",type="string",JSONPath=".spec.severity",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
