@@ -60,7 +60,8 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 			if _, ok := vulnsByImage[img]; !ok {
 				vulnsByImage[img] = &v1alpha1.VulnerabilityReportSpec{Image: img}
 			}
-			addResource(vulnsByImage[img], f.Kind, f.Namespace, f.Name)
+			spec := vulnsByImage[img]
+			addResource(spec, f.Kind, f.Namespace, f.Name)
 
 			k := fmt.Sprintf("%s;%s", img, result.Class)
 			if _, ok := parsed[k]; ok {
@@ -69,18 +70,19 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 			parsed[k] = true
 
 			for _, vuln := range result.Vulnerabilities {
-				vulnsByImage[img].Vulnerabilities = append(vulnsByImage[img].Vulnerabilities, newVulnerability(vuln))
+				spec.Vulnerabilities = append(spec.Vulnerabilities, newVulnerability(vuln, result.Type))
 			}
 		}
 	}
 	specs := make([]v1alpha1.VulnerabilityReportSpec, 0, len(vulnsByImage))
 	for _, spec := range vulnsByImage {
+		summarize(spec)
 		specs = append(specs, *spec)
 	}
 	return specs, nil
 }
 
-func newVulnerability(vuln trivytypes.DetectedVulnerability) v1alpha1.Vulnerability {
+func newVulnerability(vuln trivytypes.DetectedVulnerability, resultType string) v1alpha1.Vulnerability {
 	return v1alpha1.Vulnerability{
 		ID:          vuln.VulnerabilityID,
 		Severity:    vuln.Severity,
@@ -90,7 +92,26 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability) v1alpha1.Vulnerabil
 		FixVersion:  vuln.FixedVersion,
 		URL:         vuln.PrimaryURL,
 		Status:      vuln.Status.String(),
+		Score:       getScore(vuln),
+		Type:        resultType,
 	}
+}
+
+func getScore(vuln trivytypes.DetectedVulnerability) string {
+	var vendor *float64
+	for id, cvss := range vuln.CVSS {
+		if cvss.V3Score == 0.0 {
+			continue
+		}
+		if string(id) == "nvd" {
+			return fmt.Sprintf("%v", cvss.V3Score)
+		}
+		vendor = &cvss.V3Score
+	}
+	if vendor == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v", *vendor)
 }
 
 func getImage(finding trivyreport.Resource) string {
@@ -102,20 +123,41 @@ func getImage(finding trivyreport.Resource) string {
 	return ""
 }
 
-func addResource(in *v1alpha1.VulnerabilityReportSpec, kind, namespace, name string) {
-	if in.Resources == nil {
-		in.Resources = map[string][]string{}
+func addResource(spec *v1alpha1.VulnerabilityReportSpec, kind, namespace, name string) {
+	if spec.Resources == nil {
+		spec.Resources = map[string][]string{}
 	}
 	id := name
 	if namespace != "" {
 		id = fmt.Sprintf("%s/%s", namespace, name)
 	}
-	if res, ok := in.Resources[kind]; ok {
+	if res, ok := spec.Resources[kind]; ok {
 		for _, re := range res {
 			if re == id {
 				return
 			}
 		}
 	}
-	in.Resources[kind] = append(in.Resources[kind], id)
+	spec.Resources[kind] = append(spec.Resources[kind], id)
+	spec.TotalResources++
+}
+
+func summarize(spec *v1alpha1.VulnerabilityReportSpec) {
+	s := &v1alpha1.VulnerabilitySummary{}
+	for _, v := range spec.Vulnerabilities {
+		s.Total++
+		switch v.Severity {
+		case "CRITICAL":
+			s.Critical++
+		case "HIGH":
+			s.High++
+		case "MEDIUM":
+			s.Medium++
+		case "LOW":
+			s.Low++
+		default:
+			s.Unknown++
+		}
+	}
+	spec.Summary = *s
 }

@@ -44,6 +44,7 @@ func TestParse(t *testing.T) {
 					Resources: map[string][]string{
 						"Pod": {"kube-system/kube-apiserver-kind-control-plane"},
 					},
+					TotalResources: 1,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
 							ID:          "CVE-2022-41723",
@@ -54,7 +55,13 @@ func TestParse(t *testing.T) {
 							FixVersion:  "0.7.0",
 							URL:         "https://avd.aquasec.com/nvd/cve-2022-41723",
 							Status:      "fixed",
+							Type:        "gobinary",
+							Score:       "7.5",
 						},
+					},
+					Summary: v1alpha1.VulnerabilitySummary{
+						Total: 1,
+						High:  1,
 					},
 				},
 				{
@@ -65,6 +72,7 @@ func TestParse(t *testing.T) {
 							"apps/app2",
 						},
 					},
+					TotalResources: 2,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
 							ID:          "CVE-2022-4450",
@@ -75,6 +83,8 @@ func TestParse(t *testing.T) {
 							FixVersion:  "1.1.1t-r0",
 							URL:         "https://avd.aquasec.com/nvd/cve-2022-4450",
 							Status:      "fixed",
+							Type:        "alpine",
+							Score:       "7.5",
 						},
 						{
 							ID:          "CVE-2022-4450",
@@ -85,6 +95,8 @@ func TestParse(t *testing.T) {
 							FixVersion:  "1.1.1t-r0",
 							URL:         "https://avd.aquasec.com/nvd/cve-2022-4450",
 							Status:      "fixed",
+							Type:        "alpine",
+							Score:       "7.5",
 						},
 						{
 							ID:          "CVE-2023-37920",
@@ -95,7 +107,14 @@ func TestParse(t *testing.T) {
 							FixVersion:  "2023.7.22",
 							URL:         "https://avd.aquasec.com/nvd/cve-2023-37920",
 							Status:      "fixed",
+							Type:        "python-pkg",
+							Score:       "9.8",
 						},
+					},
+					Summary: v1alpha1.VulnerabilitySummary{
+						Total:    3,
+						Critical: 1,
+						High:     2,
 					},
 				},
 				{
@@ -103,6 +122,7 @@ func TestParse(t *testing.T) {
 					Resources: map[string][]string{
 						"Deployment": {"apps/app1"},
 					},
+					TotalResources: 1,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
 							ID:          "DLA-3051-1",
@@ -113,6 +133,7 @@ func TestParse(t *testing.T) {
 							FixVersion:  "2021a-0+deb9u4",
 							URL:         "",
 							Status:      "fixed",
+							Type:        "debian",
 						},
 						{
 							ID:          "CVE-2016-2779",
@@ -123,6 +144,8 @@ func TestParse(t *testing.T) {
 							FixVersion:  "",
 							URL:         "https://avd.aquasec.com/nvd/cve-2016-2779",
 							Status:      "affected",
+							Type:        "debian",
+							Score:       "7.8",
 						},
 						{
 							ID:          "GHSA-jmqm-f2gx-4fjv",
@@ -133,7 +156,15 @@ func TestParse(t *testing.T) {
 							FixVersion:  "8.1.1, 4.0.5",
 							URL:         "https://github.com/advisories/GHSA-jmqm-f2gx-4fjv",
 							Status:      "fixed",
+							Type:        "node-pkg",
+							Score:       "5.3",
 						},
+					},
+					Summary: v1alpha1.VulnerabilitySummary{
+						Total:   3,
+						High:    1,
+						Medium:  1,
+						Unknown: 1,
 					},
 				},
 				{
@@ -141,6 +172,7 @@ func TestParse(t *testing.T) {
 					Resources: map[string][]string{
 						"Deployment": {"apps/app2"},
 					},
+					TotalResources: 1,
 					Vulnerabilities: []v1alpha1.Vulnerability{
 						{
 							ID:          "CVE-2016-2781",
@@ -151,6 +183,8 @@ func TestParse(t *testing.T) {
 							FixVersion:  "",
 							URL:         "https://avd.aquasec.com/nvd/cve-2016-2781",
 							Status:      "will_not_fix",
+							Type:        "debian",
+							Score:       "6.5",
 						},
 						{
 							ID:          "CVE-2023-28755",
@@ -161,7 +195,14 @@ func TestParse(t *testing.T) {
 							FixVersion:  "~\u003e 0.10.0.1, ~\u003e 0.10.2, ~\u003e 0.11.1, \u003e= 0.12.1",
 							URL:         "https://avd.aquasec.com/nvd/cve-2023-28755",
 							Status:      "fixed",
+							Type:        "gemspec",
+							Score:       "5.3",
 						},
+					},
+					Summary: v1alpha1.VulnerabilitySummary{
+						Total: 2,
+						High:  1,
+						Low:   1,
 					},
 				},
 			},
