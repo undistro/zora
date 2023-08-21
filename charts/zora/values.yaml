@@ -34,7 +34,7 @@ saas:
       # -- SaaS hooks image repository
       repository: curlimages/curl
       # -- SaaS hooks image tag
-      tag: '7.88.1'
+      tag: '8.2.1'
     # -- SaaS install hook URL template
     installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
 
