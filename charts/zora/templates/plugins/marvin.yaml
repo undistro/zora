@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{ if .Values.scan.plugins.marvin.enabled -}}
 apiVersion: zora.undistro.io/v1alpha1
 kind: Plugin
 metadata:
@@ -50,4 +49,3 @@ spec:
       end=$(date +%s)
       echo "Scan has finished in $(($end-$start)) seconds with exit code $exitcode"
       exit $exitcode
-{{- end }}

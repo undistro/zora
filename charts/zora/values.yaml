@@ -153,8 +153,6 @@ scan:
     - marvin
   plugins:
     marvin:
-      # -- Specifies whether the marvin plugin should be created
-      enabled: true
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
       resources:
         requests:
@@ -170,8 +168,6 @@ scan:
         tag: v0.2.0
 
     popeye:
-      # -- Specifies whether the popeye plugin should be created
-      enabled: true
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
       # 2. kubernetes system reserved RBAC (prefixed with `system:`);
