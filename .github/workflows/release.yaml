@@ -60,7 +60,7 @@ jobs:
       - name: checkout charts
         uses: actions/checkout@v3
         with:
-          repository: undistro/charts.undistro.io
+          repository: undistro/helm-charts
           ref: main
           fetch-depth: 1
           token: ${{ secrets.BOT_TOKEN }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
