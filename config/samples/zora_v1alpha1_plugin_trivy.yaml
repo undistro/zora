@@ -17,7 +17,7 @@ spec:
     - /bin/sh
     - -c
     - |
-      time trivy k8s --debug -A --scanners=vuln --report=summary -f=json cluster -o $(DONE_DIR)/results.json
+      time trivy k8s --debug --no-progress -A --scanners=vuln --report=summary -f=json cluster -o $(DONE_DIR)/results.json
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error
