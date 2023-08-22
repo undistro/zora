@@ -55,7 +55,7 @@ func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader,
 		if err != nil {
 			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
 		}
-		log.Info(fmt.Sprintf("cluster issue %q successfully created", issue.Name), "resourceVersion", issue.ResourceVersion)
+		log.Info(fmt.Sprintf("ClusterIssue %q successfully created", issue.Name), "resourceVersion", issue.ResourceVersion)
 	}
 	return nil
 }

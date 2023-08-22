@@ -52,7 +52,7 @@ func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, cl
 		if err != nil {
 			return fmt.Errorf("failed to create VulnerabilityReport %q: %v", vuln.Name, err)
 		}
-		log.Info(fmt.Sprintf("vulnerability report %q successfully created", vuln.Name), "resourceVersion", vuln.ResourceVersion)
+		log.Info(fmt.Sprintf("VulnerabilityReport %q successfully created", vuln.Name), "resourceVersion", vuln.ResourceVersion)
 	}
 	return nil
 }
