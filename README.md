@@ -11,6 +11,7 @@
 [![license](https://img.shields.io/github/license/undistro/zora)](https://github.com/undistro/zora/blob/main/LICENSE)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/undistro/zora?display_name=tag&sort=semver&color=blue)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fundistro%2Fzora.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fundistro%2Fzora?ref=badge_shield)
+[![slack](https://img.shields.io/badge/Slack-Join-4a154b?logo=slack)](https://join.slack.com/t/undistrocommunity/shared_invite/zt-21slyrao4-dTW_XtOB90QVj05txOX6rA)
 
 </div>
 
