@@ -167,6 +167,20 @@ scan:
         # -- marvin plugin image tag
         tag: v0.2.0
 
+    trivy:
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+      image:
+        # -- trivy plugin image repository
+        repository: ghcr.io/aquasecurity/trivy
+        # -- trivy plugin image tag
+        tag: 0.44.1
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
