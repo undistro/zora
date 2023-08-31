@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.7.0-rc2](https://img.shields.io/badge/Version-0.7.0--rc2-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.7.0-rc2](https://img.shields.io/badge/AppVersion-v0.7.0--rc2-informational?style=flat-square&color=3CA9DD)
+![Version: 0.7.0-rc3](https://img.shields.io/badge/Version-0.7.0--rc3-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.7.0-rc3](https://img.shields.io/badge/AppVersion-v0.7.0--rc3-informational?style=flat-square&color=3CA9DD)
 
 Zora scans multiple Kubernetes clusters and reports potential issues.
 
@@ -12,7 +12,7 @@ To install the chart with the release name `zora`:
 helm repo add undistro https://charts.undistro.io --force-update
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.7.0-rc2 \
+  --version 0.7.0-rc3 \
   --create-namespace --wait
 ```
 
@@ -55,7 +55,6 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
 | clusterName | string | `""` | Cluster name. Should be set by `kubectl config current-context`. |
-| scanSchedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format |
 | saas.workspaceID | string | `""` | Your SaaS workspace ID |
 | saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |
 | saas.hooks.image.repository | string | `"curlimages/curl"` | SaaS hooks image repository |
@@ -93,12 +92,20 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
 | operator.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
+| scan.misconfiguration.enabled | bool | `true` | Specifies whether misconfiguration scan is enabled |
+| scan.misconfiguration.schedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format for misconfiguration scan |
+| scan.misconfiguration.plugins | list | `["marvin","popeye"]` | Misconfiguration scanners plugins |
+| scan.vulnerability.enabled | bool | `true` | Specifies whether vulnerability scan is enabled |
+| scan.vulnerability.schedule | string | Cron expression for every day at the current hour and minute + 5 minutes | Cluster scan schedule in Cron format for vulnerability scan |
+| scan.vulnerability.plugins | list | `["trivy"]` | Vulnerability scanners plugins |
 | scan.worker.image.repository | string | `"ghcr.io/undistro/zora/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
-| scan.defaultPlugins | list | `["popeye","marvin"]` | Names of the default plugins |
 | scan.plugins.marvin.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container |
 | scan.plugins.marvin.image.repository | string | `"ghcr.io/undistro/marvin"` | marvin plugin image repository |
 | scan.plugins.marvin.image.tag | string | `"v0.2.0"` | marvin plugin image tag |
+| scan.plugins.trivy.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
+| scan.plugins.trivy.image.repository | string | `"ghcr.io/aquasecurity/trivy"` | trivy plugin image repository |
+| scan.plugins.trivy.image.tag | string | `"0.44.1"` | trivy plugin image tag |
 | scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml |
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
