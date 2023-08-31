@@ -11,23 +11,47 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-{{ if .Values.clusterName }}
+{{- if not (.Capabilities.APIVersions.Has "batch/v1") }}
+  {{- fail "Required API group `batch/v1` not available." }}
+{{- end }}
 apiVersion: zora.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   labels:
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "clusterName" . }}
+  name: {{ include "zora.clusterName" . }}
 spec: {}
+{{- if .Values.scan.misconfiguration.enabled }}
 ---
 apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   labels:
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "clusterName" . }}
+  name: {{ include "zora.clusterName" . }}-misc
 spec:
   clusterRef:
-    name: {{ include "clusterName" . }}
-  schedule: {{ include "scanSchedule" . | quote }}
+    name: {{ include "zora.clusterName" . }}
+  schedule: {{ include "zora.miscSchedule" . | quote }}
+  plugins:
+  {{- range .Values.scan.misconfiguration.plugins }}
+    - name: {{ . }}
+  {{- end }}
+{{- end }}
+{{- if .Values.scan.vulnerability.enabled }}
+---
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  labels:
+    {{- include "zora.labels" . | nindent 4 }}
+  name: {{ include "zora.clusterName" . }}-vuln
+spec:
+  clusterRef:
+    name: {{ include "zora.clusterName" . }}
+  schedule: {{ include "zora.vulnSchedule" . | quote }}
+  plugins:
+  {{- range .Values.scan.vulnerability.plugins }}
+    - name: {{ . }}
+  {{- end }}
 {{- end }}

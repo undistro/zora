@@ -20,10 +20,6 @@ fullnameOverride: ""
 # -- Cluster name. Should be set by `kubectl config current-context`.
 clusterName: ""
 
-# -- Cluster scan schedule in Cron format
-# @default -- Cron expression for every hour at the current minute + 5 minutes
-scanSchedule: ""
-
 saas:
   # -- Your SaaS workspace ID
   workspaceID: ""
@@ -141,16 +137,31 @@ operator:
     timeEncoding: rfc3339
 
 scan:
+  misconfiguration:
+    # -- Specifies whether misconfiguration scan is enabled
+    enabled: true
+    # -- Cluster scan schedule in Cron format for misconfiguration scan
+    # @default -- Cron expression for every hour at the current minute + 5 minutes
+    schedule: ""
+    # -- Misconfiguration scanners plugins
+    plugins:
+      - marvin
+      - popeye
+  vulnerability:
+    # -- Specifies whether vulnerability scan is enabled
+    enabled: true
+    # -- Cluster scan schedule in Cron format for vulnerability scan
+    # @default -- Cron expression for every day at the current hour and minute + 5 minutes
+    schedule: ""
+    # -- Vulnerability scanners plugins
+    plugins:
+      - trivy
   worker:
     image:
       # -- worker image repository
       repository: ghcr.io/undistro/zora/worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
-  # -- Names of the default plugins
-  defaultPlugins:
-    - popeye
-    - marvin
   plugins:
     marvin:
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
