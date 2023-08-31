@@ -33,9 +33,11 @@ spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
   schedule: {{ include "zora.miscSchedule" . | quote }}
+  {{- if .Values.scan.misconfiguration.plugins }}
   plugins:
   {{- range .Values.scan.misconfiguration.plugins }}
     - name: {{ . }}
+  {{- end }}
   {{- end }}
 {{- end }}
 {{- if .Values.scan.vulnerability.enabled }}
@@ -50,8 +52,10 @@ spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
   schedule: {{ include "zora.vulnSchedule" . | quote }}
+  {{- if .Values.scan.vulnerability.plugins }}
   plugins:
   {{- range .Values.scan.vulnerability.plugins }}
     - name: {{ . }}
+  {{- end }}
   {{- end }}
 {{- end }}
