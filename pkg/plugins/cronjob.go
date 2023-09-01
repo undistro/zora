@@ -100,18 +100,14 @@ func (r *CronJobMutator) Mutate() error {
 	}
 	r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
 	r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
-	schedule := r.PluginRef.Schedule
-	if schedule == "" {
-		schedule = r.ClusterScan.Spec.Schedule
-	}
-	r.Existing.Spec.Schedule = schedule
+	r.Existing.Spec.Schedule = r.ClusterScan.Spec.Schedule
 	r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 	r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
 	r.Existing.Spec.FailedJobsHistoryLimit = r.ClusterScan.Spec.FailedScansHistoryLimit
 
 	r.Existing.Spec.Suspend = &r.Suspend
 	if !r.Suspend {
-		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
+		r.Existing.Spec.Suspend = r.ClusterScan.Spec.Suspend
 	}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
@@ -312,13 +308,4 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 			},
 		},
 	)
-}
-
-func firstNonNilBoolPointer(pointers ...*bool) *bool {
-	for _, b := range pointers {
-		if b != nil {
-			return b
-		}
-	}
-	return pointer.Bool(false)
 }

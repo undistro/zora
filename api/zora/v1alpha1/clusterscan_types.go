@@ -61,13 +61,6 @@ type PluginReference struct {
 	// Namespace defines the space within which the Plugin name must be unique.
 	Namespace string `json:"namespace,omitempty"`
 
-	// This flag tells the controller to suspend subsequent executions, it does
-	// not apply to already started executions.  Defaults to false.
-	Suspend *bool `json:"suspend,omitempty"`
-
-	// The schedule in Cron format for this Plugin, see https://en.wikipedia.org/wiki/Cron.
-	Schedule string `json:"schedule,omitempty"`
-
 	// List of environment variables to set in the Plugin container.
 	Env []corev1.EnvVar `json:"env,omitempty"`
 }

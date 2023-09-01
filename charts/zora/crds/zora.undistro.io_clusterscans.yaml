@@ -240,15 +240,6 @@ spec:
                       description: Namespace defines the space within which the Plugin
                         name must be unique.
                       type: string
-                    schedule:
-                      description: The schedule in Cron format for this Plugin, see
-                        https://en.wikipedia.org/wiki/Cron.
-                      type: string
-                    suspend:
-                      description: This flag tells the controller to suspend subsequent
-                        executions, it does not apply to already started executions.  Defaults
-                        to false.
-                      type: boolean
                   required:
                   - name
                   type: object
