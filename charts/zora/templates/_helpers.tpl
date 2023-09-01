@@ -105,7 +105,7 @@ Create the name of the service account to use in Operator
 {{- printf "%d %d * * *" $minute $hour }}
 {{- end }}
 
-{{- define "zora.miscSchedule" }}
+{{- define "zora.misconfigSchedule" }}
 {{- default (include "zora.hourlySchedule" .) .Values.scan.misconfiguration.schedule }}
 {{- end }}
 

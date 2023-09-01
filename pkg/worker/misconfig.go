@@ -31,8 +31,8 @@ import (
 	"github.com/undistro/zora/pkg/worker/report/popeye"
 )
 
-// miscPlugins maps parse function by misc plugin name
-var miscPlugins = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.ClusterIssueSpec, error){
+// misconfigPlugins maps parse function by misconfig plugin name
+var misconfigPlugins = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.ClusterIssueSpec, error){
 	"popeye": popeye.Parse,
 	"marvin": marvin.Parse,
 }
@@ -46,7 +46,7 @@ var createOpts = metav1.CreateOptions{}
 
 func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader, client *zora.Clientset) error {
 	log := logr.FromContextOrDiscard(ctx)
-	issues, err := parseMiscResults(ctx, cfg, results)
+	issues, err := parseMisconfigResults(ctx, cfg, results)
 	if err != nil {
 		return err
 	}
@@ -60,9 +60,9 @@ func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader,
 	return nil
 }
 
-// parseMiscResults converts the given results into ClusterIssues
-func parseMiscResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
-	parseFunc, ok := miscPlugins[cfg.PluginName]
+// parseMisconfigResults converts the given results into ClusterIssues
+func parseMisconfigResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
+	parseFunc, ok := misconfigPlugins[cfg.PluginName]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
 	}

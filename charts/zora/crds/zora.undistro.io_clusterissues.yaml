@@ -29,8 +29,8 @@ spec:
     shortNames:
     - issue
     - issues
-    - misc
-    - miscs
+    - misconfig
+    - misconfigs
     - misconfigurations
     singular: clusterissue
   scope: Namespaced

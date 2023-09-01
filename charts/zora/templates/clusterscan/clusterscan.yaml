@@ -28,11 +28,11 @@ kind: ClusterScan
 metadata:
   labels:
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "zora.clusterName" . }}-misc
+  name: {{ include "zora.clusterName" . }}-misconfig
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
-  schedule: {{ include "zora.miscSchedule" . | quote }}
+  schedule: {{ include "zora.misconfigSchedule" . | quote }}
   {{- if .Values.scan.misconfiguration.plugins }}
   plugins:
   {{- range .Values.scan.misconfiguration.plugins }}

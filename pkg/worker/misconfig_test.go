@@ -29,7 +29,7 @@ import (
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
-func TestParseMiscResults(t *testing.T) {
+func TestParseMisconfigResults(t *testing.T) {
 	type args struct {
 		cfg      *config
 		filename string
@@ -331,20 +331,20 @@ func TestParseMiscResults(t *testing.T) {
 			if tt.args.filename != "" {
 				f, err := os.Open(tt.args.filename)
 				if err != nil {
-					t.Errorf("parseMiscResults() setup error = %v", err)
+					t.Errorf("parseMisconfigResults() setup error = %v", err)
 					return
 				}
 				r = f
 			}
-			got, err := parseMiscResults(context.TODO(), tt.args.cfg, r)
+			got, err := parseMisconfigResults(context.TODO(), tt.args.cfg, r)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseMiscResults() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("parseMisconfigResults() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			sortClusterIssues(got)
 			sortClusterIssues(tt.want)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseMiscResults() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
+				t.Errorf("parseMisconfigResults() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
 		})
 	}
