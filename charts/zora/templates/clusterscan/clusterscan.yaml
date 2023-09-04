@@ -33,6 +33,7 @@ spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
   schedule: {{ include "zora.misconfigSchedule" . | quote }}
+  successfulScansHistoryLimit: {{ .Values.scan.misconfiguration.successfulScansHistoryLimit }}
   {{- if .Values.scan.misconfiguration.plugins }}
   plugins:
   {{- range .Values.scan.misconfiguration.plugins }}
@@ -52,6 +53,7 @@ spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
   schedule: {{ include "zora.vulnSchedule" . | quote }}
+  successfulScansHistoryLimit: {{ .Values.scan.vulnerability.successfulScansHistoryLimit }}
   {{- if .Values.scan.vulnerability.plugins }}
   plugins:
   {{- range .Values.scan.vulnerability.plugins }}

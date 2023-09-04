@@ -94,9 +94,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
 | scan.misconfiguration.enabled | bool | `true` | Specifies whether misconfiguration scan is enabled |
 | scan.misconfiguration.schedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format for misconfiguration scan |
+| scan.misconfiguration.successfulScansHistoryLimit | int | `1` | The number of successful finished scans and their issues to retain. |
 | scan.misconfiguration.plugins | list | `["marvin","popeye"]` | Misconfiguration scanners plugins |
 | scan.vulnerability.enabled | bool | `true` | Specifies whether vulnerability scan is enabled |
 | scan.vulnerability.schedule | string | Cron expression for every day at the current hour and minute + 5 minutes | Cluster scan schedule in Cron format for vulnerability scan |
+| scan.vulnerability.successfulScansHistoryLimit | int | `1` | The number of successful finished scans and their issues to retain. |
 | scan.vulnerability.plugins | list | `["trivy"]` | Vulnerability scanners plugins |
 | scan.worker.image.repository | string | `"ghcr.io/undistro/zora/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |

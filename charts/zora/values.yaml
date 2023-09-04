@@ -143,6 +143,8 @@ scan:
     # -- Cluster scan schedule in Cron format for misconfiguration scan
     # @default -- Cron expression for every hour at the current minute + 5 minutes
     schedule: ""
+    # -- The number of successful finished scans and their issues to retain.
+    successfulScansHistoryLimit: 1
     # -- Misconfiguration scanners plugins
     plugins:
       - marvin
@@ -153,6 +155,8 @@ scan:
     # -- Cluster scan schedule in Cron format for vulnerability scan
     # @default -- Cron expression for every day at the current hour and minute + 5 minutes
     schedule: ""
+    # -- The number of successful finished scans and their issues to retain.
+    successfulScansHistoryLimit: 1
     # -- Vulnerability scanners plugins
     plugins:
       - trivy
