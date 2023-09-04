@@ -184,13 +184,7 @@ scan:
 
     trivy:
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
-      resources:
-        requests:
-          cpu: 250m
-          memory: 256Mi
-        limits:
-          cpu: 500m
-          memory: 500Mi
+      resources: {}
       image:
         # -- trivy plugin image repository
         repository: ghcr.io/aquasecurity/trivy
