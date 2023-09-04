@@ -99,9 +99,8 @@ spec:
                 x-kubernetes-map-type: atomic
               failedScansHistoryLimit:
                 default: 1
-                description: FailedScansHistoryLimit specifies the amount of failed
-                  scan Jobs to be kept in the cluster. This field is analogous to
-                  <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
+                description: The number of failed finished scans to retain. Value
+                  must be non-negative integer. Defaults to 1.
                 format: int32
                 minimum: 0
                 type: integer
@@ -246,9 +245,8 @@ spec:
                 type: string
               successfulScansHistoryLimit:
                 default: 3
-                description: SuccessfulScansHistoryLimit specifies the amount of successfully
-                  completed scan Jobs to be kept in the cluster. This field is analogous
-                  to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
+                description: The number of successful finished scans and their issues
+                  to retain. Value must be non-negative integer. Defaults to 3.
                 format: int32
                 minimum: 0
                 type: integer
