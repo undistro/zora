@@ -153,14 +153,14 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 					},
 				}
 			}
-			pluginStatus[p].Scan.Suspend = s.Suspend
-			pluginStatus[p].Schedule = s.Schedule
+			pluginStatus[p].Scan.Suspend = *cs.Spec.Suspend
+			pluginStatus[p].Schedule = cs.Spec.Schedule
 
-			if s.IssueCount != nil {
+			if s.TotalIssues != nil {
 				if pluginStatus[p].IssueCount == nil {
 					pluginStatus[p].IssueCount = new(int)
 				}
-				*pluginStatus[p].IssueCount += *s.IssueCount
+				*pluginStatus[p].IssueCount += *s.TotalIssues
 			}
 
 			switch s.LastFinishedStatus {

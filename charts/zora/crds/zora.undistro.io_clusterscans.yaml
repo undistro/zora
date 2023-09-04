@@ -54,9 +54,6 @@ spec:
     - jsonPath: .status.lastSuccessfulTime
       name: Last Successful
       type: date
-    - jsonPath: .status.totalIssues
-      name: Issues
-      type: integer
     - jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
       type: string
@@ -371,10 +368,6 @@ spec:
               plugins:
                 additionalProperties:
                   properties:
-                    issueCount:
-                      description: IssueCount holds the sum of ClusterIssues found
-                        in the last successful scan.
-                      type: integer
                     lastErrorMsg:
                       description: LastErrorMsg contains a plugin error message from
                         the last failed scan.
@@ -412,12 +405,10 @@ spec:
                       description: Time when the next job will schedule.
                       format: date-time
                       type: string
-                    schedule:
-                      description: The Cron schedule of this plugin
-                      type: string
-                    suspend:
-                      description: Suspend field value from ClusterScan spec.plugins.*.suspend
-                      type: boolean
+                    totalIssues:
+                      description: TotalIssues holds the sum of ClusterIssues found
+                        in the last successful scan.
+                      type: integer
                   type: object
                 description: Information of the last scans of plugins
                 type: object

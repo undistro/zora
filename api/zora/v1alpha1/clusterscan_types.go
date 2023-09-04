@@ -214,14 +214,8 @@ type PluginScanStatus struct {
 	// LastErrorMsg contains a plugin error message from the last failed scan.
 	LastErrorMsg string `json:"lastErrorMsg,omitempty"`
 
-	// IssueCount holds the sum of ClusterIssues found in the last successful scan.
-	IssueCount *int `json:"issueCount,omitempty"`
-
-	// Suspend field value from ClusterScan spec.plugins.*.suspend
-	Suspend bool `json:"suspend,omitempty"`
-
-	// The Cron schedule of this plugin
-	Schedule string `json:"schedule,omitempty"`
+	// TotalIssues holds the sum of ClusterIssues found in the last successful scan.
+	TotalIssues *int `json:"totalIssues,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -234,7 +228,6 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastStatus",priority=0
 //+kubebuilder:printcolumn:name="Last Schedule",type="date",JSONPath=".status.lastScheduleTime",priority=0
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0
-//+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
 //+kubebuilder:printcolumn:name="SaaS",type="string",JSONPath=".status.conditions[?(@.type==\"SaaS\")].reason",priority=1

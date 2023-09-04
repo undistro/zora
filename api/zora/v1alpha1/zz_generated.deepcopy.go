@@ -606,8 +606,8 @@ func (in *PluginScanStatus) DeepCopyInto(out *PluginScanStatus) {
 		in, out := &in.NextScheduleTime, &out.NextScheduleTime
 		*out = (*in).DeepCopy()
 	}
-	if in.IssueCount != nil {
-		in, out := &in.IssueCount, &out.IssueCount
+	if in.TotalIssues != nil {
+		in, out := &in.TotalIssues, &out.TotalIssues
 		*out = new(int)
 		**out = **in
 	}
