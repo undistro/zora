@@ -16,7 +16,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "zora.fullname" . }}-saas-install-hook"
+  name: "{{ include "zora.fullname" . }}-install-hook"
   labels:
     {{- include "zora.labels" . | nindent 4 }}
   annotations:
