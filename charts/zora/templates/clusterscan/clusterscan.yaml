@@ -18,6 +18,7 @@ apiVersion: zora.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   labels:
+    zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
   name: {{ include "zora.clusterName" . }}
 spec: {}
@@ -27,6 +28,7 @@ apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   labels:
+    zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
   name: {{ include "zora.clusterName" . }}-misconfig
 spec:
@@ -47,6 +49,7 @@ apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   labels:
+    zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
   name: {{ include "zora.clusterName" . }}-vuln
 spec:
