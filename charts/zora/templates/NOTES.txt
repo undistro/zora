@@ -3,13 +3,12 @@ Thank you for installing {{ .Chart.Name | title }} version {{ .Chart.Version }}.
 {{ if .Values.clusterName -}}
 Cluster `{{ .Values.clusterName }}` is scheduled to be scanned. Check it by running:
     kubectl get cluster,scan -o wide -n {{ .Release.Namespace }}
-
 {{ if or .Values.scan.misconfiguration.enabled .Values.scan.vulnerability.enabled }}
-Once a cluster is successfully scanned, you can check issues by running:
+Once the cluster is successfully scanned, you can check issues by running:
     kubectl get misconfigurations -n {{ .Release.Namespace }}
     kubectl get vulnerabilities   -n {{ .Release.Namespace }}
-{{ end -}}
-{{ end -}}
+{{- end }}
+{{- end }}
 
 Visit our documentation for in-depth information: https://zora-docs.undistro.io
 
