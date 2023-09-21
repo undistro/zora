@@ -197,7 +197,7 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/aquasecurity/trivy
         # -- trivy plugin image tag
-        tag: 0.44.1
+        tag: 0.45.1
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
