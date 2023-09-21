@@ -57,9 +57,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | clusterName | string | `""` | Cluster name. Should be set by `kubectl config current-context`. |
 | saas.workspaceID | string | `""` | Your SaaS workspace ID |
 | saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |
-| saas.hooks.image.repository | string | `"curlimages/curl"` | SaaS hooks image repository |
-| saas.hooks.image.tag | string | `"8.2.1"` | SaaS hooks image tag |
-| saas.hooks.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS install hook URL template |
+| saas.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS URL template to notify installation |
+| hooks.install.image.repository | string | `"curlimages/curl"` | Install hook image repository |
+| hooks.install.image.tag | string | `"8.2.1"` | Install hook image tag |
+| hooks.delete.image.repository | string | `"rancher/kubectl"` | Delete hook image repository |
+| hooks.delete.image.tag | string | `"v1.28.2"` | Delete hook image tag |
 | imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
 | imageCredentials.registry | string | `"ghcr.io"` | Docker registry host |
 | imageCredentials.username | string | `""` | Docker registry username |
@@ -107,7 +109,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.marvin.image.tag | string | `"v0.2.0"` | marvin plugin image tag |
 | scan.plugins.trivy.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/aquasecurity/trivy"` | trivy plugin image repository |
-| scan.plugins.trivy.image.tag | string | `"0.44.1"` | trivy plugin image tag |
+| scan.plugins.trivy.image.tag | string | `"0.45.1"` | trivy plugin image tag |
 | scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml |
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
