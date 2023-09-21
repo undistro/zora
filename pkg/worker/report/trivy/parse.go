@@ -85,7 +85,8 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, resultType string) 
 	return v1alpha1.Vulnerability{
 		ID:          vuln.VulnerabilityID,
 		Severity:    vuln.Severity,
-		Description: vuln.Title,
+		Title:       vuln.Title,
+		Description: vuln.Description,
 		Package:     vuln.PkgName,
 		Version:     vuln.InstalledVersion,
 		FixVersion:  vuln.FixedVersion,
