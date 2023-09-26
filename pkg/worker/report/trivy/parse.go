@@ -19,6 +19,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
+	"strconv"
 	"strings"
 
 	trivyreport "github.com/aquasecurity/trivy/pkg/k8s/report"
@@ -34,6 +36,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
+	ignoreDescriptions, _ := strconv.ParseBool(os.Getenv("TRIVY_IGNORE_VULN_DESCRIPTIONS"))
 	vulnsByImage := make(map[string]*v1alpha1.VulnerabilityReportSpec)
 
 	// map to control which image + class was parsed
@@ -69,7 +72,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 			parsed[k] = true
 
 			for _, vuln := range result.Vulnerabilities {
-				spec.Vulnerabilities = append(spec.Vulnerabilities, newVulnerability(vuln, result.Type))
+				spec.Vulnerabilities = append(spec.Vulnerabilities, newVulnerability(vuln, ignoreDescriptions, result.Type))
 			}
 		}
 	}
@@ -81,12 +84,17 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 	return specs, nil
 }
 
-func newVulnerability(vuln trivytypes.DetectedVulnerability, resultType string) v1alpha1.Vulnerability {
+func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescriptions bool, resultType string) v1alpha1.Vulnerability {
+	description := ""
+	if !ignoreDescriptions {
+		description = vuln.Description
+	}
+
 	return v1alpha1.Vulnerability{
 		ID:          vuln.VulnerabilityID,
 		Severity:    vuln.Severity,
 		Title:       vuln.Title,
-		Description: vuln.Description,
+		Description: description,
 		Package:     vuln.PkgName,
 		Version:     vuln.InstalledVersion,
 		FixVersion:  vuln.FixedVersion,

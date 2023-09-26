@@ -13,11 +13,23 @@ spec:
   image: ghcr.io/aquasecurity/trivy:0.45.1
   securityContext:
     allowPrivilegeEscalation: false
+  env:
+    - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
+      value: "false"
   command:
     - /bin/sh
     - -c
     - |
-      time trivy k8s --debug --no-progress -A --scanners=vuln --report=summary -f=json cluster -o $(DONE_DIR)/results.json
+      time trivy k8s \
+        --debug \
+        --no-progress \
+        --all-namespaces \
+        --scanners=vuln \
+        --report=summary \
+        -f=json \
+        -o $(DONE_DIR)/results.json \
+        cluster
+      
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
         echo "ERROR" > $(DONE_DIR)/error

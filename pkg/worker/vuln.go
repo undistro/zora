@@ -48,11 +48,11 @@ func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, cl
 		return err
 	}
 	for _, vuln := range vulns {
-		vuln, err := client.ZoraV1alpha1().VulnerabilityReports(cfg.Namespace).Create(ctx, &vuln, createOpts)
+		v, err := client.ZoraV1alpha1().VulnerabilityReports(cfg.Namespace).Create(ctx, &vuln, createOpts)
 		if err != nil {
 			return fmt.Errorf("failed to create VulnerabilityReport %q: %v", vuln.Name, err)
 		}
-		log.Info(fmt.Sprintf("VulnerabilityReport %q successfully created", vuln.Name), "resourceVersion", vuln.ResourceVersion)
+		log.Info(fmt.Sprintf("VulnerabilityReport %q successfully created", v.Name), "resourceVersion", v.ResourceVersion)
 	}
 	return nil
 }

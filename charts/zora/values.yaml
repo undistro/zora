@@ -191,6 +191,10 @@ scan:
         tag: v0.2.0
 
     trivy:
+      # -- Specifies whether only fixed vulnerabilities should be reported
+      ignoreUnfixed: false
+      # -- Specifies whether vulnerability descriptions should be ignored
+      ignoreDescriptions: false
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
       resources: {}
       image:
