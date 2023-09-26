@@ -1,5 +1,7 @@
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
+WORKER_IMG ?= worker:latest
+
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.27.1
 
@@ -33,7 +35,7 @@ all: build
 
 .PHONY: help
 help: ## Display this help.
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 ##@ Development
 
@@ -101,11 +103,15 @@ docker-build: test ## Build docker image with the manager.
 
 .PHONY: docker-build-worker
 docker-build-worker: test ## Build docker image with worker.
-	docker build -t worker:latest -f cmd/worker/Dockerfile .
+	docker build -t ${WORKER_IMG} -f cmd/worker/Dockerfile .
 
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
 	docker push ${IMG}
+
+.PHONY: docker-push-worker
+docker-push-worker: ## Push docker image with worker.
+	docker push ${WORKER_IMG}
 
 # PLATFORMS defines the target platforms for  the manager image be build to provide support to multiple
 # architectures. (i.e. make docker-buildx IMG=myregistry/myoperator:0.0.1). To use this option you need to:
@@ -159,6 +165,18 @@ template: manifests kustomize ## Build kustomize configurations.
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | $(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f -
 
+##@ Kind
+
+CLUSTER_NAME ?= kind
+.PHONY: kind-create-cluster
+kind-create-cluster: kind ## Create a local Kubernetes cluster with Kind
+	$(KIND) create cluster --name $(CLUSTER_NAME)
+
+.PHONY: kind-load-images
+kind-load-images: kind docker-build docker-build-worker ## Build and load docker images into Kind nodes
+	$(KIND) load docker-image ${IMG}
+	$(KIND) load docker-image ${WORKER_IMG}
+
 ##@ Build Dependencies
 
 ## Location to install dependencies to
@@ -173,10 +191,13 @@ CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen
 ENVTEST ?= $(LOCALBIN)/setup-envtest
 ADDLICENSE ?= $(LOCALBIN)/addlicense
 HELM_DOCS ?= $(LOCALBIN)/helm-docs
+KIND ?= $(LOCALBIN)/kind
 
 ## Tool Versions
 KUSTOMIZE_VERSION ?= v5.0.0
 CONTROLLER_TOOLS_VERSION ?= v0.11.3
+HELM_DOCS_VERSION ?= v1.11.2
+KIND_VERSION ?= v0.20.0
 
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 .PHONY: kustomize
@@ -205,7 +226,11 @@ $(ADDLICENSE): $(LOCALBIN)
 	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@latest
 
 .PHONY: helm-docs
-helm-docs: $(HELM_DOCS) ## Download helm-docs if necessary
+helm-docs: $(HELM_DOCS) ## Download helm-docs locally if necessary
 $(HELM_DOCS): $(LOCALBIN)
-	test -s $(LOCALBIN)/helm-docs || GOBIN=$(LOCALBIN) go install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.8.1
+	test -s $(LOCALBIN)/helm-docs || GOBIN=$(LOCALBIN) go install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
 
+.PHONY: kind
+kind: $(KIND) ## Download kind locally if necessary
+$(KIND): $(LOCALBIN)
+	test -s $(LOCALBIN)/kind || GOBIN=$(LOCALBIN) go install sigs.k8s.io/kind@$(KIND_VERSION)
