@@ -51,7 +51,7 @@ type PluginSpec struct {
 	// More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 	Args []string `json:"args,omitempty"`
 
-	// List of sources to populate environment variables in the container.
+	// List of sources to populate environment variables in plugin and worker containers.
 	// The keys defined within a source must be a C_IDENTIFIER. All invalid keys
 	// will be reported as an event when the container is starting. When a key exists in multiple
 	// sources, the value associated with the last source will take precedence.
@@ -59,7 +59,7 @@ type PluginSpec struct {
 	// Cannot be updated.
 	EnvFrom []corev1.EnvFromSource `json:"envFrom,omitempty"`
 
-	// List of environment variables to set in the container.
+	// List of environment variables to set in plugin and worker containers.
 	// Cannot be updated.
 	Env []corev1.EnvVar `json:"env,omitempty"`
 

@@ -189,6 +189,7 @@ func (r *CronJobMutator) workerContainer() corev1.Container {
 		Name:            workerContainerName,
 		Image:           r.WorkerImage,
 		Env:             r.workerEnv(),
+		EnvFrom:         r.Plugin.Spec.EnvFrom,
 		Resources:       r.Plugin.Spec.Resources,
 		VolumeMounts:    commonVolumeMounts,
 		ImagePullPolicy: corev1.PullIfNotPresent,
@@ -270,7 +271,8 @@ func (r *CronJobMutator) pluginEnv() []corev1.EnvVar {
 
 // workerEnv returns a list of environment variables to set in the Worker container
 func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
-	return append(commonEnv,
+	p := append(commonEnv, r.Plugin.Spec.Env...)
+	p = append(p,
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",
 			Value: r.ClusterScan.Spec.ClusterRef.Name,
@@ -308,4 +310,5 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 			},
 		},
 	)
+	return p
 }
