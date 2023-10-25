@@ -1,0 +1,237 @@
+# Copyright 2022 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# -- String to partially override fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override fullname template with a string
+fullnameOverride: ""
+
+# -- Cluster name. Should be set by `kubectl config current-context`.
+clusterName: ""
+
+saas:
+  # -- Your SaaS workspace ID
+  workspaceID: ""
+  # -- SaaS server URL
+  server: "https://zora-dashboard.undistro.io"
+  # -- SaaS URL template to notify installation
+  installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
+
+hooks:
+  install:
+    image:
+      # -- Install hook image repository
+      repository: curlimages/curl
+      # -- Install hook image tag
+      tag: '8.2.1'
+  delete:
+    image:
+      # -- Delete hook image repository
+      repository: rancher/kubectl
+      # -- Delete hook image tag
+      tag: 'v1.28.2'
+
+# Credentials for private registries.
+imageCredentials:
+  # -- Specifies whether the secret should be created by providing credentials
+  create: false
+  # -- Docker registry host
+  registry: ghcr.io
+  # -- Docker registry username
+  username: ""
+  # -- Docker registry password
+  password: ""
+
+# -- Specify docker-registry secret names as an array to be used when `imageCredentials.create` is false
+imagePullSecrets: []
+
+operator:
+  # -- Number of replicas desired of Zora operator
+  replicaCount: 1
+  image:
+    # -- Zora operator image repository
+    repository: ghcr.io/undistro/zora/operator
+    # -- Overrides the image tag whose default is the chart appVersion
+    tag: ""
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
+  rbac:
+    # -- Specifies whether ClusterRoles and ClusterRoleBindings should be created
+    create: true
+    serviceAccount:
+      # -- Specifies whether a service account should be created
+      create: true
+      # -- Annotations to be added to service account
+      annotations: {}
+      # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+      name: ""
+  # -- Annotations to be added to pods
+  podAnnotations:
+    kubectl.kubernetes.io/default-container: manager
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+  metricsService:
+    # -- Type of metrics service
+    type: ClusterIP
+    # -- Port of metrics service
+    port: 8443
+  serviceMonitor:
+    # -- Specifies whether a Prometheus `ServiceMonitor` should be enabled
+    enabled: false
+  # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  rbacProxy:
+    image:
+      # -- `kube-rbac-proxy` image repository
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      # -- `kube-rbac-proxy` image tag
+      tag: v0.14.1
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+    # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+  # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+  nodeSelector: {}
+  # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+  tolerations: []
+  # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+  affinity: {}
+  log:
+    # -- Log encoding (one of 'json' or 'console')
+    encoding: json
+    # -- Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error',
+    # or any integer value > 0 which corresponds to custom debug levels of increasing verbosity
+    level: info
+    # -- Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic')
+    stacktraceLevel: error
+    # -- Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')
+    timeEncoding: rfc3339
+
+scan:
+  misconfiguration:
+    # -- Specifies whether misconfiguration scan is enabled
+    enabled: true
+    # -- Cluster scan schedule in Cron format for misconfiguration scan
+    # @default -- Cron expression for every hour at the current minute + 5 minutes
+    schedule: ""
+    # -- The number of successful finished scans and their issues to retain.
+    successfulScansHistoryLimit: 1
+    # -- Misconfiguration scanners plugins
+    plugins:
+      - marvin
+      - popeye
+  vulnerability:
+    # -- Specifies whether vulnerability scan is enabled
+    enabled: true
+    # -- Cluster scan schedule in Cron format for vulnerability scan
+    # @default -- Cron expression for every day at the current hour and minute + 5 minutes
+    schedule: ""
+    # -- The number of successful finished scans and their issues to retain.
+    successfulScansHistoryLimit: 1
+    # -- Vulnerability scanners plugins
+    plugins:
+      - trivy
+  worker:
+    image:
+      # -- worker image repository
+      repository: ghcr.io/undistro/zora/worker
+      # -- Overrides the image tag whose default is the chart appVersion
+      tag: ""
+  plugins:
+    marvin:
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+      image:
+        # -- marvin plugin image repository
+        repository: ghcr.io/undistro/marvin
+        # -- marvin plugin image tag
+        tag: v0.2.0
+
+    trivy:
+      # -- Specifies whether only fixed vulnerabilities should be reported
+      ignoreUnfixed: false
+      # -- Specifies whether vulnerability descriptions should be ignored
+      ignoreDescriptions: false
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
+      resources: {}
+      image:
+        # -- trivy plugin image repository
+        repository: ghcr.io/aquasecurity/trivy
+        # -- trivy plugin image tag
+        tag: 0.45.1
+    popeye:
+      # -- Specifies whether the following resources should be skipped by `popeye` scans.
+      # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
+      # 2. kubernetes system reserved RBAC (prefixed with `system:`);
+      # 3. `kube-root-ca.crt` configmaps;
+      # 4. `default` namespace;
+      # 5. `default` serviceaccounts;
+      # 6. Helm secrets (prefixed with `sh.helm.release`);
+      # 7. Zora components.
+      # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml
+      skipInternalResources: false
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+      image:
+        # -- popeye plugin image repository
+        repository: ghcr.io/undistro/popeye
+        # -- popeye plugin image tag
+        tag: pr252
+
+kubexnsImage:
+  # -- kubexns image repository
+  repository: ghcr.io/undistro/kubexns
+  # -- kubexns image tag
+  tag: v0.1.1
+
+# -- Custom checks ConfigMap name
+customChecksConfigMap: zora-custom-checks

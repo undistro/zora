@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/dashboard/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/helm-chart/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/configuration/custom-checks/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/configuration/scan-schedule/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/getting-started/installation/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>
