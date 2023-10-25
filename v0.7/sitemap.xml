@@ -30,4 +30,24 @@
          <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/plugins/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/plugins/marvin/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/plugins/popeye/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://zora-docs.undistro.io/v0.7/plugins/trivy/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
