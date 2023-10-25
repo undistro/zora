@@ -4,14 +4,14 @@ Zora offers a declarative way to create your own checks using the `CustomCheck` 
 
 Custom checks use the [Common Expression Language (CEL)](https://github.com/google/cel-spec) 
 to declare the validation rules and are performed by the [Marvin](https://github.com/undistro/marvin) plugin, 
-so it should be enabled in your cluster scans.
+which should be enabled in your cluster scans.
 
 !!! info 
     Marvin is already a default plugin and enabled by default in cluster scans since Zora 0.5.0.
 
-## `CustomCheck`
+## `CustomCheck` API
 
-The example below represents a custom check that requires the labels `mycompany.com/squad` and `mycompany.com/component` 
+The example below demonstrates a custom check that requires the labels `mycompany.com/squad` and `mycompany.com/component` 
 to be present on `Pods`, `Deployments` and `Services`.
 
 !!! example
@@ -50,10 +50,13 @@ to be present on `Pods`, `Deployments` and `Services`.
           message: "Resource without required labels"
     ```
 
-The `spec.match.resources` defines which resources will be checked by the expressions 
-defined in `spec.validations.expression` as [Common Expression Language (CEL)](https://github.com/google/cel-spec).
+The `spec.match.resources` defines which resources are checked by the expressions 
+defined in `spec.validations.expression` using [Common Expression Language (CEL)](https://github.com/google/cel-spec).
 
-If an expression evaluates to `false`, the check fails and a `ClusterIssue` is reported.
+If an expression evaluates to `false`, the check fails, and a `ClusterIssue` is reported.
+
+!!! tip "CEL Playground"
+    To quickly test CEL expressions directly from your browser, check out [CEL Playground](https://playcel.undistro.io/).
 
 ### Variables
 
@@ -64,7 +67,7 @@ The variables available in CEL expressions:
 | `object` | The object being scanned.                     |
 | `params` | The parameter defined in `spec.params` field. |
 
-If matches a `PodSpec`, the following useful variables are available:
+If the object matches a `PodSpec`, the following useful variables are available:
 
 | Variable        | Description                                                                     |
 |-----------------|---------------------------------------------------------------------------------|
@@ -83,17 +86,17 @@ The following resources matches a `PodSpec`:
 - `batch/v1/jobs`
 - `batch/v1/cronjobs`
 
-### Apply a `CustomCheck`
+### Applying custom checks
 
-Since you have a `CustomCheck` on a file, you can apply it with the command below.
+Since you have a `CustomCheck` on a file, you can apply it with the following command.
 
 ```shell
 kubectl apply -f check.yaml -n zora-system
 ```
 
-### List custom checks
+### Listing custom checks
 
-Once created, list the custom checks to see if it's ready.
+Once created, list the custom checks to see if they are ready.
 
 ```shell
 kubectl get customchecks -n zora-system
@@ -105,7 +108,7 @@ mycheck   Required labels   Low        True
 
 The `READY` column indicates when the check has successfully compiled and is ready to be used in the next Marvin scan.
 
-`ClusterIssues` reported by a custom check have are labeled `custom=true` and can be filtered by the following command:
+`ClusterIssues` reported by a custom check are labeled `custom=true` and can be filtered by the following command:
 
 ```shell
 kubectl get clusterissues -l custom=true
@@ -120,9 +123,7 @@ mycluster-mycheck-4edd75cb85a4   mycluster   mycheck   Required labels   Low    
 All Marvin checks are similar to the `CustomCheck` API. 
 You can see them in the [`internal/builtins`](https://github.com/undistro/marvin/tree/main/internal/builtins) folder for examples.
 
-If you want to quickly test CEL expressions from your browser, check out the [CEL Playground](https://playcel.undistro.io/).
-
-Some examples of Marvin built-in checks expressions:
+Here are some examples of Marvin built-in checks expressions:
 
 - [HostPath volumes must be forbidden](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-104_host_path_volumes.yml)
   ```

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-site_name: "Zora"
+site_name: "Zora OSS"
 site_url: https://zora-docs.undistro.io
 repo_url: https://github.com/undistro/zora
 repo_name: undistro/zora
@@ -77,12 +77,23 @@ copyright: Copyright &copy; 2022 - 2023 Undistro Authors
 
 nav:
   - Documentation:
-      - Introduction: index.md
-      - Install: install.md
-      - Prepare the target cluster: target-cluster.md
-      - Connect the target cluster to Zora: connect-cluster.md
-      - Configure a cluster scan: cluster-scan.md
-      - Create your own check: custom-checks.md
-      - Glossary: glossary.md
+      - "🚀 Getting Started":
+          - Overview: index.md
+          - Installation: getting-started/installation.md
+      - "🛠️ Configuration":
+          - Scan schedule: configuration/scan-schedule.md
+          - Custom checks with CEL: configuration/custom-checks.md
+      - "🔌 Plugins":
+          - Overview: plugins/index.md
+          - Misconfiguration:
+            - Marvin: plugins/marvin.md
+            - Popeye: plugins/popeye.md
+          - Vulnerability:
+            - Trivy: plugins/trivy.md
+      - "🔄 Migrating to 0.7": getting-started/installation/#migrating-to-07
+#      - "🔐 Data privacy": data-privacy.md
+      - "📊 Zora Dashboard": dashboard.md
+#      - "🗃️ Troubleshooting": troubleshooting.md
+#      - "❓ FAQ": faq.md
   - Helm Chart:
       - Zora Helm Chart: helm-chart.md
