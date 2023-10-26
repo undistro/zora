@@ -3,12 +3,15 @@ kind: ClusterScan
 metadata:
   labels:
     app.kubernetes.io/name: clusterscan
-    app.kubernetes.io/instance: mycluster
+    app.kubernetes.io/instance: mycluster-misconfig
     app.kubernetes.io/part-of: zora
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: zora
-  name: mycluster
+  name: mycluster-misconfig
 spec:
   clusterRef:
     name: mycluster
   schedule: "*/2 * * * *"
+  plugins:
+    - name: marvin
+    - name: popeye
