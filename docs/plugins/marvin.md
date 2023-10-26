@@ -9,8 +9,8 @@ to report potential issues and misconfigurations.
 
 Marvin enables Zora's custom checks using CEL. For further information, please visit [this page](../configuration/custom-checks.md).
 
-** :octicons-codescan-24: Type**: `misconfiguration`
+:octicons-codescan-24: **Type**: `misconfiguration`
 
-** :simple-docker: Image**: `ghcr.io/undistro/marvin:v0.2.0`
+:simple-docker: **Image**: `ghcr.io/undistro/marvin:v0.2.0`
 
-** :simple-github: GitHub repository**: [https://github.com/undistro/marvin](https://github.com/undistro/marvin)
+:simple-github: **GitHub repository**: [https://github.com/undistro/marvin](https://github.com/undistro/marvin)
