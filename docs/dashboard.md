@@ -11,8 +11,10 @@ across all your clusters. You can also invite users to your workspace.
 
 ![Zora Dashboard Screenshot](assets/zora-dashboard-screenshot.png)
 
+[Try Zora Dashboard](https://zora-dashboard.undistro.io/){ .md-button #zora-dashboard-button }
+
 Currently, it's free for up to 3 clusters.
-Please [contact us](https://undistro.io/contact) if you need unlock clusters in Zora Dashboard.
+Please [contact us](https://undistro.io/contact) if you need unlock more clusters in Zora Dashboard.
 
 ## Getting started
 
