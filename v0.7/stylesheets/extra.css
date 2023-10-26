@@ -2,8 +2,10 @@
     --md-primary-fg-color:        #3CA9DD;
     --md-primary-fg-color--light: #2086B6;
     --md-primary-fg-color--dark:  #3CA9DD;
+    --md-accent-fg-color:         #3CA9DD;
 }
 
 .md-typeset a:is(:focus,:hover), .md-nav__link:is(:focus,:hover) {
     color: #176082
 }
+
