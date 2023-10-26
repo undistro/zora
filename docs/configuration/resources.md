@@ -1,4 +1,4 @@
-# Resources
+# Compute resources
 
 [Zora Helm Chart](../helm-chart.md) allows you to define resource requests and limits (memory and CPU) 
 for `zora-operator` and plugins.
