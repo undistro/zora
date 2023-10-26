@@ -49,7 +49,7 @@ helm get notes zora -n zora-system
 ```
 
 !!! info "Zora Helm Chart"
-    To see the full list of available parameters in Zora Helm chart, please visit [this page](../../helm-chart.md)
+    To see the full list of available parameters in Zora Helm chart, please visit [this page](../helm-chart.md)
 
 If everything is set up correctly, your cluster should have scheduled scans. Check it by running:
 
