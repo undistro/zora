@@ -14,7 +14,7 @@
         <link rel="prev" href="../resources/">
       
       
-        <link rel="next" href="../../plugins/">
+        <link rel="next" href="../retain-issues/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -123,7 +123,7 @@ You're not viewing the latest version.
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="Zora OSS" class="md-header__button md-logo" aria-label="Zora OSS" data-md-component="logo">
       
-  <img src="../../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -312,7 +312,7 @@ You're not viewing the latest version.
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="Zora OSS" class="md-nav__button md-logo" aria-label="Zora OSS" data-md-component="logo">
       
-  <img src="../../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.svg" alt="logo">
 
     </a>
     Zora OSS
@@ -580,6 +580,26 @@ You're not viewing the latest version.
 
       </a>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retain-issues/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Retain issues
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -994,6 +1014,11 @@ This action will suspend subsequent scans, it does not apply to already started 
 <p>The command below suspends the <code>mycluster-vuln</code> scan.</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>scan<span class="w"> </span>mycluster-vuln<span class="w"> </span>--type<span class="o">=</span><span class="s1">&#39;merge&#39;</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;suspend&quot;:true}}&#39;</span><span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This way, the scan results remain available, 
+unlike if the <code>ClusterScan</code> had been deleted, in which case the results would also be removed.</p>
+</div>
 <p>Setting <code>spec.suspend</code> back to <code>false</code>, the scans are resume:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>scan<span class="w"> </span>mycluster-vuln<span class="w"> </span>--type<span class="o">=</span><span class="s1">&#39;merge&#39;</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;suspend&quot;:false}}&#39;</span><span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
@@ -1045,13 +1070,13 @@ This action will suspend subsequent scans, it does not apply to already started 
         
         
           
-          <a href="../../plugins/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../retain-issues/" class="md-footer__link md-footer__link--next" aria-label="Next: Retain issues">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Retain issues
               </div>
             </div>
             <div class="md-footer__button md-icon">

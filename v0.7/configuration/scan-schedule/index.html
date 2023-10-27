@@ -123,7 +123,7 @@ You're not viewing the latest version.
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="Zora OSS" class="md-header__button md-logo" aria-label="Zora OSS" data-md-component="logo">
       
-  <img src="../../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -312,7 +312,7 @@ You're not viewing the latest version.
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="Zora OSS" class="md-nav__button md-logo" aria-label="Zora OSS" data-md-component="logo">
       
-  <img src="../../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.svg" alt="logo">
 
     </a>
     Zora OSS
@@ -613,6 +613,26 @@ You're not viewing the latest version.
   
   <span class="md-ellipsis">
     Suspending scans
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retain-issues/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Retain issues
   </span>
   
 
@@ -1073,7 +1093,7 @@ while the vulnerability scan is scheduled to run every day at the current hour a
 <p>However, you can customize the schedule for each scan 
 by directly editing the <code>ClusterScan</code> resource 
 or by providing parameters in the <code>helm upgrade --install</code> command, as shown in the example below:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># omitted command and parameters</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># omitted &quot;helm upgrade --install&quot; command and parameters</span>
 
 --set<span class="w"> </span>scan.misconfiguration.schedule<span class="o">=</span><span class="s2">&quot;0 * * * *&quot;</span><span class="w"> </span><span class="se">\</span>
 --set<span class="w"> </span>scan.vulnerability.schedule<span class="o">=</span><span class="s2">&quot;0 0 * * *&quot;</span>

@@ -31,6 +31,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://zora-docs.undistro.io/v0.7/configuration/retain-issues/</loc>
+         <lastmod>2023-10-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://zora-docs.undistro.io/v0.7/configuration/scan-schedule/</loc>
          <lastmod>2023-10-27</lastmod>
          <changefreq>daily</changefreq>
