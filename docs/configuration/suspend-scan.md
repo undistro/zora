@@ -10,6 +10,10 @@ The command below suspends the `mycluster-vuln` scan.
 kubectl patch scan mycluster-vuln --type='merge' -p '{"spec":{"suspend":true}}' -n zora-system
 ```
 
+!!! note
+    This way, the scan results remain available, 
+    unlike if the `ClusterScan` had been deleted, in which case the results would also be removed.
+
 Setting `spec.suspend` back to `false`, the scans are resume:
 
 ```shell
