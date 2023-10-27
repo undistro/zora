@@ -25,7 +25,7 @@ by directly editing the `ClusterScan` resource
 or by providing parameters in the `helm upgrade --install` command, as shown in the example below:
 
 ```shell 
-# omitted command and parameters
+# omitted "helm upgrade --install" command and parameters
 
 --set scan.misconfiguration.schedule="0 * * * *" \
 --set scan.vulnerability.schedule="0 0 * * *"
