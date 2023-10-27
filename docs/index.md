@@ -21,12 +21,6 @@ and [Trivy](plugins/trivy.md) as scanners.
 These tools' capabilities are combined to provide you with a unified view of your cluster's security posture, 
 addressing potential issues, misconfigurations, and vulnerabilities.
 
-#### :simple-kubernetes: Kubernetes-native
-
-All scan configurations and plugin reports, including misconfigurations and vulnerabilities, 
-are securely stored as [CRDs (Custom Resource Definitions)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) 
-within your Kubernetes cluster, making it easily accessible through the Kubernetes API and `kubectl` command.
-
 #### :fontawesome-solid-list-check: Kubernetes compliance
 
 Zora and its plugins provide actionable insights, guiding you to align your cluster with industry-recognized frameworks 
@@ -40,6 +34,12 @@ and [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-se
 
 Enabled by the [Marvin](https://github.com/undistro/marvin) plugin, Zora offers a declarative way to create your own 
 checks by using [CEL](https://github.com/google/cel-spec) expressions to define validation rules.
+
+#### :simple-kubernetes: Kubernetes-native
+
+All scan configurations and plugin reports, including misconfigurations and vulnerabilities,
+are securely stored as [CRDs (Custom Resource Definitions)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+within your Kubernetes cluster, making it easily accessible through the Kubernetes API and `kubectl` command.
 
 ## Architecture
 
