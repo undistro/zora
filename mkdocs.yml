@@ -96,6 +96,6 @@ nav:
 #      - "🔐 Data privacy": data-privacy.md
       - "📊 Zora Dashboard": dashboard.md
 #      - "🗃️ Troubleshooting": troubleshooting.md
-#      - "❓ FAQ": faq.md
+      - "❓ FAQ": faq.md
   - Helm Chart:
       - Zora Helm Chart: helm-chart.md
