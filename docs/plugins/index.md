@@ -60,6 +60,10 @@ kubectl get misconfigurations
 !!! note
     The results are only available after a successful scan, in the same namespace as the `ClusterScan` (default is `zora-system`).
 
+!!! note
+    Currently, vulnerability reports are only available in Zora OSS.
+    We are working to include this in Zora Dashboard, and it will be available soon.
+
 ## How plugins work
 
 Starting from a `Plugin` and a `ClusterScan`, Zora manages and schedules scans by applying `CronJobs`, which
