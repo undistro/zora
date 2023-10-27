@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://zora-docs.undistro.io/v0.7/helm-chart/">
       
       
-        <link rel="prev" href="../dashboard/">
+        <link rel="prev" href="../faq/">
       
       
       
@@ -527,6 +527,46 @@ You're not viewing the latest version.
 
               
             
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compute resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/suspend-scan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suspending scans
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -787,6 +827,26 @@ You're not viewing the latest version.
 
               
             
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ❓ FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1005,7 +1065,7 @@ You're not viewing the latest version.
 <p><img alt="Version: 0.7.0-rc7" src="https://img.shields.io/badge/Version-0.7.0--rc7-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.7.0-rc7" src="https://img.shields.io/badge/AppVersion-v0.7.0--rc7-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
-<p>To install the chart with the release name <code>zora</code>:</p>
+<p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
 <div class="highlight"><pre><span></span><code><span class="go">helm repo add undistro https://charts.undistro.io --force-update</span>
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
@@ -1030,7 +1090,7 @@ You're not viewing the latest version.
 <p>List all versions available of <code>undistro/zora</code> chart using <code>helm search repo undistro/zora --versions</code></p>
 </li>
 <li>
-<p>List all releases using <code>helm list</code></p>
+<p>List all releases in a specific namespace using <code>helm list -n zora-system</code></p>
 </li>
 <li>
 <p>Get the notes provided by <code>zora</code> release using <code>helm get notes zora -n zora-system</code></p>
@@ -1039,7 +1099,7 @@ You're not viewing the latest version.
 </blockquote>
 <h2 id="uninstalling-the-chart">Uninstalling the Chart<a class="headerlink" href="#uninstalling-the-chart" title="Permanent link">&para;</a></h2>
 <p>To uninstall/delete the <code>zora</code> release:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>helm<span class="w"> </span>delete<span class="w"> </span>zora
+<div class="highlight"><pre><span></span><code><span class="go">helm uninstall zora -n zora-system</span>
 </code></pre></div>
 <p>The command removes all the Kubernetes components associated with the chart and deletes the release.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
@@ -1459,11 +1519,11 @@ You're not viewing the latest version.
 </tbody>
 </table>
 <p>Specify each parameter using the <code>--set key=value[,key=value]</code> argument to <code>helm install</code>. For example,</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>helm<span class="w"> </span>install<span class="w"> </span>zora<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>server.service.port<span class="o">=</span><span class="m">8080</span><span class="w"> </span>undistro/zora
+<div class="highlight"><pre><span></span><code><span class="go">helm install zora \</span>
+<span class="go">  --set operator.resources.limits.memory=256Mi undistro/zora</span>
 </code></pre></div>
 <p>Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>helm<span class="w"> </span>install<span class="w"> </span>zora<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>undistro/zora
+<div class="highlight"><pre><span></span><code><span class="go">helm install zora -f values.yaml undistro/zora</span>
 </code></pre></div>
 <blockquote>
 <p><strong>Tip</strong>: You can use the default <a href="../values.yaml">values.yaml</a></p>
@@ -1499,7 +1559,7 @@ You're not viewing the latest version.
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../dashboard/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 📊 Zora Dashboard">
+          <a href="../faq/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ❓ FAQ">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -1509,7 +1569,7 @@ You're not viewing the latest version.
                 Previous
               </span>
               <div class="md-ellipsis">
-                📊 Zora Dashboard
+                ❓ FAQ
               </div>
             </div>
           </a>
