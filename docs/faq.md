@@ -18,7 +18,6 @@ and can be used either as standalone tool or integrated with Zora Dashboard.
 
 On the other hand, Zora Dashboard is a SaaS platform that provides a full experience, 
 centralizing the security posture management of all your clusters.
-
 It's free for up to 3 clusters. Visit the [Zora Dashboard page](dashboard.md) for more information.
 
 ## Can I use Zora OSS standalone without Zora Dashboard?
