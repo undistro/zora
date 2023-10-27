@@ -71,10 +71,10 @@ kubectl get vulnerabilities   -n zora-system
 
 ### What's new in 0.7
 
-In versions up to [0.6](/v0.6), Zora was installed in a single cluster (referred to as the management cluster) 
+In versions up to [0.6](/v0.6/), Zora was installed in a single cluster (referred to as the management cluster) 
 and connected to other clusters (referred to as target clusters) via kubeconfig, requiring only read permissions.
 
-Starting from version [0.7](/v0.7), Zora should be installed in each cluster you want to scan. 
+Starting from version [0.7](/v0.7/), Zora should be installed in each cluster you want to scan. 
 This significant change, in addition to streamlining the quick start, 
 enables the use of plugins for more in-depth scans of your cluster, 
 thereby providing more insights to help you keep your cluster secure and adhere to best practices.
