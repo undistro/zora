@@ -28,11 +28,11 @@ theme:
   palette:
     - scheme: default
       toggle:
-        icon: material/lightbulb
+        icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
       toggle:
-        icon: material/lightbulb-outline
+        icon: material/brightness-4
         name: Switch to light mode
   features:
     - content.tabs.link
