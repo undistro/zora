@@ -10,6 +10,13 @@ industry-leading frameworks.
 By scanning your cluster with multiple plugins at scheduled times, 
 Zora identifies potential issues, misconfigurations, and vulnerabilities.
 
+## Zora OSS vs Zora Dashboard
+
+[Zora OSS is open-source](https://github.com/undistro/zora), available under Apache 2.0 license,
+and can be used either as standalone tool or integrated with [Zora Dashboard](dashboard.md), 
+a SaaS platform which centralize all your clusters providing a full experience. 
+Please refer to [Zora Dashboard page](dashboard.md) for more details.
+
 ## Key features
 
 #### :octicons-plug-16: Multi-plugin architecture
@@ -49,10 +56,6 @@ are managed in CRDs (Custom Resource Definitions).
 
 ![Zora architecture diagram](assets/oss-arch-light.png#only-light){ loading=lazy }
 ![Zora architecture diagram](assets/oss-arch-dark.png#only-dark){ loading=lazy }
-
-!!! tip "Zora Dashboard"
-    If you are looking for a full experience, explore [Zora Dashboard](dashboard.md), our SaaS platform 
-    designed to seamlessly centralize the security posture management of all your Kubernetes clusters.
 
 ## Zora origins
 
