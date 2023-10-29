@@ -7,7 +7,7 @@ where the `zora-operator` deployment is created and scans are automatically sche
 
 - Kubernetes cluster 1.21+
 - Kubectl
-- Helm 3.6+
+- Helm 3.8+
 
 ## Install with Helm
 
@@ -24,16 +24,29 @@ First, [ensure that your current context of `kubectl` refer to the Kubernetes cl
 
 Then, run the following command to install Zora [Helm chart](https://helm.sh/docs/topics/charts/):
 
-```shell
-helm repo add undistro https://charts.undistro.io --force-update
-helm repo update undistro
-helm upgrade --install zora undistro/zora \
-  -n zora-system \
-  --version 0.7.0 \
-  --create-namespace \
-  --wait \
-  --set clusterName="$(kubectl config current-context)"
-```
+=== "HTTP chart repository"
+    
+    ```shell
+    helm repo add undistro https://charts.undistro.io --force-update
+    helm repo update undistro
+    helm upgrade --install zora undistro/zora \
+      -n zora-system \
+      --version 0.7.0 \
+      --create-namespace \
+      --wait \
+      --set clusterName="$(kubectl config current-context)"
+    ```
+
+=== "OCI registry"
+
+    ```shell
+    helm upgrade --install zora oci://ghcr.io/undistro/helm-charts/zora \
+      -n zora-system \
+      --version 0.7.0 \
+      --create-namespace \
+      --wait \
+      --set clusterName="$(kubectl config current-context)"
+    ```
 
 This command will install Zora in `zora-system` namespace, creating the namespace if it doesn't already exist.
 
