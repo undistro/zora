@@ -57,6 +57,12 @@ are managed in CRDs (Custom Resource Definitions).
 ![Zora architecture diagram](assets/oss-arch-light.png#only-light){ loading=lazy }
 ![Zora architecture diagram](assets/oss-arch-dark.png#only-dark){ loading=lazy }
 
+!!! note "Zora Dashboard"
+    When a Zora OSS installation is integrated with Zora Dashboard, 
+    scan results are automatically sent to Zora Dashboard SaaS by `zora-operator`.
+    
+    Check out [Zora Dashboard architecture](dashboard.md#architecture) for more details.
+
 ## Zora origins
 
 In the early days of the cloud native era, [Borg](https://intl.startrek.com/database_article/borg) 
