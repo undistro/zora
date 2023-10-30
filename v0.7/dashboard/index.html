@@ -1092,9 +1092,9 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-dashboard">Zora Dashboard<a class="headerlink" href="#zora-dashboard" title="Permanent link">&para;</a></h1>
-<p>Zora Dashboard is a SaaS platform designed to seamlessly centralize the security posture management of all your 
+<p>Zora Dashboard is a SaaS platform designed to seamlessly centralize the security posture management of all your
 Kubernetes clusters, providing a full experience powered by Zora OSS.</p>
-<p>It features a powerful UI that allows you to navigate, filter and explore details of issues and affected resources 
+<p>It features a powerful UI that allows you to navigate, filter and explore details of issues and affected resources
 across all your clusters. You can also invite users to your workspace.</p>
 <p><img alt="Zora Dashboard Screenshot" src="../assets/zora-dashboard-screenshot.png" /></p>
 <div align="center">
@@ -1104,13 +1104,17 @@ across all your clusters. You can also invite users to your workspace.</p>
 <p>Currently, it's free for up to 3 clusters.
 Please <a href="https://undistro.io/contact">contact us</a> if you need unlock more clusters in Zora Dashboard.</p>
 <h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>To integrate your cluster with Zora Dashboard, you need to provide the workspace ID 
+<p>To integrate your cluster with Zora Dashboard, you need to provide the workspace ID
 as an additional parameter in Zora OSS installation command.</p>
 <ol>
 <li>Sign in at <a href="https://zora-dashboard.undistro.io">Zora Dashboard</a>;</li>
 <li>Click on "Connect cluster" button and copy the workspace ID;</li>
-<li>Then provide it in <code>saas.workspaceID</code> parameter in <a href="../getting-started/installation/">Zora OSS installation command</a>:
-    <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>undistro<span class="w"> </span>https://charts.undistro.io<span class="w"> </span>--force-update
+<li>Then provide it in <code>saas.workspaceID</code> parameter in <a href="../getting-started/installation/">Zora OSS installation command</a>:</li>
+</ol>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">HTTP chart repository</label><label for="__tabbed_1_2">OCI registry</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>undistro<span class="w"> </span>https://charts.undistro.io<span class="w"> </span>--force-update
 helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> </span>undistro
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
@@ -1119,11 +1123,23 @@ helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class=
 <span class="w">  </span>--wait<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="hll"><span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;
-</span></code></pre></div></li>
-</ol>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>oci://ghcr.io/undistro/helm-charts/zora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.7.0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--wait<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p>Zora OSS acts as the engine of Zora Dashboard, meaning that once scans are completed, 
-<strong>only the results are sent to Zora Dashboard</strong>, where they are accessible by you 
+<p>Zora OSS acts as the engine of Zora Dashboard, meaning that once scans are completed,
+<strong>only the results are sent to Zora Dashboard</strong>, where they are accessible by you
 and those you have invited to your workspace.</p>
 <p><img alt="Zora Architecture Diagram" src="../assets/dashboard-arch-light.png#only-light" />
 <img alt="Zora Architecture Diagram" src="../assets/dashboard-arch-dark.png#only-dark" /></p>

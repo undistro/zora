@@ -468,6 +468,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
+  <a href="#zora-oss-vs-zora-dashboard" class="md-nav__link">
+    Zora OSS vs Zora Dashboard
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-features" class="md-nav__link">
     Key features
   </a>
@@ -1102,6 +1109,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
+  <a href="#zora-oss-vs-zora-dashboard" class="md-nav__link">
+    Zora OSS vs Zora Dashboard
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-features" class="md-nav__link">
     Key features
   </a>
@@ -1194,6 +1208,11 @@ You're not viewing the latest version.
 industry-leading frameworks.</p>
 <p>By scanning your cluster with multiple plugins at scheduled times, 
 Zora identifies potential issues, misconfigurations, and vulnerabilities.</p>
+<h2 id="zora-oss-vs-zora-dashboard">Zora OSS vs Zora Dashboard<a class="headerlink" href="#zora-oss-vs-zora-dashboard" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/undistro/zora">Zora OSS is open-source</a>, available under Apache 2.0 license,
+and can be used either as standalone tool or integrated with <a href="dashboard/">Zora Dashboard</a>, 
+a SaaS platform which centralize all your clusters providing a full experience. 
+Please refer to <a href="dashboard/">Zora Dashboard page</a> for more details.</p>
 <h2 id="key-features">Key features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <h4 id="multi-plugin-architecture"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4 8H2.5a1 1 0 0 0-1 1v5.25a.75.75 0 0 1-1.5 0V9a2.5 2.5 0 0 1 2.5-2.5H4V5.133a1.75 1.75 0 0 1 1.533-1.737l2.831-.353.76-.913c.332-.4.825-.63 1.344-.63h.782c.966 0 1.75.784 1.75 1.75V4h2.25a.75.75 0 0 1 0 1.5H13v4h2.25a.75.75 0 0 1 0 1.5H13v.75a1.75 1.75 0 0 1-1.75 1.75h-.782c-.519 0-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75 1.75 0 0 1 4 9.867Zm6.276-4.91-.95 1.14a.753.753 0 0 1-.483.265l-3.124.39a.25.25 0 0 0-.219.248v4.734c0 .126.094.233.219.249l3.124.39a.752.752 0 0 1 .483.264l.95 1.14a.25.25 0 0 0 .192.09h.782a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25h-.782a.25.25 0 0 0-.192.09Z"/></svg></span> Multi-plugin architecture<a class="headerlink" href="#multi-plugin-architecture" title="Permanent link">&para;</a></h4>
 <p>Zora seamlessly integrates open-source tools like 
@@ -1222,10 +1241,11 @@ where both scan and plugin configurations, as well as the results (misconfigurat
 are managed in CRDs (Custom Resource Definitions).</p>
 <p><img alt="Zora architecture diagram" loading="lazy" src="assets/oss-arch-light.png#only-light" />
 <img alt="Zora architecture diagram" loading="lazy" src="assets/oss-arch-dark.png#only-dark" /></p>
-<div class="admonition tip">
+<div class="admonition note">
 <p class="admonition-title">Zora Dashboard</p>
-<p>If you are looking for a full experience, explore <a href="dashboard/">Zora Dashboard</a>, our SaaS platform 
-designed to seamlessly centralize the security posture management of all your Kubernetes clusters.</p>
+<p>When a Zora OSS installation is integrated with Zora Dashboard, 
+scan results are automatically sent to Zora Dashboard SaaS by <code>zora-operator</code>.</p>
+<p>Check out <a href="dashboard/#architecture">Zora Dashboard architecture</a> for more details.</p>
 </div>
 <h2 id="zora-origins">Zora origins<a class="headerlink" href="#zora-origins" title="Permanent link">&para;</a></h2>
 <p>In the early days of the cloud native era, <a href="https://intl.startrek.com/database_article/borg">Borg</a> 
