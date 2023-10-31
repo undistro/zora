@@ -1,44 +1,82 @@
-# Introduction
+# Welcome to the Zora documentation
+
+This documentation will help you install, explore, and configure Zora!
 
 ## What is Zora?
 
-Zora is a multi-cluster scan that helps you to identify potential issues and vulnerabilities 
-in your Kubernetes clusters in a centralized way, ensuring that the recommended best practices are in place.
+Zora is an open-source solution that helps you achieve compliance with Kubernetes best practices recommended by 
+industry-leading frameworks.
 
-Throughout this documentation, we will use the following notation:
+By scanning your cluster with multiple plugins at scheduled times, 
+Zora identifies potential issues, misconfigurations, and vulnerabilities.
 
-- **[Management Cluster](glossary#management-cluster)** to refer to the only Kubernetes cluster where Zora is installed;
-- **[Target Cluster](target-cluster)** to refer to all clusters you will connect to Zora to be scanned.
+## Zora OSS vs Zora Dashboard
 
-Follow these steps to get started with Zora:
+[Zora OSS is open-source](https://github.com/undistro/zora), available under Apache 2.0 license,
+and can be used either as standalone tool or integrated with [Zora Dashboard](dashboard.md), 
+a SaaS platform which centralize all your clusters providing a full experience. 
+Please refer to [Zora Dashboard page](dashboard.md) for more details.
 
-1. [Install Zora](install) in a [Management Cluster](glossary#management-cluster)
+## Key features
 
-2. [Prepare the target cluster](target-cluster) by creating a service account and generating a kubeconfig
+#### :octicons-plug-16: Multi-plugin architecture
+  
+Zora seamlessly integrates open-source tools like 
+[Popeye](plugins/popeye.md), 
+[Marvin](plugins/marvin.md), 
+and [Trivy](plugins/trivy.md) as scanners. 
+These tools' capabilities are combined to provide you with a unified view of your cluster's security posture, 
+addressing potential issues, misconfigurations, and vulnerabilities.
 
-3. [Connect the target cluster to Zora](connect-cluster)
+#### :fontawesome-solid-list-check: Kubernetes compliance
 
-4. [Configure a scan for the target cluster](cluster-scan)
+Zora and its plugins provide actionable insights, guiding you to align your cluster with industry-recognized frameworks 
+such as 
+[NSA-CISA](https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF), 
+[MITRE ATT&CK](https://microsoft.github.io/Threat-Matrix-for-Kubernetes), 
+[CIS Benchmark](https://downloads.cisecurity.org), 
+and [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards).
 
-5. After a successful scan [checkout the potential reported issues](cluster-scan#list-cluster-issues)
+#### :octicons-sliders-16: Custom checks
 
-All the information about these steps are detailed throughout this documentation.
+Enabled by the [Marvin](https://github.com/undistro/marvin) plugin, Zora offers a declarative way to create your own 
+checks by using [CEL](https://github.com/google/cel-spec) expressions to define validation rules.
+
+#### :simple-kubernetes: Kubernetes-native
+
+All scan configurations and plugin reports, including misconfigurations and vulnerabilities,
+are securely stored as [CRDs (Custom Resource Definitions)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+within your Kubernetes cluster, making it easily accessible through the Kubernetes API and `kubectl` command.
 
 ## Architecture
 
-![Zora Architecture Diagram](assets/arch.png#only-light)
-![Zora Architecture Diagram](assets/arch-dark.png#only-dark)
+Zora works as a [Kubernetes Operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/), 
+where both scan and plugin configurations, as well as the results (misconfigurations and vulnerabilities), 
+are managed in CRDs (Custom Resource Definitions).
+
+![Zora architecture diagram](assets/oss-arch-light.png#only-light){ loading=lazy }
+![Zora architecture diagram](assets/oss-arch-dark.png#only-dark){ loading=lazy }
+
+!!! note "Zora Dashboard"
+    When a Zora OSS installation is integrated with Zora Dashboard, 
+    scan results are automatically sent to Zora Dashboard SaaS by `zora-operator`.
+    
+    Check out [Zora Dashboard architecture](dashboard.md#architecture) for more details.
 
 ## Zora origins
 
-In the early days of the cloud native era, [Borg](https://intl.startrek.com/database_article/borg) dominated the container-oriented cluster management scene.
-The origin of the name Borg refers to the cybernetic life form existing in the Star Trek series, 
+In the early days of the cloud native era, [Borg](https://intl.startrek.com/database_article/borg) 
+dominated the container-oriented cluster management scene.
+The origin of the name Borg refers to the cybernetic life form existing in the Star Trek series,
 that worked as a collective of individuals with a single mind and the same purpose, as well as a "[cluster](https://pt.wikipedia.org/wiki/Cluster)".
 
-As good nerds as we are and wishing to honor our Kubernetes' [predecessor](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/) (Borg) we named our project [Zora](https://intl.startrek.com/node/15372).
+As good nerds as we are and wishing to honor our Kubernetes' 
+[predecessor](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/) (Borg) we named our project
+[Zora](https://intl.startrek.com/node/15372).
 
 In Star Trek, Zora is the Artificial Intelligence that controls the ship U.S.S Discovery.  
-After being merged with a collective of other intelligences, Zora became sentient and became a member of the team, bringing insights and making the ship more efficient.
+After being merged with a collective of other intelligences, Zora became sentient and became a member of the team, 
+bringing insights and making the ship more efficient.
 
-Like Star Trek's Zora, our goal is to help manage your K8s environment by periodically scanning all of your clusters, 
-looking for potential issues or vulnerabilities with deployed features and configurations, and helping you ensure compliance with the best practices.
+Like Star Trek's Zora, our goal is to help manage your Kubernetes environment by combining multiple plugin capabilities to
+scan your clusters looking for misconfigurations and vulnerabilities.

@@ -9,12 +9,17 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: marvin
 spec:
+  type: misconfiguration
   image: ghcr.io/undistro/marvin:v0.2.0
   resources:
     limits:
       cpu: 500m
       memory: 100Mi
   mountCustomChecksVolume: true
+  securityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c

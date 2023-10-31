@@ -1,0 +1,40 @@
+apiVersion: zora.undistro.io/v1alpha1
+kind: Plugin
+metadata:
+  labels:
+    app.kubernetes.io/name: plugin
+    app.kubernetes.io/instance: trivy
+    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: zora
+  name: trivy
+spec:
+  type: vulnerability
+  image: ghcr.io/aquasecurity/trivy:0.45.1
+  securityContext:
+    allowPrivilegeEscalation: false
+  env:
+    - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
+      value: "false"
+  command:
+    - /bin/sh
+    - -c
+    - |
+      time trivy k8s \
+        --debug \
+        --no-progress \
+        --all-namespaces \
+        --scanners=vuln \
+        --report=summary \
+        -f=json \
+        -o $(DONE_DIR)/results.json \
+        cluster
+      
+      exitcode=$(echo $?)
+      if [ $exitcode -ne 0 ]; then
+        echo "ERROR" > $(DONE_DIR)/error
+      else
+        echo $(DONE_DIR)/results.json > $(DONE_DIR)/done
+      fi
+      ls -lh $(DONE_DIR)/
+      exit $exitcode

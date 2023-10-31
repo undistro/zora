@@ -20,23 +20,27 @@ fullnameOverride: ""
 # -- Cluster name. Should be set by `kubectl config current-context`.
 clusterName: ""
 
-# -- Cluster scan schedule in Cron format
-# @default -- Cron expression for every hour at the current minute + 5 minutes
-scanSchedule: ""
-
 saas:
   # -- Your SaaS workspace ID
   workspaceID: ""
   # -- SaaS server URL
   server: "https://zora-dashboard.undistro.io"
-  hooks:
+  # -- SaaS URL template to notify installation
+  installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
+
+hooks:
+  install:
     image:
-      # -- SaaS hooks image repository
+      # -- Install hook image repository
       repository: curlimages/curl
-      # -- SaaS hooks image tag
-      tag: '7.88.1'
-    # -- SaaS install hook URL template
-    installURL: "{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"
+      # -- Install hook image tag
+      tag: '8.2.1'
+  delete:
+    image:
+      # -- Delete hook image repository
+      repository: rancher/kubectl
+      # -- Delete hook image tag
+      tag: 'v1.28.2'
 
 # Credentials for private registries.
 imageCredentials:
@@ -141,20 +145,37 @@ operator:
     timeEncoding: rfc3339
 
 scan:
+  misconfiguration:
+    # -- Specifies whether misconfiguration scan is enabled
+    enabled: true
+    # -- Cluster scan schedule in Cron format for misconfiguration scan
+    # @default -- Cron expression for every hour at the current minute + 5 minutes
+    schedule: ""
+    # -- The number of successful finished scans and their issues to retain.
+    successfulScansHistoryLimit: 1
+    # -- Misconfiguration scanners plugins
+    plugins:
+      - marvin
+      - popeye
+  vulnerability:
+    # -- Specifies whether vulnerability scan is enabled
+    enabled: true
+    # -- Cluster scan schedule in Cron format for vulnerability scan
+    # @default -- Cron expression for every day at the current hour and minute + 5 minutes
+    schedule: ""
+    # -- The number of successful finished scans and their issues to retain.
+    successfulScansHistoryLimit: 1
+    # -- Vulnerability scanners plugins
+    plugins:
+      - trivy
   worker:
     image:
       # -- worker image repository
       repository: ghcr.io/undistro/zora/worker
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
-  # -- Names of the default plugins
-  defaultPlugins:
-    - popeye
-    - marvin
   plugins:
     marvin:
-      # -- Specifies whether the marvin plugin should be created
-      enabled: true
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
       resources:
         requests:
@@ -169,9 +190,19 @@ scan:
         # -- marvin plugin image tag
         tag: v0.2.0
 
+    trivy:
+      # -- Specifies whether only fixed vulnerabilities should be reported
+      ignoreUnfixed: false
+      # -- Specifies whether vulnerability descriptions should be ignored
+      ignoreDescriptions: false
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
+      resources: {}
+      image:
+        # -- trivy plugin image repository
+        repository: ghcr.io/aquasecurity/trivy
+        # -- trivy plugin image tag
+        tag: 0.45.1
     popeye:
-      # -- Specifies whether the popeye plugin should be created
-      enabled: true
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
       # 2. kubernetes system reserved RBAC (prefixed with `system:`);

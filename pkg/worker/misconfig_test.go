@@ -29,7 +29,7 @@ import (
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
-func TestParseResults(t *testing.T) {
+func TestParseMisconfigResults(t *testing.T) {
 	type args struct {
 		cfg      *config
 		filename string
@@ -42,12 +42,12 @@ func TestParseResults(t *testing.T) {
 	}{
 		{
 			name:    "invalid plugin",
-			args:    args{cfg: &config{PluginName: "foo"}},
+			args:    args{cfg: &config{PluginName: "trivy"}}, // trivy is not a misconfiguration plugin
 			want:    nil,
 			wantErr: true,
 		},
 		{
-			name: "reader of a directory",
+			name: "directory reader",
 			args: args{
 				cfg:      &config{PluginName: "marvin"},
 				filename: t.TempDir(),
@@ -331,20 +331,20 @@ func TestParseResults(t *testing.T) {
 			if tt.args.filename != "" {
 				f, err := os.Open(tt.args.filename)
 				if err != nil {
-					t.Errorf("parseResults() setup error = %v", err)
+					t.Errorf("parseMisconfigResults() setup error = %v", err)
 					return
 				}
 				r = f
 			}
-			got, err := parseResults(context.TODO(), tt.args.cfg, r)
+			got, err := parseMisconfigResults(context.TODO(), tt.args.cfg, r)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseResults() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("parseMisconfigResults() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			sortClusterIssues(got)
 			sortClusterIssues(tt.want)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseResults() got unexpect result, diff = %v", cmp.Diff(got, tt.want))
+				t.Errorf("parseMisconfigResults() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
 		})
 	}

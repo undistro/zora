@@ -24,14 +24,15 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	zora "github.com/undistro/zora/pkg/clientset/versioned"
 )
 
 func Run(ctx context.Context) error {
-	log := logr.FromContextOrDiscard(ctx)
 	cfg, err := configFromEnv()
 	if err != nil {
 		return fmt.Errorf("failed to get config from env: %v", err)
@@ -44,16 +45,11 @@ func Run(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("failed to gather results: %v", err)
 	}
-	issues, err := parseResults(ctx, cfg, results)
-	if err != nil {
-		return err
-	}
-	for _, issue := range issues {
-		issue, err := client.ZoraV1alpha1().ClusterIssues(cfg.Namespace).Create(ctx, &issue, metav1.CreateOptions{})
-		if err != nil {
-			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
-		}
-		log.Info(fmt.Sprintf("cluster issue %q successfully created", issue.Name), "resource version", issue.ResourceVersion)
+	switch cfg.PluginType {
+	case "misconfiguration":
+		return handleMisconfiguration(ctx, cfg, results, client)
+	case "vulnerability":
+		return handleVulnerability(ctx, cfg, results, client)
 	}
 	return nil
 }
@@ -133,4 +129,13 @@ func ignoreNotExist(err error) error {
 		return nil
 	}
 	return err
+}
+
+func ownerReference(cfg *config) metav1.OwnerReference {
+	return metav1.OwnerReference{
+		APIVersion: batchv1.SchemeGroupVersion.String(),
+		Kind:       "Job",
+		Name:       cfg.JobName,
+		UID:        types.UID(cfg.JobUID),
+	}
 }

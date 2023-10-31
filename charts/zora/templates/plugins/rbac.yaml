@@ -20,10 +20,12 @@ rules:
   - apiGroups: [ "zora.undistro.io" ]
     resources:
       - clusterissues
+      - vulnerabilityreports
     verbs: [ "create", "delete", "get", "list", "patch", "update", "watch" ]
   - apiGroups: [ "zora.undistro.io" ]
     resources:
       - clusterissues/status
+      - vulnerabilityreports/status
     verbs: [ "get" ]
   - apiGroups: [ "" ]
     resources:
@@ -35,6 +37,8 @@ rules:
       - persistentvolumes
       - persistentvolumeclaims
       - pods
+      - replicationcontrollers
+      - resourcequotas
       - secrets
       - serviceaccounts
       - services
@@ -78,7 +82,6 @@ rules:
       - cronjobs
     verbs: [ "get", "list" ]
 ---
-{{ $crb := (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "zora-plugins-rolebinding") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -91,6 +94,7 @@ subjects:
   - kind: ServiceAccount
     name: {{ include "zora.operatorServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
+  {{- $crb := (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "zora-plugins-rolebinding") }}
   {{- range $s := $crb.subjects }}
   - kind: {{ $s.kind }}
     name: {{ $s.name }}

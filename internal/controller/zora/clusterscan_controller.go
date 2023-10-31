@@ -73,6 +73,8 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=plugins,verbs=get;list;watch
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=get
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch
@@ -225,8 +227,6 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 		}
 
 		pluginStatus := clusterscan.Status.GetPluginStatus(plugin.Name)
-		pluginStatus.Suspend = *cronJob.Spec.Suspend
-		pluginStatus.Schedule = cronJob.Spec.Schedule
 
 		if sched, err := cron.ParseStandard(cronJob.Spec.Schedule); err != nil {
 			log.Error(err, "failed to parse CronJob Schedule")
@@ -282,12 +282,13 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 	return notReadyErr
 }
 
-// countIssues update the fields IssueCount (for each plugin) and TotalIssues from ClusterScan status based on the given issues
+// countIssues update the fields TotalIssues (for each plugin) and TotalIssues from ClusterScan status based on the given issues
 func (r *ClusterScanReconciler) countIssues(issues []v1alpha1.ClusterIssue, clusterscan *v1alpha1.ClusterScan) {
 	totalIssuesByPlugin := map[string]int{}
 	var totalIssues *int
 	for _, i := range issues {
-		totalIssuesByPlugin[i.Labels[v1alpha1.LabelPlugin]]++
+		pluginName := i.Labels[v1alpha1.LabelPlugin]
+		totalIssuesByPlugin[pluginName]++
 		if totalIssues == nil {
 			totalIssues = new(int)
 		}
@@ -295,9 +296,9 @@ func (r *ClusterScanReconciler) countIssues(issues []v1alpha1.ClusterIssue, clus
 	}
 	for p, ps := range clusterscan.Status.Plugins {
 		if t, ok := totalIssuesByPlugin[p]; ok {
-			ps.IssueCount = &t
+			ps.TotalIssues = &t
 		} else {
-			ps.IssueCount = nil
+			ps.TotalIssues = nil
 		}
 	}
 	clusterscan.Status.TotalIssues = totalIssues
@@ -394,7 +395,7 @@ func (r *ClusterScanReconciler) getLastJob(ctx context.Context, cronJob *batchv1
 	log := ctrllog.FromContext(ctx, "CronJob", cronJob.Name)
 
 	jobList := &batchv1.JobList{}
-	if err := r.List(ctx, jobList, client.MatchingFields{jobOwnerKey: cronJob.Name}); err != nil {
+	if err := r.List(ctx, jobList, client.InNamespace(cronJob.Namespace), client.MatchingFields{jobOwnerKey: cronJob.Name}); err != nil {
 		log.Error(err, "failed to list Jobs")
 		return nil, err
 	}

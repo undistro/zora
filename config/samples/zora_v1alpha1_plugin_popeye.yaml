@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/created-by: zora
   name: popeye
 spec:
+  type: misconfiguration
   image: ghcr.io/undistro/popeye:pr252
   resources:
     limits:
@@ -69,6 +70,9 @@ spec:
                 codes: [1109]
             policy/v1/poddisruptionbudgets:
               - name: 'rx:^kube-(system|public|node-lease)'
+  securityContext:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c

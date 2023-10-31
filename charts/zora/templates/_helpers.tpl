@@ -77,16 +77,39 @@ Create the name of the service account to use in Operator
 {{- end }}
 {{- end }}
 
-{{- define "imagePullSecret" }}
+{{- define "zora.imagePullSecret" }}
 {{- with .Values.imageCredentials }}
 {{- printf "{\"auths\":{\"%s\":{\"auth\":\"%s\"}}}" .registry (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
 
-{{- define "clusterName" }}
-{{- regexReplaceAll "\\W+" (required "clusterName is required" .Values.clusterName) "-" }}
+{{- define "zora.clusterName" }}
+{{- regexReplaceAll "\\W+" (required "`clusterName` is required." .Values.clusterName) "-" }}
 {{- end }}
 
-{{- define "scanSchedule"}}
-{{- default (printf "%d * * * *" (add 5 (now | date "04"))) .Values.scanSchedule }}
+{{- define "zora.hourlySchedule" }}
+{{- $minute := add 5 (now | date "04") }}
+{{- if ge $minute 60 }}
+{{- $minute = sub $minute 60 }}
+{{- end }}
+{{- printf "%d * * * *" $minute }}
+{{- end }}
+
+{{- define "zora.dailySchedule" }}
+{{- $hour := (dateInZone "15" (now) "UTC" | int) }}
+{{- $minute := add 5 (now | date "04") }}
+{{- if ge $minute 60 }}
+{{- $minute = sub $minute 60 }}
+{{- $hour = add1 $hour }}
+{{- end }}
+{{- printf "%d %d * * *" $minute $hour }}
+{{- end }}
+
+{{- define "zora.misconfigSchedule" }}
+{{- default (include "zora.hourlySchedule" .) .Values.scan.misconfiguration.schedule }}
+{{- end }}
+
+
+{{- define "zora.vulnSchedule" }}
+{{- default (include "zora.dailySchedule" .) .Values.scan.vulnerability.schedule }}
 {{- end }}

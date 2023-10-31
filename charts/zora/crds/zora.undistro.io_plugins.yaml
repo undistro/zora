@@ -33,6 +33,9 @@ spec:
     - jsonPath: .spec.image
       name: Image
       type: string
+    - jsonPath: .spec.type
+      name: Type
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
@@ -83,8 +86,8 @@ spec:
                   type: string
                 type: array
               env:
-                description: List of environment variables to set in the container.
-                  Cannot be updated.
+                description: List of environment variables to set in plugin and worker
+                  containers. Cannot be updated.
                 items:
                   description: EnvVar represents an environment variable present in
                     a Container.
@@ -194,11 +197,12 @@ spec:
                 type: array
               envFrom:
                 description: List of sources to populate environment variables in
-                  the container. The keys defined within a source must be a C_IDENTIFIER.
-                  All invalid keys will be reported as an event when the container
-                  is starting. When a key exists in multiple sources, the value associated
-                  with the last source will take precedence. Values defined by an
-                  Env with a duplicate key will take precedence. Cannot be updated.
+                  plugin and worker containers. The keys defined within a source must
+                  be a C_IDENTIFIER. All invalid keys will be reported as an event
+                  when the container is starting. When a key exists in multiple sources,
+                  the value associated with the last source will take precedence.
+                  Values defined by an Env with a duplicate key will take precedence.
+                  Cannot be updated.
                 items:
                   description: EnvFromSource represents the source of a set of ConfigMaps
                   properties:
@@ -454,8 +458,16 @@ spec:
                         type: string
                     type: object
                 type: object
+              type:
+                default: misconfiguration
+                description: Indicates what this plugin reports
+                enum:
+                - misconfiguration
+                - vulnerability
+                type: string
             required:
             - image
+            - type
             type: object
           status:
             description: PluginStatus defines the observed state of Plugin

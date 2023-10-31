@@ -70,7 +70,7 @@ spec:
             - --zap-stacktrace-level={{ .Values.operator.log.stacktraceLevel }}
             - --zap-time-encoding={{ .Values.operator.log.timeEncoding }}
             - --default-plugins-namespace={{ .Release.Namespace }}
-            - --default-plugins-names={{ join "," .Values.scan.defaultPlugins }}
+            - --default-plugins-names={{ join "," .Values.scan.misconfiguration.plugins }}
             - --worker-image={{ printf "%s:%s" .Values.scan.worker.image.repository (.Values.scan.worker.image.tag | default .Chart.AppVersion) }}
             - --cronjob-clusterrolebinding-name=zora-plugins-rolebinding
             - --cronjob-serviceaccount-name=zora-plugins

@@ -14,10 +14,10 @@
 
 apiVersion: v2
 name: zora
-description: Zora scans multiple Kubernetes clusters and reports potential issues.
-icon: https://zora-docs.undistro.io/assets/logo.png
+description: A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
+icon: https://zora-docs.undistro.io/v0.7/assets/logo.svg
 type: application
-version: 0.7.0-rc2
-appVersion: "v0.7.0-rc2"
+version: 0.7.0
+appVersion: "v0.7.0"
 sources:
   - https://github.com/undistro/zora

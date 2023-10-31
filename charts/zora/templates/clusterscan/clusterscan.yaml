@@ -1,0 +1,66 @@
+# Copyright 2023 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+{{- if not (.Capabilities.APIVersions.Has "batch/v1") }}
+  {{- fail "Required API group `batch/v1` not available." }}
+{{- end }}
+apiVersion: zora.undistro.io/v1alpha1
+kind: Cluster
+metadata:
+  labels:
+    zora.undistro.io/default: "true"
+    {{- include "zora.labels" . | nindent 4 }}
+  name: {{ include "zora.clusterName" . }}
+spec: {}
+{{- if .Values.scan.misconfiguration.enabled }}
+---
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  labels:
+    zora.undistro.io/default: "true"
+    {{- include "zora.labels" . | nindent 4 }}
+  name: {{ include "zora.clusterName" . }}-misconfig
+spec:
+  clusterRef:
+    name: {{ include "zora.clusterName" . }}
+  schedule: {{ include "zora.misconfigSchedule" . | quote }}
+  successfulScansHistoryLimit: {{ .Values.scan.misconfiguration.successfulScansHistoryLimit }}
+  {{- if .Values.scan.misconfiguration.plugins }}
+  plugins:
+  {{- range .Values.scan.misconfiguration.plugins }}
+    - name: {{ . }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- if .Values.scan.vulnerability.enabled }}
+---
+apiVersion: zora.undistro.io/v1alpha1
+kind: ClusterScan
+metadata:
+  labels:
+    zora.undistro.io/default: "true"
+    {{- include "zora.labels" . | nindent 4 }}
+  name: {{ include "zora.clusterName" . }}-vuln
+spec:
+  clusterRef:
+    name: {{ include "zora.clusterName" . }}
+  schedule: {{ include "zora.vulnSchedule" . | quote }}
+  successfulScansHistoryLimit: {{ .Values.scan.vulnerability.successfulScansHistoryLimit }}
+  {{- if .Values.scan.vulnerability.plugins }}
+  plugins:
+  {{- range .Values.scan.vulnerability.plugins }}
+    - name: {{ . }}
+  {{- end }}
+  {{- end }}
+{{- end }}

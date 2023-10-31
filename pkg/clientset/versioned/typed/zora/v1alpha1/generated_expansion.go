@@ -7,3 +7,5 @@ type ClusterExpansion interface{}
 type ClusterIssueExpansion interface{}
 
 type ClusterScanExpansion interface{}
+
+type VulnerabilityReportExpansion interface{}

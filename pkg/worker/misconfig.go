@@ -22,17 +22,17 @@ import (
 	"strconv"
 	"strings"
 
-	batchv1 "k8s.io/api/batch/v1"
+	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	zora "github.com/undistro/zora/pkg/clientset/versioned"
 	"github.com/undistro/zora/pkg/worker/report/marvin"
 	"github.com/undistro/zora/pkg/worker/report/popeye"
 )
 
-// pluginParsers maps parse function by plugin name
-var pluginParsers = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.ClusterIssueSpec, error){
+// misconfigPlugins maps parse function by misconfig plugin name
+var misconfigPlugins = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.ClusterIssueSpec, error){
 	"popeye": popeye.Parse,
 	"marvin": marvin.Parse,
 }
@@ -42,9 +42,27 @@ var clusterIssueTypeMeta = metav1.TypeMeta{
 	APIVersion: v1alpha1.SchemeGroupVersion.String(),
 }
 
-// parseResults converts the given results into ClusterIssues
-func parseResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
-	parseFunc, ok := pluginParsers[cfg.PluginName]
+var createOpts = metav1.CreateOptions{}
+
+func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader, client *zora.Clientset) error {
+	log := logr.FromContextOrDiscard(ctx)
+	issues, err := parseMisconfigResults(ctx, cfg, results)
+	if err != nil {
+		return err
+	}
+	for _, issue := range issues {
+		issue, err := client.ZoraV1alpha1().ClusterIssues(cfg.Namespace).Create(ctx, &issue, createOpts)
+		if err != nil {
+			return fmt.Errorf("failed to create ClusterIssue %q: %v", issue.Name, err)
+		}
+		log.Info(fmt.Sprintf("ClusterIssue %q successfully created", issue.Name), "resourceVersion", issue.ResourceVersion)
+	}
+	return nil
+}
+
+// parseMisconfigResults converts the given results into ClusterIssues
+func parseMisconfigResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
+	parseFunc, ok := misconfigPlugins[cfg.PluginName]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
 	}
@@ -52,12 +70,7 @@ func parseResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alph
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse %q results: %v", cfg.PluginName, err)
 	}
-	owner := metav1.OwnerReference{
-		APIVersion: batchv1.SchemeGroupVersion.String(),
-		Kind:       "Job",
-		Name:       cfg.JobName,
-		UID:        types.UID(cfg.JobUID),
-	}
+	owner := ownerReference(cfg)
 	issues := make([]v1alpha1.ClusterIssue, len(specs))
 	for i := 0; i < len(specs); i++ {
 		issues[i] = newClusterIssue(cfg, specs[i], owner)
@@ -77,10 +90,10 @@ func newClusterIssue(cfg *config, spec v1alpha1.ClusterIssueSpec, owner metav1.O
 			Labels: map[string]string{
 				v1alpha1.LabelScanID:   cfg.JobUID,
 				v1alpha1.LabelCluster:  cfg.ClusterName,
+				v1alpha1.LabelPlugin:   cfg.PluginName,
 				v1alpha1.LabelSeverity: string(spec.Severity),
 				v1alpha1.LabelIssueID:  spec.ID,
 				v1alpha1.LabelCategory: strings.ReplaceAll(spec.Category, " ", ""),
-				v1alpha1.LabelPlugin:   cfg.PluginName,
 				v1alpha1.LabelCustom:   strconv.FormatBool(spec.Custom),
 			},
 		},

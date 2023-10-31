@@ -1,0 +1,70 @@
+# Copyright 2023 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zora-cluster-delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: zora-cluster-delete
+rules:
+  - verbs: [ "get", "list", "delete" ]
+    apiGroups: [ "zora.undistro.io" ]
+    resources: [ "clusters" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: zora-cluster-delete
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: zora-cluster-delete
+subjects:
+  - kind: ServiceAccount
+    name: zora-cluster-delete
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "zora.clusterName" . }}-delete-hook
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": hook-succeeded
+  labels:
+    {{- include "zora.labels" . | nindent 4 }}
+spec:
+  serviceAccountName: zora-cluster-delete
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+  containers:
+    - name: kubectl
+      image: {{ .Values.hooks.delete.image.repository }}:{{ .Values.hooks.delete.image.tag }}
+      imagePullPolicy: IfNotPresent
+      args:
+        - delete
+        - clusters.zora.undistro.io
+        - {{ include "zora.clusterName" . }}
+        - --namespace={{ .Release.Namespace }}
+        - --ignore-not-found=true
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+  restartPolicy: Never

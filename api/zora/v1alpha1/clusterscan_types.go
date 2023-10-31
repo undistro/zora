@@ -39,16 +39,14 @@ type ClusterScanSpec struct {
 	// The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
 	Plugins []PluginReference `json:"plugins,omitempty"`
 
-	// SuccessfulScansHistoryLimit specifies the amount of successfully
-	// completed scan Jobs to be kept in the cluster. This field is analogous
-	// to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
+	// The number of successful finished scans and their issues to retain. Value must be non-negative integer.
+	// Defaults to 3.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:default=3
 	SuccessfulScansHistoryLimit *int32 `json:"successfulScansHistoryLimit,omitempty"`
 
-	// FailedScansHistoryLimit specifies the amount of failed scan Jobs to be
-	// kept in the cluster. This field is analogous to
-	// <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
+	// The number of failed finished scans to retain. Value must be non-negative integer.
+	// Defaults to 1.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:default=1
 	FailedScansHistoryLimit *int32 `json:"failedScansHistoryLimit,omitempty"`
@@ -60,13 +58,6 @@ type PluginReference struct {
 
 	// Namespace defines the space within which the Plugin name must be unique.
 	Namespace string `json:"namespace,omitempty"`
-
-	// This flag tells the controller to suspend subsequent executions, it does
-	// not apply to already started executions.  Defaults to false.
-	Suspend *bool `json:"suspend,omitempty"`
-
-	// The schedule in Cron format for this Plugin, see https://en.wikipedia.org/wiki/Cron.
-	Schedule string `json:"schedule,omitempty"`
 
 	// List of environment variables to set in the Plugin container.
 	Env []corev1.EnvVar `json:"env,omitempty"`
@@ -221,19 +212,13 @@ type PluginScanStatus struct {
 	// LastErrorMsg contains a plugin error message from the last failed scan.
 	LastErrorMsg string `json:"lastErrorMsg,omitempty"`
 
-	// IssueCount holds the sum of ClusterIssues found in the last successful scan.
-	IssueCount *int `json:"issueCount,omitempty"`
-
-	// Suspend field value from ClusterScan spec.plugins.*.suspend
-	Suspend bool `json:"suspend,omitempty"`
-
-	// The Cron schedule of this plugin
-	Schedule string `json:"schedule,omitempty"`
+	// TotalIssues holds the sum of ClusterIssues found in the last successful scan.
+	TotalIssues *int `json:"totalIssues,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:resource:shortName="cscan"
+//+kubebuilder:resource:shortName={scan,scans}
 //+kubebuilder:printcolumn:name="Cluster",type="string",JSONPath=".spec.clusterRef.name",priority=0
 //+kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule",priority=0
 //+kubebuilder:printcolumn:name="Suspend",type="boolean",JSONPath=".status.suspend",priority=0
@@ -241,10 +226,9 @@ type PluginScanStatus struct {
 //+kubebuilder:printcolumn:name="Last Status",type="string",JSONPath=".status.lastStatus",priority=0
 //+kubebuilder:printcolumn:name="Last Schedule",type="date",JSONPath=".status.lastScheduleTime",priority=0
 //+kubebuilder:printcolumn:name="Last Successful",type="date",JSONPath=".status.lastSuccessfulTime",priority=0
-//+kubebuilder:printcolumn:name="Issues",type="integer",JSONPath=".status.totalIssues",priority=0
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
-//+kubebuilder:printcolumn:name="SaaS",type="string",JSONPath=".status.conditions[?(@.type==\"SaaS\")].reason",priority=0
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=0
+//+kubebuilder:printcolumn:name="SaaS",type="string",JSONPath=".status.conditions[?(@.type==\"SaaS\")].reason",priority=1
 //+kubebuilder:printcolumn:name="Next Schedule",type="string",JSONPath=".status.nextScheduleTime",priority=1
 
 // ClusterScan is the Schema for the clusterscans API

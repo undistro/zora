@@ -27,6 +27,7 @@ spec:
     listKind: CustomCheckList
     plural: customchecks
     shortNames:
+    - check
     - checks
     singular: customcheck
   scope: Namespaced

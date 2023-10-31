@@ -100,18 +100,14 @@ func (r *CronJobMutator) Mutate() error {
 	}
 	r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
 	r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
-	schedule := r.PluginRef.Schedule
-	if schedule == "" {
-		schedule = r.ClusterScan.Spec.Schedule
-	}
-	r.Existing.Spec.Schedule = schedule
+	r.Existing.Spec.Schedule = r.ClusterScan.Spec.Schedule
 	r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 	r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
 	r.Existing.Spec.FailedJobsHistoryLimit = r.ClusterScan.Spec.FailedScansHistoryLimit
 
 	r.Existing.Spec.Suspend = &r.Suspend
 	if !r.Suspend {
-		r.Existing.Spec.Suspend = firstNonNilBoolPointer(r.PluginRef.Suspend, r.ClusterScan.Spec.Suspend)
+		r.Existing.Spec.Suspend = r.ClusterScan.Spec.Suspend
 	}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
@@ -138,9 +134,6 @@ func (r *CronJobMutator) Mutate() error {
 				},
 			},
 		})
-	}
-	r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
-		RunAsNonRoot: pointer.Bool(true),
 	}
 
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
@@ -196,9 +189,14 @@ func (r *CronJobMutator) workerContainer() corev1.Container {
 		Name:            workerContainerName,
 		Image:           r.WorkerImage,
 		Env:             r.workerEnv(),
+		EnvFrom:         r.Plugin.Spec.EnvFrom,
 		Resources:       r.Plugin.Spec.Resources,
 		VolumeMounts:    commonVolumeMounts,
 		ImagePullPolicy: corev1.PullIfNotPresent,
+		SecurityContext: &corev1.SecurityContext{
+			RunAsNonRoot:             pointer.Bool(true),
+			AllowPrivilegeEscalation: pointer.Bool(false),
+		},
 	}
 }
 
@@ -238,6 +236,10 @@ func (r *CronJobMutator) initContainer() corev1.Container {
 		VolumeMounts:    []corev1.VolumeMount{customChecksVolume},
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		Resources:       r.Plugin.Spec.Resources,
+		SecurityContext: &corev1.SecurityContext{
+			RunAsNonRoot:             pointer.Bool(true),
+			AllowPrivilegeEscalation: pointer.Bool(false),
+		},
 	}
 }
 
@@ -269,7 +271,8 @@ func (r *CronJobMutator) pluginEnv() []corev1.EnvVar {
 
 // workerEnv returns a list of environment variables to set in the Worker container
 func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
-	return append(commonEnv,
+	p := append(commonEnv, r.Plugin.Spec.Env...)
+	p = append(p,
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",
 			Value: r.ClusterScan.Spec.ClusterRef.Name,
@@ -283,6 +286,10 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 		corev1.EnvVar{
 			Name:  "PLUGIN_NAME",
 			Value: r.Plugin.Name,
+		},
+		corev1.EnvVar{
+			Name:  "PLUGIN_TYPE",
+			Value: r.Plugin.Spec.Type,
 		},
 		corev1.EnvVar{
 			Name: "JOB_NAME",
@@ -303,13 +310,5 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 			},
 		},
 	)
-}
-
-func firstNonNilBoolPointer(pointers ...*bool) *bool {
-	for _, b := range pointers {
-		if b != nil {
-			return b
-		}
-	}
-	return pointer.Bool(false)
+	return p
 }

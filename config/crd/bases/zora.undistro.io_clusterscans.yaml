@@ -13,7 +13,8 @@ spec:
     listKind: ClusterScanList
     plural: clusterscans
     shortNames:
-    - cscan
+    - scan
+    - scans
     singular: clusterscan
   scope: Namespaced
   versions:
@@ -39,18 +40,16 @@ spec:
     - jsonPath: .status.lastSuccessfulTime
       name: Last Successful
       type: date
-    - jsonPath: .status.totalIssues
-      name: Issues
-      type: integer
     - jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
-      type: string
-    - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
-      name: SaaS
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
+    - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
+      name: SaaS
+      priority: 1
+      type: string
     - jsonPath: .status.nextScheduleTime
       name: Next Schedule
       priority: 1
@@ -86,9 +85,8 @@ spec:
                 x-kubernetes-map-type: atomic
               failedScansHistoryLimit:
                 default: 1
-                description: FailedScansHistoryLimit specifies the amount of failed
-                  scan Jobs to be kept in the cluster. This field is analogous to
-                  <Cronjob.Spec.FailedScansHistoryLimit> from the <batch> package.
+                description: The number of failed finished scans to retain. Value
+                  must be non-negative integer. Defaults to 1.
                 format: int32
                 minimum: 0
                 type: integer
@@ -224,15 +222,6 @@ spec:
                       description: Namespace defines the space within which the Plugin
                         name must be unique.
                       type: string
-                    schedule:
-                      description: The schedule in Cron format for this Plugin, see
-                        https://en.wikipedia.org/wiki/Cron.
-                      type: string
-                    suspend:
-                      description: This flag tells the controller to suspend subsequent
-                        executions, it does not apply to already started executions.  Defaults
-                        to false.
-                      type: boolean
                   required:
                   - name
                   type: object
@@ -242,9 +231,8 @@ spec:
                 type: string
               successfulScansHistoryLimit:
                 default: 3
-                description: SuccessfulScansHistoryLimit specifies the amount of successfully
-                  completed scan Jobs to be kept in the cluster. This field is analogous
-                  to <Cronjob.Spec.SuccessfulJobsHistoryLimit> from the <batch> package.
+                description: The number of successful finished scans and their issues
+                  to retain. Value must be non-negative integer. Defaults to 3.
                 format: int32
                 minimum: 0
                 type: integer
@@ -364,10 +352,6 @@ spec:
               plugins:
                 additionalProperties:
                   properties:
-                    issueCount:
-                      description: IssueCount holds the sum of ClusterIssues found
-                        in the last successful scan.
-                      type: integer
                     lastErrorMsg:
                       description: LastErrorMsg contains a plugin error message from
                         the last failed scan.
@@ -405,12 +389,10 @@ spec:
                       description: Time when the next job will schedule.
                       format: date-time
                       type: string
-                    schedule:
-                      description: The Cron schedule of this plugin
-                      type: string
-                    suspend:
-                      description: Suspend field value from ClusterScan spec.plugins.*.suspend
-                      type: boolean
+                    totalIssues:
+                      description: TotalIssues holds the sum of ClusterIssues found
+                        in the last successful scan.
+                      type: integer
                   type: object
                 description: Information of the last scans of plugins
                 type: object

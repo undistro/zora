@@ -202,3 +202,21 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - vulnerabilityreports
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - vulnerabilityreports/status
+  verbs:
+  - get

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{ if .Values.scan.plugins.marvin.enabled -}}
 apiVersion: zora.undistro.io/v1alpha1
 kind: Plugin
 metadata:
@@ -20,12 +19,17 @@ metadata:
   labels:
     {{- include "zora.labels" . | nindent 4 }}
 spec:
+  type: misconfiguration
   image: "{{ .Values.scan.plugins.marvin.image.repository }}:{{ .Values.scan.plugins.marvin.image.tag }}"
   {{- if .Values.scan.plugins.marvin.resources }}
   resources:
     {{- toYaml .Values.scan.plugins.marvin.resources | nindent 4 }}
   {{- end }}
   mountCustomChecksVolume: true
+  securityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
   command:
     - /bin/sh
     - -c
@@ -45,4 +49,3 @@ spec:
       end=$(date +%s)
       echo "Scan has finished in $(($end-$start)) seconds with exit code $exitcode"
       exit $exitcode
-{{- end }}

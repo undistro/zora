@@ -52,4 +52,12 @@ resources:
   kind: CustomCheck
   path: github.com/undistro/zora/api/zora/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: undistro.io
+  group: zora
+  kind: VulnerabilityReport
+  path: github.com/undistro/zora/api/zora/v1alpha1
+  version: v1alpha1
 version: "3"

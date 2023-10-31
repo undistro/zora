@@ -127,7 +127,7 @@ func TestNewResourcedIssue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := NewResourcedIssue(tt.clusterIssue)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewIssues() = %s", cmp.Diff(got, tt.want))
+				t.Errorf("NewIssues() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
 		})
 	}
