@@ -2,72 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/dashboard/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/faq/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/helm-chart/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/configuration/custom-checks/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/configuration/resources/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/configuration/retain-issues/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/configuration/scan-schedule/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/configuration/suspend-scan/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/getting-started/installation/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/plugins/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/plugins/marvin/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/plugins/popeye/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.7/plugins/trivy/</loc>
-         <lastmod>2023-10-30</lastmod>
+         <lastmod>2023-10-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
