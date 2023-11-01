@@ -87,5 +87,5 @@ then transforms the results and creates `ClusterIssues` and `VulnerabilityReport
 ![Zora plugin diagram](../assets/plugin-arch-dark.png#only-dark)
 
 !!! note
-    This architecture for supporting plugins is inspired by [Sonobuoy](https://sonobuoy.io/), 
+    This architecture for supporting plugins is inspired by [Sonobuoy](https://sonobuoy.io/){:target="_blank"}, 
     a project used for CNCF conformance certification.

@@ -1,6 +1,6 @@
 # Installation
 
-Zora OSS is installed inside your Kubernetes clusters using [Helm](https://helm.sh/),
+Zora OSS is installed inside your Kubernetes clusters using [Helm](https://helm.sh/){:target="_blank"},
 where the `zora-operator` deployment is created and scans are automatically scheduled for your cluster.
 
 ## Prerequisites
@@ -11,7 +11,7 @@ where the `zora-operator` deployment is created and scans are automatically sche
 
 ## Install with Helm
 
-First, [ensure that your current context of `kubectl` refer to the Kubernetes cluster you wish to install Zora into](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
+First, [ensure that your current context of `kubectl` refer to the Kubernetes cluster you wish to install Zora into](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/){:target="_blank"}.
 
 ??? tip "Manage kubectl contexts"
     The following commands can help you to manage kubectl contexts:
@@ -22,7 +22,7 @@ First, [ensure that your current context of `kubectl` refer to the Kubernetes cl
 
     - Use the context for the Kind cluster: `kubectl config use-context kind-kind`
 
-Then, run the following command to install Zora [Helm chart](https://helm.sh/docs/topics/charts/):
+Then, run the following command to install Zora [Helm chart](https://helm.sh/docs/topics/charts/){:target="_blank"}:
 
 === "HTTP chart repository"
     
@@ -108,7 +108,7 @@ You can uninstall Zora and its components by uninstalling the Helm chart install
 helm uninstall zora -n zora-system
 ```
 
-By design, [Helm doesn't upgrade or delete CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
+By design, [Helm doesn't upgrade or delete CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations){:target="_blank"}.
 You can permanently delete Zora CRDs and any remaining associated resources from your cluster, using the following command.
 
 ```shell

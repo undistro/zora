@@ -16,14 +16,14 @@ across all your clusters. You can also invite users to your workspace.
 </div>
 
 Currently, it's free for up to 3 clusters.
-Please [contact us](https://undistro.io/contact) if you need unlock more clusters in Zora Dashboard.
+Please [contact us](https://undistro.io/contact){:target="_blank"} if you need unlock more clusters in Zora Dashboard.
 
 ## Getting started
 
 To integrate your cluster with Zora Dashboard, you need to provide the workspace ID
 as an additional parameter in Zora OSS installation command.
 
-1. Sign in at [Zora Dashboard](https://zora-dashboard.undistro.io);
+1. Sign in at [Zora Dashboard](https://zora-dashboard.undistro.io){:target="_blank"};
 2. Click on "Connect cluster" button and copy the workspace ID;
 3. Then provide it in `saas.workspaceID` parameter in [Zora OSS installation command](getting-started/installation.md):
 

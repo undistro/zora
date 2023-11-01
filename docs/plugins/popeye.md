@@ -10,7 +10,7 @@ Popeye is a utility that scans live Kubernetes cluster and reports potential iss
 
 :simple-docker: **Image**: `ghcr.io/undistro/popeye:pr252`
 
-:simple-github: **GitHub repository**: [https://github.com/derailed/popeye](https://github.com/derailed/popeye)
+:simple-github: **GitHub repository**: [https://github.com/derailed/popeye](https://github.com/derailed/popeye){:target="_blank"}
 
 !!! info
     Currently, Zora does not use the official Popeye image (`derailed/popeye`) due to its lack of multi-architecture support.
