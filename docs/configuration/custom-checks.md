@@ -2,8 +2,8 @@
 
 Zora offers a declarative way to create your own checks using the `CustomCheck` API, introduced in version 0.6.
 
-Custom checks use the [Common Expression Language (CEL)](https://github.com/google/cel-spec) 
-to declare the validation rules and are performed by the [Marvin](https://github.com/undistro/marvin) plugin, 
+Custom checks use the [Common Expression Language (CEL)](https://github.com/google/cel-spec){:target="_blank"} 
+to declare the validation rules and are performed by the [Marvin](https://github.com/undistro/marvin){:target="_blank"} plugin, 
 which should be enabled in your cluster scans.
 
 !!! info 
@@ -51,12 +51,12 @@ to be present on `Pods`, `Deployments` and `Services`.
     ```
 
 The `spec.match.resources` defines which resources are checked by the expressions 
-defined in `spec.validations.expression` using [Common Expression Language (CEL)](https://github.com/google/cel-spec).
+defined in `spec.validations.expression` using [Common Expression Language (CEL)](https://github.com/google/cel-spec){:target="_blank"}.
 
 If an expression evaluates to `false`, the check fails, and a `ClusterIssue` is reported.
 
 !!! tip "CEL Playground"
-    To quickly test CEL expressions directly from your browser, check out [CEL Playground](https://playcel.undistro.io/).
+    To quickly test CEL expressions directly from your browser, check out [CEL Playground](https://playcel.undistro.io/){:target="_blank"}.
 
 ### Variables
 
@@ -121,28 +121,28 @@ mycluster-mycheck-4edd75cb85a4   mycluster   mycheck   Required labels   Low    
 ### Examples
 
 All Marvin checks are similar to the `CustomCheck` API. 
-You can see them in the [`internal/builtins`](https://github.com/undistro/marvin/tree/main/internal/builtins) folder for examples.
+You can see them in the [`internal/builtins`](https://github.com/undistro/marvin/tree/main/internal/builtins){:target="_blank"} folder for examples.
 
 Here are some examples of Marvin built-in checks expressions:
 
-- [HostPath volumes must be forbidden](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-104_host_path_volumes.yml)
+- [HostPath volumes must be forbidden](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-104_host_path_volumes.yml){:target="_blank"}
   ```
   !has(podSpec.volumes) || podSpec.volumes.all(vol, !has(vol.hostPath))
   ```
-- [Sharing the host namespaces must be disallowed](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-101_host_namespaces.yml)
+- [Sharing the host namespaces must be disallowed](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-101_host_namespaces.yml){:target="_blank"}
   ```
   (!has(podSpec.hostNetwork) || podSpec.hostNetwork == false) &&
   (!has(podSpec.hostPID) || podSpec.hostPID == false) &&
   (!has(podSpec.hostIPC) || podSpec.hostIPC == false)
   ```
-- [Privileged Pods disable most security mechanisms and must be disallowed](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-102_privileged_containers.yml)
+- [Privileged Pods disable most security mechanisms and must be disallowed](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-102_privileged_containers.yml){:target="_blank"}
   ```
   allContainers.all(container,
     !has(container.securityContext) ||
     !has(container.securityContext.privileged) ||
     container.securityContext.privileged == false)
   ```
-- [HostPorts should be disallowed entirely (recommended) or restricted to a known list](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-105_host_ports.yml)
+- [HostPorts should be disallowed entirely (recommended) or restricted to a known list](https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-105_host_ports.yml){:target="_blank"}
   ```
   allContainers.all(container,
     !has(container.ports) ||
@@ -155,9 +155,9 @@ Here are some examples of Marvin built-in checks expressions:
   ```
 
 Marvin's checks and Zora's `CustomCheck` API are inspired in 
-[Kubernetes ValidatingAdmissionPolicy](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy) API, 
+[Kubernetes ValidatingAdmissionPolicy](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy){:target="_blank"} API, 
 introduced in version 1.26 as an alpha feature. 
-Below, the table of [validation expression examples](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/#validation-expression-examples) from Kubernetes documentation.
+Below, the table of [validation expression examples](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/#validation-expression-examples){:target="_blank"} from Kubernetes documentation.
 
 | Expression                                                                                   | Purpose                                                                                        |
 |----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|

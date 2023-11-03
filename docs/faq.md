@@ -7,13 +7,13 @@ title: FAQ
 Do you have any question about Zora?
 We do our best to answer all of your questions on this page. 
 If you can't find your question below, 
-ask it on our [discussion board](https://github.com/undistro/zora/discussions/categories/q-a)!
+ask it on our [discussion board](https://github.com/undistro/zora/discussions/categories/q-a){:target="_blank"}!
 
 ## Is Zora open source?
 
 There are two Zora tools: Zora OSS and Zora Dashboard.
 
-[Zora OSS is open-source](https://github.com/undistro/zora), available under Apache 2.0 license, 
+[Zora OSS is open-source](https://github.com/undistro/zora){:target="_blank"}, available under Apache 2.0 license, 
 and can be used either as standalone tool or integrated with Zora Dashboard.
 
 On the other hand, Zora Dashboard is a SaaS platform that provides a full experience, 
@@ -43,8 +43,8 @@ which is written in Go. A fully declarative approach is not yet supported.
 
 Refer to [plugins page](plugins/index.md) to know more about how plugins work.
 
-Feel free to [open an issue](https://github.com/undistro/zora/issues/new/choose) or 
-[start a discussion](https://github.com/undistro/zora/discussions/categories/q-a) with any suggestions 
+Feel free to [open an issue](https://github.com/undistro/zora/issues/new/choose){:target="_blank"} or 
+[start a discussion](https://github.com/undistro/zora/discussions/categories/q-a){:target="_blank"} with any suggestions 
 regarding this process.
 
 ## Which data is sent to Zora Dashboard (SaaS)?
@@ -61,5 +61,5 @@ where only you and the users you've invited to your workspace will have access.
 Currently, Zora Dashboard is available as a SaaS platform. 
 While we do not offer an on-premise version of Zora Dashboard at this time, we're continuously working to enhance and 
 expand our offerings. If you have specific requirements or are interested in on-premise solutions, 
-please [contact us](https://undistro.io/contact), and we'll be happy to discuss potential options and 
+please [contact us](https://undistro.io/contact){:target="_blank"}, and we'll be happy to discuss potential options and 
 explore how we can meet your needs.

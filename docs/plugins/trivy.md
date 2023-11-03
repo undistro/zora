@@ -13,7 +13,7 @@ in different targets like containers, code repositories and **Kubernetes cluster
 
 :simple-docker: **Image**: `ghcr.io/aquasecurity/trivy:0.45.1`
 
-:simple-github: **GitHub repository**: [https://github.com/aquasecurity/trivy](https://github.com/aquasecurity/trivy)
+:simple-github: **GitHub repository**: [https://github.com/aquasecurity/trivy](https://github.com/aquasecurity/trivy){:target="_blank"}
 
 ## Large vulnerability reports
 
