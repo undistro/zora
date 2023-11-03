@@ -1162,7 +1162,7 @@ You're not viewing the latest version.
 
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<p>Zora OSS is installed inside your Kubernetes clusters using <a href="https://helm.sh/">Helm</a>,
+<p>Zora OSS is installed inside your Kubernetes clusters using <a href="https://helm.sh/" target="_blank">Helm</a>,
 where the <code>zora-operator</code> deployment is created and scans are automatically scheduled for your cluster.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1171,7 +1171,7 @@ where the <code>zora-operator</code> deployment is created and scans are automat
 <li>Helm 3.8+</li>
 </ul>
 <h2 id="install-with-helm">Install with Helm<a class="headerlink" href="#install-with-helm" title="Permanent link">&para;</a></h2>
-<p>First, <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">ensure that your current context of <code>kubectl</code> refer to the Kubernetes cluster you wish to install Zora into</a>.</p>
+<p>First, <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/" target="_blank">ensure that your current context of <code>kubectl</code> refer to the Kubernetes cluster you wish to install Zora into</a>.</p>
 <details class="tip">
 <summary>Manage kubectl contexts</summary>
 <p>The following commands can help you to manage kubectl contexts:</p>
@@ -1187,7 +1187,7 @@ where the <code>zora-operator</code> deployment is created and scans are automat
 </li>
 </ul>
 </details>
-<p>Then, run the following command to install Zora <a href="https://helm.sh/docs/topics/charts/">Helm chart</a>:</p>
+<p>Then, run the following command to install Zora <a href="https://helm.sh/docs/topics/charts/" target="_blank">Helm chart</a>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">HTTP chart repository</label><label for="__tabbed_1_2">OCI registry</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -1254,7 +1254,7 @@ will no longer be needed and can be deleted.</p>
 <p>You can uninstall Zora and its components by uninstalling the Helm chart installed above.</p>
 <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>uninstall<span class="w"> </span>zora<span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
-<p>By design, <a href="https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations">Helm doesn't upgrade or delete CRDs</a>.
+<p>By design, <a href="https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations" target="_blank">Helm doesn't upgrade or delete CRDs</a>.
 You can permanently delete Zora CRDs and any remaining associated resources from your cluster, using the following command.</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>crd<span class="w"> </span>-o<span class="o">=</span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>--color<span class="o">=</span>never<span class="w"> </span><span class="s1">&#39;zora.undistro.io&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>kubectl<span class="w"> </span>delete
 </code></pre></div>

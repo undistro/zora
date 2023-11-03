@@ -1149,8 +1149,8 @@ You're not viewing the latest version.
 
 <h1 id="custom-checks">Custom checks<a class="headerlink" href="#custom-checks" title="Permanent link">&para;</a></h1>
 <p>Zora offers a declarative way to create your own checks using the <code>CustomCheck</code> API, introduced in version 0.6.</p>
-<p>Custom checks use the <a href="https://github.com/google/cel-spec">Common Expression Language (CEL)</a> 
-to declare the validation rules and are performed by the <a href="https://github.com/undistro/marvin">Marvin</a> plugin, 
+<p>Custom checks use the <a href="https://github.com/google/cel-spec" target="_blank">Common Expression Language (CEL)</a> 
+to declare the validation rules and are performed by the <a href="https://github.com/undistro/marvin" target="_blank">Marvin</a> plugin, 
 which should be enabled in your cluster scans.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -1196,11 +1196,11 @@ to be present on <code>Pods</code>, <code>Deployments</code> and <code>Services<
 </code></pre></div>
 </div>
 <p>The <code>spec.match.resources</code> defines which resources are checked by the expressions 
-defined in <code>spec.validations.expression</code> using <a href="https://github.com/google/cel-spec">Common Expression Language (CEL)</a>.</p>
+defined in <code>spec.validations.expression</code> using <a href="https://github.com/google/cel-spec" target="_blank">Common Expression Language (CEL)</a>.</p>
 <p>If an expression evaluates to <code>false</code>, the check fails, and a <code>ClusterIssue</code> is reported.</p>
 <div class="admonition tip">
 <p class="admonition-title">CEL Playground</p>
-<p>To quickly test CEL expressions directly from your browser, check out <a href="https://playcel.undistro.io/">CEL Playground</a>.</p>
+<p>To quickly test CEL expressions directly from your browser, check out <a href="https://playcel.undistro.io/" target="_blank">CEL Playground</a>.</p>
 </div>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
 <p>The variables available in CEL expressions:</p>
@@ -1276,24 +1276,24 @@ mycluster-mycheck-4edd75cb85a4   mycluster   mycheck   Required labels   Low    
 </code></pre></div></p>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <p>All Marvin checks are similar to the <code>CustomCheck</code> API. 
-You can see them in the <a href="https://github.com/undistro/marvin/tree/main/internal/builtins"><code>internal/builtins</code></a> folder for examples.</p>
+You can see them in the <a href="https://github.com/undistro/marvin/tree/main/internal/builtins" target="_blank"><code>internal/builtins</code></a> folder for examples.</p>
 <p>Here are some examples of Marvin built-in checks expressions:</p>
 <ul>
-<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-104_host_path_volumes.yml">HostPath volumes must be forbidden</a>
+<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-104_host_path_volumes.yml" target="_blank">HostPath volumes must be forbidden</a>
   <div class="highlight"><pre><span></span><code>!has(podSpec.volumes) || podSpec.volumes.all(vol, !has(vol.hostPath))
 </code></pre></div></li>
-<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-101_host_namespaces.yml">Sharing the host namespaces must be disallowed</a>
+<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-101_host_namespaces.yml" target="_blank">Sharing the host namespaces must be disallowed</a>
   <div class="highlight"><pre><span></span><code>(!has(podSpec.hostNetwork) || podSpec.hostNetwork == false) &amp;&amp;
 (!has(podSpec.hostPID) || podSpec.hostPID == false) &amp;&amp;
 (!has(podSpec.hostIPC) || podSpec.hostIPC == false)
 </code></pre></div></li>
-<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-102_privileged_containers.yml">Privileged Pods disable most security mechanisms and must be disallowed</a>
+<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-102_privileged_containers.yml" target="_blank">Privileged Pods disable most security mechanisms and must be disallowed</a>
   <div class="highlight"><pre><span></span><code>allContainers.all(container,
   !has(container.securityContext) ||
   !has(container.securityContext.privileged) ||
   container.securityContext.privileged == false)
 </code></pre></div></li>
-<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-105_host_ports.yml">HostPorts should be disallowed entirely (recommended) or restricted to a known list</a>
+<li><a href="https://github.com/undistro/marvin/blob/main/internal/builtins/pss/baseline/M-105_host_ports.yml" target="_blank">HostPorts should be disallowed entirely (recommended) or restricted to a known list</a>
   <div class="highlight"><pre><span></span><code>allContainers.all(container,
   !has(container.ports) ||
   container.ports.all(port,
@@ -1305,9 +1305,9 @@ You can see them in the <a href="https://github.com/undistro/marvin/tree/main/in
 </code></pre></div></li>
 </ul>
 <p>Marvin's checks and Zora's <code>CustomCheck</code> API are inspired in 
-<a href="https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy">Kubernetes ValidatingAdmissionPolicy</a> API, 
+<a href="https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy" target="_blank">Kubernetes ValidatingAdmissionPolicy</a> API, 
 introduced in version 1.26 as an alpha feature. 
-Below, the table of <a href="https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/#validation-expression-examples">validation expression examples</a> from Kubernetes documentation.</p>
+Below, the table of <a href="https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/#validation-expression-examples" target="_blank">validation expression examples</a> from Kubernetes documentation.</p>
 <table>
 <thead>
 <tr>
