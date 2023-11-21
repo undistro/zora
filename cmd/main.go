@@ -108,8 +108,9 @@ func main() {
 
 	var onClusterUpdate, onClusterDelete saas.ClusterHook
 	var onClusterScanUpdate, onClusterScanDelete saas.ClusterScanHook
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyFromEnvironment}}
 	if saasWorkspaceID != "" {
-		saasClient, err := saas.NewClient(saasServer, version, saasWorkspaceID, http.DefaultClient)
+		saasClient, err := saas.NewClient(saasServer, version, saasWorkspaceID, client)
 		if err != nil {
 			setupLog.Error(err, "unable to create SaaS client", "workspaceID", saasWorkspaceID)
 			os.Exit(1)
