@@ -143,6 +143,15 @@ operator:
     stacktraceLevel: error
     # -- Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')
     timeEncoding: rfc3339
+  # -- List of environment variables to set in operator container. Cannot be updated
+  env: []
+  #  - name: key
+  #    value: value
+
+  # -- List of sources to populate environment variables in operator container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
+  envFrom: []
+  #  - configMapRef:
+  #    name: foo
 
 scan:
   misconfiguration:

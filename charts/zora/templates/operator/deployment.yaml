@@ -59,6 +59,10 @@ spec:
           securityContext:
             {{- toYaml .Values.operator.rbacProxy.securityContext | nindent 12 }}
         - name: manager
+          envFrom:
+            {{- toYaml .Values.operator.envFrom | nindent 12 }}
+          env:
+            {{- toYaml .Values.operator.env | nindent 12 }}
           command:
             - /manager
           args:
