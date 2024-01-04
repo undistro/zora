@@ -14,7 +14,12 @@
 
 package popeye
 
-import zorav1a1 "github.com/undistro/zora/api/zora/v1alpha1"
+import (
+	"strconv"
+	"strings"
+
+	zorav1a1 "github.com/undistro/zora/api/zora/v1alpha1"
+)
 
 var (
 	// LevelToIssueSeverity maps Popeye's <Level> type to Zora's
@@ -218,106 +223,47 @@ var (
 		// RBAC
 		"POP-1300": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding",
 	}
-
-	// IssueIDtoCategory maps Popeye's issue codes to Category as described
-	IssueIDtoCategory = map[string]string{
-		"POP-100": "Container",
-		"POP-101": "Container",
-		"POP-102": "Container",
-		"POP-103": "Container",
-		"POP-104": "Container",
-		"POP-105": "Container",
-		"POP-106": "Container",
-		"POP-107": "Container",
-		"POP-108": "Container",
-		"POP-109": "Container",
-		"POP-110": "Container",
-		"POP-111": "Container",
-		"POP-112": "Container",
-		"POP-113": "Container",
-
-		"POP-200": "Pod",
-		"POP-201": "Pod",
-		"POP-202": "Pod",
-		"POP-203": "Pod",
-		"POP-204": "Pod",
-		"POP-205": "Pod",
-		"POP-206": "Pod",
-		"POP-207": "Pod",
-		"POP-208": "Pod",
-
-		"POP-300": "Security",
-		"POP-301": "Security",
-		"POP-302": "Security",
-		"POP-303": "Security",
-		"POP-304": "Security",
-		"POP-305": "Security",
-		"POP-306": "Security",
-
-		"POP-400": "General",
-		"POP-401": "General",
-		"POP-402": "General",
-		"POP-403": "General",
-		"POP-404": "General",
-		"POP-405": "General",
-		"POP-406": "General",
-
-		"POP-500": "Workloads",
-		"POP-501": "Workloads",
-		"POP-503": "Workloads",
-		"POP-504": "Workloads",
-		"POP-505": "Workloads",
-		"POP-506": "Workloads",
-		"POP-507": "Workloads",
-
-		"POP-600": "HorizontalPodAutoscaler",
-		"POP-601": "HorizontalPodAutoscaler",
-		"POP-602": "HorizontalPodAutoscaler",
-		"POP-603": "HorizontalPodAutoscaler",
-		"POP-604": "HorizontalPodAutoscaler",
-		"POP-605": "HorizontalPodAutoscaler",
-
-		"POP-700": "Node",
-		"POP-701": "Node",
-		"POP-702": "Node",
-		"POP-703": "Node",
-		"POP-704": "Node",
-		"POP-705": "Node",
-		"POP-706": "Node",
-		"POP-707": "Node",
-		"POP-708": "Node",
-		"POP-709": "Node",
-		"POP-710": "Node",
-		"POP-711": "Node",
-		"POP-712": "Node",
-
-		"POP-800": "Namespace",
-
-		"POP-900": "PodDisruptionBudget",
-		"POP-901": "PodDisruptionBudget",
-
-		"POP-1000": "Volumes",
-		"POP-1001": "Volumes",
-		"POP-1002": "Volumes",
-		"POP-1003": "Volumes",
-		"POP-1004": "Volumes",
-
-		"POP-1100": "Service",
-		"POP-1101": "Service",
-		"POP-1102": "Service",
-		"POP-1103": "Service",
-		"POP-1104": "Service",
-		"POP-1105": "Service",
-		"POP-1106": "Service",
-		"POP-1107": "Service",
-		"POP-1108": "Service",
-		"POP-1109": "Service",
-
-		"POP-1120": "ReplicaSet",
-
-		"POP-1200": "NetworkPolicies",
-		"POP-1201": "NetworkPolicies",
-
-		"POP-1300": "RBAC",
+	categoriesInterval = map[int]string{
+		1:  "Container",
+		2:  "Pod",
+		3:  "Security",
+		4:  "General",
+		5:  "Workloads",
+		6:  "HorizontalPodAutoscaler",
+		7:  "Node",
+		8:  "Namespace",
+		9:  "PodDisruptionBudget",
+		10: "Volumes",
+		11: "Service",
+		// exception for "ReplicaSet" of POP-1120
+		12: "NetworkPolicies",
+		13: "RBAC",
 	}
 )
+
+// getCategory returns a category from the given issue ID.
+// https://github.com/derailed/popeye/blob/master/docs/codes.md
+func getCategory(s string) string {
+	ss := strings.SplitN(s, "-", 2)
+	if len(ss) != 2 {
+		return ""
+	}
+
+	id, err := strconv.Atoi(ss[1])
+	if err != nil {
+		return ""
+	}
+
+	if id == 1120 {
+		return "ReplicaSet"
+	}
+
+	for i, category := range categoriesInterval {
+		start := i * 100
+		if id >= start && id < start+100 {
+			return category
+		}
+	}
+
+	return ""
+}
