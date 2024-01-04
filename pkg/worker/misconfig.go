@@ -16,7 +16,6 @@ package worker
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -64,7 +63,7 @@ func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader,
 func parseMisconfigResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
 	parseFunc, ok := misconfigPlugins[cfg.PluginName]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
+		return nil, fmt.Errorf("invalid plugin %q", cfg.PluginName)
 	}
 	specs, err := parseFunc(ctx, results)
 	if err != nil {

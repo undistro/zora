@@ -16,7 +16,6 @@ package worker
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"regexp"
@@ -60,7 +59,7 @@ func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, cl
 func parseVulnResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.VulnerabilityReport, error) {
 	parseFunc, ok := vulnPlugins[cfg.PluginName]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
+		return nil, fmt.Errorf("invalid plugin %q", cfg.PluginName)
 	}
 	specs, err := parseFunc(ctx, results)
 	if err != nil {
