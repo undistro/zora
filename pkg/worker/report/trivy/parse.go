@@ -84,9 +84,9 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 	return specs, nil
 }
 
-func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescriptions bool, resultType string) v1alpha1.Vulnerability {
+func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription bool, t string) v1alpha1.Vulnerability {
 	description := ""
-	if !ignoreDescriptions {
+	if !ignoreDescription {
 		description = vuln.Description
 	}
 
@@ -101,7 +101,7 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescriptions 
 		URL:         vuln.PrimaryURL,
 		Status:      vuln.Status.String(),
 		Score:       getScore(vuln),
-		Type:        resultType,
+		Type:        t,
 	}
 }
 
