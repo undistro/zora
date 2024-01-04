@@ -108,6 +108,7 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescriptions 
 func getScore(vuln trivytypes.DetectedVulnerability) string {
 	var vendor *float64
 	for id, cvss := range vuln.CVSS {
+		cvss := cvss
 		if cvss.V3Score == 0.0 {
 			continue
 		}
