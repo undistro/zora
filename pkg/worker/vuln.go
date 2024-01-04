@@ -78,7 +78,7 @@ func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner met
 	return v1alpha1.VulnerabilityReport{
 		TypeMeta: vulnReportTypeMeta,
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            fmt.Sprintf("%s-%s-%s", cfg.ClusterName, strings.ToLower(cleanString(spec.Image)), cfg.suffix),
+			Name:            vulnReportName(cfg, spec),
 			Namespace:       cfg.Namespace,
 			OwnerReferences: []metav1.OwnerReference{owner},
 			Labels: map[string]string{
@@ -89,6 +89,10 @@ func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner met
 		},
 		Spec: spec,
 	}
+}
+
+func vulnReportName(cfg *config, spec v1alpha1.VulnerabilityReportSpec) string {
+	return fmt.Sprintf("%s-%s-%s", cfg.ClusterName, strings.ToLower(cleanString(spec.Image)), cfg.suffix)
 }
 
 func cleanString(s string) string {
