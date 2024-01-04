@@ -120,11 +120,11 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 // SyncStatus updates ClusterScan status and time fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names, failed, active, complete []string
-	var sechedule, finishedTime, successful, next *metav1.Time
+	var schedule, finishedTime, successful, next *metav1.Time
 	for name, plugin := range in.Plugins {
 		names = append(names, name)
-		if sechedule == nil || sechedule.Before(plugin.LastScheduleTime) {
-			sechedule = plugin.LastScheduleTime
+		if schedule == nil || schedule.Before(plugin.LastScheduleTime) {
+			schedule = plugin.LastScheduleTime
 		}
 		if finishedTime == nil || finishedTime.Before(plugin.LastFinishedTime) {
 			finishedTime = plugin.LastFinishedTime
@@ -159,7 +159,7 @@ func (in *ClusterScanStatus) SyncStatus() {
 		status = "Active"
 	}
 
-	in.LastScheduleTime = sechedule
+	in.LastScheduleTime = schedule
 	in.LastFinishedTime = finishedTime
 	in.LastSuccessfulTime = successful
 	in.NextScheduleTime = next
