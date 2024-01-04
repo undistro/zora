@@ -82,7 +82,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
 | operator.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `manager` container |
 | operator.rbacProxy.image.repository | string | `"gcr.io/kubebuilder/kube-rbac-proxy"` | `kube-rbac-proxy` image repository |
-| operator.rbacProxy.image.tag | string | `"v0.14.1"` | `kube-rbac-proxy` image tag |
+| operator.rbacProxy.image.tag | string | `"v0.15.0"` | `kube-rbac-proxy` image tag |
 | operator.rbacProxy.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | operator.rbacProxy.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container |
 | operator.rbacProxy.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container |
