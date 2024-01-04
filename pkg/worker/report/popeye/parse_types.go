@@ -109,6 +109,7 @@ var (
 
 	// IssueIDtoUrl maps Popeye's issue codes to urls for wiki pages, blog
 	// posts and other sources documenting the issue.
+	//nolint:lll
 	IssueIDtoUrl = map[string]string{
 		// Container
 		"POP-100": "https://kubernetes.io/docs/concepts/containers/images/#image-names",

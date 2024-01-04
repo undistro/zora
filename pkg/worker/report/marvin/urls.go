@@ -22,6 +22,7 @@ const (
 	k8sResourcesURL  = "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
 )
 
+//nolint:lll
 var urls = map[string]string{
 	"M-100": pssBaselineURL,
 	"M-101": pssBaselineURL,

@@ -125,6 +125,7 @@ func (r *CronJobMutator) Mutate() error {
 		},
 	}
 	if r.KubeconfigSecret != nil {
+		//nolint:lll
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
 			Name: kubeconfigVolumeName,
 			VolumeSource: corev1.VolumeSource{
