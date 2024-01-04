@@ -29,16 +29,17 @@ import (
 )
 
 const (
-	checksVolumeName     = "custom-checks"
-	checksPath           = "/custom-checks"
-	workerContainerName  = "worker"
-	kubeconfigVolumeName = "kubeconfig"
-	kubeconfigMountPath  = "/etc/zora"
-	kubeconfigFile       = "kubeconfig.yml"
-	resultsVolumeName    = "results"
-	resultsDir           = "/tmp/zora/results"
-	LabelClusterScan     = "zora.undistro.io/cluster-scan"
-	LabelPlugin          = "zora.undistro.io/plugin"
+	checksVolumeName           = "custom-checks"
+	checksPath                 = "/custom-checks"
+	workerContainerName        = "worker"
+	kubeconfigVolumeName       = "kubeconfig"
+	kubeconfigMountPath        = "/etc/zora"
+	kubeconfigFile             = "kubeconfig.yml"
+	resultsVolumeName          = "results"
+	resultsDir                 = "/tmp/zora/results"
+	labelClusterScan           = "zora.undistro.io/cluster-scan"
+	labelPlugin                = "zora.undistro.io/plugin"
+	annotationDefaultContainer = "kubectl.kubernetes.io/default-container"
 )
 
 var (
@@ -98,8 +99,8 @@ func (r *CronJobMutator) Mutate() error {
 	if r.Existing.ObjectMeta.Labels == nil {
 		r.Existing.ObjectMeta.Labels = make(map[string]string)
 	}
-	r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
-	r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
+	r.Existing.ObjectMeta.Labels[labelClusterScan] = r.ClusterScan.Name
+	r.Existing.ObjectMeta.Labels[labelPlugin] = r.Plugin.Name
 	r.Existing.Spec.Schedule = r.ClusterScan.Spec.Schedule
 	r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 	r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
@@ -112,7 +113,7 @@ func (r *CronJobMutator) Mutate() error {
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
-	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{"kubectl.kubernetes.io/default-container": r.Plugin.Name}
+	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{annotationDefaultContainer: r.Plugin.Name}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
 		{
 			Name:         resultsVolumeName,
