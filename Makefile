@@ -61,7 +61,7 @@ generate-client:  ## Generate client
 		-e GROUPS_VERSION="zora:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
 		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		quay.io/slok/kube-code-generator:v1.26.0
+		ghcr.io/slok/kube-code-generator:v1.27.0
 
 .PHONY: generate-helm-docs
 generate-helm-docs: helm-docs ## Generate documentation for helm chart.
