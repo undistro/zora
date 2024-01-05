@@ -15,7 +15,7 @@ kubectl get plugins -n zora-system
 ```
 ```
 NAME     IMAGE                               TYPE               AGE
-marvin   ghcr.io/undistro/marvin:v0.2.0      misconfiguration   14m
+marvin   ghcr.io/undistro/marvin:v0.2.1      misconfiguration   14m
 popeye   ghcr.io/undistro/popeye:pr252       misconfiguration   14m
 trivy    ghcr.io/aquasecurity/trivy:0.45.1   vulnerability      14m
 ```

@@ -188,7 +188,7 @@ scan:
         # -- marvin plugin image repository
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
-        tag: v0.2.0
+        tag: v0.2.1
 
     trivy:
       # -- Specifies whether only fixed vulnerabilities should be reported

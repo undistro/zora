@@ -105,7 +105,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.plugins.marvin.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container |
 | scan.plugins.marvin.image.repository | string | `"ghcr.io/undistro/marvin"` | marvin plugin image repository |
-| scan.plugins.marvin.image.tag | string | `"v0.2.0"` | marvin plugin image tag |
+| scan.plugins.marvin.image.tag | string | `"v0.2.1"` | marvin plugin image tag |
 | scan.plugins.trivy.ignoreUnfixed | bool | `false` | Specifies whether only fixed vulnerabilities should be reported |
 | scan.plugins.trivy.ignoreDescriptions | bool | `false` | Specifies whether vulnerability descriptions should be ignored |
 | scan.plugins.trivy.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
