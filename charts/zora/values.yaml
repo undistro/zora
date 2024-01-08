@@ -231,7 +231,7 @@ kubexnsImage:
   # -- kubexns image repository
   repository: ghcr.io/undistro/kubexns
   # -- kubexns image tag
-  tag: v0.1.1
+  tag: v0.1.2
 
 # -- Custom checks ConfigMap name
 customChecksConfigMap: zora-custom-checks

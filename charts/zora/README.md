@@ -116,7 +116,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | string | `"pr252"` | popeye plugin image tag |
 | kubexnsImage.repository | string | `"ghcr.io/undistro/kubexns"` | kubexns image repository |
-| kubexnsImage.tag | string | `"v0.1.1"` | kubexns image tag |
+| kubexnsImage.tag | string | `"v0.1.2"` | kubexns image tag |
 | customChecksConfigMap | string | `"zora-custom-checks"` | Custom checks ConfigMap name |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
