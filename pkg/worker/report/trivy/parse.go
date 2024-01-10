@@ -22,10 +22,12 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	trivyreport "github.com/aquasecurity/trivy/pkg/k8s/report"
 	trivytypes "github.com/aquasecurity/trivy/pkg/types"
 	"github.com/go-logr/logr"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
@@ -112,18 +114,27 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription b
 	}
 
 	return v1alpha1.Vulnerability{
-		ID:          vuln.VulnerabilityID,
-		Severity:    vuln.Severity,
-		Title:       vuln.Title,
-		Description: description,
-		Package:     vuln.PkgName,
-		Version:     vuln.InstalledVersion,
-		FixVersion:  vuln.FixedVersion,
-		URL:         vuln.PrimaryURL,
-		Status:      vuln.Status.String(),
-		Score:       getScore(vuln),
-		Type:        t,
+		ID:               vuln.VulnerabilityID,
+		Severity:         vuln.Severity,
+		Title:            vuln.Title,
+		Description:      description,
+		Package:          vuln.PkgName,
+		Version:          vuln.InstalledVersion,
+		FixVersion:       vuln.FixedVersion,
+		URL:              vuln.PrimaryURL,
+		Status:           vuln.Status.String(),
+		Score:            getScore(vuln),
+		Type:             t,
+		PublishedDate:    parseTime(vuln.PublishedDate),
+		LastModifiedDate: parseTime(vuln.LastModifiedDate),
 	}
+}
+
+func parseTime(t *time.Time) *metav1.Time {
+	if t == nil {
+		return nil
+	}
+	return &metav1.Time{Time: *t}
 }
 
 func getScore(vuln trivytypes.DetectedVulnerability) string {
