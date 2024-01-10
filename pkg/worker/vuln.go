@@ -82,9 +82,10 @@ func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner met
 			Namespace:       cfg.Namespace,
 			OwnerReferences: []metav1.OwnerReference{owner},
 			Labels: map[string]string{
-				v1alpha1.LabelScanID:  cfg.JobUID,
-				v1alpha1.LabelCluster: cfg.ClusterName,
-				v1alpha1.LabelPlugin:  cfg.PluginName,
+				v1alpha1.LabelScanID:     cfg.JobUID,
+				v1alpha1.LabelCluster:    cfg.ClusterName,
+				v1alpha1.LabelClusterUID: cfg.ClusterUID,
+				v1alpha1.LabelPlugin:     cfg.PluginName,
 			},
 		},
 		Spec: spec,

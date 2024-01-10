@@ -33,9 +33,10 @@ import (
 )
 
 var labels = map[string]string{
-	v1alpha1.LabelScanID:  "50c8957e-c9e1-493a-9fa4-d0786deea017",
-	v1alpha1.LabelCluster: "cluster",
-	v1alpha1.LabelPlugin:  "trivy",
+	v1alpha1.LabelScanID:     "50c8957e-c9e1-493a-9fa4-d0786deea017",
+	v1alpha1.LabelCluster:    "cluster",
+	v1alpha1.LabelPlugin:     "trivy",
+	v1alpha1.LabelClusterUID: "9a1d324c-9170-4aa7-9f64-76f01c9d7989",
 }
 
 var owners = []metav1.OwnerReference{
@@ -79,6 +80,7 @@ func TestParseVulnResults(t *testing.T) {
 				cfg: &config{
 					PluginName:  "trivy",
 					ClusterName: "cluster",
+					ClusterUID:  "9a1d324c-9170-4aa7-9f64-76f01c9d7989",
 					Namespace:   "ns",
 					JobName:     "cluster-trivy-28140229",
 					JobUID:      "50c8957e-c9e1-493a-9fa4-d0786deea017",

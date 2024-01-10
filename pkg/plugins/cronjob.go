@@ -21,6 +21,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
 
@@ -92,6 +93,7 @@ type CronJobMutator struct {
 	Suspend            bool
 	KubexnsImage       string
 	ChecksConfigMap    string
+	ClusterUID         types.UID
 }
 
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
@@ -278,6 +280,10 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",
 			Value: r.ClusterScan.Spec.ClusterRef.Name,
+		},
+		corev1.EnvVar{
+			Name:  "CLUSTER_UID",
+			Value: string(r.ClusterUID),
 		},
 		corev1.EnvVar{
 			Name: "NAMESPACE",
