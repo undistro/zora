@@ -109,7 +109,7 @@ operator:
       # -- `kube-rbac-proxy` image repository
       repository: gcr.io/kubebuilder/kube-rbac-proxy
       # -- `kube-rbac-proxy` image tag
-      tag: v0.14.1
+      tag: v0.15.0
       # -- Image pull policy
       pullPolicy: IfNotPresent
     # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container
@@ -188,7 +188,7 @@ scan:
         # -- marvin plugin image repository
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
-        tag: v0.2.0
+        tag: v0.2.1
 
     trivy:
       # -- Specifies whether only fixed vulnerabilities should be reported
@@ -201,7 +201,7 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/aquasecurity/trivy
         # -- trivy plugin image tag
-        tag: 0.45.1
+        tag: 0.48.2
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
@@ -231,7 +231,7 @@ kubexnsImage:
   # -- kubexns image repository
   repository: ghcr.io/undistro/kubexns
   # -- kubexns image tag
-  tag: v0.1.1
+  tag: v0.1.2
 
 # -- Custom checks ConfigMap name
 customChecksConfigMap: zora-custom-checks

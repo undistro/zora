@@ -38,7 +38,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.ClusterIssueSpec,
 	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
-	var css []v1alpha1.ClusterIssueSpec
+	css := make([]v1alpha1.ClusterIssueSpec, 0, len(report.Checks))
 	for _, check := range report.Checks {
 		if check.Status != marvin.StatusFailed {
 			continue

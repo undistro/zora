@@ -21,6 +21,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
 
@@ -29,16 +30,17 @@ import (
 )
 
 const (
-	checksVolumeName     = "custom-checks"
-	checksPath           = "/custom-checks"
-	workerContainerName  = "worker"
-	kubeconfigVolumeName = "kubeconfig"
-	kubeconfigMountPath  = "/etc/zora"
-	kubeconfigFile       = "kubeconfig.yml"
-	resultsVolumeName    = "results"
-	resultsDir           = "/tmp/zora/results"
-	LabelClusterScan     = "zora.undistro.io/cluster-scan"
-	LabelPlugin          = "zora.undistro.io/plugin"
+	checksVolumeName           = "custom-checks"
+	checksPath                 = "/custom-checks"
+	workerContainerName        = "worker"
+	kubeconfigVolumeName       = "kubeconfig"
+	kubeconfigMountPath        = "/etc/zora"
+	kubeconfigFile             = "kubeconfig.yml"
+	resultsVolumeName          = "results"
+	resultsDir                 = "/tmp/zora/results"
+	labelClusterScan           = "zora.undistro.io/cluster-scan"
+	labelPlugin                = "zora.undistro.io/plugin"
+	annotationDefaultContainer = "kubectl.kubernetes.io/default-container"
 )
 
 var (
@@ -91,6 +93,7 @@ type CronJobMutator struct {
 	Suspend            bool
 	KubexnsImage       string
 	ChecksConfigMap    string
+	ClusterUID         types.UID
 }
 
 // Mutate returns a function which mutates the existing CronJob into it's desired state.
@@ -98,8 +101,8 @@ func (r *CronJobMutator) Mutate() error {
 	if r.Existing.ObjectMeta.Labels == nil {
 		r.Existing.ObjectMeta.Labels = make(map[string]string)
 	}
-	r.Existing.ObjectMeta.Labels[LabelClusterScan] = r.ClusterScan.Name
-	r.Existing.ObjectMeta.Labels[LabelPlugin] = r.Plugin.Name
+	r.Existing.ObjectMeta.Labels[labelClusterScan] = r.ClusterScan.Name
+	r.Existing.ObjectMeta.Labels[labelPlugin] = r.Plugin.Name
 	r.Existing.Spec.Schedule = r.ClusterScan.Spec.Schedule
 	r.Existing.Spec.ConcurrencyPolicy = batchv1.ForbidConcurrent
 	r.Existing.Spec.SuccessfulJobsHistoryLimit = r.ClusterScan.Spec.SuccessfulScansHistoryLimit
@@ -112,7 +115,7 @@ func (r *CronJobMutator) Mutate() error {
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
-	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{"kubectl.kubernetes.io/default-container": r.Plugin.Name}
+	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{annotationDefaultContainer: r.Plugin.Name}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
 		{
 			Name:         resultsVolumeName,
@@ -124,6 +127,7 @@ func (r *CronJobMutator) Mutate() error {
 		},
 	}
 	if r.KubeconfigSecret != nil {
+		//nolint:lll
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
 			Name: kubeconfigVolumeName,
 			VolumeSource: corev1.VolumeSource{
@@ -276,6 +280,10 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 		corev1.EnvVar{
 			Name:  "CLUSTER_NAME",
 			Value: r.ClusterScan.Spec.ClusterRef.Name,
+		},
+		corev1.EnvVar{
+			Name:  "CLUSTER_UID",
+			Value: string(r.ClusterUID),
 		},
 		corev1.EnvVar{
 			Name: "NAMESPACE",

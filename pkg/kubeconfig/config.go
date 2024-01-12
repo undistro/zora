@@ -38,8 +38,8 @@ func SecretFromRef(ctx context.Context, client ctrlclient.Client, name types.Nam
 }
 
 // ConfigFromSecretName return a rest.Config from a kubeconfig secret name
-func ConfigFromSecretName(ctx context.Context, client ctrlclient.Client, name types.NamespacedName) (*rest.Config, error) {
-	existing, err := SecretFromRef(ctx, client, name)
+func ConfigFromSecretName(ctx context.Context, cli ctrlclient.Client, name types.NamespacedName) (*rest.Config, error) {
+	existing, err := SecretFromRef(ctx, cli, name)
 	if err != nil {
 		return nil, err
 	}

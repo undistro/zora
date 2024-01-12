@@ -1,6 +1,6 @@
 {
   "ClusterName": "kind-kind",
-  "Findings": [
+  "Resources": [
     {
       "Kind": "",
       "Name": ""
@@ -15,6 +15,68 @@
       "Namespace": "kube-system",
       "Kind": "Deployment",
       "Name": "coredns",
+      "Metadata": {
+        "ImageID": "sha256:ead0a4a53df89fd173874b46093b6e62d8c72967bbf606d672c9e8c9b601a4fc",
+        "DiffIDs": [
+          "sha256:6a4a177e62f374d68e6889ffa22b644db056e1d47ee4085c88408fa1d153871d",
+          "sha256:398c9baff0cedc8a35520742c35f0c216f9fd7f300f5f1e5e469504a93dc03bf"
+        ],
+        "RepoTags": [
+          "registry.k8s.io/coredns/coredns:v1.10.1"
+        ],
+        "RepoDigests": [
+          "registry.k8s.io/coredns/coredns@sha256:a0ead06651cf580044aeb0a0feba63591858fb2e43ade8c9dea45a6a89ae7e5e"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "created": "2023-02-06T18:31:00.426815885Z",
+          "history": [
+            {
+              "created": "2023-02-06T18:31:00.19534776Z",
+              "created_by": "COPY /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-02-06T18:31:00.426815885Z",
+              "created_by": "ADD coredns /coredns # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-02-06T18:31:00.426815885Z",
+              "created_by": "EXPOSE map[53/tcp:{} 53/udp:{}]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-02-06T18:31:00.426815885Z",
+              "created_by": "ENTRYPOINT [\"/coredns\"]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:6a4a177e62f374d68e6889ffa22b644db056e1d47ee4085c88408fa1d153871d",
+              "sha256:398c9baff0cedc8a35520742c35f0c216f9fd7f300f5f1e5e469504a93dc03bf"
+            ]
+          },
+          "config": {
+            "Entrypoint": [
+              "/coredns"
+            ],
+            "Env": [
+              "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "WorkingDir": "/",
+            "ExposedPorts": {
+              "53/tcp": {},
+              "53/udp": {}
+            }
+          }
+        }
+      },
       "Results": [
         {
           "Target": "coredns",
@@ -48,9 +110,140 @@
       "Namespace": "kube-system",
       "Kind": "Pod",
       "Name": "kube-apiserver-kind-control-plane",
+      "Metadata": {
+        "OS": {
+          "Family": "debian",
+          "Name": "11.7"
+        },
+        "ImageID": "sha256:08a0c939e61b7340db53ebf07b4d0e908a35ad8d94e2cb7d0f958210e567079a",
+        "DiffIDs": [
+          "sha256:e023e0e48e6e29e90e519f4dd356d058ff2bffbd16e28b802f3b8f93aa4ccb17",
+          "sha256:6fbdf253bbc2490dcfede5bdb58ca0db63ee8aff565f6ea9f918f3bce9e2d5aa",
+          "sha256:7bea6b893187b14fc0a759fe5f8972d1292a9c0554c87cbf485f0947c26b8a05",
+          "sha256:ff5700ec54186528cbae40f54c24b1a34fb7c01527beaa1232868c16e2353f52",
+          "sha256:d52f02c6501c9c4410568f0bf6ff30d30d8290f57794c308fe36ea78393afac2",
+          "sha256:e624a5370eca2b8266e74d179326e2a8767d361db14d13edd9fb57e408731784",
+          "sha256:1a73b54f556b477f0a8b939d13c504a3b4f4db71f7a09c63afbc10acb3de5849",
+          "sha256:d2d7ec0f6756eb51cf1602c6f8ac4dd811d3d052661142e0110357bf0b581457",
+          "sha256:4cb10dd2545bd173858450b80853b850e49608260f1a0789e0d0b39edf12f500",
+          "sha256:1b8d05b4878684b6d03d768101f88cab6d01c1ac91bb7001fbc314c13b8a7383",
+          "sha256:53452b6da21ce309163ed7b8190ad495797e30408efed45e49a50a67cb62449e"
+        ],
+        "RepoTags": [
+          "registry.k8s.io/kube-apiserver:v1.27.3"
+        ],
+        "RepoDigests": [
+          "registry.k8s.io/kube-apiserver@sha256:fd03335dd2e7163e5e36e933a0c735d7fec6f42b33ddafad0bc54f333e4a23c0"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "created": "2023-06-14T10:04:53.012648525Z",
+          "history": [
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "0001-01-01T00:00:00Z"
+            },
+            {
+              "created": "2023-06-07T04:08:19.793812974Z",
+              "created_by": "LABEL maintainers=Kubernetes Authors",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-06-07T04:08:19.793812974Z",
+              "created_by": "LABEL description=go based runner for distroless scenarios",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-06-07T04:08:19.793812974Z",
+              "created_by": "WORKDIR /",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-06-07T04:08:19.793812974Z",
+              "created_by": "COPY /workspace/go-runner . # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-06-07T04:08:19.793812974Z",
+              "created_by": "ENTRYPOINT [\"/go-runner\"]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-06-14T10:04:53.012648525Z",
+              "created_by": "ARG BINARY",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-06-14T10:04:53.012648525Z",
+              "created_by": "COPY /kube-apiserver /usr/local/bin/kube-apiserver # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:e023e0e48e6e29e90e519f4dd356d058ff2bffbd16e28b802f3b8f93aa4ccb17",
+              "sha256:6fbdf253bbc2490dcfede5bdb58ca0db63ee8aff565f6ea9f918f3bce9e2d5aa",
+              "sha256:7bea6b893187b14fc0a759fe5f8972d1292a9c0554c87cbf485f0947c26b8a05",
+              "sha256:ff5700ec54186528cbae40f54c24b1a34fb7c01527beaa1232868c16e2353f52",
+              "sha256:d52f02c6501c9c4410568f0bf6ff30d30d8290f57794c308fe36ea78393afac2",
+              "sha256:e624a5370eca2b8266e74d179326e2a8767d361db14d13edd9fb57e408731784",
+              "sha256:1a73b54f556b477f0a8b939d13c504a3b4f4db71f7a09c63afbc10acb3de5849",
+              "sha256:d2d7ec0f6756eb51cf1602c6f8ac4dd811d3d052661142e0110357bf0b581457",
+              "sha256:4cb10dd2545bd173858450b80853b850e49608260f1a0789e0d0b39edf12f500",
+              "sha256:1b8d05b4878684b6d03d768101f88cab6d01c1ac91bb7001fbc314c13b8a7383",
+              "sha256:53452b6da21ce309163ed7b8190ad495797e30408efed45e49a50a67cb62449e"
+            ]
+          },
+          "config": {
+            "Entrypoint": [
+              "/go-runner"
+            ],
+            "Env": [
+              "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt"
+            ],
+            "Labels": {
+              "description": "go based runner for distroless scenarios",
+              "maintainers": "Kubernetes Authors"
+            },
+            "User": "0",
+            "WorkingDir": "/"
+          }
+        }
+      },
       "Results": [
         {
-          "Target": "registry.k8s.io/kube-apiserver:v1.25.3 (debian 11.5)",
+          "Target": "registry.k8s.io/kube-apiserver:v1.27.3 (debian 11.7)",
           "Class": "os-pkgs",
           "Type": "debian"
         },
@@ -132,6 +325,169 @@
       "Namespace": "apps",
       "Kind": "Deployment",
       "Name": "app1",
+      "Metadata": {
+        "OS": {
+          "Family": "debian",
+          "Name": "9.12",
+          "EOSL": true
+        },
+        "ImageID": "sha256:bc1431aee95794187947c398fa6806bf5936736de1215fed291e078930a4c2dc",
+        "DiffIDs": [
+          "sha256:333e2cb4c707229901f45d7f5e4e3caf5a983229da7fefb0605975ff3a1eaf6f",
+          "sha256:90a1d8ebd7b4107bb74cb50c6ba3dcb144ff738c7afd01a753826641458476a4",
+          "sha256:98b7d0c5ef14f59e0a17429a6430028b12c5ea3c6312c4bbc1d99c4a6cd62538",
+          "sha256:d136f6518ac73d9588ec725d5899e0c5279a0b05b5fdece684874b9c21b90bc6",
+          "sha256:2577840953762b3cfb5a299ead93c0764da096200eee9f0cbd3243eff9cddf09",
+          "sha256:d40de8d65ee499720b9d54269112b014b07089fe50d9bf2c4e3f84585c84a927",
+          "sha256:7f4d5ea130c3e5f7b4f0ab9e0a9664165e9b5e381a05d045f8d15081b8d853fa",
+          "sha256:c6a3bd834638efb20573ad1c5f2f3d722070c1d67e3c424fc03d807968d90bbc",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:681e1481ec7c7e0054ab8f7106134d0c1eddc5e3094bb3de6c6cfb1fe881e119"
+        ],
+        "RepoTags": [
+          "istio/examples-bookinfo-ratings-v1:1.17.0"
+        ],
+        "RepoDigests": [
+          "istio/examples-bookinfo-ratings-v1@sha256:b6a6b88d35785c19f6dcb6acf055aa585511f2126bb0b5802f3107b7d37ead0b"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "created": "2022-09-06T15:39:06.6095144Z",
+          "history": [
+            {
+              "created": "2020-06-09T01:23:35.675588078Z",
+              "created_by": "/bin/sh -c #(nop) ADD file:57b431451a292755d0f13673f5f3bea9f62aea36c7a1b59d34d7d200ba134fea in / "
+            },
+            {
+              "created": "2020-06-09T01:23:35.907722594Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"bash\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-06-09T16:04:25.808972997Z",
+              "created_by": "/bin/sh -c groupadd --gid 1000 node   \u0026\u0026 useradd --uid 1000 --gid node --shell /bin/bash --create-home node"
+            },
+            {
+              "created": "2020-06-18T20:31:56.038855054Z",
+              "created_by": "/bin/sh -c #(nop)  ENV NODE_VERSION=12.18.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-06-18T20:32:15.128258973Z",
+              "created_by": "/bin/sh -c ARCH= \u0026\u0026 dpkgArch=\"$(dpkg --print-architecture)\"     \u0026\u0026 case \"${dpkgArch##*-}\" in       amd64) ARCH='x64';;       ppc64el) ARCH='ppc64le';;       s390x) ARCH='s390x';;       arm64) ARCH='arm64';;       armhf) ARCH='armv7l';;       i386) ARCH='x86';;       *) echo \"unsupported architecture\"; exit 1 ;;     esac     \u0026\u0026 set -ex     \u0026\u0026 apt-get update \u0026\u0026 apt-get install -y ca-certificates curl wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends     \u0026\u0026 rm -rf /var/lib/apt/lists/*     \u0026\u0026 for key in       94AE36675C464D64BAFA68DD7434390BDBE9B9C5       FD3A5288F042B6850C66B31F09FE44734EB7990E       71DCFD284A79C3B38668286BC97EC7A07EDE3FC1       DD8F2338BAE7501E3DD5AC78C273792F7D83545D       C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8       B9AE9905FFD7803F25714661B63B535A4C206CA9       77984A986EBC2AA786BC0F66B01FBB92821C587A       8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600       4ED778F539E3634C779C87C6D7062848A1AB005C       A48C2BEE680E841632CD4E44F07496B3EB3C1762       B9E2F5981AA6E0CD28160D9FF13993A75599653C     ; do       gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys \"$key\" ||       gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys \"$key\" ||       gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys \"$key\" ;     done     \u0026\u0026 curl -fsSLO --compressed \"https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz\"     \u0026\u0026 curl -fsSLO --compressed \"https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc\"     \u0026\u0026 gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc     \u0026\u0026 grep \" node-v$NODE_VERSION-linux-$ARCH.tar.xz\\$\" SHASUMS256.txt | sha256sum -c -     \u0026\u0026 tar -xJf \"node-v$NODE_VERSION-linux-$ARCH.tar.xz\" -C /usr/local --strip-components=1 --no-same-owner     \u0026\u0026 rm \"node-v$NODE_VERSION-linux-$ARCH.tar.xz\" SHASUMS256.txt.asc SHASUMS256.txt     \u0026\u0026 apt-mark auto '.*' \u003e /dev/null     \u0026\u0026 find /usr/local -type f -executable -exec ldd '{}' ';'       | awk '/=\u003e/ { print $(NF-1) }'       | sort -u       | xargs -r dpkg-query --search       | cut -d: -f1       | sort -u       | xargs -r apt-mark manual     \u0026\u0026 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false     \u0026\u0026 ln -s /usr/local/bin/node /usr/local/bin/nodejs     \u0026\u0026 node --version     \u0026\u0026 npm --version"
+            },
+            {
+              "created": "2020-06-18T20:32:15.451094637Z",
+              "created_by": "/bin/sh -c #(nop)  ENV YARN_VERSION=1.22.4",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-06-18T20:32:30.870119365Z",
+              "created_by": "/bin/sh -c set -ex   \u0026\u0026 savedAptMark=\"$(apt-mark showmanual)\"   \u0026\u0026 apt-get update \u0026\u0026 apt-get install -y ca-certificates curl wget gnupg dirmngr --no-install-recommends   \u0026\u0026 rm -rf /var/lib/apt/lists/*   \u0026\u0026 for key in     6A010C5166006599AA17F08146C2130DFD2497F5   ; do     gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys \"$key\" ||     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys \"$key\" ||     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys \"$key\" ;   done   \u0026\u0026 curl -fsSLO --compressed \"https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz\"   \u0026\u0026 curl -fsSLO --compressed \"https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc\"   \u0026\u0026 gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz   \u0026\u0026 mkdir -p /opt   \u0026\u0026 tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/   \u0026\u0026 ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn   \u0026\u0026 ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg   \u0026\u0026 rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz   \u0026\u0026 apt-mark auto '.*' \u003e /dev/null   \u0026\u0026 { [ -z \"$savedAptMark\" ] || apt-mark manual $savedAptMark \u003e /dev/null; }   \u0026\u0026 find /usr/local -type f -executable -exec ldd '{}' ';'     | awk '/=\u003e/ { print $(NF-1) }'     | sort -u     | xargs -r dpkg-query --search     | cut -d: -f1     | sort -u     | xargs -r apt-mark manual   \u0026\u0026 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false   \u0026\u0026 yarn --version"
+            },
+            {
+              "created": "2020-06-18T20:32:31.073261798Z",
+              "created_by": "/bin/sh -c #(nop) COPY file:238737301d47304174e4d24f4def935b29b3069c03c72ae8de97d94624382fce in /usr/local/bin/ "
+            },
+            {
+              "created": "2020-06-18T20:32:31.232069353Z",
+              "created_by": "/bin/sh -c #(nop)  ENTRYPOINT [\"docker-entrypoint.sh\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-06-18T20:32:31.395588375Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"node\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:39:04.704306208Z",
+              "created_by": "RUN /bin/sh -c apt-get update     \u0026\u0026 apt-get install curl --no-install-recommends -y     \u0026\u0026 rm -rf /var/lib/apt/lists/* # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:39:04.739145041Z",
+              "created_by": "ARG service_version",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:39:04.739145041Z",
+              "created_by": "ENV SERVICE_VERSION=v1",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:39:04.739145041Z",
+              "created_by": "COPY package.json /opt/microservices/ # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:39:04.768059975Z",
+              "created_by": "COPY ratings.js /opt/microservices/ # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:39:04.79666825Z",
+              "created_by": "WORKDIR /opt/microservices",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:39:06.6095144Z",
+              "created_by": "RUN |1 service_version=v1 /bin/sh -c npm install # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:39:06.6095144Z",
+              "created_by": "EXPOSE map[9080/tcp:{}]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:39:06.6095144Z",
+              "created_by": "CMD [\"node\" \"/opt/microservices/ratings.js\" \"9080\"]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:333e2cb4c707229901f45d7f5e4e3caf5a983229da7fefb0605975ff3a1eaf6f",
+              "sha256:90a1d8ebd7b4107bb74cb50c6ba3dcb144ff738c7afd01a753826641458476a4",
+              "sha256:98b7d0c5ef14f59e0a17429a6430028b12c5ea3c6312c4bbc1d99c4a6cd62538",
+              "sha256:d136f6518ac73d9588ec725d5899e0c5279a0b05b5fdece684874b9c21b90bc6",
+              "sha256:2577840953762b3cfb5a299ead93c0764da096200eee9f0cbd3243eff9cddf09",
+              "sha256:d40de8d65ee499720b9d54269112b014b07089fe50d9bf2c4e3f84585c84a927",
+              "sha256:7f4d5ea130c3e5f7b4f0ab9e0a9664165e9b5e381a05d045f8d15081b8d853fa",
+              "sha256:c6a3bd834638efb20573ad1c5f2f3d722070c1d67e3c424fc03d807968d90bbc",
+              "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+              "sha256:681e1481ec7c7e0054ab8f7106134d0c1eddc5e3094bb3de6c6cfb1fe881e119"
+            ]
+          },
+          "config": {
+            "Cmd": [
+              "node",
+              "/opt/microservices/ratings.js",
+              "9080"
+            ],
+            "Entrypoint": [
+              "docker-entrypoint.sh"
+            ],
+            "Env": [
+              "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "NODE_VERSION=12.18.1",
+              "YARN_VERSION=1.22.4",
+              "SERVICE_VERSION=v1"
+            ],
+            "WorkingDir": "/opt/microservices",
+            "ExposedPorts": {
+              "9080/tcp": {}
+            },
+            "ArgsEscaped": true
+          }
+        }
+      },
       "Results": [
         {
           "Target": "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0 (debian 9.12)",
@@ -259,6 +615,172 @@
       "Namespace": "apps",
       "Kind": "Deployment",
       "Name": "app1",
+      "Metadata": {
+        "OS": {
+          "Family": "alpine",
+          "Name": "3.16.3"
+        },
+        "ImageID": "sha256:5493d548b163d6bfa8d1a06a63148425857abb925cb35f294a127d88d67d0b81",
+        "DiffIDs": [
+          "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd",
+          "sha256:f80ab90a8af02011fc7ec3e94ee27788925af0ad2d9acb0b38fb50a1183af534",
+          "sha256:4a58a9711165524b9f07d087a586c3bbe3208863e5a3d25973e61878ce44ce28",
+          "sha256:9cdca906b6b00f8f12b274ed4ef6eaef66e0f55bf6fa0ef91ebb99d3c94a868e",
+          "sha256:e067457cde3692987ba197b0179551bf008afa41f61717f6a7fff96c1ee4f363",
+          "sha256:250f5d7c4338d844a6250be796b46c6cddb508aaac7e959bdfaf85bcc694736b",
+          "sha256:ce34393fe7243a48e39beea73159b7b4ee007a57463f3bf5d4deff2b05220841"
+        ],
+        "RepoTags": [
+          "quay.io/kiwigrid/k8s-sidecar:1.22.0"
+        ],
+        "RepoDigests": [
+          "quay.io/kiwigrid/k8s-sidecar@sha256:eaa478cdd0b8e1be7a4813bc1b01948b838e2feaa6d999e60c997dc823013824"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "created": "2023-01-17T08:32:05.175738444Z",
+          "history": [
+            {
+              "created": "2022-11-12T04:19:23.05154209Z",
+              "created_by": "/bin/sh -c #(nop) ADD file:ceeb6e8632fafc657116cbf3afbd522185a16963230b57881073dad22eb0e1a3 in / "
+            },
+            {
+              "created": "2022-11-12T04:19:23.199716539Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"/bin/sh\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-11-12T05:56:57.396927424Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-11-12T06:39:07.636263263Z",
+              "created_by": "/bin/sh -c #(nop)  ENV LANG=C.UTF-8",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-11-12T06:39:08.897309213Z",
+              "created_by": "/bin/sh -c set -eux; \tapk add --no-cache \t\tca-certificates \t\ttzdata \t;"
+            },
+            {
+              "created": "2022-11-12T06:57:28.607739372Z",
+              "created_by": "/bin/sh -c #(nop)  ENV GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-12-08T01:08:35.20421488Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_VERSION=3.11.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-12-08T01:27:05.815228143Z",
+              "created_by": "/bin/sh -c set -eux; \t\tapk add --no-cache --virtual .build-deps \t\tgnupg \t\ttar \t\txz \t\t\t\tbluez-dev \t\tbzip2-dev \t\tdpkg-dev dpkg \t\texpat-dev \t\tfindutils \t\tgcc \t\tgdbm-dev \t\tlibc-dev \t\tlibffi-dev \t\tlibnsl-dev \t\tlibtirpc-dev \t\tlinux-headers \t\tmake \t\tncurses-dev \t\topenssl-dev \t\tpax-utils \t\treadline-dev \t\tsqlite-dev \t\ttcl-dev \t\ttk \t\ttk-dev \t\tutil-linux-dev \t\txz-dev \t\tzlib-dev \t; \t\twget -O python.tar.xz \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz\"; \twget -O python.tar.xz.asc \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc\"; \tGNUPGHOME=\"$(mktemp -d)\"; export GNUPGHOME; \tgpg --batch --keyserver hkps://keys.openpgp.org --recv-keys \"$GPG_KEY\"; \tgpg --batch --verify python.tar.xz.asc python.tar.xz; \tcommand -v gpgconf \u003e /dev/null \u0026\u0026 gpgconf --kill all || :; \trm -rf \"$GNUPGHOME\" python.tar.xz.asc; \tmkdir -p /usr/src/python; \ttar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \trm python.tar.xz; \t\tcd /usr/src/python; \tgnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\"; \t./configure \t\t--build=\"$gnuArch\" \t\t--enable-loadable-sqlite-extensions \t\t--enable-optimizations \t\t--enable-option-checking=fatal \t\t--enable-shared \t\t--with-lto \t\t--with-system-expat \t\t--without-ensurepip \t; \tnproc=\"$(nproc)\"; \tmake -j \"$nproc\" \t\tEXTRA_CFLAGS=\"-DTHREAD_STACK_SIZE=0x100000\" \t\tLDFLAGS=\"-Wl,--strip-all\" \t; \tmake install; \t\tcd /; \trm -rf /usr/src/python; \t\tfind /usr/local -depth \t\t\\( \t\t\t\\( -type d -a \\( -name test -o -name tests -o -name idle_test \\) \\) \t\t\t-o \\( -type f -a \\( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \\) \\) \t\t\\) -exec rm -rf '{}' + \t; \t\tfind /usr/local -type f -executable -not \\( -name '*tkinter*' \\) -exec scanelf --needed --nobanner --format '%n#p' '{}' ';' \t\t| tr ',' '\\n' \t\t| sort -u \t\t| awk 'system(\"[ -e /usr/local/lib/\" $1 \" ]\") == 0 { next } { print \"so:\" $1 }' \t\t| xargs -rt apk add --no-network --virtual .python-rundeps \t; \tapk del --no-network .build-deps; \t\tpython3 --version"
+            },
+            {
+              "created": "2022-12-08T01:27:06.532823707Z",
+              "created_by": "/bin/sh -c set -eux; \tfor src in idle3 pydoc3 python3 python3-config; do \t\tdst=\"$(echo \"$src\" | tr -d 3)\"; \t\t[ -s \"/usr/local/bin/$src\" ]; \t\t[ ! -e \"/usr/local/bin/$dst\" ]; \t\tln -svT \"$src\" \"/usr/local/bin/$dst\"; \tdone"
+            },
+            {
+              "created": "2022-12-08T01:27:06.644083913Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_PIP_VERSION=22.3.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:31.916649178Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_SETUPTOOLS_VERSION=65.5.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:32.019128924Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/66030fa03382b4914d4c4d0896961a0bdeeeb274/public/get-pip.py",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:32.125306121Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_GET_PIP_SHA256=1e501cf004eac1b7eb1f97266d28f995ae835d30250bec7f8850562703067dc6",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:38.555958395Z",
+              "created_by": "/bin/sh -c set -eux; \t\twget -O get-pip.py \"$PYTHON_GET_PIP_URL\"; \techo \"$PYTHON_GET_PIP_SHA256 *get-pip.py\" | sha256sum -c -; \t\texport PYTHONDONTWRITEBYTECODE=1; \t\tpython get-pip.py \t\t--disable-pip-version-check \t\t--no-cache-dir \t\t--no-compile \t\t\"pip==$PYTHON_PIP_VERSION\" \t\t\"setuptools==$PYTHON_SETUPTOOLS_VERSION\" \t; \trm -f get-pip.py; \t\tpip --version"
+            },
+            {
+              "created": "2023-01-06T18:42:38.710203313Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"python3\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:31:18.688094602Z",
+              "created_by": "ENV PYTHONUNBUFFERED=1",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:31:18.688094602Z",
+              "created_by": "WORKDIR /app",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "COPY /app /app # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "ENV PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "USER 65534:65534",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "CMD [\"python\" \"-u\" \"/app/sidecar.py\"]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd",
+              "sha256:f80ab90a8af02011fc7ec3e94ee27788925af0ad2d9acb0b38fb50a1183af534",
+              "sha256:4a58a9711165524b9f07d087a586c3bbe3208863e5a3d25973e61878ce44ce28",
+              "sha256:9cdca906b6b00f8f12b274ed4ef6eaef66e0f55bf6fa0ef91ebb99d3c94a868e",
+              "sha256:e067457cde3692987ba197b0179551bf008afa41f61717f6a7fff96c1ee4f363",
+              "sha256:250f5d7c4338d844a6250be796b46c6cddb508aaac7e959bdfaf85bcc694736b",
+              "sha256:ce34393fe7243a48e39beea73159b7b4ee007a57463f3bf5d4deff2b05220841"
+            ]
+          },
+          "config": {
+            "Cmd": [
+              "python",
+              "-u",
+              "/app/sidecar.py"
+            ],
+            "Env": [
+              "PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "LANG=C.UTF-8",
+              "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+              "PYTHON_VERSION=3.11.1",
+              "PYTHON_PIP_VERSION=22.3.1",
+              "PYTHON_SETUPTOOLS_VERSION=65.5.1",
+              "PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/66030fa03382b4914d4c4d0896961a0bdeeeb274/public/get-pip.py",
+              "PYTHON_GET_PIP_SHA256=1e501cf004eac1b7eb1f97266d28f995ae835d30250bec7f8850562703067dc6",
+              "PYTHONUNBUFFERED=1"
+            ],
+            "User": "65534:65534",
+            "WorkingDir": "/app",
+            "ArgsEscaped": true
+          }
+        }
+      },
       "Results": [
         {
           "Target": "quay.io/kiwigrid/k8s-sidecar:1.22.0 (alpine 3.16.3)",
@@ -518,6 +1040,172 @@
       "Namespace": "apps",
       "Kind": "Deployment",
       "Name": "app2",
+      "Metadata": {
+        "OS": {
+          "Family": "alpine",
+          "Name": "3.16.3"
+        },
+        "ImageID": "sha256:5493d548b163d6bfa8d1a06a63148425857abb925cb35f294a127d88d67d0b81",
+        "DiffIDs": [
+          "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd",
+          "sha256:f80ab90a8af02011fc7ec3e94ee27788925af0ad2d9acb0b38fb50a1183af534",
+          "sha256:4a58a9711165524b9f07d087a586c3bbe3208863e5a3d25973e61878ce44ce28",
+          "sha256:9cdca906b6b00f8f12b274ed4ef6eaef66e0f55bf6fa0ef91ebb99d3c94a868e",
+          "sha256:e067457cde3692987ba197b0179551bf008afa41f61717f6a7fff96c1ee4f363",
+          "sha256:250f5d7c4338d844a6250be796b46c6cddb508aaac7e959bdfaf85bcc694736b",
+          "sha256:ce34393fe7243a48e39beea73159b7b4ee007a57463f3bf5d4deff2b05220841"
+        ],
+        "RepoTags": [
+          "quay.io/kiwigrid/k8s-sidecar:1.22.0"
+        ],
+        "RepoDigests": [
+          "quay.io/kiwigrid/k8s-sidecar@sha256:eaa478cdd0b8e1be7a4813bc1b01948b838e2feaa6d999e60c997dc823013824"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "created": "2023-01-17T08:32:05.175738444Z",
+          "history": [
+            {
+              "created": "2022-11-12T04:19:23.05154209Z",
+              "created_by": "/bin/sh -c #(nop) ADD file:ceeb6e8632fafc657116cbf3afbd522185a16963230b57881073dad22eb0e1a3 in / "
+            },
+            {
+              "created": "2022-11-12T04:19:23.199716539Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"/bin/sh\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-11-12T05:56:57.396927424Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-11-12T06:39:07.636263263Z",
+              "created_by": "/bin/sh -c #(nop)  ENV LANG=C.UTF-8",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-11-12T06:39:08.897309213Z",
+              "created_by": "/bin/sh -c set -eux; \tapk add --no-cache \t\tca-certificates \t\ttzdata \t;"
+            },
+            {
+              "created": "2022-11-12T06:57:28.607739372Z",
+              "created_by": "/bin/sh -c #(nop)  ENV GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-12-08T01:08:35.20421488Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_VERSION=3.11.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-12-08T01:27:05.815228143Z",
+              "created_by": "/bin/sh -c set -eux; \t\tapk add --no-cache --virtual .build-deps \t\tgnupg \t\ttar \t\txz \t\t\t\tbluez-dev \t\tbzip2-dev \t\tdpkg-dev dpkg \t\texpat-dev \t\tfindutils \t\tgcc \t\tgdbm-dev \t\tlibc-dev \t\tlibffi-dev \t\tlibnsl-dev \t\tlibtirpc-dev \t\tlinux-headers \t\tmake \t\tncurses-dev \t\topenssl-dev \t\tpax-utils \t\treadline-dev \t\tsqlite-dev \t\ttcl-dev \t\ttk \t\ttk-dev \t\tutil-linux-dev \t\txz-dev \t\tzlib-dev \t; \t\twget -O python.tar.xz \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz\"; \twget -O python.tar.xz.asc \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc\"; \tGNUPGHOME=\"$(mktemp -d)\"; export GNUPGHOME; \tgpg --batch --keyserver hkps://keys.openpgp.org --recv-keys \"$GPG_KEY\"; \tgpg --batch --verify python.tar.xz.asc python.tar.xz; \tcommand -v gpgconf \u003e /dev/null \u0026\u0026 gpgconf --kill all || :; \trm -rf \"$GNUPGHOME\" python.tar.xz.asc; \tmkdir -p /usr/src/python; \ttar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \trm python.tar.xz; \t\tcd /usr/src/python; \tgnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\"; \t./configure \t\t--build=\"$gnuArch\" \t\t--enable-loadable-sqlite-extensions \t\t--enable-optimizations \t\t--enable-option-checking=fatal \t\t--enable-shared \t\t--with-lto \t\t--with-system-expat \t\t--without-ensurepip \t; \tnproc=\"$(nproc)\"; \tmake -j \"$nproc\" \t\tEXTRA_CFLAGS=\"-DTHREAD_STACK_SIZE=0x100000\" \t\tLDFLAGS=\"-Wl,--strip-all\" \t; \tmake install; \t\tcd /; \trm -rf /usr/src/python; \t\tfind /usr/local -depth \t\t\\( \t\t\t\\( -type d -a \\( -name test -o -name tests -o -name idle_test \\) \\) \t\t\t-o \\( -type f -a \\( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \\) \\) \t\t\\) -exec rm -rf '{}' + \t; \t\tfind /usr/local -type f -executable -not \\( -name '*tkinter*' \\) -exec scanelf --needed --nobanner --format '%n#p' '{}' ';' \t\t| tr ',' '\\n' \t\t| sort -u \t\t| awk 'system(\"[ -e /usr/local/lib/\" $1 \" ]\") == 0 { next } { print \"so:\" $1 }' \t\t| xargs -rt apk add --no-network --virtual .python-rundeps \t; \tapk del --no-network .build-deps; \t\tpython3 --version"
+            },
+            {
+              "created": "2022-12-08T01:27:06.532823707Z",
+              "created_by": "/bin/sh -c set -eux; \tfor src in idle3 pydoc3 python3 python3-config; do \t\tdst=\"$(echo \"$src\" | tr -d 3)\"; \t\t[ -s \"/usr/local/bin/$src\" ]; \t\t[ ! -e \"/usr/local/bin/$dst\" ]; \t\tln -svT \"$src\" \"/usr/local/bin/$dst\"; \tdone"
+            },
+            {
+              "created": "2022-12-08T01:27:06.644083913Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_PIP_VERSION=22.3.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:31.916649178Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_SETUPTOOLS_VERSION=65.5.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:32.019128924Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/66030fa03382b4914d4c4d0896961a0bdeeeb274/public/get-pip.py",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:32.125306121Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PYTHON_GET_PIP_SHA256=1e501cf004eac1b7eb1f97266d28f995ae835d30250bec7f8850562703067dc6",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-06T18:42:38.555958395Z",
+              "created_by": "/bin/sh -c set -eux; \t\twget -O get-pip.py \"$PYTHON_GET_PIP_URL\"; \techo \"$PYTHON_GET_PIP_SHA256 *get-pip.py\" | sha256sum -c -; \t\texport PYTHONDONTWRITEBYTECODE=1; \t\tpython get-pip.py \t\t--disable-pip-version-check \t\t--no-cache-dir \t\t--no-compile \t\t\"pip==$PYTHON_PIP_VERSION\" \t\t\"setuptools==$PYTHON_SETUPTOOLS_VERSION\" \t; \trm -f get-pip.py; \t\tpip --version"
+            },
+            {
+              "created": "2023-01-06T18:42:38.710203313Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"python3\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:31:18.688094602Z",
+              "created_by": "ENV PYTHONUNBUFFERED=1",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:31:18.688094602Z",
+              "created_by": "WORKDIR /app",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "COPY /app /app # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "ENV PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "USER 65534:65534",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-01-17T08:32:05.175738444Z",
+              "created_by": "CMD [\"python\" \"-u\" \"/app/sidecar.py\"]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd",
+              "sha256:f80ab90a8af02011fc7ec3e94ee27788925af0ad2d9acb0b38fb50a1183af534",
+              "sha256:4a58a9711165524b9f07d087a586c3bbe3208863e5a3d25973e61878ce44ce28",
+              "sha256:9cdca906b6b00f8f12b274ed4ef6eaef66e0f55bf6fa0ef91ebb99d3c94a868e",
+              "sha256:e067457cde3692987ba197b0179551bf008afa41f61717f6a7fff96c1ee4f363",
+              "sha256:250f5d7c4338d844a6250be796b46c6cddb508aaac7e959bdfaf85bcc694736b",
+              "sha256:ce34393fe7243a48e39beea73159b7b4ee007a57463f3bf5d4deff2b05220841"
+            ]
+          },
+          "config": {
+            "Cmd": [
+              "python",
+              "-u",
+              "/app/sidecar.py"
+            ],
+            "Env": [
+              "PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "LANG=C.UTF-8",
+              "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+              "PYTHON_VERSION=3.11.1",
+              "PYTHON_PIP_VERSION=22.3.1",
+              "PYTHON_SETUPTOOLS_VERSION=65.5.1",
+              "PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/66030fa03382b4914d4c4d0896961a0bdeeeb274/public/get-pip.py",
+              "PYTHON_GET_PIP_SHA256=1e501cf004eac1b7eb1f97266d28f995ae835d30250bec7f8850562703067dc6",
+              "PYTHONUNBUFFERED=1"
+            ],
+            "User": "65534:65534",
+            "WorkingDir": "/app",
+            "ArgsEscaped": true
+          }
+        }
+      },
       "Results": [
         {
           "Target": "quay.io/kiwigrid/k8s-sidecar:1.22.0 (alpine 3.16.3)",
@@ -769,6 +1457,182 @@
       "Namespace": "apps",
       "Kind": "Deployment",
       "Name": "app2",
+      "Metadata": {
+        "OS": {
+          "Family": "debian",
+          "Name": "10.5"
+        },
+        "ImageID": "sha256:b6e2475a1d4b23324913d03cdb9dcdcd87367b654bb39fa7e4e8692faed72d86",
+        "DiffIDs": [
+          "sha256:07cab433985205f29909739f511777a810f4a9aff486355b71308bb654cdc868",
+          "sha256:d85310698a88f6963dfb9b4e978d719489e46aa56779ae209ce1a497ecdaefea",
+          "sha256:15364b93b273198a177bf57f6e9a9dfdef58907fbb53ddbc871450aa528a0a3d",
+          "sha256:3ef556e0d9e2bd857ebdd209ef980f7b78c351f3180ad4359ff98bf1909a6046",
+          "sha256:c709bce24c1e9e63c7188663862ed5863d155d39763fb0411db522785c818a3c",
+          "sha256:603b36a7ede76de95e98760fcc2c65b3664796ce49ce1f5db69befab1786e041",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+        ],
+        "RepoTags": [
+          "istio/examples-bookinfo-details-v1:1.17.0"
+        ],
+        "RepoDigests": [
+          "istio/examples-bookinfo-details-v1@sha256:2b081e3c86dd8105040ea1f2adcc94cb473f41249dc9c91ebc1c2885ddd56c13"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "created": "2022-09-06T15:37:44.298449203Z",
+          "history": [
+            {
+              "created": "2020-09-10T00:23:29.698339558Z",
+              "created_by": "/bin/sh -c #(nop) ADD file:e7407f2294ad23634565820b9669b18ff2a2ca0212a7ec84b9c89d8550859954 in / "
+            },
+            {
+              "created": "2020-09-10T00:23:30.055763036Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"bash\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:47:42.374173351Z",
+              "created_by": "/bin/sh -c set -eux; \tapt-get update; \tapt-get install -y --no-install-recommends \t\tbzip2 \t\tca-certificates \t\tlibffi-dev \t\tlibgmp-dev \t\tlibssl-dev \t\tlibyaml-dev \t\tprocps \t\tzlib1g-dev \t; \trm -rf /var/lib/apt/lists/*"
+            },
+            {
+              "created": "2020-09-10T19:47:43.328803438Z",
+              "created_by": "/bin/sh -c set -eux; \tmkdir -p /usr/local/etc; \t{ \t\techo 'install: --no-document'; \t\techo 'update: --no-document'; \t} \u003e\u003e /usr/local/etc/gemrc"
+            },
+            {
+              "created": "2020-09-10T19:47:43.553098481Z",
+              "created_by": "/bin/sh -c #(nop)  ENV LANG=C.UTF-8",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:47:43.757867771Z",
+              "created_by": "/bin/sh -c #(nop)  ENV RUBY_MAJOR=2.7",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:47:43.968550367Z",
+              "created_by": "/bin/sh -c #(nop)  ENV RUBY_VERSION=2.7.1",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:47:44.259766336Z",
+              "created_by": "/bin/sh -c #(nop)  ENV RUBY_DOWNLOAD_SHA256=b224f9844646cc92765df8288a46838511c1cec5b550d8874bd4686a904fcee7",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:51:48.539526923Z",
+              "created_by": "/bin/sh -c set -eux; \t\tsavedAptMark=\"$(apt-mark showmanual)\"; \tapt-get update; \tapt-get install -y --no-install-recommends \t\tautoconf \t\tbison \t\tdpkg-dev \t\tgcc \t\tlibbz2-dev \t\tlibgdbm-compat-dev \t\tlibgdbm-dev \t\tlibglib2.0-dev \t\tlibncurses-dev \t\tlibreadline-dev \t\tlibxml2-dev \t\tlibxslt-dev \t\tmake \t\truby \t\twget \t\txz-utils \t; \trm -rf /var/lib/apt/lists/*; \t\twget -O ruby.tar.xz \"https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz\"; \techo \"$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz\" | sha256sum --check --strict; \t\tmkdir -p /usr/src/ruby; \ttar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1; \trm ruby.tar.xz; \t\tcd /usr/src/ruby; \t\t{ \t\techo '#define ENABLE_PATH_CHECK 0'; \t\techo; \t\tcat file.c; \t} \u003e file.c.new; \tmv file.c.new file.c; \t\tautoconf; \tgnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\"; \t./configure \t\t--build=\"$gnuArch\" \t\t--disable-install-doc \t\t--enable-shared \t; \tmake -j \"$(nproc)\"; \tmake install; \t\tapt-mark auto '.*' \u003e /dev/null; \tapt-mark manual $savedAptMark \u003e /dev/null; \tfind /usr/local -type f -executable -not \\( -name '*tkinter*' \\) -exec ldd '{}' ';' \t\t| awk '/=\u003e/ { print $(NF-1) }' \t\t| sort -u \t\t| xargs -r dpkg-query --search \t\t| cut -d: -f1 \t\t| sort -u \t\t| xargs -r apt-mark manual \t; \tapt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \t\tcd /; \trm -r /usr/src/ruby; \t! dpkg -l | grep -i ruby; \t[ \"$(command -v ruby)\" = '/usr/local/bin/ruby' ]; \truby --version; \tgem --version; \tbundle --version"
+            },
+            {
+              "created": "2020-09-10T19:51:48.827166009Z",
+              "created_by": "/bin/sh -c #(nop)  ENV GEM_HOME=/usr/local/bundle",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:51:49.026841584Z",
+              "created_by": "/bin/sh -c #(nop)  ENV BUNDLE_SILENCE_ROOT_WARNING=1 BUNDLE_APP_CONFIG=/usr/local/bundle",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:51:49.239784956Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "empty_layer": true
+            },
+            {
+              "created": "2020-09-10T19:51:50.026322119Z",
+              "created_by": "/bin/sh -c mkdir -p \"$GEM_HOME\" \u0026\u0026 chmod 777 \"$GEM_HOME\""
+            },
+            {
+              "created": "2020-09-10T19:51:50.238628193Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"irb\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:37:44.270259728Z",
+              "created_by": "COPY details.rb /opt/microservices/ # buildkit",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "ARG service_version",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "ENV SERVICE_VERSION=v1",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "ARG enable_external_book_service",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "ENV ENABLE_EXTERNAL_BOOK_SERVICE=false",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "EXPOSE map[9080/tcp:{}]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "WORKDIR /opt/microservices",
+              "comment": "buildkit.dockerfile.v0"
+            },
+            {
+              "created": "2022-09-06T15:37:44.298449203Z",
+              "created_by": "CMD [\"ruby\" \"details.rb\" \"9080\"]",
+              "comment": "buildkit.dockerfile.v0",
+              "empty_layer": true
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:07cab433985205f29909739f511777a810f4a9aff486355b71308bb654cdc868",
+              "sha256:d85310698a88f6963dfb9b4e978d719489e46aa56779ae209ce1a497ecdaefea",
+              "sha256:15364b93b273198a177bf57f6e9a9dfdef58907fbb53ddbc871450aa528a0a3d",
+              "sha256:3ef556e0d9e2bd857ebdd209ef980f7b78c351f3180ad4359ff98bf1909a6046",
+              "sha256:c709bce24c1e9e63c7188663862ed5863d155d39763fb0411db522785c818a3c",
+              "sha256:603b36a7ede76de95e98760fcc2c65b3664796ce49ce1f5db69befab1786e041",
+              "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+            ]
+          },
+          "config": {
+            "Cmd": [
+              "ruby",
+              "details.rb",
+              "9080"
+            ],
+            "Env": [
+              "PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "LANG=C.UTF-8",
+              "RUBY_MAJOR=2.7",
+              "RUBY_VERSION=2.7.1",
+              "RUBY_DOWNLOAD_SHA256=b224f9844646cc92765df8288a46838511c1cec5b550d8874bd4686a904fcee7",
+              "GEM_HOME=/usr/local/bundle",
+              "BUNDLE_SILENCE_ROOT_WARNING=1",
+              "BUNDLE_APP_CONFIG=/usr/local/bundle",
+              "SERVICE_VERSION=v1",
+              "ENABLE_EXTERNAL_BOOK_SERVICE=false"
+            ],
+            "WorkingDir": "/opt/microservices",
+            "ExposedPorts": {
+              "9080/tcp": {}
+            },
+            "ArgsEscaped": true
+          }
+        }
+      },
       "Results": [
         {
           "Target": "docker.io/istio/examples-bookinfo-details-v1:1.17.0 (debian 10.5)",
@@ -916,6 +1780,137 @@
       "Namespace": "default",
       "Kind": "Deployment",
       "Name": "nginx",
+      "Metadata": {
+        "OS": {
+          "Family": "debian",
+          "Name": "11.7"
+        },
+        "ImageID": "sha256:f9c14fe76d502861ba0939bc3189e642c02e257f06f4c0214b1f8ca329326cda",
+        "DiffIDs": [
+          "sha256:8cbe4b54fa88d8fc0198ea0cc3a5432aea41573e6a0ee26eca8c79f9fbfa40e3",
+          "sha256:4b8862fe7056d8a3c2c0910eb38ebb8fc08785eaa1f9f53b2043bf7ca8adbafb",
+          "sha256:e60266289ce4a890aaf52b93228090998e28220aef04f128704141864992dd15",
+          "sha256:7daac92f43be84ad9675f94875c1a00357b975d6c58b11d17104e0a0e04da370",
+          "sha256:5e099cf3f3c83c449b8c062f944ac025c9bf2dd7ec255837c53430021f5a1517",
+          "sha256:4fd83434130318dede62defafcc5853d03dae8636eccfa1b9dcd385d92e3ff19"
+        ],
+        "RepoTags": [
+          "nginx:1.25.0"
+        ],
+        "RepoDigests": [
+          "nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305"
+        ],
+        "ImageConfig": {
+          "architecture": "amd64",
+          "container": "23b0fce2f40be83daa129eacbf79b8a57c6524a7898bf3aba06e10c15b433d0d",
+          "created": "2023-05-24T22:43:48.18207587Z",
+          "docker_version": "20.10.23",
+          "history": [
+            {
+              "created": "2023-05-23T01:20:14Z",
+              "created_by": "/bin/sh -c #(nop) ADD file:88252a7f118b4d6f55dd5baf49dbcaa053c9d6172c652963c1151fa76f625e44 in / "
+            },
+            {
+              "created": "2023-05-23T01:20:14Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"bash\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-23T08:51:20Z",
+              "created_by": "/bin/sh -c #(nop)  LABEL maintainer=NGINX Docker Maintainers \u003cdocker-maint@nginx.com\u003e",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:27Z",
+              "created_by": "/bin/sh -c #(nop)  ENV NGINX_VERSION=1.25.0",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:27Z",
+              "created_by": "/bin/sh -c #(nop)  ENV NJS_VERSION=0.7.12",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:27Z",
+              "created_by": "/bin/sh -c #(nop)  ENV PKG_RELEASE=1~bullseye",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:47Z",
+              "created_by": "/bin/sh -c set -x     \u0026\u0026 addgroup --system --gid 101 nginx     \u0026\u0026 adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos \"nginx user\" --shell /bin/false --uid 101 nginx     \u0026\u0026 apt-get update     \u0026\u0026 apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates     \u0026\u0026     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62;     NGINX_GPGKEY_PATH=/usr/share/keyrings/nginx-archive-keyring.gpg;     export GNUPGHOME=\"$(mktemp -d)\";     found='';     for server in         hkp://keyserver.ubuntu.com:80         pgp.mit.edu     ; do         echo \"Fetching GPG key $NGINX_GPGKEY from $server\";         gpg1 --keyserver \"$server\" --keyserver-options timeout=10 --recv-keys \"$NGINX_GPGKEY\" \u0026\u0026 found=yes \u0026\u0026 break;     done;     test -z \"$found\" \u0026\u0026 echo \u003e\u00262 \"error: failed to fetch GPG key $NGINX_GPGKEY\" \u0026\u0026 exit 1;     gpg1 --export \"$NGINX_GPGKEY\" \u003e \"$NGINX_GPGKEY_PATH\" ;     rm -rf \"$GNUPGHOME\";     apt-get remove --purge --auto-remove -y gnupg1 \u0026\u0026 rm -rf /var/lib/apt/lists/*     \u0026\u0026 dpkgArch=\"$(dpkg --print-architecture)\"     \u0026\u0026 nginxPackages=\"         nginx=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-xslt=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-geoip=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-image-filter=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-njs=${NGINX_VERSION}+${NJS_VERSION}-${PKG_RELEASE}     \"     \u0026\u0026 case \"$dpkgArch\" in         amd64|arm64)             echo \"deb [signed-by=$NGINX_GPGKEY_PATH] https://nginx.org/packages/mainline/debian/ bullseye nginx\" \u003e\u003e /etc/apt/sources.list.d/nginx.list             \u0026\u0026 apt-get update             ;;         *)             echo \"deb-src [signed-by=$NGINX_GPGKEY_PATH] https://nginx.org/packages/mainline/debian/ bullseye nginx\" \u003e\u003e /etc/apt/sources.list.d/nginx.list                         \u0026\u0026 tempDir=\"$(mktemp -d)\"             \u0026\u0026 chmod 777 \"$tempDir\"                         \u0026\u0026 savedAptMark=\"$(apt-mark showmanual)\"                         \u0026\u0026 apt-get update             \u0026\u0026 apt-get build-dep -y $nginxPackages             \u0026\u0026 (                 cd \"$tempDir\"                 \u0026\u0026 DEB_BUILD_OPTIONS=\"nocheck parallel=$(nproc)\"                     apt-get source --compile $nginxPackages             )                         \u0026\u0026 apt-mark showmanual | xargs apt-mark auto \u003e /dev/null             \u0026\u0026 { [ -z \"$savedAptMark\" ] || apt-mark manual $savedAptMark; }                         \u0026\u0026 ls -lAFh \"$tempDir\"             \u0026\u0026 ( cd \"$tempDir\" \u0026\u0026 dpkg-scanpackages . \u003e Packages )             \u0026\u0026 grep '^Package: ' \"$tempDir/Packages\"             \u0026\u0026 echo \"deb [ trusted=yes ] file://$tempDir ./\" \u003e /etc/apt/sources.list.d/temp.list             \u0026\u0026 apt-get -o Acquire::GzipIndexes=false update             ;;     esac         \u0026\u0026 apt-get install --no-install-recommends --no-install-suggests -y                         $nginxPackages                         gettext-base                         curl     \u0026\u0026 apt-get remove --purge --auto-remove -y \u0026\u0026 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list         \u0026\u0026 if [ -n \"$tempDir\" ]; then         apt-get purge -y --auto-remove         \u0026\u0026 rm -rf \"$tempDir\" /etc/apt/sources.list.d/temp.list;     fi     \u0026\u0026 ln -sf /dev/stdout /var/log/nginx/access.log     \u0026\u0026 ln -sf /dev/stderr /var/log/nginx/error.log     \u0026\u0026 mkdir /docker-entrypoint.d"
+            },
+            {
+              "created": "2023-05-24T22:43:47Z",
+              "created_by": "/bin/sh -c #(nop) COPY file:7b307b62e82255f040c9812421a30090bf9abf3685f27b02d77fcca99f997911 in / "
+            },
+            {
+              "created": "2023-05-24T22:43:47Z",
+              "created_by": "/bin/sh -c #(nop) COPY file:5c18272734349488bd0c94ec8d382c872c1a0a435cca13bd4671353d6021d2cb in /docker-entrypoint.d "
+            },
+            {
+              "created": "2023-05-24T22:43:47Z",
+              "created_by": "/bin/sh -c #(nop) COPY file:36429cfeeb299f9913b84ea136b004be12fbe4bb4f975a977a3608044e8bfa91 in /docker-entrypoint.d "
+            },
+            {
+              "created": "2023-05-24T22:43:47Z",
+              "created_by": "/bin/sh -c #(nop) COPY file:e57eef017a414ca793499729d80a7b9075790c9a804f930f1417e56d506970cf in /docker-entrypoint.d "
+            },
+            {
+              "created": "2023-05-24T22:43:47Z",
+              "created_by": "/bin/sh -c #(nop)  ENTRYPOINT [\"/docker-entrypoint.sh\"]",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:48Z",
+              "created_by": "/bin/sh -c #(nop)  EXPOSE 80",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:48Z",
+              "created_by": "/bin/sh -c #(nop)  STOPSIGNAL SIGQUIT",
+              "empty_layer": true
+            },
+            {
+              "created": "2023-05-24T22:43:48Z",
+              "created_by": "/bin/sh -c #(nop)  CMD [\"nginx\" \"-g\" \"daemon off;\"]",
+              "empty_layer": true
+            }
+          ],
+          "os": "linux",
+          "rootfs": {
+            "type": "layers",
+            "diff_ids": [
+              "sha256:8cbe4b54fa88d8fc0198ea0cc3a5432aea41573e6a0ee26eca8c79f9fbfa40e3",
+              "sha256:4b8862fe7056d8a3c2c0910eb38ebb8fc08785eaa1f9f53b2043bf7ca8adbafb",
+              "sha256:e60266289ce4a890aaf52b93228090998e28220aef04f128704141864992dd15",
+              "sha256:7daac92f43be84ad9675f94875c1a00357b975d6c58b11d17104e0a0e04da370",
+              "sha256:5e099cf3f3c83c449b8c062f944ac025c9bf2dd7ec255837c53430021f5a1517",
+              "sha256:4fd83434130318dede62defafcc5853d03dae8636eccfa1b9dcd385d92e3ff19"
+            ]
+          },
+          "config": {
+            "Cmd": [
+              "nginx",
+              "-g",
+              "daemon off;"
+            ],
+            "Entrypoint": [
+              "/docker-entrypoint.sh"
+            ],
+            "Env": [
+              "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+              "NGINX_VERSION=1.25.0",
+              "NJS_VERSION=0.7.12",
+              "PKG_RELEASE=1~bullseye"
+            ],
+            "Image": "sha256:a14a5803cbf095a0268663fe3235681c2f7fd5d0b59c242d99e7b1ebb59284f3",
+            "Labels": {
+              "maintainer": "NGINX Docker Maintainers \u003cdocker-maint@nginx.com\u003e"
+            },
+            "StopSignal": "SIGQUIT"
+          }
+        }
+      },
       "Results": [
         {
           "Target": "nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305 (debian 11.7)",

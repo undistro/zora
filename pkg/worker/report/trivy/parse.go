@@ -22,17 +22,19 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	trivyreport "github.com/aquasecurity/trivy/pkg/k8s/report"
 	trivytypes "github.com/aquasecurity/trivy/pkg/types"
 	"github.com/go-logr/logr"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityReportSpec, error) {
 	log := logr.FromContextOrDiscard(ctx)
-	report := &trivyreport.ConsolidatedReport{}
+	report := &trivyreport.Report{}
 	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
@@ -42,28 +44,29 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 	// map to control which image + class was parsed
 	parsed := make(map[string]bool)
 
-	for _, f := range report.Findings {
-		if f.Kind == "" {
+	for _, r := range report.Resources {
+		if r.Kind == "" {
 			continue
 		}
-		if len(f.Error) > 0 {
-			log.Info(fmt.Sprintf("trivy error for %q \"%s/%s\": %s", f.Kind, f.Namespace, f.Name, f.Error))
+		if len(r.Error) > 0 {
+			log.Info(fmt.Sprintf("trivy error for %q \"%s/%s\": %s", r.Kind, r.Namespace, r.Name, r.Error))
 			continue
 		}
-		img := getImage(f)
+		img := getImage(r)
 		if img == "" {
 			log.Info(`skipping finding without "os-pkgs" result`)
 			continue
 		}
-		for _, result := range f.Results {
+		for _, result := range r.Results {
 			if len(result.Vulnerabilities) == 0 {
+				log.Info("skipping result without vulnerabilities")
 				continue
 			}
 			if _, ok := vulnsByImage[img]; !ok {
-				vulnsByImage[img] = &v1alpha1.VulnerabilityReportSpec{Image: img}
+				vulnsByImage[img] = newSpec(img, r)
 			}
 			spec := vulnsByImage[img]
-			addResource(spec, f.Kind, f.Namespace, f.Name)
+			addResource(spec, r.Kind, r.Namespace, r.Name)
 
 			k := fmt.Sprintf("%s;%s", img, result.Class)
 			if _, ok := parsed[k]; ok {
@@ -72,7 +75,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 			parsed[k] = true
 
 			for _, vuln := range result.Vulnerabilities {
-				spec.Vulnerabilities = append(spec.Vulnerabilities, newVulnerability(vuln, ignoreDescriptions, result.Type))
+				spec.Vulnerabilities = append(spec.Vulnerabilities, newVulnerability(vuln, ignoreDescriptions, string(result.Type)))
 			}
 		}
 	}
@@ -84,30 +87,60 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 	return specs, nil
 }
 
-func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescriptions bool, resultType string) v1alpha1.Vulnerability {
+func newSpec(img string, resource trivyreport.Resource) *v1alpha1.VulnerabilityReportSpec {
+	meta := resource.Metadata
+	s := &v1alpha1.VulnerabilityReportSpec{
+		Image:        img,
+		Tags:         meta.RepoTags,
+		Architecture: meta.ImageConfig.Architecture,
+		OS:           meta.ImageConfig.OS,
+	}
+	if len(meta.RepoDigests) > 0 {
+		s.Digest = meta.RepoDigests[0]
+	}
+	if o := meta.OS; o != nil {
+		s.Distro = &v1alpha1.Distro{
+			Name:    string(o.Family),
+			Version: o.Name,
+		}
+	}
+	return s
+}
+
+func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription bool, t string) v1alpha1.Vulnerability {
 	description := ""
-	if !ignoreDescriptions {
+	if !ignoreDescription {
 		description = vuln.Description
 	}
 
 	return v1alpha1.Vulnerability{
-		ID:          vuln.VulnerabilityID,
-		Severity:    vuln.Severity,
-		Title:       vuln.Title,
-		Description: description,
-		Package:     vuln.PkgName,
-		Version:     vuln.InstalledVersion,
-		FixVersion:  vuln.FixedVersion,
-		URL:         vuln.PrimaryURL,
-		Status:      vuln.Status.String(),
-		Score:       getScore(vuln),
-		Type:        resultType,
+		ID:               vuln.VulnerabilityID,
+		Severity:         vuln.Severity,
+		Title:            vuln.Title,
+		Description:      description,
+		Package:          vuln.PkgName,
+		Version:          vuln.InstalledVersion,
+		FixVersion:       vuln.FixedVersion,
+		URL:              vuln.PrimaryURL,
+		Status:           vuln.Status.String(),
+		Score:            getScore(vuln),
+		Type:             t,
+		PublishedDate:    parseTime(vuln.PublishedDate),
+		LastModifiedDate: parseTime(vuln.LastModifiedDate),
 	}
+}
+
+func parseTime(t *time.Time) *metav1.Time {
+	if t == nil {
+		return nil
+	}
+	return &metav1.Time{Time: *t}
 }
 
 func getScore(vuln trivytypes.DetectedVulnerability) string {
 	var vendor *float64
 	for id, cvss := range vuln.CVSS {
+		cvss := cvss
 		if cvss.V3Score == 0.0 {
 			continue
 		}
@@ -122,8 +155,8 @@ func getScore(vuln trivytypes.DetectedVulnerability) string {
 	return fmt.Sprintf("%v", *vendor)
 }
 
-func getImage(finding trivyreport.Resource) string {
-	for _, r := range finding.Results {
+func getImage(resource trivyreport.Resource) string {
+	for _, r := range resource.Results {
 		if r.Class == "os-pkgs" {
 			return strings.SplitN(r.Target, " (", 2)[0]
 		}

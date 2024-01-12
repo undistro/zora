@@ -212,6 +212,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			Suspend:            notReadyErr != nil,
 			KubexnsImage:       r.KubexnsImage,
 			ChecksConfigMap:    r.ChecksConfigMap,
+			ClusterUID:         cluster.UID,
 		}
 
 		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate)

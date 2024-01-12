@@ -40,7 +40,6 @@ spec:
         --no-progress \
         --all-namespaces \
         --scanners=vuln \
-        --report=summary \
         -f=json \
         {{- if .Values.scan.plugins.trivy.ignoreUnfixed }}
         --ignore-unfixed \

@@ -28,13 +28,14 @@ const (
 	SeverityMedium  ClusterIssueSeverity = "Medium"
 	SeverityHigh    ClusterIssueSeverity = "High"
 
-	LabelScanID   = "scanID"
-	LabelCluster  = "cluster"
-	LabelSeverity = "severity"
-	LabelIssueID  = "id"
-	LabelCategory = "category"
-	LabelPlugin   = "plugin"
-	LabelCustom   = "custom"
+	LabelScanID     = "scanID"
+	LabelCluster    = "cluster"
+	LabelClusterUID = "clusterUID"
+	LabelSeverity   = "severity"
+	LabelIssueID    = "id"
+	LabelCategory   = "category"
+	LabelPlugin     = "plugin"
+	LabelCustom     = "custom"
 )
 
 // ClusterIssueSpec defines the desired state of ClusterIssue
