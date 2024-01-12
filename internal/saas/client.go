@@ -22,6 +22,8 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+
+	"github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 const (
@@ -42,6 +44,7 @@ type Client interface {
 	DeleteCluster(ctx context.Context, namespace, name string) error
 	PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 	DeleteClusterScan(ctx context.Context, namespace, name string) error
+	PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha1.VulnerabilityReport) error
 }
 
 type client struct {
@@ -103,6 +106,26 @@ func (r *client) DeleteCluster(ctx context.Context, namespace, name string) erro
 func (r *client) PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error {
 	u := r.clusterURL(namespace, name, "scan")
 	b, err := json.Marshal(pluginStatus)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, u, bytes.NewReader(b))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("content-type", "application/json")
+	req.Header.Set(versionHeader, r.version)
+	res, err := r.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	return validateStatus(res)
+}
+
+func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha1.VulnerabilityReport) error {
+	u := r.clusterURL(namespace, name, "vulnerabilityreports")
+	b, err := json.Marshal(vulnReport)
 	if err != nil {
 		return err
 	}
