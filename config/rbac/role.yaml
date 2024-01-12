@@ -219,3 +219,5 @@ rules:
   - vulnerabilityreports/status
   verbs:
   - get
+  - patch
+  - update
