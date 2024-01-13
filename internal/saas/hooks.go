@@ -16,8 +16,10 @@ package saas
 
 import (
 	"context"
+	"errors"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	ctrlClient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
@@ -76,6 +78,17 @@ func getClusterScans(ctx context.Context, c ctrlClient.Client, namespace, cluste
 }
 
 func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
+	if err := pushMisconfigs(saasClient, c, ctx, clusterScan, scanList); err != nil {
+		return err
+	}
+
+	if err := pushVulns(saasClient, c, ctx, clusterScan); err != nil {
+		return err
+	}
+	return nil
+}
+
+func pushMisconfigs(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
 	clusterName := clusterScan.Spec.ClusterRef.Name
 	var lastScanIDs []string
 	for _, cs := range scanList.Items {
@@ -85,22 +98,13 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
 	}
 
-	ls := &metav1.LabelSelector{
-		MatchLabels: map[string]string{v1alpha1.LabelCluster: clusterName},
-	}
-	if len(lastScanIDs) > 0 {
-		ls.MatchExpressions = []metav1.LabelSelectorRequirement{{
-			Key:      v1alpha1.LabelScanID,
-			Operator: metav1.LabelSelectorOpIn,
-			Values:   lastScanIDs,
-		}}
-	}
-	lss, err := metav1.LabelSelectorAsSelector(ls)
+	ls, err := buildLabelSelector(clusterName, lastScanIDs)
 	if err != nil {
 		return err
 	}
+
 	issueList := &v1alpha1.ClusterIssueList{}
-	if err := c.List(ctx, issueList, ctrlClient.MatchingLabelsSelector{Selector: lss}); err != nil {
+	if err := c.List(ctx, issueList, ctrlClient.MatchingLabelsSelector{Selector: ls}); err != nil {
 		return err
 	}
 
@@ -108,8 +112,9 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 	if status == nil {
 		return nil
 	}
-	if err := saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterName, status); err != nil {
-		if serr, ok := err.(*saasError); ok {
+	if err := saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterScan.Spec.ClusterRef.Name, status); err != nil {
+		var serr *saasError
+		if errors.As(err, &serr) {
 			clusterScan.SetSaaSStatus(metav1.ConditionFalse, serr.Err, serr.Detail)
 			return nil
 		}
@@ -118,4 +123,61 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 	}
 	clusterScan.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
 	return nil
+}
+
+func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alpha1.ClusterScan) error {
+	successfulScanIDs := cs.Status.LastScanIDs(true)
+	if len(successfulScanIDs) == 0 {
+		return nil
+	}
+	ls, err := buildLabelSelector(cs.Spec.ClusterRef.Name, successfulScanIDs)
+	if err != nil {
+		return err
+	}
+
+	metaList := &metav1.PartialObjectMetadataList{}
+	metaList.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("VulnerabilityReportList"))
+	if err := cl.List(ctx, metaList, ls); err != nil {
+		return err
+	}
+	if len(metaList.Items) == 0 {
+		return nil
+	}
+	for _, i := range metaList.Items {
+		vulnReport := &v1alpha1.VulnerabilityReport{}
+		if err := cl.Get(ctx, types.NamespacedName{Namespace: i.Namespace, Name: i.Name}, vulnReport); err != nil {
+			return err
+		}
+		if vulnReport.SaaSStatusIsTrue() {
+			continue
+		}
+		if err := scl.PutVulnerabilityReport(ctx, cs.Namespace, cs.Spec.ClusterRef.Name, *vulnReport); err != nil {
+			cs.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
+			vulnReport.SetSaaSStatus(metav1.ConditionTrue, "Error", err.Error())
+			_ = cl.Status().Update(ctx, vulnReport)
+			return err
+		}
+		vulnReport.SetSaaSStatus(metav1.ConditionTrue, "OK", "VulnerabilityReport successfully pushed to SaaS")
+		if err := cl.Status().Update(ctx, vulnReport); err != nil {
+			return err
+		}
+	}
+	cs.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
+	return nil
+}
+
+func buildLabelSelector(clusterName string, scanIDs []string) (*ctrlClient.MatchingLabelsSelector, error) {
+	sel := &metav1.LabelSelector{MatchLabels: map[string]string{v1alpha1.LabelCluster: clusterName}}
+	if len(scanIDs) > 0 {
+		sel.MatchExpressions = []metav1.LabelSelectorRequirement{{
+			Key:      v1alpha1.LabelScanID,
+			Operator: metav1.LabelSelectorOpIn,
+			Values:   scanIDs,
+		}}
+	}
+	ls, err := metav1.LabelSelectorAsSelector(sel)
+	if err != nil {
+		return nil, err
+	}
+	return &ctrlClient.MatchingLabelsSelector{Selector: ls}, nil
 }
