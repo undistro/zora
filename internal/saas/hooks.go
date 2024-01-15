@@ -78,11 +78,10 @@ func getClusterScans(ctx context.Context, c ctrlClient.Client, namespace, cluste
 }
 
 func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
-	if err := pushMisconfigs(saasClient, c, ctx, clusterScan, scanList); err != nil {
+	if err := pushVulns(saasClient, c, ctx, clusterScan); err != nil {
 		return err
 	}
-
-	if err := pushVulns(saasClient, c, ctx, clusterScan); err != nil {
+	if err := pushMisconfigs(saasClient, c, ctx, clusterScan, scanList); err != nil {
 		return err
 	}
 	return nil

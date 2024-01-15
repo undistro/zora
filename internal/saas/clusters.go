@@ -80,6 +80,7 @@ type ScanStatus struct {
 	Status  ScanStatusType `json:"status"`
 	Message string         `json:"message"`
 	Suspend bool           `json:"suspend"`
+	ID      string         `json:"id"`
 }
 
 type ConnectionStatus struct {
@@ -156,6 +157,7 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 			}
 			pluginStatus[p].Scan.Suspend = pointer.BoolDeref(cs.Spec.Suspend, false)
 			pluginStatus[p].Schedule = cs.Spec.Schedule
+			pluginStatus[p].Scan.ID = s.LastScanID
 
 			if s.TotalIssues != nil {
 				if pluginStatus[p].IssueCount == nil {
