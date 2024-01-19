@@ -71,6 +71,8 @@ func (in *PluginReference) PluginKey(defaultNamespace string) types.NamespacedNa
 	return types.NamespacedName{Name: in.Name, Namespace: ns}
 }
 
+type PluginScanProcessedResources map[string]string
+
 // ClusterScanStatus defines the observed state of ClusterScan
 type ClusterScanStatus struct {
 	Status `json:",inline"`
@@ -104,6 +106,12 @@ type ClusterScanStatus struct {
 
 	// Total of ClusterIssues reported in the last successful scan
 	TotalIssues *int `json:"totalIssues,omitempty"`
+
+	// Resource versions of processed vulnerabilities
+	ProcessedVulnerabilities map[string]PluginScanProcessedResources `json:"processedVulnerabilities,omitempty"`
+
+	// Resource versions of processed misconfigurations
+	ProcessedMisconfigurations map[string]PluginScanProcessedResources `json:"processedMisconfigurations,omitempty"`
 }
 
 // GetPluginStatus returns a PluginScanStatus of a plugin
