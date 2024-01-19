@@ -17,10 +17,13 @@ package saas
 import (
 	"context"
 	"errors"
+	"fmt"
+	"reflect"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrlClient "sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
@@ -107,6 +110,13 @@ func pushMisconfigs(saasClient Client, c ctrlClient.Client, ctx context.Context,
 		return err
 	}
 
+	pluginProcessedResources := getMisconfigProcessedResources(clusterScan.Status.Plugins, issueList.Items)
+	if reflect.DeepEqual(pluginProcessedResources, clusterScan.Status.ProcessedMisconfigurations) {
+		log := log.FromContext(ctx)
+		log.Info("Skipping misconfigurations, no changes from processed misconfigurations")
+		return nil
+	}
+
 	status := NewScanStatusWithIssues(scanList.Items, issueList.Items)
 	if status == nil {
 		return nil
@@ -120,6 +130,7 @@ func pushMisconfigs(saasClient Client, c ctrlClient.Client, ctx context.Context,
 		clusterScan.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
 		return err
 	}
+	clusterScan.Status.ProcessedMisconfigurations = pluginProcessedResources
 	clusterScan.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
 	return nil
 }
@@ -142,6 +153,14 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 	if len(metaList.Items) == 0 {
 		return nil
 	}
+
+	pluginProcessedResources := getVulnerabilityProcessedResources(metaList.Items)
+	if reflect.DeepEqual(pluginProcessedResources, cs.Status.ProcessedVulnerabilities) {
+		log := log.FromContext(ctx)
+		log.Info("Skipping vulnerabilities, no changes from processed vulnerabilities")
+		return nil
+	}
+
 	for _, i := range metaList.Items {
 		vulnReport := &v1alpha1.VulnerabilityReport{}
 		if err := cl.Get(ctx, types.NamespacedName{Namespace: i.Namespace, Name: i.Name}, vulnReport); err != nil {
@@ -161,6 +180,7 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 			return err
 		}
 	}
+	cs.Status.ProcessedVulnerabilities = pluginProcessedResources
 	cs.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
 	return nil
 }
@@ -179,4 +199,47 @@ func buildLabelSelector(clusterName string, scanIDs []string) (*ctrlClient.Match
 		return nil, err
 	}
 	return &ctrlClient.MatchingLabelsSelector{Selector: ls}, nil
+}
+
+func getMisconfigProcessedResources(pluginStatus map[string]*v1alpha1.PluginScanStatus, clusterIssues []v1alpha1.ClusterIssue) map[string]v1alpha1.PluginScanProcessedResources {
+	var pluginProcessedResources map[string]v1alpha1.PluginScanProcessedResources
+	issuePluginIncluded := false
+	for _, issue := range clusterIssues {
+		plugin := issue.Labels[v1alpha1.LabelPlugin]
+		if !issuePluginIncluded {
+			_, issuePluginIncluded = pluginStatus[plugin]
+		}
+		if pluginProcessedResources == nil {
+			pluginProcessedResources = map[string]v1alpha1.PluginScanProcessedResources{}
+		}
+		processedResources, ok := pluginProcessedResources[plugin]
+		if !ok {
+			processedResources = v1alpha1.PluginScanProcessedResources{}
+			pluginProcessedResources[plugin] = processedResources
+		}
+		processedResources[fmt.Sprintf("%s/%s", issue.Namespace, issue.Name)] = issue.ResourceVersion
+	}
+	if issuePluginIncluded {
+		return pluginProcessedResources
+	} else {
+		return nil
+	}
+}
+
+func getVulnerabilityProcessedResources(vulnerabiltiyIssues []metav1.PartialObjectMetadata) map[string]v1alpha1.PluginScanProcessedResources {
+	var pluginProcessedResources map[string]v1alpha1.PluginScanProcessedResources
+	for _, issue := range vulnerabiltiyIssues {
+		plugin := issue.Labels[v1alpha1.LabelPlugin]
+		if pluginProcessedResources == nil {
+			pluginProcessedResources = map[string]v1alpha1.PluginScanProcessedResources{}
+		}
+		processedResources, ok := pluginProcessedResources[plugin]
+		if !ok {
+			processedResources = v1alpha1.PluginScanProcessedResources{}
+			pluginProcessedResources[plugin] = processedResources
+		}
+		processedResources[fmt.Sprintf("%s/%s", issue.Namespace, issue.Name)] = issue.ResourceVersion
+
+	}
+	return pluginProcessedResources
 }

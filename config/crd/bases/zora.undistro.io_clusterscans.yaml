@@ -395,6 +395,20 @@ spec:
                   type: object
                 description: Information of the last scans of plugins
                 type: object
+              processedMisconfigurations:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  type: object
+                description: Resource versions of processed misconfigurations
+                type: object
+              processedVulnerabilities:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  type: object
+                description: Resource versions of processed vulnerabilities
+                type: object
               suspend:
                 description: Suspend field value from ClusterScan spec
                 type: boolean
