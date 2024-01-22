@@ -157,7 +157,7 @@ func getScore(vuln trivytypes.DetectedVulnerability) string {
 
 func getImage(resource trivyreport.Resource) string {
 	for _, r := range resource.Results {
-		if r.Class == "os-pkgs" {
+		if r.Class == trivytypes.ClassOSPkg {
 			return strings.SplitN(r.Target, " (", 2)[0]
 		}
 	}
