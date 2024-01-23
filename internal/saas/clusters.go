@@ -56,6 +56,7 @@ type PluginStatus struct {
 	LastFinishedScanTime   *metav1.Time     `json:"lastFinishedScanTime"`
 	NextScheduleScanTime   *metav1.Time     `json:"nextScheduleScanTime"`
 	Schedule               string           `json:"schedule"`
+	LastSuccessfulScanID   string           `json:"lastSuccessfulScanID"`
 }
 
 type NamespacedName struct {
@@ -158,6 +159,7 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 			pluginStatus[p].Scan.Suspend = pointer.BoolDeref(cs.Spec.Suspend, false)
 			pluginStatus[p].Schedule = cs.Spec.Schedule
 			pluginStatus[p].Scan.ID = s.LastScanID
+			pluginStatus[p].LastSuccessfulScanID = s.LastSuccessfulScanID
 
 			if s.TotalIssues != nil {
 				if pluginStatus[p].IssueCount == nil {

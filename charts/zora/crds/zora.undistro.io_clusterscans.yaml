@@ -416,6 +416,51 @@ spec:
                   type: object
                 description: Resource versions of processed misconfigurations
                 type: object
+              processedPluginStatus:
+                additionalProperties:
+                  description: PluginStatus defines the observed state of Plugin
+                  properties:
+                    issueCount:
+                      description: The number of misconfiguration issues discovered
+                        in the last successful scan.
+                      type: integer
+                    lastFinishedScanTime:
+                      description: When the last scan finished.
+                      format: date-time
+                      type: string
+                    lastSuccessfulScanID:
+                      description: The Scan ID of the last successful scan.
+                      type: string
+                    lastSuccessfulScanTime:
+                      description: When the last successful scan occurred.
+                      format: date-time
+                      type: string
+                    nextScheduleScanTime:
+                      description: When the next scan will occurr.
+                      format: date-time
+                      type: string
+                    scan:
+                      description: The scan status information.
+                      properties:
+                        id:
+                          description: The status of the last scan.
+                          type: string
+                        message:
+                          description: The message for the last scan.
+                          type: string
+                        status:
+                          description: The status of the last scan.
+                          type: string
+                        suspend:
+                          description: True is the scan is currently suspended.
+                          type: boolean
+                      type: object
+                    schedule:
+                      description: The schedule of the scan.
+                      type: string
+                  type: object
+                description: Processed Status information for each plugin
+                type: object
               processedVulnerabilities:
                 additionalProperties:
                   additionalProperties:
