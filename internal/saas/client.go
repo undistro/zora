@@ -45,6 +45,7 @@ type Client interface {
 	PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 	DeleteClusterScan(ctx context.Context, namespace, name string) error
 	PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha1.VulnerabilityReport) error
+	PutClusterStatus(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 }
 
 type client struct {
@@ -151,6 +152,26 @@ func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) 
 	}
 	res, err := r.client.Do(req)
 	req.Header.Set(versionHeader, r.version)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	return validateStatus(res)
+}
+
+func (r *client) PutClusterStatus(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error {
+	u := r.clusterURL(namespace, name, "status")
+	b, err := json.Marshal(pluginStatus)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, u, bytes.NewReader(b))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("content-type", "application/json")
+	req.Header.Set(versionHeader, r.version)
+	res, err := r.client.Do(req)
 	if err != nil {
 		return err
 	}

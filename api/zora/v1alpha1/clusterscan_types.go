@@ -71,6 +71,35 @@ func (in *PluginReference) PluginKey(defaultNamespace string) types.NamespacedNa
 	return types.NamespacedName{Name: in.Name, Namespace: ns}
 }
 
+type ProcessedScanStatus struct {
+	// The status of the last scan.
+	Status string `json:"status,omitempty"`
+	// The message for the last scan.
+	Message string `json:"message,omitempty"`
+	// True is the scan is currently suspended.
+	Suspend bool `json:"suspend,omitempty"`
+	// The status of the last scan.
+	ID string `json:"id,omitempty"`
+}
+
+// PluginStatus defines the observed state of Plugin
+type PluginScanProcessedStatus struct {
+	// The scan status information.
+	Scan *ProcessedScanStatus `json:"scan,omitempty"`
+	// The number of misconfiguration issues discovered in the last successful scan.
+	IssueCount *int `json:"issueCount,omitempty"`
+	// When the last successful scan occurred.
+	LastSuccessfulScanTime *metav1.Time `json:"lastSuccessfulScanTime,omitempty"`
+	// When the last scan finished.
+	LastFinishedScanTime *metav1.Time `json:"lastFinishedScanTime,omitempty"`
+	// When the next scan will occurr.
+	NextScheduleScanTime *metav1.Time `json:"nextScheduleScanTime,omitempty"`
+	// The schedule of the scan.
+	Schedule string `json:"schedule,omitempty"`
+	// The Scan ID of the last successful scan.
+	LastSuccessfulScanID string `json:"lastSuccessfulScanID,omitempty"`
+}
+
 type PluginScanProcessedResources map[string]string
 
 // ClusterScanStatus defines the observed state of ClusterScan
@@ -112,6 +141,9 @@ type ClusterScanStatus struct {
 
 	// Resource versions of processed misconfigurations
 	ProcessedMisconfigurations map[string]PluginScanProcessedResources `json:"processedMisconfigurations,omitempty"`
+
+	// Processed Status information for each plugin
+	ProcessedPluginStatus map[string]*PluginScanProcessedStatus `json:"processedPluginStatus,omitempty"`
 }
 
 // GetPluginStatus returns a PluginScanStatus of a plugin
