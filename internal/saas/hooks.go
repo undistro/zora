@@ -121,7 +121,7 @@ func pushMisconfigs(saasClient Client, c ctrlClient.Client, ctx context.Context,
 		return false, nil
 	}
 
-	status := NewScanStatusWithIssues(scanList.Items, issueList.Items)
+	status := NewScanStatusWithIssues(clusterScan, scanList.Items, issueList.Items)
 	if status == nil {
 		return true, nil
 	}
@@ -190,7 +190,7 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 }
 
 func pushStatusUpdate(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
-	status, _ := NewScanStatus(scanList.Items)
+	status, _ := NewScanStatus(clusterScan, scanList.Items)
 	processedPluginStatus := getPluginProcessedStatus(status)
 
 	if reflect.DeepEqual(processedPluginStatus, clusterScan.Status.ProcessedPluginStatus) {

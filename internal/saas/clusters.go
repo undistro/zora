@@ -134,11 +134,14 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	return cl
 }
 
-func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
+func NewScanStatus(clusterScan *v1alpha1.ClusterScan, scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
 	var pluginStatus map[string]*PluginStatus
 	var totalIssues *int
 
-	for _, cs := range scans {
+	allScans := []v1alpha1.ClusterScan{}
+	allScans = append(allScans, scans...)
+	allScans = append(allScans, *clusterScan)
+	for _, cs := range allScans {
 		if cs.Status.TotalIssues != nil {
 			if totalIssues == nil {
 				totalIssues = new(int)
@@ -196,8 +199,8 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 	return pluginStatus, totalIssues
 }
 
-func NewScanStatusWithIssues(scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) map[string]*PluginStatus {
-	pluginStatus, _ := NewScanStatus(scans)
+func NewScanStatusWithIssues(clusterScan *v1alpha1.ClusterScan, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) map[string]*PluginStatus {
+	pluginStatus, _ := NewScanStatus(clusterScan, scans)
 	if pluginStatus == nil {
 		return nil
 	}
