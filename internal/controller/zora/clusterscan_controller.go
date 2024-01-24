@@ -127,6 +127,9 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	err := r.reconcile(ctx, clusterscan)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
 
 	if r.OnUpdate != nil {
 		if err := r.OnUpdate(ctx, clusterscan); err != nil {
