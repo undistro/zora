@@ -94,7 +94,7 @@ nav:
             - Popeye: plugins/popeye.md
           - Vulnerability:
             - Trivy: plugins/trivy.md
-      - "🔄 Migrating to 0.7": getting-started/installation/#migrating-to-07
+      - "🔄 Migrating to 0.8": getting-started/installation/#migrating-to-08
 #      - "🔐 Data privacy": data-privacy.md
       - "📊 Zora Dashboard": dashboard.md
 #      - "🗃️ Troubleshooting": troubleshooting.md

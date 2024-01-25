@@ -31,7 +31,7 @@ Then, run the following command to install Zora [Helm chart](https://helm.sh/doc
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
       -n zora-system \
-      --version 0.7.0 \
+      --version 0.8.0 \
       --create-namespace \
       --wait \
       --set clusterName="$(kubectl config current-context)"
@@ -42,7 +42,7 @@ Then, run the following command to install Zora [Helm chart](https://helm.sh/doc
     ```shell
     helm upgrade --install zora oci://ghcr.io/undistro/helm-charts/zora \
       -n zora-system \
-      --version 0.7.0 \
+      --version 0.8.0 \
       --create-namespace \
       --wait \
       --set clusterName="$(kubectl config current-context)"
@@ -80,25 +80,31 @@ kubectl get misconfigurations -n zora-system
 kubectl get vulnerabilities   -n zora-system
 ```
 
-## Migrating to 0.7
+## Migrating to 0.8
 
-### What's new in 0.7
+### What's new in 0.8
 
-In versions up to [0.6](/v0.6/), Zora was installed in a single cluster (referred to as the management cluster) 
-and connected to other clusters (referred to as target clusters) via kubeconfig, requiring only read permissions.
+#### Extended Vulnerability Reports Information
 
-Starting from version [0.7](/v0.7/), Zora should be installed in each cluster you want to scan. 
-This significant change, in addition to streamlining the quick start, 
-enables the use of plugins for more in-depth scans of your cluster, 
-thereby providing more insights to help you keep your cluster secure and adhere to best practices.
+Now, `VulnerabilityReports` provide more in-depth information about the image, including `OS`, `architecture`, `distro`, and `digest`.
+Additionally, details about vulnerabilities, such as `publishedDate` and `lastModifiedDate`, have been included 
+to offer a clearer understanding of your cluster's security posture.
+
+#### Full Integration with Zora Dashboard
+
+Zora 0.8 introduces the integration of Vulnerability Reports with the Zora Dashboard.
+Now, alongside misconfigurations, you can centrally explore images and vulnerabilities across your clusters.
 
 ### Migration guide
 
-The recommended way to migrate to version 0.7 is to [uninstall](#uninstall) Zora 0.6 from your management cluster, 
-including its CRDs, and then install it again on the clusters you wish to scan. 
+!!! warning "Version 0.7 or earlier"
+    If you are currently using a version prior to 0.7, 
+    please be aware that the 0.7 release brought about significant architectural changes. 
+    Before upgrading to version 0.8, refer to [this page](/v0.7/getting-started/installation/#migrating-to-07) 
+    for essential information and considerations to ensure a smooth transition.
 
-The ServiceAccounts in the target clusters, which previously contained the tokens used in the kubeconfig files, 
-will no longer be needed and can be deleted.
+
+The recommended way to migrate to version 0.8 is to reinstall Zora, including its CRDs.
 
 ## Uninstall
 
