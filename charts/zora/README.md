@@ -93,6 +93,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
 | operator.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
+| operator.env | list | `[]` | List of environment variables to set in operator container. Cannot be updated |
+| operator.envFrom | list | `[]` | List of sources to populate environment variables in operator container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated. |
 | scan.misconfiguration.enabled | bool | `true` | Specifies whether misconfiguration scan is enabled |
 | scan.misconfiguration.schedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format for misconfiguration scan |
 | scan.misconfiguration.successfulScansHistoryLimit | int | `1` | The number of successful finished scans and their issues to retain. |
