@@ -8,7 +8,6 @@ import (
 	v1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	testing "k8s.io/client-go/testing"
 )
 
@@ -18,9 +17,9 @@ type FakeClusterScans struct {
 	ns   string
 }
 
-var clusterscansResource = schema.GroupVersionResource{Group: "zora", Version: "v1alpha1", Resource: "clusterscans"}
+var clusterscansResource = v1alpha1.SchemeGroupVersion.WithResource("clusterscans")
 
-var clusterscansKind = schema.GroupVersionKind{Group: "zora", Version: "v1alpha1", Kind: "ClusterScan"}
+var clusterscansKind = v1alpha1.SchemeGroupVersion.WithKind("ClusterScan")
 
 // Get takes name of the clusterScan, and returns the corresponding clusterScan object, and an error if there is any.
 func (c *FakeClusterScans) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ClusterScan, err error) {

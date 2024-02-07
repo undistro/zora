@@ -28,6 +28,7 @@ type config struct {
 	PluginName   string        `env:"PLUGIN_NAME,required"`
 	PluginType   string        `env:"PLUGIN_TYPE,required"`
 	ClusterName  string        `env:"CLUSTER_NAME,required"`
+	ClusterUID   string        `env:"CLUSTER_UID,required"`
 	Namespace    string        `env:"NAMESPACE,required"`
 	JobName      string        `env:"JOB_NAME,required"`
 	JobUID       string        `env:"JOB_UID,required"`

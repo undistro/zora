@@ -16,9 +16,14 @@ package saas
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"reflect"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	ctrlClient "sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
 )
@@ -76,6 +81,20 @@ func getClusterScans(ctx context.Context, c ctrlClient.Client, namespace, cluste
 }
 
 func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
+	if err := pushVulns(saasClient, c, ctx, clusterScan); err != nil {
+		return err
+	}
+	if updatedScan, err := pushMisconfigs(saasClient, c, ctx, clusterScan, scanList); err != nil {
+		return err
+	} else if !updatedScan {
+		if err := pushStatusUpdate(saasClient, c, ctx, clusterScan, scanList); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func pushMisconfigs(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) (bool, error) {
 	clusterName := clusterScan.Spec.ClusterRef.Name
 	var lastScanIDs []string
 	for _, cs := range scanList.Items {
@@ -85,37 +104,197 @@ func updateClusterScan(saasClient Client, c ctrlClient.Client, ctx context.Conte
 		lastScanIDs = append(lastScanIDs, cs.Status.LastScanIDs(true)...)
 	}
 
-	ls := &metav1.LabelSelector{
-		MatchLabels: map[string]string{v1alpha1.LabelCluster: clusterName},
+	ls, err := buildLabelSelector(clusterName, lastScanIDs)
+	if err != nil {
+		return false, err
 	}
-	if len(lastScanIDs) > 0 {
-		ls.MatchExpressions = []metav1.LabelSelectorRequirement{{
-			Key:      v1alpha1.LabelScanID,
-			Operator: metav1.LabelSelectorOpIn,
-			Values:   lastScanIDs,
-		}}
+
+	issueList := &v1alpha1.ClusterIssueList{}
+	if err := c.List(ctx, issueList, ctrlClient.MatchingLabelsSelector{Selector: ls}); err != nil {
+		return false, err
 	}
-	lss, err := metav1.LabelSelectorAsSelector(ls)
+
+	pluginProcessedResources := getMisconfigProcessedResources(clusterScan.Status.Plugins, issueList.Items)
+	if reflect.DeepEqual(pluginProcessedResources, clusterScan.Status.ProcessedMisconfigurations) {
+		log := log.FromContext(ctx)
+		log.Info("Skipping misconfigurations, no changes from processed misconfigurations")
+		return false, nil
+	}
+
+	status := NewScanStatusWithIssues(clusterScan, scanList.Items, issueList.Items)
+	if status == nil {
+		return true, nil
+	}
+	if err := saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterScan.Spec.ClusterRef.Name, status); err != nil {
+		var serr *saasError
+		if errors.As(err, &serr) {
+			clusterScan.SetSaaSStatus(metav1.ConditionFalse, serr.Err, serr.Detail)
+			return true, nil
+		}
+		clusterScan.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
+		return false, err
+	}
+	clusterScan.Status.ProcessedMisconfigurations = pluginProcessedResources
+	clusterScan.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
+	return true, nil
+}
+
+func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alpha1.ClusterScan) error {
+	successfulScanIDs := cs.Status.LastScanIDs(true)
+	if len(successfulScanIDs) == 0 {
+		return nil
+	}
+	ls, err := buildLabelSelector(cs.Spec.ClusterRef.Name, successfulScanIDs)
 	if err != nil {
 		return err
 	}
-	issueList := &v1alpha1.ClusterIssueList{}
-	if err := c.List(ctx, issueList, ctrlClient.MatchingLabelsSelector{Selector: lss}); err != nil {
+
+	metaList := &metav1.PartialObjectMetadataList{}
+	metaList.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("VulnerabilityReportList"))
+	if err := cl.List(ctx, metaList, ls); err != nil {
 		return err
 	}
+	if len(metaList.Items) == 0 {
+		return nil
+	}
 
-	status := NewScanStatusWithIssues(scanList.Items, issueList.Items)
+	pluginProcessedResources := getVulnerabilityProcessedResources(metaList.Items)
+	if reflect.DeepEqual(pluginProcessedResources, cs.Status.ProcessedVulnerabilities) {
+		log := log.FromContext(ctx)
+		log.Info("Skipping vulnerabilities, no changes from processed vulnerabilities")
+		return nil
+	}
+
+	for _, i := range metaList.Items {
+		vulnReport := &v1alpha1.VulnerabilityReport{}
+		if err := cl.Get(ctx, types.NamespacedName{Namespace: i.Namespace, Name: i.Name}, vulnReport); err != nil {
+			return err
+		}
+		if vulnReport.SaaSStatusIsTrue() {
+			continue
+		}
+		if err := scl.PutVulnerabilityReport(ctx, cs.Namespace, cs.Spec.ClusterRef.Name, *vulnReport); err != nil {
+			cs.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
+			vulnReport.SetSaaSStatus(metav1.ConditionTrue, "Error", err.Error())
+			_ = cl.Status().Update(ctx, vulnReport)
+			return err
+		}
+		vulnReport.SetSaaSStatus(metav1.ConditionTrue, "OK", "VulnerabilityReport successfully pushed to SaaS")
+		if err := cl.Status().Update(ctx, vulnReport); err != nil {
+			return err
+		}
+	}
+	cs.Status.ProcessedVulnerabilities = pluginProcessedResources
+	cs.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
+	return nil
+}
+
+func pushStatusUpdate(saasClient Client, c ctrlClient.Client, ctx context.Context, clusterScan *v1alpha1.ClusterScan, scanList *v1alpha1.ClusterScanList) error {
+	status, _ := NewScanStatus(clusterScan, scanList.Items)
+	processedPluginStatus := getPluginProcessedStatus(status)
+
+	if reflect.DeepEqual(processedPluginStatus, clusterScan.Status.ProcessedPluginStatus) {
+		log := log.FromContext(ctx)
+		log.Info("Skipping status update, no changes from processed statuses")
+		return nil
+	}
+
 	if status == nil {
 		return nil
 	}
-	if err := saasClient.PutClusterScan(ctx, clusterScan.Namespace, clusterName, status); err != nil {
-		if serr, ok := err.(*saasError); ok {
+	if err := saasClient.PutClusterStatus(ctx, clusterScan.Namespace, clusterScan.Spec.ClusterRef.Name, status); err != nil {
+		var serr *saasError
+		if errors.As(err, &serr) {
 			clusterScan.SetSaaSStatus(metav1.ConditionFalse, serr.Err, serr.Detail)
 			return nil
 		}
 		clusterScan.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
 		return err
 	}
+	clusterScan.Status.ProcessedPluginStatus = processedPluginStatus
 	clusterScan.SetSaaSStatus(metav1.ConditionTrue, "OK", "cluster scan successfully synced with SaaS")
 	return nil
+}
+
+func getPluginProcessedStatus(statuses map[string]*PluginStatus) map[string]*v1alpha1.PluginScanProcessedStatus {
+	result := map[string]*v1alpha1.PluginScanProcessedStatus{}
+	for plugin, status := range statuses {
+		processedStatus := &v1alpha1.PluginScanProcessedStatus{
+			IssueCount:             status.IssueCount,
+			LastSuccessfulScanTime: status.LastSuccessfulScanTime,
+			LastFinishedScanTime:   status.LastFinishedScanTime,
+			NextScheduleScanTime:   status.NextScheduleScanTime,
+			Schedule:               status.Schedule,
+			LastSuccessfulScanID:   status.LastSuccessfulScanID,
+		}
+		if status.Scan != nil {
+			processedStatus.Scan = &v1alpha1.ProcessedScanStatus{
+				Status:  string(status.Scan.Status),
+				Message: status.Scan.Message,
+				Suspend: status.Scan.Suspend,
+				ID:      status.Scan.ID,
+			}
+		}
+		result[plugin] = processedStatus
+	}
+	return result
+}
+
+func buildLabelSelector(clusterName string, scanIDs []string) (*ctrlClient.MatchingLabelsSelector, error) {
+	sel := &metav1.LabelSelector{MatchLabels: map[string]string{v1alpha1.LabelCluster: clusterName}}
+	if len(scanIDs) > 0 {
+		sel.MatchExpressions = []metav1.LabelSelectorRequirement{{
+			Key:      v1alpha1.LabelScanID,
+			Operator: metav1.LabelSelectorOpIn,
+			Values:   scanIDs,
+		}}
+	}
+	ls, err := metav1.LabelSelectorAsSelector(sel)
+	if err != nil {
+		return nil, err
+	}
+	return &ctrlClient.MatchingLabelsSelector{Selector: ls}, nil
+}
+
+func getMisconfigProcessedResources(pluginStatus map[string]*v1alpha1.PluginScanStatus, clusterIssues []v1alpha1.ClusterIssue) map[string]v1alpha1.PluginScanProcessedResources {
+	var pluginProcessedResources map[string]v1alpha1.PluginScanProcessedResources
+	issuePluginIncluded := false
+	for _, issue := range clusterIssues {
+		plugin := issue.Labels[v1alpha1.LabelPlugin]
+		if !issuePluginIncluded {
+			_, issuePluginIncluded = pluginStatus[plugin]
+		}
+		if pluginProcessedResources == nil {
+			pluginProcessedResources = map[string]v1alpha1.PluginScanProcessedResources{}
+		}
+		processedResources, ok := pluginProcessedResources[plugin]
+		if !ok {
+			processedResources = v1alpha1.PluginScanProcessedResources{}
+			pluginProcessedResources[plugin] = processedResources
+		}
+		processedResources[fmt.Sprintf("%s/%s", issue.Namespace, issue.Name)] = issue.ResourceVersion
+	}
+	if issuePluginIncluded {
+		return pluginProcessedResources
+	} else {
+		return nil
+	}
+}
+
+func getVulnerabilityProcessedResources(vulnerabiltiyIssues []metav1.PartialObjectMetadata) map[string]v1alpha1.PluginScanProcessedResources {
+	var pluginProcessedResources map[string]v1alpha1.PluginScanProcessedResources
+	for _, issue := range vulnerabiltiyIssues {
+		plugin := issue.Labels[v1alpha1.LabelPlugin]
+		if pluginProcessedResources == nil {
+			pluginProcessedResources = map[string]v1alpha1.PluginScanProcessedResources{}
+		}
+		processedResources, ok := pluginProcessedResources[plugin]
+		if !ok {
+			processedResources = v1alpha1.PluginScanProcessedResources{}
+			pluginProcessedResources[plugin] = processedResources
+		}
+		processedResources[fmt.Sprintf("%s/%s", issue.Namespace, issue.Name)] = issue.ResourceVersion
+
+	}
+	return pluginProcessedResources
 }

@@ -16,7 +16,6 @@ package worker
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"regexp"
@@ -60,7 +59,7 @@ func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, cl
 func parseVulnResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.VulnerabilityReport, error) {
 	parseFunc, ok := vulnPlugins[cfg.PluginName]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
+		return nil, fmt.Errorf("invalid plugin %q", cfg.PluginName)
 	}
 	specs, err := parseFunc(ctx, results)
 	if err != nil {
@@ -79,17 +78,22 @@ func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner met
 	return v1alpha1.VulnerabilityReport{
 		TypeMeta: vulnReportTypeMeta,
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            fmt.Sprintf("%s-%s-%s", cfg.ClusterName, strings.ToLower(cleanString(spec.Image)), cfg.suffix),
+			Name:            vulnReportName(cfg, spec),
 			Namespace:       cfg.Namespace,
 			OwnerReferences: []metav1.OwnerReference{owner},
 			Labels: map[string]string{
-				v1alpha1.LabelScanID:  cfg.JobUID,
-				v1alpha1.LabelCluster: cfg.ClusterName,
-				v1alpha1.LabelPlugin:  cfg.PluginName,
+				v1alpha1.LabelScanID:     cfg.JobUID,
+				v1alpha1.LabelCluster:    cfg.ClusterName,
+				v1alpha1.LabelClusterUID: cfg.ClusterUID,
+				v1alpha1.LabelPlugin:     cfg.PluginName,
 			},
 		},
 		Spec: spec,
 	}
+}
+
+func vulnReportName(cfg *config, spec v1alpha1.VulnerabilityReportSpec) string {
+	return fmt.Sprintf("%s-%s-%s", cfg.ClusterName, strings.ToLower(cleanString(spec.Image)), cfg.suffix)
 }
 
 func cleanString(s string) string {

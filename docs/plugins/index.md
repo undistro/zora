@@ -15,9 +15,9 @@ kubectl get plugins -n zora-system
 ```
 ```
 NAME     IMAGE                               TYPE               AGE
-marvin   ghcr.io/undistro/marvin:v0.2.0      misconfiguration   14m
+marvin   ghcr.io/undistro/marvin:v0.2.1      misconfiguration   14m
 popeye   ghcr.io/undistro/popeye:pr252       misconfiguration   14m
-trivy    ghcr.io/aquasecurity/trivy:0.45.1   vulnerability      14m
+trivy    ghcr.io/aquasecurity/trivy:0.48.2   vulnerability      14m
 ```
 
 Each item listed above is an instance of `Plugin` CRD and represents the execution configuration of a plugin.
@@ -59,10 +59,6 @@ kubectl get misconfigurations
 
 !!! note
     The results are only available after a successful scan, in the same namespace as the `ClusterScan` (default is `zora-system`).
-
-!!! note
-    Currently, vulnerability reports are only available in Zora OSS.
-    We are working to include this in Zora Dashboard, and it will be available soon.
 
 ## How plugins work
 

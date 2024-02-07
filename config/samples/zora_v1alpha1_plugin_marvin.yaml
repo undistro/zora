@@ -10,7 +10,7 @@ metadata:
   name: marvin
 spec:
   type: misconfiguration
-  image: ghcr.io/undistro/marvin:v0.2.0
+  image: ghcr.io/undistro/marvin:v0.2.1
   resources:
     limits:
       cpu: 500m

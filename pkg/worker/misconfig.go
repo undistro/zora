@@ -16,7 +16,6 @@ package worker
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -64,7 +63,7 @@ func handleMisconfiguration(ctx context.Context, cfg *config, results io.Reader,
 func parseMisconfigResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.ClusterIssue, error) {
 	parseFunc, ok := misconfigPlugins[cfg.PluginName]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("invalid plugin %q", cfg.PluginName))
+		return nil, fmt.Errorf("invalid plugin %q", cfg.PluginName)
 	}
 	specs, err := parseFunc(ctx, results)
 	if err != nil {
@@ -88,13 +87,14 @@ func newClusterIssue(cfg *config, spec v1alpha1.ClusterIssueSpec, owner metav1.O
 			Namespace:       cfg.Namespace,
 			OwnerReferences: []metav1.OwnerReference{owner},
 			Labels: map[string]string{
-				v1alpha1.LabelScanID:   cfg.JobUID,
-				v1alpha1.LabelCluster:  cfg.ClusterName,
-				v1alpha1.LabelPlugin:   cfg.PluginName,
-				v1alpha1.LabelSeverity: string(spec.Severity),
-				v1alpha1.LabelIssueID:  spec.ID,
-				v1alpha1.LabelCategory: strings.ReplaceAll(spec.Category, " ", ""),
-				v1alpha1.LabelCustom:   strconv.FormatBool(spec.Custom),
+				v1alpha1.LabelScanID:     cfg.JobUID,
+				v1alpha1.LabelCluster:    cfg.ClusterName,
+				v1alpha1.LabelClusterUID: cfg.ClusterUID,
+				v1alpha1.LabelPlugin:     cfg.PluginName,
+				v1alpha1.LabelSeverity:   string(spec.Severity),
+				v1alpha1.LabelIssueID:    spec.ID,
+				v1alpha1.LabelCategory:   strings.ReplaceAll(spec.Category, " ", ""),
+				v1alpha1.LabelCustom:     strconv.FormatBool(spec.Custom),
 			},
 		},
 		Spec: spec,

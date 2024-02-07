@@ -71,6 +71,37 @@ func (in *PluginReference) PluginKey(defaultNamespace string) types.NamespacedNa
 	return types.NamespacedName{Name: in.Name, Namespace: ns}
 }
 
+type ProcessedScanStatus struct {
+	// The status of the last scan.
+	Status string `json:"status,omitempty"`
+	// The message for the last scan.
+	Message string `json:"message,omitempty"`
+	// True is the scan is currently suspended.
+	Suspend bool `json:"suspend,omitempty"`
+	// The status of the last scan.
+	ID string `json:"id,omitempty"`
+}
+
+// PluginStatus defines the observed state of Plugin
+type PluginScanProcessedStatus struct {
+	// The scan status information.
+	Scan *ProcessedScanStatus `json:"scan,omitempty"`
+	// The number of misconfiguration issues discovered in the last successful scan.
+	IssueCount *int `json:"issueCount,omitempty"`
+	// When the last successful scan occurred.
+	LastSuccessfulScanTime *metav1.Time `json:"lastSuccessfulScanTime,omitempty"`
+	// When the last scan finished.
+	LastFinishedScanTime *metav1.Time `json:"lastFinishedScanTime,omitempty"`
+	// When the next scan will occurr.
+	NextScheduleScanTime *metav1.Time `json:"nextScheduleScanTime,omitempty"`
+	// The schedule of the scan.
+	Schedule string `json:"schedule,omitempty"`
+	// The Scan ID of the last successful scan.
+	LastSuccessfulScanID string `json:"lastSuccessfulScanID,omitempty"`
+}
+
+type PluginScanProcessedResources map[string]string
+
 // ClusterScanStatus defines the observed state of ClusterScan
 type ClusterScanStatus struct {
 	Status `json:",inline"`
@@ -104,6 +135,15 @@ type ClusterScanStatus struct {
 
 	// Total of ClusterIssues reported in the last successful scan
 	TotalIssues *int `json:"totalIssues,omitempty"`
+
+	// Resource versions of processed vulnerabilities
+	ProcessedVulnerabilities map[string]PluginScanProcessedResources `json:"processedVulnerabilities,omitempty"`
+
+	// Resource versions of processed misconfigurations
+	ProcessedMisconfigurations map[string]PluginScanProcessedResources `json:"processedMisconfigurations,omitempty"`
+
+	// Processed Status information for each plugin
+	ProcessedPluginStatus map[string]*PluginScanProcessedStatus `json:"processedPluginStatus,omitempty"`
 }
 
 // GetPluginStatus returns a PluginScanStatus of a plugin
@@ -120,11 +160,11 @@ func (in *ClusterScanStatus) GetPluginStatus(name string) *PluginScanStatus {
 // SyncStatus updates ClusterScan status and time fields based on PluginStatus
 func (in *ClusterScanStatus) SyncStatus() {
 	var names, failed, active, complete []string
-	var sechedule, finishedTime, successful, next *metav1.Time
+	var schedule, finishedTime, successful, next *metav1.Time
 	for name, plugin := range in.Plugins {
 		names = append(names, name)
-		if sechedule == nil || sechedule.Before(plugin.LastScheduleTime) {
-			sechedule = plugin.LastScheduleTime
+		if schedule == nil || schedule.Before(plugin.LastScheduleTime) {
+			schedule = plugin.LastScheduleTime
 		}
 		if finishedTime == nil || finishedTime.Before(plugin.LastFinishedTime) {
 			finishedTime = plugin.LastFinishedTime
@@ -159,7 +199,7 @@ func (in *ClusterScanStatus) SyncStatus() {
 		status = "Active"
 	}
 
-	in.LastScheduleTime = sechedule
+	in.LastScheduleTime = schedule
 	in.LastFinishedTime = finishedTime
 	in.LastSuccessfulTime = successful
 	in.NextScheduleTime = next

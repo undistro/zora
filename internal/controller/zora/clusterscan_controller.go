@@ -74,7 +74,7 @@ type ClusterScanReconciler struct {
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=clusterissues/status,verbs=get
 //+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports/status,verbs=get
+//+kubebuilder:rbac:groups=zora.undistro.io,resources=vulnerabilityreports/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=cronjobs/status,verbs=get
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch
@@ -127,6 +127,9 @@ func (r *ClusterScanReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	err := r.reconcile(ctx, clusterscan)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
 
 	if r.OnUpdate != nil {
 		if err := r.OnUpdate(ctx, clusterscan); err != nil {
@@ -212,6 +215,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			Suspend:            notReadyErr != nil,
 			KubexnsImage:       r.KubexnsImage,
 			ChecksConfigMap:    r.ChecksConfigMap,
+			ClusterUID:         cluster.UID,
 		}
 
 		result, err := ctrl.CreateOrUpdate(ctx, r.Client, cronJob, cronJobMutator.Mutate)

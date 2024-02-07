@@ -56,6 +56,7 @@ type PluginStatus struct {
 	LastFinishedScanTime   *metav1.Time     `json:"lastFinishedScanTime"`
 	NextScheduleScanTime   *metav1.Time     `json:"nextScheduleScanTime"`
 	Schedule               string           `json:"schedule"`
+	LastSuccessfulScanID   string           `json:"lastSuccessfulScanID"`
 }
 
 type NamespacedName struct {
@@ -80,6 +81,7 @@ type ScanStatus struct {
 	Status  ScanStatusType `json:"status"`
 	Message string         `json:"message"`
 	Suspend bool           `json:"suspend"`
+	ID      string         `json:"id"`
 }
 
 type ConnectionStatus struct {
@@ -132,11 +134,14 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 	return cl
 }
 
-func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
+func NewScanStatus(clusterScan *v1alpha1.ClusterScan, scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
 	var pluginStatus map[string]*PluginStatus
 	var totalIssues *int
 
-	for _, cs := range scans {
+	allScans := []v1alpha1.ClusterScan{}
+	allScans = append(allScans, scans...)
+	allScans = append(allScans, *clusterScan)
+	for _, cs := range allScans {
 		if cs.Status.TotalIssues != nil {
 			if totalIssues == nil {
 				totalIssues = new(int)
@@ -156,6 +161,8 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 			}
 			pluginStatus[p].Scan.Suspend = pointer.BoolDeref(cs.Spec.Suspend, false)
 			pluginStatus[p].Schedule = cs.Spec.Schedule
+			pluginStatus[p].Scan.ID = s.LastScanID
+			pluginStatus[p].LastSuccessfulScanID = s.LastSuccessfulScanID
 
 			if s.TotalIssues != nil {
 				if pluginStatus[p].IssueCount == nil {
@@ -192,8 +199,8 @@ func NewScanStatus(scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int
 	return pluginStatus, totalIssues
 }
 
-func NewScanStatusWithIssues(scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) map[string]*PluginStatus {
-	pluginStatus, _ := NewScanStatus(scans)
+func NewScanStatusWithIssues(clusterScan *v1alpha1.ClusterScan, scans []v1alpha1.ClusterScan, issues []v1alpha1.ClusterIssue) map[string]*PluginStatus {
+	pluginStatus, _ := NewScanStatus(clusterScan, scans)
 	if pluginStatus == nil {
 		return nil
 	}
