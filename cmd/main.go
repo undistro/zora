@@ -61,6 +61,7 @@ func main() {
 	var workerImage string
 	var cronJobClusterRoleBinding string
 	var cronJobServiceAccount string
+	var cronJobAnnotations string
 	var saasWorkspaceID string
 	var saasServer string
 	var version string
@@ -78,6 +79,7 @@ func main() {
 	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:latest", "Docker image name of Worker container")
 	flag.StringVar(&cronJobClusterRoleBinding, "cronjob-clusterrolebinding-name", "zora-plugins-rolebinding", "Name of ClusterRoleBinding to append CronJob ServiceAccounts")
 	flag.StringVar(&cronJobServiceAccount, "cronjob-serviceaccount-name", "zora-plugins", "Name of ServiceAccount to be configured, appended to ClusterRoleBinding and used by CronJobs")
+	flag.StringVar(&cronJobAnnotations, "cronjob-serviceaccount-annotations", "annotaion1=value1,annotation2=value2", "Annotations to be applied to the CronJob Service Account")
 	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
 	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
 	flag.StringVar(&version, "version", "0.8.0", "Zora version")
@@ -139,6 +141,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	annotations, err := annotations(cronJobAnnotations)
+	if err != nil {
+		setupLog.Error(err, "unable to parse annotations")
+		os.Exit(1)
+	}
 	if err = (&zoracontroller.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
 		K8sClient:               kcli,
@@ -149,6 +156,7 @@ func main() {
 		WorkerImage:             workerImage,
 		ClusterRoleBindingName:  cronJobClusterRoleBinding,
 		ServiceAccountName:      cronJobServiceAccount,
+		Annotations:             annotations,
 		OnUpdate:                onClusterScanUpdate,
 		OnDelete:                onClusterScanDelete,
 		KubexnsImage:            kubexnsImage,
@@ -182,4 +190,22 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+func annotations(cronJobAnnotations string) (map[string]string, error) {
+	cronJobAnnotations = strings.Trim(cronJobAnnotations, " ")
+	if len(cronJobAnnotations) == 0 {
+		return nil, nil
+	}
+	annotations := map[string]string{}
+	for _, annotation := range strings.Split(cronJobAnnotations, ",") {
+		index := strings.Index(annotation, "=")
+		if index == -1 || index == len(annotation) {
+			return nil, fmt.Errorf("Could not parse annotation %s", annotation)
+		}
+		key := annotation[:index]
+		value := annotation[index+1:]
+		annotations[key] = value
+	}
+	return annotations, nil
 }

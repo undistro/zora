@@ -34,6 +34,10 @@ spec:
   securityContext:
     runAsNonRoot: true
     allowPrivilegeEscalation: false
+  {{- if .Values.scan.plugins.popeye.podAnnotations }}
+  annotations:
+    {{- toYaml .Values.scan.plugins.popeye.podAnnotations | nindent 4 }}
+  {{- end }}
   command:
     - /bin/sh
     - -c
