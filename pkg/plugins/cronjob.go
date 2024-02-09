@@ -115,7 +115,7 @@ func (r *CronJobMutator) Mutate() error {
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
-	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = map[string]string{annotationDefaultContainer: r.Plugin.Name}
+	r.Existing.Spec.JobTemplate.Spec.Template.Annotations = r.annotations()
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = []corev1.Volume{
 		{
 			Name:         resultsVolumeName,
@@ -319,4 +319,14 @@ func (r *CronJobMutator) workerEnv() []corev1.EnvVar {
 		},
 	)
 	return p
+}
+
+func (r *CronJobMutator) annotations() map[string]string {
+	annotations := map[string]string{}
+	for key, value := range r.Plugin.Spec.Annotations {
+		annotations[key] = value
+	}
+	annotations[annotationDefaultContainer] = r.Plugin.Name
+
+	return annotations
 }

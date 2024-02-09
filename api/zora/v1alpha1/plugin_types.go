@@ -63,6 +63,10 @@ type PluginSpec struct {
 	// Cannot be updated.
 	Env []corev1.EnvVar `json:"env,omitempty"`
 
+	// Annotations to set in plugin and worker containers.
+	// Cannot be updated.
+	Annotations map[string]string `json:"annotations,omitempty"`
+
 	// Compute Resources required by this container.
 	// Cannot be updated.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/

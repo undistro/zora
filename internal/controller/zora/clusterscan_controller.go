@@ -63,6 +63,7 @@ type ClusterScanReconciler struct {
 	ServiceAccountName      string
 	KubexnsImage            string
 	ChecksConfigMap         string
+	Annotations             map[string]string
 	OnUpdate                saas.ClusterScanHook
 	OnDelete                saas.ClusterScanHook
 }
@@ -462,7 +463,7 @@ func (r *ClusterScanReconciler) applyRBAC(ctx context.Context, clusterscan *v1al
 		return err
 	}
 
-	sa := &corev1.ServiceAccount{ObjectMeta: metav1.ObjectMeta{Name: r.ServiceAccountName, Namespace: clusterscan.Namespace}}
+	sa := &corev1.ServiceAccount{ObjectMeta: metav1.ObjectMeta{Name: r.ServiceAccountName, Namespace: clusterscan.Namespace, Annotations: r.Annotations}}
 	res, err := ctrl.CreateOrUpdate(ctx, r.Client, sa, func() error {
 		return controllerutil.SetOwnerReference(clusterscan, sa, r.Scheme)
 	})

@@ -74,6 +74,9 @@ spec:
             - --worker-image={{ printf "%s:%s" .Values.scan.worker.image.repository (.Values.scan.worker.image.tag | default .Chart.AppVersion) }}
             - --cronjob-clusterrolebinding-name=zora-plugins-rolebinding
             - --cronjob-serviceaccount-name=zora-plugins
+{{- if .Values.scan.plugins.annotations}}
+            - --cronjob-serviceaccount-annotations={{ $first := true }}{{- range $key, $value := .Values.scan.plugins.annotations }}{{if not $first}},{{else}}{{$first = false}}{{end}}{{ $key }}={{$value}}{{- end }}
+{{- end }}
             - --saas-workspace-id={{ .Values.saas.workspaceID }}
             - --saas-server={{ .Values.saas.server }}
             - --version={{ .Chart.Version }}
