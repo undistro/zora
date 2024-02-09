@@ -233,7 +233,7 @@ scan:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: pr252
+        tag: v0.11.3
 
 kubexnsImage:
   # -- kubexns image repository
