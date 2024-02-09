@@ -776,6 +776,13 @@ func (in *PluginSpec) DeepCopyInto(out *PluginSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Annotations != nil {
+		in, out := &in.Annotations, &out.Annotations
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	in.Resources.DeepCopyInto(&out.Resources)
 	if in.SecurityContext != nil {
 		in, out := &in.SecurityContext, &out.SecurityContext

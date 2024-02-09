@@ -44,6 +44,12 @@ spec:
           spec:
             description: PluginSpec defines the desired state of Plugin
             properties:
+              annotations:
+                additionalProperties:
+                  type: string
+                description: Annotations to set in plugin and worker containers. Cannot
+                  be updated.
+                type: object
               args:
                 description: 'Arguments to the entrypoint. The docker image''s CMD
                   is used if this is not provided. Variable references $(VAR_NAME)
