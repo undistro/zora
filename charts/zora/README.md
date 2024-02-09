@@ -122,6 +122,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | kubexnsImage.repository | string | `"ghcr.io/undistro/kubexns"` | kubexns image repository |
 | kubexnsImage.tag | string | `"v0.1.2"` | kubexns image tag |
 | customChecksConfigMap | string | `"zora-custom-checks"` | Custom checks ConfigMap name |
+| httpsProxy | string | `""` | HTTPS proxy URL |
+| noProxy | string | `"kubernetes.default.svc.*,127.0.0.1,localhost"` | Comma-separated list of URL patterns to be excluded from going through the proxy |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

@@ -59,6 +59,13 @@ spec:
           securityContext:
             {{- toYaml .Values.operator.rbacProxy.securityContext | nindent 12 }}
         - name: manager
+          {{- if .Values.httpsProxy }}
+          env:
+            - name: HTTPS_PROXY
+              value: {{ .Values.httpsProxy | quote }}
+            - name: NO_PROXY
+              value: {{ .Values.noProxy | quote }}
+          {{- end }}
           command:
             - /manager
           args:

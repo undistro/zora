@@ -87,6 +87,7 @@ nav:
           - Suspending scans: configuration/suspend-scan.md
           - Retain issues: configuration/retain-issues.md
           - Ignore unfixed vulnerabilities: plugins/trivy/#large-vulnerability-reports
+          - HTTPS Proxy: configuration/https-proxy.md
           - Scanning Images hosted in AWS Elastic Container Registry: configuration/aws-elastic-container-registry.md
       - "🔌 Plugins":
           - Overview: plugins/index.md

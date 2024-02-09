@@ -31,6 +31,12 @@ spec:
   env:
     - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
       value: {{ .Values.scan.plugins.trivy.ignoreDescriptions | quote }}
+    {{- if .Values.httpsProxy }}
+    - name: HTTPS_PROXY
+      value: {{ .Values.httpsProxy | quote }}
+    - name: NO_PROXY
+      value: {{ .Values.noProxy | quote }}
+    {{- end }}
   {{- if .Values.scan.plugins.trivy.podAnnotations }}
   annotations:
     {{- toYaml .Values.scan.plugins.trivy.podAnnotations | nindent 4 }}

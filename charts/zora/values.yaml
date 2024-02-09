@@ -243,3 +243,8 @@ kubexnsImage:
 
 # -- Custom checks ConfigMap name
 customChecksConfigMap: zora-custom-checks
+
+# -- HTTPS proxy URL
+httpsProxy: ""
+# -- Comma-separated list of URL patterns to be excluded from going through the proxy
+noProxy: kubernetes.default.svc.*,127.0.0.1,localhost
