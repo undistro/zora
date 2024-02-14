@@ -94,8 +94,17 @@ thereby providing more insights to help you keep your cluster secure and adhere 
 
 ### Migration guide
 
-The recommended way to migrate to version 0.7 is to [uninstall](#uninstall) Zora 0.6 from your management cluster, 
-including its CRDs, and then install it again on the clusters you wish to scan. 
+The recommended way to migrate to version 0.7 is by uninstalling Zora 0.6 
+with the following steps in your **management cluster**:
+
+1. Delete `Cluster` objects
+   ```shell
+    kubectl delete clusters.zora.undistro.io --all -A
+   ```
+2. [Uninstall](#uninstall) Zora 0.6
+3. [Delete CRDs](#delete-crds)
+
+Then [install Zora 0.7](#install-with-helm) on the clusters you wish to scan! 
 
 The ServiceAccounts in the target clusters, which previously contained the tokens used in the kubeconfig files, 
 will no longer be needed and can be deleted.
@@ -107,6 +116,8 @@ You can uninstall Zora and its components by uninstalling the Helm chart install
 ```shell
 helm uninstall zora -n zora-system
 ```
+
+### Delete CRDs
 
 By design, [Helm doesn't upgrade or delete CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations){:target="_blank"}.
 You can permanently delete Zora CRDs and any remaining associated resources from your cluster, using the following command.
