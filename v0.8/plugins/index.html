@@ -11,14 +11,14 @@
         <link rel="canonical" href="https://zora-docs.undistro.io/v0.8/plugins/">
       
       
-        <link rel="prev" href="../configuration/retain-issues/">
+        <link rel="prev" href="../configuration/aws-elastic-container-registry/">
       
       
         <link rel="next" href="marvin/">
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.5">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.9">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -343,14 +343,15 @@ You're not viewing the latest version.
     
     
     
-    
-    
+      
+        
+        
       
       
+    
     
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
@@ -383,11 +384,12 @@ You're not viewing the latest version.
     
     
     
+      
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_1" >
@@ -470,11 +472,12 @@ You're not viewing the latest version.
     
     
     
+      
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
@@ -624,6 +627,48 @@ You're not viewing the latest version.
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/https-proxy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTPS Proxy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/aws-elastic-container-registry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scanning Images hosted in AWS Elastic Container Registry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -643,11 +688,12 @@ You're not viewing the latest version.
     
     
     
+      
+      
     
     
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" checked>
@@ -768,11 +814,12 @@ You're not viewing the latest version.
     
     
     
+      
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_2" >
@@ -855,11 +902,12 @@ You're not viewing the latest version.
     
     
     
+      
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_3" >
@@ -999,20 +1047,18 @@ You're not viewing the latest version.
     
     
     
-    
-    
       
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1154,7 +1200,7 @@ as plugins to perform scans on Kubernetes clusters.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>NAME     IMAGE                               TYPE               AGE
 marvin   ghcr.io/undistro/marvin:v0.2.1      misconfiguration   14m
-popeye   ghcr.io/undistro/popeye:pr252       misconfiguration   14m
+popeye   ghcr.io/undistro/popeye:v0.11.3     misconfiguration   14m
 trivy    ghcr.io/aquasecurity/trivy:0.48.2   vulnerability      14m
 </code></pre></div></p>
 <p>Each item listed above is an instance of <code>Plugin</code> CRD and represents the execution configuration of a plugin.
@@ -1252,7 +1298,7 @@ a project used for CNCF conformance certification.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../configuration/retain-issues/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Retain issues">
+          <a href="../configuration/aws-elastic-container-registry/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Scanning Images hosted in AWS Elastic Container Registry">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -1262,7 +1308,7 @@ a project used for CNCF conformance certification.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Retain issues
+                Scanning Images hosted in AWS Elastic Container Registry
               </div>
             </div>
           </a>
@@ -1342,7 +1388,7 @@ a project used for CNCF conformance certification.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.c18c5fb9.min.js"></script>
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
       
     
   </body>

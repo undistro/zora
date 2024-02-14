@@ -175,6 +175,8 @@ scan:
       # -- Overrides the image tag whose default is the chart appVersion
       tag: ""
   plugins:
+    # -- Annotations added to the plugin service account
+    annotations: {}
     marvin:
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
       resources:
@@ -184,6 +186,8 @@ scan:
         limits:
           cpu: 500m
           memory: 500Mi
+      # -- Annotations added to the marvin pods
+      podAnnotations: {}
       image:
         # -- marvin plugin image repository
         repository: ghcr.io/undistro/marvin
@@ -197,6 +201,8 @@ scan:
       ignoreDescriptions: false
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
       resources: {}
+      # -- Annotations added to the trivy pods
+      podAnnotations: {}
       image:
         # -- trivy plugin image repository
         repository: ghcr.io/aquasecurity/trivy
@@ -221,11 +227,13 @@ scan:
         limits:
           cpu: 500m
           memory: 500Mi
+      # -- Annotations added to the popeye pods
+      podAnnotations: {}
       image:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: pr252
+        tag: v0.11.3
 
 kubexnsImage:
   # -- kubexns image repository
@@ -235,3 +243,8 @@ kubexnsImage:
 
 # -- Custom checks ConfigMap name
 customChecksConfigMap: zora-custom-checks
+
+# -- HTTPS proxy URL
+httpsProxy: ""
+# -- Comma-separated list of URL patterns to be excluded from going through the proxy
+noProxy: kubernetes.default.svc.*,127.0.0.1,localhost
