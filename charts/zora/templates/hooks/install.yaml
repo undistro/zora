@@ -37,6 +37,9 @@ spec:
         - |
           curl -kfsS -X POST '{{ tpl .Values.saas.installURL . }}' \
             -H 'content-type: application/json' \
+          {{- if .Values.httpsProxy }}
+            -x '{{ .Values.httpsProxy}}' \
+          {{- end }}
             -d '{{ toJson (dict
               "kubeVersion" .Capabilities.KubeVersion.GitVersion
               "chartVersion" .Chart.Version
