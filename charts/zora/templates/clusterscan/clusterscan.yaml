@@ -30,7 +30,8 @@ metadata:
   labels:
     zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "zora.clusterName" . }}-misconfig
+  name: {{ include "truncate.name" (dict "name" (printf "%s-misconfig" (include "zora.clusterName" .)) "len" 63 ) }}
+
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
@@ -51,7 +52,7 @@ metadata:
   labels:
     zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "zora.clusterName" . }}-vuln
+  name: {{ include "truncate.name" (dict "name" (printf "%s-vuln" (include "zora.clusterName" .)) "len" 63 ) }}
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
