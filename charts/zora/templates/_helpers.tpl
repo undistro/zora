@@ -84,7 +84,7 @@ Create the name of the service account to use in Operator
 {{- end }}
 
 {{- define "zora.clusterName" }}
-{{- regexReplaceAll "\\W+" (required "`clusterName` is required." .Values.clusterName) "-" }}
+{{- include "truncate.name" (dict "name" (regexReplaceAll "\\W+" (required "`clusterName` is required." .Values.clusterName) "-") "len" 63 ) }}
 {{- end }}
 
 {{- define "zora.hourlySchedule" }}
@@ -112,4 +112,21 @@ Create the name of the service account to use in Operator
 
 {{- define "zora.vulnSchedule" }}
 {{- default (include "zora.dailySchedule" .) .Values.scan.vulnerability.schedule }}
+{{- end }}
+
+{{/*
+Truncate a name to a specific length
+@param .name the name of the component
+@param .len the maximum length to return
+*/}}
+{{- define "truncate.name" }}
+{{- if gt (len .name) .len }}
+{{- $maxLen := int (sub .len 3) }}
+{{- $suffixLen := int (div $maxLen 2) }}
+{{- $prefixLen := int (sub $maxLen $suffixLen) }}
+{{- $suffixStart := int (sub (len .name) $suffixLen) }}
+{{- printf "%s---%s" (substr 0 $prefixLen .name) (substr $suffixStart (len .name) .name) }}
+{{- else }}
+{{- .name }}
+{{- end }}
 {{- end }}

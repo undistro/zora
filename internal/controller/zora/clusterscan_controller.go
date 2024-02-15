@@ -203,7 +203,8 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			clusterscan.SetReadyStatus(false, "PluginFetchError", err.Error())
 			return err
 		}
-		cronJob := plugins.NewCronJob(fmt.Sprintf("%s-%s", clusterscan.Name, plugin.Name), clusterscan.Namespace)
+
+		cronJob := plugins.NewCronJob(getCronJobName(clusterscan.Name, plugin.Name), clusterscan.Namespace)
 		cronJobMutator := &plugins.CronJobMutator{
 			Scheme:             r.Scheme,
 			Existing:           cronJob,
@@ -315,7 +316,7 @@ func (r *ClusterScanReconciler) deleteOldPlugins(ctx context.Context, clustersca
 	oldPlugins := r.getOldPlugins(clusterscan, pluginRefs)
 	for _, plugin := range oldPlugins {
 		cj := &batchv1.CronJob{ObjectMeta: metav1.ObjectMeta{
-			Name:      fmt.Sprintf("%s-%s", clusterscan.Name, plugin),
+			Name:      getCronJobName(clusterscan.Name, plugin),
 			Namespace: clusterscan.Namespace,
 		}}
 		if err := r.Delete(ctx, cj); err != nil {
@@ -534,4 +535,9 @@ func (r *ClusterScanReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&v1alpha1.ClusterScan{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Owns(&batchv1.CronJob{}).
 		Complete(r)
+}
+
+func getCronJobName(clusterScanName, pluginName string) string {
+	// cronjob name should not exceed a length of 52 characters
+	return truncateName(fmt.Sprintf("%s-%s", clusterScanName, pluginName), 52)
 }
