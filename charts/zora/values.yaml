@@ -193,6 +193,10 @@ scan:
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
         tag: v0.2.1
+      # -- List of environment variables to set in marvin container.
+      env: []
+      # -- List of sources to populate environment variables in marvin container.
+      envFrom: []
 
     trivy:
       # -- Specifies whether only fixed vulnerabilities should be reported

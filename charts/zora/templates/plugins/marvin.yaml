@@ -30,6 +30,14 @@ spec:
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
+  {{- with .Values.scan.plugins.marvin.envFrom }}
+  envFrom:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
+  {{- with .Values.scan.plugins.marvin.env }}
+  env:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
   {{- if .Values.scan.plugins.marvin.podAnnotations }}
   annotations:
     {{- toYaml .Values.scan.plugins.marvin.podAnnotations | nindent 4 }}
