@@ -25,12 +25,21 @@ spec:
   resources:
     {{- toYaml .Values.scan.plugins.popeye.resources | nindent 4 }}
   {{- end }}
-{{- if .Values.scan.plugins.popeye.skipInternalResources }}
+  {{- if or .Values.scan.plugins.popeye.skipInternalResources .Values.scan.plugins.popeye.envFrom }}
   envFrom:
+  {{- end }}
+  {{- if or .Values.scan.plugins.popeye.skipInternalResources }}
     - configMapRef:
         name: popeye-config
         optional: true
-{{- end }}
+  {{- end }}
+    {{- with .Values.scan.plugins.popeye.envFrom }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.scan.plugins.popeye.env }}
+  env:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
   securityContext:
     runAsNonRoot: true
     allowPrivilegeEscalation: false
