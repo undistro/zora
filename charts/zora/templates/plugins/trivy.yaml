@@ -28,9 +28,16 @@ spec:
   mountCustomChecksVolume: false
   securityContext:
     allowPrivilegeEscalation: false
+  {{- with .Values.scan.plugins.trivy.envFrom }}
+  envFrom:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
   env:
     - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
       value: {{ .Values.scan.plugins.trivy.ignoreDescriptions | quote }}
+    {{- with .Values.scan.plugins.trivy.env }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
     {{- if .Values.httpsProxy }}
     - name: HTTPS_PROXY
       value: {{ .Values.httpsProxy | quote }}
