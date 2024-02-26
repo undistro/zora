@@ -193,6 +193,10 @@ scan:
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
         tag: v0.2.1
+      # -- List of environment variables to set in marvin container.
+      env: []
+      # -- List of sources to populate environment variables in marvin container.
+      envFrom: []
 
     trivy:
       # -- Specifies whether only fixed vulnerabilities should be reported
@@ -208,6 +212,20 @@ scan:
         repository: ghcr.io/aquasecurity/trivy
         # -- trivy plugin image tag
         tag: 0.48.2
+      # -- List of environment variables to set in trivy container.
+      env: []
+      #  - name: AWS_REGION
+      #    value: us-east-1
+      #  - name: TRIVY_PASSWORD
+      #    valueFrom:
+      #      secretKeyRef:
+      #        key: TRIVY_PASSWORD
+      #        name: trivy-password
+
+      # -- List of sources to populate environment variables in trivy container.
+      envFrom: []
+      #  - secretRef:
+      #      name: trivy-credentials
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
@@ -234,6 +252,10 @@ scan:
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
         tag: v0.11.3
+      # -- List of environment variables to set in popeye container.
+      env: []
+      # -- List of sources to populate environment variables in popeye container.
+      envFrom: []
 
 kubexnsImage:
   # -- kubexns image repository

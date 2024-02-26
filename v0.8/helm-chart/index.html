@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.9">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1183,7 +1183,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.8.1" src="https://img.shields.io/badge/Version-0.8.1-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.8.1" src="https://img.shields.io/badge/AppVersion-v0.8.1-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.8.2" src="https://img.shields.io/badge/Version-0.8.2-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.8.2" src="https://img.shields.io/badge/AppVersion-v0.8.2-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1191,7 +1191,7 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.8.1 \</span>
+<span class="go">  --version 0.8.2 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
 <span class="go">  --set clusterName=&quot;$(kubectl config current-context)&quot;</span>
@@ -1578,6 +1578,18 @@ You're not viewing the latest version.
 <td>marvin plugin image tag</td>
 </tr>
 <tr>
+<td>scan.plugins.marvin.env</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td>List of environment variables to set in marvin container.</td>
+</tr>
+<tr>
+<td>scan.plugins.marvin.envFrom</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td>List of sources to populate environment variables in marvin container.</td>
+</tr>
+<tr>
 <td>scan.plugins.trivy.ignoreUnfixed</td>
 <td>bool</td>
 <td><code>false</code></td>
@@ -1614,6 +1626,18 @@ You're not viewing the latest version.
 <td>trivy plugin image tag</td>
 </tr>
 <tr>
+<td>scan.plugins.trivy.env</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td>List of environment variables to set in trivy container.</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.envFrom</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td>List of sources to populate environment variables in trivy container.</td>
+</tr>
+<tr>
 <td>scan.plugins.popeye.skipInternalResources</td>
 <td>bool</td>
 <td><code>false</code></td>
@@ -1642,6 +1666,18 @@ You're not viewing the latest version.
 <td>string</td>
 <td><code>"v0.11.3"</code></td>
 <td>popeye plugin image tag</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.env</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td>List of environment variables to set in popeye container.</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.envFrom</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td>List of sources to populate environment variables in popeye container.</td>
 </tr>
 <tr>
 <td>kubexnsImage.repository</td>
