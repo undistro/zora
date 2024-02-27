@@ -88,7 +88,8 @@ nav:
           - Retain issues: configuration/retain-issues.md
           - Ignore unfixed vulnerabilities: plugins/trivy/#large-vulnerability-reports
           - HTTPS Proxy: configuration/https-proxy.md
-          - Scanning Images hosted in AWS Elastic Container Registry: configuration/aws-elastic-container-registry.md
+          - Scanning Images hosted in AWS ECR: configuration/aws-elastic-container-registry.md
+          - Scanning Images hosted in Azure ACR: configuration/acr.md
       - "🔌 Plugins":
           - Overview: plugins/index.md
           - Misconfiguration:
