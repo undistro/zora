@@ -14,7 +14,7 @@
         <link rel="prev" href="../https-proxy/">
       
       
-        <link rel="next" href="../../plugins/">
+        <link rel="next" href="../acr/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Scanning Images hosted in AWS Elastic Container Registry - Zora OSS</title>
+        <title>Scanning Images hosted in AWS ECR - Zora OSS</title>
       
     
     
@@ -137,7 +137,7 @@ You're not viewing the latest version.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Scanning Images hosted in AWS Elastic Container Registry
+              Scanning Images hosted in AWS ECR
             
           </span>
         </div>
@@ -670,12 +670,33 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    Scanning Images hosted in AWS Elastic Container Registry
+    Scanning Images hosted in AWS ECR
   </span>
   
 
       </a>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../acr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scanning Images hosted in Azure ACR
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1098,10 +1119,10 @@ You're not viewing the latest version.
 
 <h1 id="aws-elastic-container-registry">AWS Elastic Container Registry<a class="headerlink" href="#aws-elastic-container-registry" title="Permanent link">&para;</a></h1>
 <p>If you are running within AWS, and making use of a private <a href="https://aws.amazon.com/ecr/">Elastic Container Registry (ECR)</a> to host your application images, then the Trivy plugin will be unable to scan those images unless access is granted to the registry through an <a href="https://aws.amazon.com/iam/">Identity and Access Managemnent (IAM)</a> role assigned to the service account running the Trivy plugins.</p>
-<p>Once an IAM role granting grant access to the ECR has been created, this can be assigned to the service account by including the following additional parameter when running the <code>helm upgrade --install</code> command.</p>
+<p>Once an IAM role granting access to the ECR has been created, this can be assigned to the service account by including the following additional parameter when running the <code>helm upgrade --install</code> command.</p>
 <p><div class="highlight"><pre><span></span><code>--set<span class="w"> </span>scan.plugins.annotations.eks<span class="se">\\</span>.amazonaws<span class="se">\\</span>.com/role-arn<span class="o">=</span>arn:aws:iam::&lt;AWS_ACCOUNT_ID&gt;:role/&lt;ROLE_NAME&gt;
 </code></pre></div>
-where <code>&lt;AWS_ACCOUNT_ID&gt;</code> should be replaced witth your AWS account ID, and <code>&lt;ROLE_NAME&gt;</code> should be replaced with the name of the role granting access to the ECR.</p>
+where <code>&lt;AWS_ACCOUNT_ID&gt;</code> should be replaced with your AWS account ID, and <code>&lt;ROLE_NAME&gt;</code> should be replaced with the name of the role granting access to the ECR.</p>
 <p>This will now allow the Trivy plugin to scan your internal images for vulnerabilities.</p>
 
 
@@ -1159,13 +1180,13 @@ where <code>&lt;AWS_ACCOUNT_ID&gt;</code> should be replaced witth your AWS acco
         
         
           
-          <a href="../../plugins/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../acr/" class="md-footer__link md-footer__link--next" aria-label="Next: Scanning Images hosted in Azure ACR">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Scanning Images hosted in Azure ACR
               </div>
             </div>
             <div class="md-footer__button md-icon">
