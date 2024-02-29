@@ -61,6 +61,7 @@ spec:
         {{- if .Values.scan.plugins.trivy.ignoreUnfixed }}
         --ignore-unfixed \
         {{- end }}
+        --timeout={{ .Values.scan.plugins.trivy.timeout | quote }} \
         -o $(DONE_DIR)/results.json \
         cluster
 
