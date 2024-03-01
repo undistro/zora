@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
     
     
       
@@ -681,6 +681,27 @@ You're not viewing the latest version.
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/trivy/#scan-timeout" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vulnerability scan timeout
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1204,7 +1225,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.8.2" src="https://img.shields.io/badge/Version-0.8.2-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.8.2" src="https://img.shields.io/badge/AppVersion-v0.8.2-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.8.3" src="https://img.shields.io/badge/Version-0.8.3-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.8.3" src="https://img.shields.io/badge/AppVersion-v0.8.3-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1212,7 +1233,7 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.8.2 \</span>
+<span class="go">  --version 0.8.3 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
 <span class="go">  --set clusterName=&quot;$(kubectl config current-context)&quot;</span>
@@ -1659,6 +1680,12 @@ You're not viewing the latest version.
 <td>List of sources to populate environment variables in trivy container.</td>
 </tr>
 <tr>
+<td>scan.plugins.trivy.timeout</td>
+<td>string</td>
+<td><code>"10m"</code></td>
+<td>Trivy timeout</td>
+</tr>
+<tr>
 <td>scan.plugins.popeye.skipInternalResources</td>
 <td>bool</td>
 <td><code>false</code></td>
@@ -1855,7 +1882,7 @@ You're not viewing the latest version.
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../assets/javascripts/bundle.c8d2eff1.min.js"></script>
       
     
   </body>

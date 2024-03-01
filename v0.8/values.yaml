@@ -226,6 +226,8 @@ scan:
       envFrom: []
       #  - secretRef:
       #      name: trivy-credentials
+      # -- Trivy timeout
+      timeout: 10m
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
