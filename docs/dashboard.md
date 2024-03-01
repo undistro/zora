@@ -34,7 +34,7 @@ as an additional parameter in Zora OSS installation command.
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
       -n zora-system \
-      --version 0.8.2 \
+      --version 0.8.3 \
       --create-namespace \
       --wait \
       --set clusterName="$(kubectl config current-context)" \
@@ -46,7 +46,7 @@ as an additional parameter in Zora OSS installation command.
     ```shell hl_lines="7"
     helm upgrade --install zora oci://ghcr.io/undistro/helm-charts/zora \
       -n zora-system \
-      --version 0.8.2 \
+      --version 0.8.3 \
       --create-namespace \
       --wait \
       --set clusterName="$(kubectl config current-context)" \
