@@ -35,6 +35,8 @@ spec:
   env:
     - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
       value: {{ .Values.scan.plugins.trivy.ignoreDescriptions | quote }}
+    - name: SSL_CERT_DIR
+      value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"
     {{- with .Values.scan.plugins.trivy.env }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

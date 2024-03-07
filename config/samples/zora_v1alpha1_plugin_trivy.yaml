@@ -16,6 +16,8 @@ spec:
   env:
     - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
       value: "false"
+    - name: SSL_CERT_DIR
+      value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"
   command:
     - /bin/sh
     - -c
