@@ -228,6 +228,9 @@ scan:
       #      name: trivy-credentials
       # -- Trivy timeout
       timeout: 10m
+      # -- Allow insecure server connections for Trivy
+      insecure: false
+
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
