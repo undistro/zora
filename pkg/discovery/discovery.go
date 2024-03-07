@@ -85,7 +85,7 @@ func (r *clusterDiscovery) Resources(ctx context.Context) (ClusterResources, err
 func (r *clusterDiscovery) provider(nodes []corev1.Node) string {
 	for _, node := range nodes {
 		for l := range node.Labels {
-			for pref, p := range ClusterSourcePrefixes {
+			for pref, p := range providerPrefixes {
 				if strings.HasPrefix(l, pref) {
 					return p
 				}
