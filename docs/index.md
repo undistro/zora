@@ -40,7 +40,7 @@ and [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-se
 #### :octicons-sliders-16: Custom checks
 
 Enabled by the [Marvin](https://github.com/undistro/marvin){:target="_blank"} plugin, Zora offers a declarative way to create your own 
-checks by using [CEL](https://github.com/google/cel-spec){:target="_blank"} expressions to define validation rules.
+checks by using [Common Expression Language (CEL)](https://github.com/google/cel-spec){:target="_blank"} expressions to define validation rules.
 
 #### :simple-kubernetes: Kubernetes-native
 
@@ -71,7 +71,7 @@ The origin of the name Borg refers to the cybernetic life form existing in the S
 that worked as a collective of individuals with a single mind and the same purpose, as well as a "[cluster](https://pt.wikipedia.org/wiki/Cluster){:target="_blank"}".
 
 As good nerds as we are and wishing to honor our Kubernetes' 
-[predecessor](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/) (Borg) we named our project
+[predecessor](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/){:target="_blank"} (Borg) we named our project
 Zora.
 
 In Star Trek, Zora is the Artificial Intelligence that controls the ship U.S.S Discovery.  

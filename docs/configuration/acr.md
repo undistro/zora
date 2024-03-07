@@ -1,12 +1,12 @@
 # Azure Container Registry (ACR)
 
-If you are running within Azure, and making use of a private [Azure Container Registry (ACR)](https://learn.microsoft.com/en-us/azure/container-registry/)
+If you are running within Azure, and making use of a private [Azure Container Registry (ACR)](https://learn.microsoft.com/en-us/azure/container-registry/){:target="_blank"}
 to host your application images, then the Trivy plugin will be unable to scan those images unless access is granted to 
 the registry through a service principal with `AcrPull` role assigned.
 
 ## Creating service principal
 
-The following [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/) command creates a service principal 
+The following [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/){:target="_blank"} command creates a service principal 
 with `AcrPull` role assigned, and stores the output including the credentials into `SP_DATA` environment variable.
 
 !!! note
