@@ -60,6 +60,7 @@ spec:
         --all-namespaces \
         --scanners=vuln \
         -f=json \
+        --cache-dir=/tmp/trivy-cache \
         {{- if .Values.scan.plugins.trivy.ignoreUnfixed }}
         --ignore-unfixed \
         {{- end }}

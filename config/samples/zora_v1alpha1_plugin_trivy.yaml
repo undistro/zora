@@ -28,6 +28,7 @@ spec:
         --all-namespaces \
         --scanners=vuln \
         -f=json \
+        --cache-dir=/tmp/trivy-cache \
         -o $(DONE_DIR)/results.json \
         cluster
       
