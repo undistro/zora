@@ -82,8 +82,6 @@ operator:
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
   podSecurityContext:
     runAsNonRoot: true
-    runAsUser: 65532
-    runAsGroup: 65532
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
   securityContext:
     allowPrivilegeEscalation: false
