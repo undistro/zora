@@ -75,7 +75,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | operator.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | operator.podAnnotations | object | `{"kubectl.kubernetes.io/default-container":"manager"}` | Annotations to be added to pods |
-| operator.podSecurityContext | object | `{"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| operator.podSecurityContext | object | `{"runAsNonRoot":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
 | operator.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
 | operator.metricsService.type | string | `"ClusterIP"` | Type of metrics service |
 | operator.metricsService.port | int | `8443` | Port of metrics service |
@@ -115,7 +115,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/aquasecurity/trivy"` | trivy plugin image repository |
-| scan.plugins.trivy.image.tag | string | `"0.48.2"` | trivy plugin image tag |
+| scan.plugins.trivy.image.tag | string | `"0.49.1"` | trivy plugin image tag |
 | scan.plugins.trivy.env | list | `[]` | List of environment variables to set in trivy container. |
 | scan.plugins.trivy.envFrom | list | `[]` | List of sources to populate environment variables in trivy container. |
 | scan.plugins.trivy.timeout | string | `"10m"` | Trivy timeout |
