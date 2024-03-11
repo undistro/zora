@@ -89,8 +89,8 @@ nav:
           - HTTPS proxy: configuration/https-proxy.md
           - Ignore unfixed vulnerabilities: plugins/trivy/#large-vulnerability-reports
           - Vulnerability scan timeout: plugins/trivy/#scan-timeout
+          - Authenticated registries: configuration/authenticated-registries.md
           - Private registries:
-              - Overview: configuration/private-registries/index.md
               - AWS ECR: configuration/private-registries/ecr.md
               - Azure ACR: configuration/private-registries/acr.md
       - "🔌 Plugins":

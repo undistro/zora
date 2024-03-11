@@ -1,11 +1,11 @@
-# Private Registries
+# Authenticated Registries
 
 Trivy plugin is able to scan images from registries that require authentication.
 
 It's necessary to create a secret containing authentication credentials as pairs, like the command below.
 
 !!! note
-    For [AWS ECR](ecr.md) and [Azure ACR](acr.md) registries, please refer to the specific pages.
+    For [AWS ECR](private-registries/ecr.md) and [Azure ACR](private-registries/acr.md) registries, please refer to the specific pages.
 
 ```shell
 kubectl create secret generic trivy-credentials -n zora-system \
