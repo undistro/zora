@@ -10,12 +10,14 @@ metadata:
   name: trivy
 spec:
   type: vulnerability
-  image: ghcr.io/aquasecurity/trivy:0.48.2
+  image: ghcr.io/aquasecurity/trivy:0.49.1
   securityContext:
     allowPrivilegeEscalation: false
   env:
     - name: TRIVY_IGNORE_VULN_DESCRIPTIONS
       value: "false"
+    - name: SSL_CERT_DIR
+      value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"
   command:
     - /bin/sh
     - -c
@@ -26,6 +28,7 @@ spec:
         --all-namespaces \
         --scanners=vuln \
         -f=json \
+        --cache-dir=/tmp/trivy-cache \
         -o $(DONE_DIR)/results.json \
         cluster
       

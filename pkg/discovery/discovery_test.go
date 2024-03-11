@@ -385,6 +385,30 @@ func TestProvider(t *testing.T) {
 			want: "oraclecloud",
 		},
 		{
+			name: "openshift",
+			args: args{[]corev1.Node{{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"beta.kubernetes.io/arch":                  "amd64",
+						"beta.kubernetes.io/instance-type":         "m5.xlarge",
+						"beta.kubernetes.io/os":                    "linux",
+						"failure-domain.beta.kubernetes.io/region": "us-east-1",
+						"failure-domain.beta.kubernetes.io/zone":   "us-east-1a",
+						"kubernetes.io/arch":                       "amd64",
+						"kubernetes.io/hostname":                   "ip-10-0-41-28.ec2.internal",
+						"kubernetes.io/os":                         "linux",
+						"node-role.kubernetes.io/worker":           "",
+						"node.kubernetes.io/instance-type":         "m5.xlarge",
+						"node.openshift.io/os_id":                  "rhcos",
+						"topology.ebs.csi.aws.com/zone":            "us-east-1a",
+						"topology.kubernetes.io/region":            "us-east-1",
+						"topology.kubernetes.io/zone":              "us-east-1a",
+					},
+				},
+			}}},
+			want: "openshift",
+		},
+		{
 			name: "kind",
 			args: args{[]corev1.Node{{
 				ObjectMeta: metav1.ObjectMeta{
