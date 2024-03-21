@@ -207,9 +207,9 @@ scan:
       podAnnotations: {}
       image:
         # -- trivy plugin image repository
-        repository: ghcr.io/aquasecurity/trivy
+        repository: ghcr.io/undistro/trivy
         # -- trivy plugin image tag
-        tag: 0.49.1
+        tag: 0.49.1-3
       # -- List of environment variables to set in trivy container.
       env: []
       #  - name: AWS_REGION
