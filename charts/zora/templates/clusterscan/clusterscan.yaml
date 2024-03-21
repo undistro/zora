@@ -30,12 +30,17 @@ metadata:
   labels:
     zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "truncate.name" (dict "name" (printf "%s-misconfig" (include "zora.clusterName" .)) "len" 63 ) }}
-
+  {{- $misconfigScanName := include "truncate.name" (dict "name" (printf "%s-misconfig" (include "zora.clusterName" .)) "len" 63 ) }}
+  name: {{ $misconfigScanName }}
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
+  {{- $currentMisconfigScan := (lookup "zora.undistro.io/v1alpha1" "ClusterScan" .Release.Namespace $misconfigScanName) }}
+  {{- if and $currentMisconfigScan (not .Values.scan.misconfiguration.schedule) }}
+  schedule: {{ $currentMisconfigScan.spec.schedule | quote }}
+  {{- else }}
   schedule: {{ include "zora.misconfigSchedule" . | quote }}
+  {{- end }}
   successfulScansHistoryLimit: {{ .Values.scan.misconfiguration.successfulScansHistoryLimit }}
   {{- if .Values.scan.misconfiguration.plugins }}
   plugins:
@@ -52,11 +57,17 @@ metadata:
   labels:
     zora.undistro.io/default: "true"
     {{- include "zora.labels" . | nindent 4 }}
-  name: {{ include "truncate.name" (dict "name" (printf "%s-vuln" (include "zora.clusterName" .)) "len" 63 ) }}
+  {{- $vulnScanName := include "truncate.name" (dict "name" (printf "%s-vuln" (include "zora.clusterName" .)) "len" 63 ) }}
+  name: {{ $vulnScanName }}
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
+  {{- $currentVulnScan := (lookup "zora.undistro.io/v1alpha1" "ClusterScan" .Release.Namespace $vulnScanName) }}
+  {{- if and $currentVulnScan (not .Values.scan.vulnerability.schedule) }}
+  schedule: {{ $currentVulnScan.spec.schedule | quote }}
+  {{- else }}
   schedule: {{ include "zora.vulnSchedule" . | quote }}
+  {{- end }}
   successfulScansHistoryLimit: {{ .Values.scan.vulnerability.successfulScansHistoryLimit }}
   {{- if .Values.scan.vulnerability.plugins }}
   plugins:
