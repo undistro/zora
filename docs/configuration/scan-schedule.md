@@ -33,6 +33,10 @@ or by providing parameters in the `helm upgrade --install` command, as shown in 
 
 The recommended approach is to provide parameters through Helm.
 
+!!! danger "Costly scan scheduling"
+    Overly frequent scheduling of scans can increase networking costs significantly, 
+    especially for vulnerability scans, which involve downloading a vulnerability database and pulling images.
+
 !!! warning
     If you directly edit the `ClusterScan` resource, be cautious when running the next update via Helm, as the value may be overwritten.
 
