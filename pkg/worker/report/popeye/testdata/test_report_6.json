@@ -2,9 +2,9 @@
   "popeye": {
     "score": 13,
     "grade": "F",
-    "sanitizers": [
+    "sections": [
       {
-        "sanitizer": "cluster",
+        "linter": "cluster",
         "gvr": "cluster",
         "tally": {
           "ok": 1,
@@ -25,7 +25,7 @@
         }
       },
       {
-        "sanitizer": "clusterroles",
+        "linter": "clusterroles",
         "gvr": "rbac.authorization.k8s.io/v1/clusterroles",
         "tally": {
           "ok": 0,
@@ -52,7 +52,7 @@
         }
       },
       {
-        "sanitizer": "clusterrolebindings",
+        "linter": "clusterrolebindings",
         "gvr": "rbac.authorization.k8s.io/v1/clusterrolebindings",
         "tally": {
           "ok": 0,
@@ -63,7 +63,7 @@
         }
       },
       {
-        "sanitizer": "configmaps",
+        "linter": "configmaps",
         "gvr": "v1/configmaps",
         "tally": {
           "ok": 0,
@@ -84,7 +84,7 @@
         }
       },
       {
-        "sanitizer": "daemonsets",
+        "linter": "daemonsets",
         "gvr": "apps/v1/daemonsets",
         "tally": {
           "ok": 0,
@@ -105,7 +105,7 @@
         }
       },
       {
-        "sanitizer": "deployments",
+        "linter": "deployments",
         "gvr": "apps/v1/deployments",
         "tally": {
           "ok": 0,
@@ -126,7 +126,7 @@
         }
       },
       {
-        "sanitizer": "horizontalpodautoscalers",
+        "linter": "horizontalpodautoscalers",
         "gvr": "autoscaling/v2/horizontalpodautoscalers",
         "tally": {
           "ok": 0,
@@ -147,7 +147,7 @@
         }
       },
       {
-        "sanitizer": "ingresses",
+        "linter": "ingresses",
         "gvr": "networking.k8s.io/v1/ingresses",
         "tally": {
           "ok": 0,
@@ -168,7 +168,7 @@
         }
       },
       {
-        "sanitizer": "namespaces",
+        "linter": "namespaces",
         "gvr": "v1/namespaces",
         "tally": {
           "ok": 0,
@@ -189,7 +189,7 @@
         }
       },
       {
-        "sanitizer": "networkpolicies",
+        "linter": "networkpolicies",
         "gvr": "networking.k8s.io/v1/networkpolicies",
         "tally": {
           "ok": 0,
@@ -210,7 +210,7 @@
         }
       },
       {
-        "sanitizer": "nodes",
+        "linter": "nodes",
         "gvr": "v1/nodes",
         "tally": {
           "ok": 0,
@@ -231,7 +231,7 @@
         }
       },
       {
-        "sanitizer": "persistentvolumes",
+        "linter": "persistentvolumes",
         "gvr": "v1/persistentvolumes",
         "tally": {
           "ok": 0,
@@ -258,7 +258,7 @@
         }
       },
       {
-        "sanitizer": "persistentvolumeclaims",
+        "linter": "persistentvolumeclaims",
         "gvr": "v1/persistentvolumeclaims",
         "tally": {
           "ok": 0,
@@ -279,7 +279,7 @@
         }
       },
       {
-        "sanitizer": "pods",
+        "linter": "pods",
         "gvr": "v1/pods",
         "tally": {
           "ok": 0,
@@ -290,7 +290,7 @@
         }
       },
       {
-        "sanitizer": "poddisruptionbudgets",
+        "linter": "poddisruptionbudgets",
         "gvr": "policy/v1/poddisruptionbudgets",
         "tally": {
           "ok": 0,
@@ -311,7 +311,7 @@
         }
       },
       {
-        "sanitizer": "replicasets",
+        "linter": "replicasets",
         "gvr": "apps/v1/replicasets",
         "tally": {
           "ok": 0,
@@ -332,7 +332,7 @@
         }
       },
       {
-        "sanitizer": "roles",
+        "linter": "roles",
         "gvr": "rbac.authorization.k8s.io/v1/roles",
         "tally": {
           "ok": 0,
@@ -353,7 +353,7 @@
         }
       },
       {
-        "sanitizer": "rolebindings",
+        "linter": "rolebindings",
         "gvr": "rbac.authorization.k8s.io/v1/rolebindings",
         "tally": {
           "ok": 0,
@@ -374,7 +374,7 @@
         }
       },
       {
-        "sanitizer": "secrets",
+        "linter": "secrets",
         "gvr": "v1/secrets",
         "tally": {
           "ok": 0,
@@ -395,7 +395,7 @@
         }
       },
       {
-        "sanitizer": "services",
+        "linter": "services",
         "gvr": "v1/services",
         "tally": {
           "ok": 0,
@@ -422,7 +422,7 @@
         }
       },
       {
-        "sanitizer": "serviceaccounts",
+        "linter": "serviceaccounts",
         "gvr": "v1/serviceaccounts",
         "tally": {
           "ok": 0,
@@ -443,7 +443,7 @@
         }
       },
       {
-        "sanitizer": "statefulsets",
+        "linter": "statefulsets",
         "gvr": "apps/v1/statefulsets",
         "tally": {
           "ok": 0,
