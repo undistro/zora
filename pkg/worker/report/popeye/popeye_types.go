@@ -30,22 +30,22 @@ const (
 	ErrorLevel
 )
 
-// Issue represents a Popeye sanitizer issue.
+// Issue represents a Popeye linter issue.
 type Issue struct {
 	Level   Level  `json:"level"`
 	Message string `json:"message"`
 }
 
-// Sanitizer represents a Popeye sanitizer.
-type Sanitizer struct {
-	Sanitizer string             `json:"sanitizer"`
-	GVR       string             `json:"gvr"`
-	Issues    map[string][]Issue `json:"issues"`
+// Sanitizer represents a Popeye linter.
+type Section struct {
+	Linter string             `json:"linter"`
+	GVR    string             `json:"gvr"`
+	Issues map[string][]Issue `json:"issues"`
 }
 
 // Popeye represents a Popeye report.
 type Popeye struct {
-	Sanitizers []Sanitizer `json:"sanitizers"`
+	Sections []Section `json:"sections"`
 }
 
 // Report wraps a Popeye report.

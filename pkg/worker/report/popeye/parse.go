@@ -59,8 +59,8 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.ClusterIssueSpec,
 		return nil, err
 	}
 	issuesByID := map[string]*v1alpha1.ClusterIssueSpec{}
-	for _, sanitizer := range report.Popeye.Sanitizers {
-		for typ, issues := range sanitizer.Issues {
+	for _, linter := range report.Popeye.Sections {
+		for typ, issues := range linter.Issues {
 			if typ == "" {
 				if len(issues) > 0 {
 					if msg := issues[0].Message; strings.Contains(msg, "forbidden") {
@@ -81,7 +81,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.ClusterIssueSpec,
 					continue
 				}
 				if ci, ok := issuesByID[id]; ok {
-					ci.AddResource(sanitizer.GVR, typ)
+					ci.AddResource(linter.GVR, typ)
 				} else {
 					spec := &v1alpha1.ClusterIssueSpec{
 						ID:             id,
@@ -95,7 +95,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.ClusterIssueSpec,
 					}
 					if !clusterScoped {
 						spec.TotalResources = 1
-						spec.Resources = map[string][]string{sanitizer.GVR: {typ}}
+						spec.Resources = map[string][]string{linter.GVR: {typ}}
 					}
 					issuesByID[id] = spec
 				}

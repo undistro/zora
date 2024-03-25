@@ -1,12 +1,12 @@
 {
   "popeye": {
-    "sanitizers": [
+    "sections": [
       {
-        "sanitizer": "cluster",
+        "linter": "cluster",
         "gvr": "cluster"
       },
       {
-        "sanitizer": "clusterroles",
+        "linter": "clusterroles",
         "gvr": "rbac.authorization.k8s.io/v1/clusterroles",
         "issues": {
           "admin": [

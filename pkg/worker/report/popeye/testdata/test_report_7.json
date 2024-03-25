@@ -2,9 +2,9 @@
   "popeye": {
     "score": 13,
     "grade": "F",
-    "sanitizers": [
+    "sections": [
       {
-        "sanitizer": "cluster",
+        "linter": "cluster",
         "gvr": "cluster",
         "tally": {
           "ok": 1,
