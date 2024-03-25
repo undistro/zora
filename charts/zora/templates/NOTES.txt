@@ -16,13 +16,15 @@ Visit our documentation for in-depth information: https://zora-docs.undistro.io
 Visit Zora Dashboard to explore your clusters and issues: {{ .Values.saas.server }}
 {{- end }}
 
-{{ if and .Values.scan.misconfiguration.schedule (include "zora.IsMisconfigScheduleMoreOftenThanHourly" .) -}}
+{{- $warnMisconfig := and .Values.scan.misconfiguration.schedule (include "zora.IsMisconfigScheduleMoreOftenThanHourly" .) }}
+{{- if eq $warnMisconfig "true" }}
 WARNING: The misconfiguration scan appears to be scheduled to run more frequently than hourly, you should be aware this
          may lead to higher resource utilization and network traffic.
 {{- end }}
 
-{{ if and .Values.scan.vulnerability.schedule (include "zora.IsVulnScheduleMoreOftenThanDaily" .) -}}
+{{- $warVuln := and .Values.scan.vulnerability.schedule (include "zora.IsVulnScheduleMoreOftenThanDaily" .) }}
+{{- if eq $warVuln "true" }}
 WARNING: The vulnerability scan appears to be scheduled to run more frequently than daily, potentially leading to
          significant increases in networking costs and resource utilization. This is particularly relevant for
          vulnerability scans, which involve downloading a vulnerability database and pulling images.
-{{- end }}
+{{ end }}
