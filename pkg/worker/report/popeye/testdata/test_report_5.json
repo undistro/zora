@@ -2,9 +2,9 @@
   "popeye": {
     "score": 85,
     "grade": "B",
-    "sanitizers": [
+    "sections": [
       {
-        "sanitizer": "nodes",
+        "linter": "nodes",
         "gvr": "v1/nodes",
         "tally": {
           "ok": 0,
@@ -25,7 +25,7 @@
         }
       },
       {
-        "sanitizer": "poddisruptionbudgets",
+        "linter": "poddisruptionbudgets",
         "gvr": "policy/v1/poddisruptionbudgets",
         "tally": {
           "ok": 0,

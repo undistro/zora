@@ -10,7 +10,7 @@ metadata:
   name: popeye
 spec:
   type: misconfiguration
-  image: ghcr.io/undistro/popeye:v0.11.3
+  image: ghcr.io/undistro/popeye:0.21.1-4
   resources:
     limits:
       cpu: 500m

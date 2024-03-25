@@ -1,8 +1,8 @@
 {
   "popeye": {
-    "sanitizers": [
+    "sections": [
       {
-        "sanitizer": "clusterroles",
+        "linter": "clusterroles",
         "gvr": "rbac.authorization.k8s.io/v1/clusterroles",
         "issues": {
           "system:node": [],
@@ -21,7 +21,7 @@
         }
       },
       {
-        "sanitizer": "daemonsets",
+        "linter": "daemonsets",
         "gvr": "apps/v1/daemonsets",
         "issues": {
           "kube-system/aws-node": [
@@ -43,7 +43,7 @@
         }
       },
       {
-        "sanitizer": "deployments",
+        "linter": "deployments",
         "gvr": "apps/v1/deployments",
         "issues": {
           "cert-manager/cert-manager": [
@@ -59,7 +59,7 @@
         }
       },
       {
-        "sanitizer": "cluster",
+        "linter": "cluster",
         "gvr": "cluster",
         "issues": {
           "Version": [
@@ -73,7 +73,7 @@
         }
       },
       {
-        "sanitizer": "pods",
+        "linter": "pods",
         "gvr": "v1/pods",
         "issues": {
           "kube-system/cilium-jxncv": [

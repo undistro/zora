@@ -254,7 +254,7 @@ scan:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: v0.11.3
+        tag: 0.21.1-4
       # -- List of environment variables to set in popeye container.
       env: []
       # -- List of sources to populate environment variables in popeye container.
