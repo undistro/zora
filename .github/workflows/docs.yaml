@@ -53,7 +53,7 @@ jobs:
 
       - name: mike deploy
         env:
-          VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || 'main' }}
+          VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || 'dev' }}
           ALIAS: ${{ inputs.latest && 'latest' || 'dev' }}
         run: |
           cp -f charts/zora/README.md docs/helm-chart.md
