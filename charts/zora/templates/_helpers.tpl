@@ -130,3 +130,22 @@ Truncate a name to a specific length
 {{- .name }}
 {{- end }}
 {{- end }}
+
+{{/* Returns true if the explicitly set misconfiguration schedule is more frequently than hourly */}}
+{{- define "zora.IsMisconfigScheduleMoreOftenThanHourly" -}}
+{{- $cron_fields := split " " .Values.scan.misconfiguration.schedule -}}
+{{- $minute := $cron_fields._0 -}}
+{{/* minute must be in range [0-59] */}}
+{{- not (mustRegexMatch "^(?:\\d|[0-5]\\d)$" $minute) -}}
+{{- end -}}
+
+{{/* Returns true if the explicitly set vulnerability schedule is more frequently than daily */}}
+{{- define "zora.IsVulnScheduleMoreOftenThanDaily" -}}
+{{- $cron_fields := split " " .Values.scan.vulnerability.schedule -}}
+{{- $minute := $cron_fields._0 -}}
+{{- $hour := $cron_fields._1 -}}
+{{/* minute and hour must be in range [0-59] */}}
+{{- $isMinuteBad := not (mustRegexMatch "^(?:\\d|[0-5]\\d)$" $minute) -}}
+{{- $isHourBad := not (mustRegexMatch "^(?:\\d|[0-5]\\d)$" $hour) -}}
+{{- or $isMinuteBad $isHourBad -}}
+{{- end -}}

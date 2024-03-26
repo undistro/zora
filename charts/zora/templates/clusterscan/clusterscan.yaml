@@ -35,7 +35,7 @@ metadata:
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
-  {{- $currentMisconfigScan := (lookup "zora.undistro.io/v1alpha1" "ClusterScan" .Release.Namespace $misconfigScanName) }}
+  {{- $currentMisconfigScan := and (.Capabilities.APIVersions.Has "zora.undistro.io/v1alpha1") (lookup "zora.undistro.io/v1alpha1" "ClusterScan" .Release.Namespace $misconfigScanName) }}
   {{- if and $currentMisconfigScan (not .Values.scan.misconfiguration.schedule) }}
   schedule: {{ $currentMisconfigScan.spec.schedule | quote }}
   {{- else }}
@@ -62,7 +62,7 @@ metadata:
 spec:
   clusterRef:
     name: {{ include "zora.clusterName" . }}
-  {{- $currentVulnScan := (lookup "zora.undistro.io/v1alpha1" "ClusterScan" .Release.Namespace $vulnScanName) }}
+  {{- $currentVulnScan := and (.Capabilities.APIVersions.Has "zora.undistro.io/v1alpha1") (lookup "zora.undistro.io/v1alpha1" "ClusterScan" .Release.Namespace $vulnScanName) }}
   {{- if and $currentVulnScan (not .Values.scan.vulnerability.schedule) }}
   schedule: {{ $currentVulnScan.spec.schedule | quote }}
   {{- else }}
