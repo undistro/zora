@@ -52,16 +52,18 @@ var (
 		"POP-204": "Pod is not ready",
 		"POP-205": "Pod was restarted",
 		"POP-207": "Pod is in an unhappy phase",
+		"POP-209": "Pod is managed by multiple PodDisruptionBudgets",
 
 		// Security
 		"POP-304": "ServiceAccount references a secret which does not exist",
 		"POP-305": "ServiceAccount references a docker-image pull secret which does not exist",
+		"POP-307": "Reference to a non existing ServiceAccount",
 
 		// General
 		"POP-401": "Unable to locate key reference",
-		"POP-402": "No metrics-server detected",
 		"POP-403": "Deprecated API group",
 		"POP-404": "Deprecation check failed",
+		"POP-407": "References a resource which does not exist",
 
 		// Deployment and StatefulSet
 		"POP-501": "Unhealthy, mismatch between desired and available state",
@@ -70,10 +72,10 @@ var (
 		"POP-505": "At current load, Memory under allocated",
 		"POP-506": "At current load, Memory over allocated",
 		"POP-507": "Deployment references ServiceAccount which does not exist",
+		"POP-508": "No pods match controller selector",
 
 		// HPA
 		"POP-600": "HPA references a Deployment which does not exist",
-		"POP-601": "HPA references a StatefulSet which does not exist",
 		"POP-602": "Replicas at burst will match or exceed cluster CPU capacity",
 		"POP-603": "Replicas at burst will match or exceed cluster memory capacity",
 		"POP-604": "If ALL HPAs are triggered, cluster CPU capacity will match or exceed threshold",
@@ -102,9 +104,36 @@ var (
 		// NetworkPolicies
 		"POP-1200": "No pods match pod selector",
 		"POP-1201": "No namespaces match namespace selector",
+		"POP-1202": "No pods match pod selector",
+		"POP-1203": "Allow All or Deny All policy in effect",
+		"POP-1204": "Pod is not secured by a network policy",
+		"POP-1206": "No pods matched IPBlock",
+		"POP-1207": "No pods matched except IPBlock",
+		"POP-1208": "No pods match pod selector in namespace",
 
 		// RBAC
 		"POP-1300": "References a role which does not exist",
+
+		// Ingress
+		"POP-1400": "Ingress LoadBalancer port reported an error",
+		"POP-1401": "Ingress references a service backend which does not exist",
+		"POP-1402": "Ingress references a service port which is not defined",
+		"POP-1403": "Ingress backend uses a port#, prefer a named port",
+
+		// Cronjob
+		"POP-1500": "Cronjob is suspended",
+
+		// CiliumIdentity
+		"POP-1601": "Unable to assert namespace label",
+		"POP-1602": "References namespace which does not exists",
+		"POP-1603": "Missing security namespace label",
+		"POP-1604": "Namespace mismatch with security labels namespace",
+
+		//CiliumEndpoint
+		"POP-1700": "No cilium endpoints matched selector",
+		"POP-1702": "References an unknown node IP",
+		"POP-1703": "Pod owner is not in a running state",
+		"POP-1704": "References an unknown owner ref",
 	}
 
 	// IssueIDtoUrl maps Popeye's issue codes to urls for wiki pages, blog
@@ -137,6 +166,7 @@ var (
 		"POP-206": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions",
 		"POP-207": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
 		"POP-208": "https://kubernetes.io/docs/concepts/configuration/overview/#naked-pods-vs-replicasets-deployments-and-jobs",
+		"POP-209": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions",
 
 		// Security
 		"POP-300": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
@@ -146,6 +176,7 @@ var (
 		"POP-304": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account",
 		"POP-305": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account",
 		"POP-306": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
+		"POP-307": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
 
 		// General
 		"POP-400": "",
@@ -155,6 +186,7 @@ var (
 		"POP-404": "https://kubernetes.io/docs/reference/using-api/deprecation-guide",
 		"POP-405": "https://kubernetes.io/docs/tasks/administer-cluster/cluster-upgrade/",
 		"POP-406": "https://kubernetes.io/releases/",
+		"POP-407": "",
 
 		// Deployment and StatefulSet
 		"POP-500": "https://kubernetes.io/docs/concepts/workloads/",
@@ -164,6 +196,7 @@ var (
 		"POP-505": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 		"POP-506": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
 		"POP-507": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+		"POP-508": "https://kubernetes.io/docs/concepts/workloads/",
 
 		// HPA
 		"POP-600": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
@@ -213,6 +246,7 @@ var (
 		"POP-1107": "https://kubernetes.io/docs/concepts/services-networking/service/#external-traffic-policy",
 		"POP-1108": "https://kubernetes.io/docs/concepts/services-networking/service/#external-traffic-policy",
 		"POP-1109": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
+		"POP-1110": "https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
 
 		// ReplicaSet
 		"POP-1120": "https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/",
@@ -220,9 +254,42 @@ var (
 		// NetworkPolicies
 		"POP-1200": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
 		"POP-1201": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1202": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1203": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1204": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1205": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1206": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1207": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
+		"POP-1208": "https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource",
 
 		// RBAC
 		"POP-1300": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding",
+
+		// Ingress
+		"POP-1400": "https://kubernetes.io/docs/concepts/services-networking/ingress/#load-balancing",
+		"POP-1401": "https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource",
+		"POP-1402": "https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource",
+		"POP-1403": "https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource",
+		"POP-1404": "https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource",
+
+		// Cronjob
+		"POP-1500": "https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
+		"POP-1501": "https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
+		"POP-1502": "https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
+
+		// CiliumIdentity
+		"POP-1600": "https://docs.cilium.io/en/stable/",
+		"POP-1601": "https://docs.cilium.io/en/stable/",
+		"POP-1602": "https://docs.cilium.io/en/stable/",
+		"POP-1603": "https://docs.cilium.io/en/stable/",
+		"POP-1604": "https://docs.cilium.io/en/stable/",
+
+		// CiliumEndpoint
+		"POP-1700": "https://docs.cilium.io/en/stable/",
+		"POP-1701": "https://docs.cilium.io/en/stable/",
+		"POP-1702": "https://docs.cilium.io/en/stable/",
+		"POP-1703": "https://docs.cilium.io/en/stable/",
+		"POP-1704": "https://docs.cilium.io/en/stable/",
 	}
 	categoriesInterval = map[int]string{
 		1:  "Container",
@@ -239,6 +306,10 @@ var (
 		// exception for "ReplicaSet" of POP-1120
 		12: "NetworkPolicies",
 		13: "RBAC",
+		14: "Ingress",
+		15: "Cronjob",
+		16: "CiliumIdentity",
+		17: "CiliumEndpoint",
 	}
 )
 

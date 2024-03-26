@@ -181,6 +181,54 @@ func Test_getCategory(t *testing.T) {
 			id:   "POP-1399",
 			want: "RBAC",
 		},
+		{
+			id:   "POP-1400",
+			want: "Ingress",
+		},
+		{
+			id:   "POP-1401",
+			want: "Ingress",
+		},
+		{
+			id:   "POP-1499",
+			want: "Ingress",
+		},
+		{
+			id:   "POP-1500",
+			want: "Cronjob",
+		},
+		{
+			id:   "POP-1501",
+			want: "Cronjob",
+		},
+		{
+			id:   "POP-1599",
+			want: "Cronjob",
+		},
+		{
+			id:   "POP-1600",
+			want: "CiliumIdentity",
+		},
+		{
+			id:   "POP-1601",
+			want: "CiliumIdentity",
+		},
+		{
+			id:   "POP-1699",
+			want: "CiliumIdentity",
+		},
+		{
+			id:   "POP-1700",
+			want: "CiliumEndpoint",
+		},
+		{
+			id:   "POP-1701",
+			want: "CiliumEndpoint",
+		},
+		{
+			id:   "POP-1799",
+			want: "CiliumEndpoint",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.id, func(t *testing.T) {
