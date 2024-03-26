@@ -15,9 +15,6 @@ on:
       latest:
         description: 'latest'
         type: boolean
-      dev:
-        description: 'dev'
-        type: boolean
 
 env:
   GIT_USER: "github-actions"
@@ -54,7 +51,7 @@ jobs:
       - name: mike deploy
         env:
           VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || 'dev' }}
-          ALIAS: ${{ inputs.latest && 'latest' || inputs.dev && 'dev' || '' }}
+          ALIAS: ${{ inputs.latest && 'latest' || '' }}
         run: |
           cp -f charts/zora/README.md docs/helm-chart.md
           cp -f charts/zora/values.yaml docs/values.yaml
