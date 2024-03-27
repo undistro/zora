@@ -1,5 +1,11 @@
 name: docs
 on:
+  push:
+    branches: [ 'main' ]
+    paths:
+      - 'docs/**'
+      - 'charts/zora/values.yaml'
+      - 'charts/zora/README.md'
   workflow_dispatch:
     inputs:
       version:
@@ -8,9 +14,6 @@ on:
         required: true
       latest:
         description: 'latest'
-        type: boolean
-      dev:
-        description: 'dev'
         type: boolean
 
 env:
@@ -39,14 +42,6 @@ jobs:
       - name: install mkdocs and mike
         run: pip install mkdocs-material mike
 
-      - name: set 'latest' alias
-        if: inputs.latest
-        run: echo 'alias=latest' >> $GITHUB_ENV
-
-      - name: set 'dev' alias
-        if: inputs.dev
-        run: echo 'alias=dev' >> $GITHUB_ENV
-
       - name: fetch gh-pages branch
         run: |
           git config --global user.email "$GIT_EMAIL"
@@ -54,10 +49,13 @@ jobs:
           git fetch origin gh-pages --depth=1
 
       - name: mike deploy
+        env:
+          VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || 'dev' }}
+          ALIAS: ${{ inputs.latest && 'latest' || '' }}
         run: |
           cp -f charts/zora/README.md docs/helm-chart.md
           cp -f charts/zora/values.yaml docs/values.yaml
-          mike deploy --update-aliases ${{ inputs.version }} ${{ env.alias }}
+          mike deploy --update-aliases $VERSION $ALIAS
 
       - name: update titles and push
         run: |
