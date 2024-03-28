@@ -137,10 +137,16 @@ func NewCluster(cluster v1alpha1.Cluster) Cluster {
 func NewScanStatus(clusterScan *v1alpha1.ClusterScan, scans []v1alpha1.ClusterScan) (map[string]*PluginStatus, *int) {
 	var pluginStatus map[string]*PluginStatus
 	var totalIssues *int
-
-	allScans := []v1alpha1.ClusterScan{}
-	allScans = append(allScans, scans...)
-	allScans = append(allScans, *clusterScan)
+	allScans := make(map[string]v1alpha1.ClusterScan)
+	if clusterScan != nil {
+		allScans[clusterScan.NamespacedName().String()] = *clusterScan
+	}
+	for _, scan := range scans {
+		key := scan.NamespacedName().String()
+		if _, ok := allScans[key]; !ok {
+			allScans[key] = scan
+		}
+	}
 	for _, cs := range allScans {
 		if cs.Status.TotalIssues != nil {
 			if totalIssues == nil {
