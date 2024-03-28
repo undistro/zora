@@ -209,7 +209,7 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/undistro/trivy
         # -- trivy plugin image tag
-        tag: 0.50.0-1
+        tag: 0.50.1-1
       # -- List of environment variables to set in trivy container.
       env: []
       #  - name: AWS_REGION
@@ -254,7 +254,7 @@ scan:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: 0.21.1-4
+        tag: 0.21.2-1
       # -- List of environment variables to set in popeye container.
       env: []
       # -- List of sources to populate environment variables in popeye container.
