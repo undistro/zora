@@ -12,6 +12,7 @@ spec:
   clusterRef:
     name: mycluster
   schedule: "*/2 * * * *"
+  successfulScansHistoryLimit: 1
   plugins:
     - name: marvin
     - name: popeye

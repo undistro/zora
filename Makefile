@@ -155,6 +155,9 @@ install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_customcheck_labels.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/rbac/zora_plugins_role.yaml
 	@$(KUBECTL) create -f config/rbac/zora_plugins_role_binding.yaml || true
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_cluster.yaml -n $(NAMESPACE)
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_clusterscan_misconfig.yaml -n $(NAMESPACE)
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_clusterscan_vuln.yaml -n $(NAMESPACE)
 
 .PHONY: uninstall
 uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
