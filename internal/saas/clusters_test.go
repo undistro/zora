@@ -219,8 +219,8 @@ func TestNewScanStatus(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewScanStatus() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
-			if pointer.IntDeref(totalIssues, 0) == pointer.IntDeref(tt.wantTotalIssues, 0) {
-				t.Errorf("NewScanStatus() totalIssues = %v, want %v", totalIssues, tt.wantTotalIssues)
+			if !reflect.DeepEqual(totalIssues, tt.wantTotalIssues) {
+				t.Errorf("NewScanStatus() totalIssues got = %v, want %v", totalIssues, tt.wantTotalIssues)
 			}
 		})
 	}
