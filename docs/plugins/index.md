@@ -17,7 +17,7 @@ kubectl get plugins -n zora-system
 NAME     IMAGE                               TYPE               AGE
 marvin   ghcr.io/undistro/marvin:v0.2.1      misconfiguration   14m
 popeye   ghcr.io/undistro/popeye:0.21.2-1    misconfiguration   14m
-trivy    ghcr.io/undistro/trivy:0.50.0-1     vulnerability      14m
+trivy    ghcr.io/undistro/trivy:0.50.1-1     vulnerability      14m
 ```
 
 Each item listed above is an instance of `Plugin` CRD and represents the execution configuration of a plugin.
