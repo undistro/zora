@@ -8,7 +8,7 @@ Popeye is a utility that scans live Kubernetes cluster and reports potential iss
 
 :octicons-codescan-24: **Type**: `misconfiguration`
 
-:simple-docker: **Image**: `ghcr.io/undistro/popeye:0.21.1-4`
+:simple-docker: **Image**: `ghcr.io/undistro/popeye:0.21.2-1`
 
 :simple-github: **GitHub repository**: [https://github.com/derailed/popeye](https://github.com/derailed/popeye){:target="_blank"}
 

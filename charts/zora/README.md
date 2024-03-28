@@ -115,7 +115,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |
-| scan.plugins.trivy.image.tag | string | `"0.50.0-1"` | trivy plugin image tag |
+| scan.plugins.trivy.image.tag | string | `"0.50.1-1"` | trivy plugin image tag |
 | scan.plugins.trivy.env | list | `[]` | List of environment variables to set in trivy container. |
 | scan.plugins.trivy.envFrom | list | `[]` | List of sources to populate environment variables in trivy container. |
 | scan.plugins.trivy.timeout | string | `"10m"` | Trivy timeout |
@@ -124,7 +124,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
 | scan.plugins.popeye.podAnnotations | object | `{}` | Annotations added to the popeye pods |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
-| scan.plugins.popeye.image.tag | string | `"0.21.1-4"` | popeye plugin image tag |
+| scan.plugins.popeye.image.tag | string | `"0.21.2-1"` | popeye plugin image tag |
 | scan.plugins.popeye.env | list | `[]` | List of environment variables to set in popeye container. |
 | scan.plugins.popeye.envFrom | list | `[]` | List of sources to populate environment variables in popeye container. |
 | kubexnsImage.repository | string | `"ghcr.io/undistro/kubexns"` | kubexns image repository |
