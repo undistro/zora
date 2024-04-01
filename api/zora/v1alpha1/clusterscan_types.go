@@ -311,6 +311,10 @@ func (in *ClusterScan) ClusterKey() types.NamespacedName {
 	return types.NamespacedName{Name: in.Spec.ClusterRef.Name, Namespace: in.Namespace}
 }
 
+func (in *ClusterScan) NamespacedName() types.NamespacedName {
+	return types.NamespacedName{Name: in.Name, Namespace: in.Namespace}
+}
+
 //+kubebuilder:object:root=true
 
 // ClusterScanList contains a list of ClusterScan

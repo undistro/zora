@@ -12,5 +12,6 @@ spec:
   clusterRef:
     name: mycluster
   schedule: "*/10 * * * *"
+  successfulScansHistoryLimit: 1
   plugins:
     - name: trivy
