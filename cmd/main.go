@@ -68,6 +68,7 @@ func main() {
 	var checksConfigMapNamespace string
 	var checksConfigMapName string
 	var kubexnsImage string
+	var trivyPVC string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -86,6 +87,7 @@ func main() {
 	flag.StringVar(&checksConfigMapNamespace, "checks-configmap-namespace", "zora-system", "Namespace of custom checks ConfigMap")
 	flag.StringVar(&checksConfigMapName, "checks-configmap-name", "zora-custom-checks", "Name of custom checks ConfigMap")
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
+	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
 
 	opts := zap.Options{
 		Development: true,
@@ -161,6 +163,7 @@ func main() {
 		OnUpdate:                onClusterScanUpdate,
 		OnDelete:                onClusterScanDelete,
 		KubexnsImage:            kubexnsImage,
+		TrivyPVC:                trivyPVC,
 		ChecksConfigMap:         fmt.Sprintf("%s/%s", checksConfigMapNamespace, checksConfigMapName),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
