@@ -234,10 +234,12 @@ scan:
         enabled: true
         # -- Persistence access mode
         accessMode: ReadWriteOnce
-        # -- Persistence storage class. Let it empty for default storage class.
+        # -- Persistence storage class. Let it empty for default storage class
         storageClass: ""
         # -- Persistence storage size
         storageRequest: 1Gi
+        # -- Specifies whether Java vulnerability database should be downloaded on helm install/upgrade
+        downloadJavaDB: false
 
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
