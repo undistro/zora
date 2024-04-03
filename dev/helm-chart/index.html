@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.16">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
     
     
       
@@ -1292,7 +1292,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.8.4-rc3" src="https://img.shields.io/badge/Version-0.8.4--rc3-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.8.4-rc3" src="https://img.shields.io/badge/AppVersion-v0.8.4--rc3-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.8.4-rc4" src="https://img.shields.io/badge/Version-0.8.4--rc4-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.8.4-rc4" src="https://img.shields.io/badge/AppVersion-v0.8.4--rc4-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1300,7 +1300,7 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.8.4-rc3 \</span>
+<span class="go">  --version 0.8.4-rc4 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
 <span class="go">  --set clusterName=&quot;$(kubectl config current-context)&quot;</span>
@@ -1759,6 +1759,36 @@ You're not viewing the latest version.
 <td>Allow insecure server connections for Trivy</td>
 </tr>
 <tr>
+<td>scan.plugins.trivy.persistence.enabled</td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.persistence.accessMode</td>
+<td>string</td>
+<td><code>"ReadWriteOnce"</code></td>
+<td>Persistence access mode</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.persistence.storageClass</td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Persistence storage class. Let it empty for default storage class</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.persistence.storageRequest</td>
+<td>string</td>
+<td><code>"1Gi"</code></td>
+<td>Persistence storage size</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.persistence.downloadJavaDB</td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Specifies whether Java vulnerability database should be downloaded on helm install/upgrade</td>
+</tr>
+<tr>
 <td>scan.plugins.popeye.skipInternalResources</td>
 <td>bool</td>
 <td><code>false</code></td>
@@ -1955,7 +1985,7 @@ You're not viewing the latest version.
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
       
     
   </body>

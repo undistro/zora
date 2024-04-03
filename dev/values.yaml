@@ -229,6 +229,18 @@ scan:
       # -- Allow insecure server connections for Trivy
       insecure: false
 
+      persistence:
+        # -- Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim
+        enabled: true
+        # -- Persistence access mode
+        accessMode: ReadWriteOnce
+        # -- Persistence storage class. Let it empty for default storage class
+        storageClass: ""
+        # -- Persistence storage size
+        storageRequest: 1Gi
+        # -- Specifies whether Java vulnerability database should be downloaded on helm install/upgrade
+        downloadJavaDB: false
+
     popeye:
       # -- Specifies whether the following resources should be skipped by `popeye` scans.
       # 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces;
