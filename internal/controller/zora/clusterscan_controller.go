@@ -63,6 +63,7 @@ type ClusterScanReconciler struct {
 	ServiceAccountName      string
 	KubexnsImage            string
 	ChecksConfigMap         string
+	TrivyPVC                string
 	Annotations             map[string]string
 	OnUpdate                saas.ClusterScanHook
 	OnDelete                saas.ClusterScanHook
@@ -217,6 +218,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			Suspend:            notReadyErr != nil,
 			KubexnsImage:       r.KubexnsImage,
 			ChecksConfigMap:    r.ChecksConfigMap,
+			TrivyPVC:           r.TrivyPVC,
 			ClusterUID:         cluster.UID,
 		}
 

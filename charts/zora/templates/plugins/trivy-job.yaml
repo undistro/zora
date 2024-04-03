@@ -1,0 +1,63 @@
+# Copyright 2024 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{{- if .Values.scan.plugins.trivy.persistence.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trivy-download-db
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    spec:
+      volumes:
+        - name: trivy-db
+          persistentVolumeClaim:
+            claimName: trivy-db
+      containers:
+        - name: trivy-download-db
+          image: "{{ .Values.scan.plugins.trivy.image.repository }}:{{ .Values.scan.plugins.trivy.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+          volumeMounts:
+            - mountPath: /tmp/trivy-cache
+              name: trivy-db
+          command:
+            - /bin/sh
+            - -c
+            - |
+              time trivy image \
+                --debug \
+                --no-progress \
+                --cache-dir=/tmp/trivy-cache \
+                {{- if .Values.scan.plugins.trivy.insecure }}
+                --insecure \
+                {{- end }}
+                {{- if .Values.scan.plugins.trivy.persistence.downloadJavaDB }}
+                --download-java-db-only \
+                {{- end }}
+                --download-db-only
+          env:
+            - name: SSL_CERT_DIR
+              value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"
+            {{- if .Values.httpsProxy }}
+            - name: HTTPS_PROXY
+              value: {{ .Values.httpsProxy | quote }}
+            - name: NO_PROXY
+              value: {{ .Values.noProxy | quote }}
+            {{- end }}
+      restartPolicy: OnFailure
+{{- end }}

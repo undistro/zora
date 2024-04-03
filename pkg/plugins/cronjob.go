@@ -41,6 +41,7 @@ const (
 	labelClusterScan           = "zora.undistro.io/cluster-scan"
 	labelPlugin                = "zora.undistro.io/plugin"
 	annotationDefaultContainer = "kubectl.kubernetes.io/default-container"
+	trivyDBVolumeName          = "trivy-db"
 )
 
 var (
@@ -75,6 +76,8 @@ var (
 
 	// customChecksVolume represents the volume mount to be used in the init container
 	customChecksVolume = corev1.VolumeMount{Name: checksVolumeName, MountPath: checksPath}
+
+	trivyDBVolumeMount = corev1.VolumeMount{Name: trivyDBVolumeName, MountPath: "/tmp/trivy-cache"}
 )
 
 func NewCronJob(name, namespace string) *batchv1.CronJob {
@@ -93,6 +96,7 @@ type CronJobMutator struct {
 	Suspend            bool
 	KubexnsImage       string
 	ChecksConfigMap    string
+	TrivyPVC           string
 	ClusterUID         types.UID
 }
 
@@ -136,6 +140,15 @@ func (r *CronJobMutator) Mutate() error {
 					DefaultMode: pointer.Int32(0644),
 					Items:       []corev1.KeyToPath{{Key: kubeconfig.SecretField, Path: kubeconfigFile}},
 				},
+			},
+		})
+	}
+
+	if r.Plugin.Name == "trivy" && r.TrivyPVC != "" {
+		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
+			Name: trivyDBVolumeName,
+			VolumeSource: corev1.VolumeSource{
+				PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{ClaimName: r.TrivyPVC},
 			},
 		})
 	}
@@ -223,6 +236,9 @@ func (r *CronJobMutator) pluginContainer() corev1.Container {
 	}
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
 		c.VolumeMounts = append(c.VolumeMounts, customChecksVolume)
+	}
+	if r.Plugin.Name == "trivy" {
+		c.VolumeMounts = append(c.VolumeMounts, trivyDBVolumeMount)
 	}
 	return c
 }
