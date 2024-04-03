@@ -232,9 +232,9 @@ scan:
       persistence:
         # -- Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim
         enabled: true
-        # -- Persistence access mode
+        # -- [Persistence access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes)
         accessMode: ReadWriteOnce
-        # -- Persistence storage class. Let it empty for default storage class
+        # -- [Persistence storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/). Set to empty for default storage class
         storageClass: ""
         # -- Persistence storage size
         storageRequest: 1Gi
