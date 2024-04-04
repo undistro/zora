@@ -3,7 +3,7 @@ IMG ?= controller:latest
 WORKER_IMG ?= worker:latest
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
-ENVTEST_K8S_VERSION = 1.27.1
+ENVTEST_K8S_VERSION = 1.29.3
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -203,60 +203,68 @@ $(LOCALBIN):
 
 ## Tool Binaries
 KUBECTL ?= kubectl
-KUSTOMIZE ?= $(LOCALBIN)/kustomize
-CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen
-ENVTEST ?= $(LOCALBIN)/setup-envtest
-ADDLICENSE ?= $(LOCALBIN)/addlicense
-HELM_DOCS ?= $(LOCALBIN)/helm-docs
-KIND ?= $(LOCALBIN)/kind
-GOLANGCI_LINT = $(LOCALBIN)/golangci-lint
+KUSTOMIZE ?= $(LOCALBIN)/kustomize-$(KUSTOMIZE_VERSION)
+CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen-$(CONTROLLER_TOOLS_VERSION)
+ENVTEST ?= $(LOCALBIN)/setup-envtest-$(ENVTEST_VERSION)
+GOLANGCI_LINT = $(LOCALBIN)/golangci-lint-$(GOLANGCI_LINT_VERSION)
+ADDLICENSE ?= $(LOCALBIN)/addlicense-$(ADDLICENSE_VERSION)
+HELM_DOCS ?= $(LOCALBIN)/helm-docs-$(HELM_DOCS_VERSION)
+KIND ?= $(LOCALBIN)/kind-$(KIND_VERSION)
 
 ## Tool Versions
-KUSTOMIZE_VERSION ?= v5.2.1
-CONTROLLER_TOOLS_VERSION ?= v0.13.0
-HELM_DOCS_VERSION ?= v1.12.0
-KIND_VERSION ?= v0.20.0
+KUSTOMIZE_VERSION ?= v5.3.0
+CONTROLLER_TOOLS_VERSION ?= v0.14.0
+ENVTEST_VERSION ?= release-0.17
 GOLANGCI_LINT_VERSION ?= v1.54.2
+HELM_DOCS_VERSION ?= v1.13.1
+ADDLICENSE_VERSION ?= v1.1.1
+KIND_VERSION ?= v0.22.0
 
 .PHONY: kustomize
-kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary. If wrong version is installed, it will be removed before downloading.
+kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
 $(KUSTOMIZE): $(LOCALBIN)
-	@if test -x $(LOCALBIN)/kustomize && ! $(LOCALBIN)/kustomize version | grep -q $(KUSTOMIZE_VERSION); then \
-		echo "$(LOCALBIN)/kustomize version is not expected $(KUSTOMIZE_VERSION). Removing it before installing."; \
-		rm -rf $(LOCALBIN)/kustomize; \
-	fi
-	test -s $(LOCALBIN)/kustomize || GOBIN=$(LOCALBIN) GO111MODULE=on go install sigs.k8s.io/kustomize/kustomize/v5@$(KUSTOMIZE_VERSION)
+	$(call go-install-tool,$(KUSTOMIZE),sigs.k8s.io/kustomize/kustomize/v5,$(KUSTOMIZE_VERSION))
 
 .PHONY: controller-gen
-controller-gen: $(CONTROLLER_GEN) ## Download controller-gen locally if necessary. If wrong version is installed, it will be overwritten.
+controller-gen: $(CONTROLLER_GEN) ## Download controller-gen locally if necessary.
 $(CONTROLLER_GEN): $(LOCALBIN)
-	test -s $(LOCALBIN)/controller-gen && $(LOCALBIN)/controller-gen --version | grep -q $(CONTROLLER_TOOLS_VERSION) || \
-	GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_TOOLS_VERSION)
+	$(call go-install-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen,$(CONTROLLER_TOOLS_VERSION))
 
 .PHONY: envtest
-envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
+envtest: $(ENVTEST) ## Download setup-envtest locally if necessary.
 $(ENVTEST): $(LOCALBIN)
-	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@c7e1dc9
+	$(call go-install-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest,$(ENVTEST_VERSION))
+
+.PHONY: golangci-lint
+golangci-lint: $(GOLANGCI_LINT) ## Download golangci-lint locally if necessary.
+$(GOLANGCI_LINT): $(LOCALBIN)
+	$(call go-install-tool,$(GOLANGCI_LINT),github.com/golangci/golangci-lint/cmd/golangci-lint,${GOLANGCI_LINT_VERSION})
 
 .PHONY: addlicense
 addlicense: $(ADDLICENSE) ## Download addlicense locally if necessary
 $(ADDLICENSE): $(LOCALBIN)
-	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@latest
+	$(call go-install-tool,$(ADDLICENSE),github.com/google/addlicense,${ADDLICENSE_VERSION})
 
 .PHONY: helm-docs
 helm-docs: $(HELM_DOCS) ## Download helm-docs locally if necessary
 $(HELM_DOCS): $(LOCALBIN)
-	test -s $(LOCALBIN)/helm-docs || GOBIN=$(LOCALBIN) go install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
+	$(call go-install-tool,$(HELM_DOCS),github.com/norwoodj/helm-docs/cmd/helm-docs,${HELM_DOCS_VERSION})
 
 .PHONY: kind
 kind: $(KIND) ## Download kind locally if necessary
 $(KIND): $(LOCALBIN)
-	test -s $(LOCALBIN)/kind || GOBIN=$(LOCALBIN) go install sigs.k8s.io/kind@$(KIND_VERSION)
+	$(call go-install-tool,$(KIND),sigs.k8s.io/kind,${KIND_VERSION})
 
-.PHONY: golangci-lint
-golangci-lint: $(GOLANGCI_LINT) ## Download golangci-lint locally if necessary
-$(GOLANGCI_LINT): $(LOCALBIN)
-	@[ -f $(GOLANGCI_LINT) ] || { \
-	set -e ;\
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell dirname $(GOLANGCI_LINT)) $(GOLANGCI_LINT_VERSION) ;\
-	}
+# go-install-tool will 'go install' any package with custom target and name of binary, if it doesn't exist
+# $1 - target path with name of binary (ideally with version)
+# $2 - package url which can be installed
+# $3 - specific version of package
+define go-install-tool
+@[ -f $(1) ] || { \
+set -e; \
+package=$(2)@$(3) ;\
+echo "Downloading $${package}" ;\
+GOBIN=$(LOCALBIN) go install $${package} ;\
+mv "$$(echo "$(1)" | sed "s/-$(3)$$//")" $(1) ;\
+}
+endef
