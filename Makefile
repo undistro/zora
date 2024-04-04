@@ -12,6 +12,12 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
+# CONTAINER_TOOL defines the container tool to be used for building images.
+# Be aware that the target commands are only tested with Docker which is
+# scaffolded by default. However, you might want to replace it to use other
+# tools. (i.e. podman)
+CONTAINER_TOOL ?= docker
+
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
 SHELL = /usr/bin/env bash -o pipefail
@@ -53,7 +59,7 @@ PROJECT_PACKAGE ?= $(shell go list -m)
 .PHONY: generate-client
 generate-client:  ## Generate client
 	@rm -r pkg/clientset || echo -n
-	@docker run -i --rm \
+	$(CONTAINER_TOOL) run -i --rm \
 		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
 		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
 		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
@@ -107,19 +113,19 @@ run: manifests generate fmt vet ## Run a controller from your host.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
 docker-build: test ## Build docker image with the manager.
-	docker build -t ${IMG} -f cmd/Dockerfile .
+	$(CONTAINER_TOOL) build -t ${IMG} -f cmd/Dockerfile .
 
 .PHONY: docker-build-worker
 docker-build-worker: test ## Build docker image with worker.
-	docker build -t ${WORKER_IMG} -f cmd/worker/Dockerfile .
+	$(CONTAINER_TOOL) build -t ${WORKER_IMG} -f cmd/worker/Dockerfile .
 
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
-	docker push ${IMG}
+	$(CONTAINER_TOOL) push ${IMG}
 
 .PHONY: docker-push-worker
 docker-push-worker: ## Push docker image with worker.
-	docker push ${WORKER_IMG}
+	$(CONTAINER_TOOL) push ${WORKER_IMG}
 
 # PLATFORMS defines the target platforms for  the manager image be build to provide support to multiple
 # architectures. (i.e. make docker-buildx IMG=myregistry/myoperator:0.0.1). To use this option you need to:
@@ -132,10 +138,10 @@ PLATFORMS ?= linux/arm64,linux/amd64,linux/s390x,linux/ppc64le
 docker-buildx: test ## Build and push docker image for the manager for cross-platform support.
 	# copy existing Dockerfile and insert --platform=${BUILDPLATFORM} into Dockerfile.cross, and preserve the original Dockerfile
 	sed -e '1 s/\(^FROM\)/FROM --platform=\$$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$$\{BUILDPLATFORM\}/' cmd/Dockerfile > Dockerfile.cross
-	- docker buildx create --name project-v3-builder
-	docker buildx use project-v3-builder
-	- docker buildx build --push --platform=$(PLATFORMS) --tag ${IMG} -f Dockerfile.cross .
-	- docker buildx rm project-v3-builder
+	- $(CONTAINER_TOOL) buildx create --name project-v3-builder
+	$(CONTAINER_TOOL) buildx use project-v3-builder
+	- $(CONTAINER_TOOL) buildx build --push --platform=$(PLATFORMS) --tag ${IMG} -f Dockerfile.cross .
+	- $(CONTAINER_TOOL) buildx rm project-v3-builder
 	rm Dockerfile.cross
 
 ##@ Deployment
