@@ -121,8 +121,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.timeout | string | `"10m"` | Trivy timeout |
 | scan.plugins.trivy.insecure | bool | `false` | Allow insecure server connections for Trivy |
 | scan.plugins.trivy.persistence.enabled | bool | `true` | Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim |
-| scan.plugins.trivy.persistence.accessMode | string | `"ReadWriteOnce"` | Persistence access mode |
-| scan.plugins.trivy.persistence.storageClass | string | `""` | Persistence storage class. Let it empty for default storage class |
+| scan.plugins.trivy.persistence.accessMode | string | `"ReadWriteOnce"` | [Persistence access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) |
+| scan.plugins.trivy.persistence.storageClass | string | `""` | [Persistence storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/). Set to empty for default storage class |
 | scan.plugins.trivy.persistence.storageRequest | string | `"1Gi"` | Persistence storage size |
 | scan.plugins.trivy.persistence.downloadJavaDB | bool | `false` | Specifies whether Java vulnerability database should be downloaded on helm install/upgrade |
 | scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml |

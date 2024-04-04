@@ -90,6 +90,7 @@ nav:
           - Ignore unfixed vulnerabilities: plugins/trivy/#large-vulnerability-reports
           - Vulnerability scan timeout: plugins/trivy/#scan-timeout
           - Authenticated registries: configuration/authenticated-registries.md
+          - Vulnerability database persistence: configuration/vulnerability-database-persistence.md
           - Private registries:
               - AWS ECR: configuration/private-registries/ecr.md
               - Azure ACR: configuration/private-registries/acr.md
