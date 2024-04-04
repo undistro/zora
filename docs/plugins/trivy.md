@@ -15,6 +15,14 @@ in different targets like containers, code repositories and **Kubernetes cluster
 
 :simple-github: **GitHub repository**: [https://github.com/aquasecurity/trivy](https://github.com/aquasecurity/trivy){:target="_blank"}
 
+## Vulnerability Database Persistence
+
+Trivy utilizes a database containing vulnerability information. 
+This database is updated every **6 hours** and persisted by default for caching purposes between the schedule scans.
+
+Please refer to [this page](../configuration/vulnerability-database-persistence.md) for further details and 
+configuration options regarding vulnerability database persistence.
+
 ## Large vulnerability reports
 
 Vulnerability reports can be large.
@@ -35,7 +43,7 @@ The `ClusterScan` will have a `Failed` status. You will see a log entry similar 
 ## Scan timeout
 
 Trivy's scan duration may vary depending on the total images in your cluster 
-and the time to download the vulnerability database during each scan. 
+and the time to download the vulnerability database when needed. 
 
 By default, Zora sets a timeout of **10 minutes** for Trivy scan completion.
 
