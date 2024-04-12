@@ -31,10 +31,10 @@ saas:
 hooks:
   install:
     image:
-      # -- Install hook image repository
+      # -- Post-install hook image repository
       repository: curlimages/curl
-      # -- Install hook image tag
-      tag: '8.2.1'
+      # -- Post-install hook image tag
+      tag: '8.7.1'
   delete:
     image:
       # -- Delete hook image repository
