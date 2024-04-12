@@ -57,10 +57,10 @@ The following table lists the configurable parameters of the Zora chart and thei
 | saas.workspaceID | string | `""` | Your SaaS workspace ID |
 | saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |
 | saas.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS URL template to notify installation |
-| hooks.install.image.repository | string | `"curlimages/curl"` | Install hook image repository |
-| hooks.install.image.tag | string | `"8.2.1"` | Install hook image tag |
-| hooks.delete.image.repository | string | `"rancher/kubectl"` | Delete hook image repository |
-| hooks.delete.image.tag | string | `"v1.28.2"` | Delete hook image tag |
+| hooks.install.image.repository | string | `"curlimages/curl"` | Post-install hook image repository |
+| hooks.install.image.tag | string | `"8.7.1"` | Post-install hook image tag |
+| hooks.delete.image.repository | string | `"rancher/kubectl"` | Pre-delete hook image repository |
+| hooks.delete.image.tag | string | `"v1.29.2"` | Pre-delete hook image tag |
 | imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
 | imageCredentials.registry | string | `"ghcr.io"` | Docker registry host |
 | imageCredentials.username | string | `""` | Docker registry username |
