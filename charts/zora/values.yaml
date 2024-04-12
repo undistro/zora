@@ -37,10 +37,10 @@ hooks:
       tag: '8.7.1'
   delete:
     image:
-      # -- Delete hook image repository
+      # -- Pre-delete hook image repository
       repository: rancher/kubectl
-      # -- Delete hook image tag
-      tag: 'v1.28.2'
+      # -- Pre-delete hook image tag
+      tag: 'v1.29.2'
 
 # Credentials for private registries.
 imageCredentials:
