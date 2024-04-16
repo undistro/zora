@@ -35,6 +35,7 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
+	zorav1alpha2 "github.com/undistro/zora/api/zora/v1alpha2"
 	zoracontroller "github.com/undistro/zora/internal/controller/zora"
 	"github.com/undistro/zora/internal/saas"
 	//+kubebuilder:scaffold:imports
@@ -49,6 +50,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(zorav1alpha1.AddToScheme(scheme))
+	utilruntime.Must(zorav1alpha2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 

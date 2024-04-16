@@ -19,6 +19,7 @@ patchesStrategicMerge:
 #- path: patches/webhook_in_clusterscans.yaml
 #- path: patches/webhook_in_customchecks.yaml
 #- path: patches/webhook_in_vulnerabilityreports.yaml
+#- path: patches/webhook_in_zora_customchecks.yaml
 #+kubebuilder:scaffold:crdkustomizewebhookpatch
 
 # [CERTMANAGER] To enable cert-manager, uncomment all the sections with [CERTMANAGER] prefix.
@@ -29,6 +30,7 @@ patchesStrategicMerge:
 #- path: patches/cainjection_in_clusterscans.yaml
 #- path: patches/cainjection_in_customchecks.yaml
 #- path: patches/cainjection_in_vulnerabilityreports.yaml
+#- path: patches/cainjection_in_zora_customchecks.yaml
 #+kubebuilder:scaffold:crdkustomizecainjectionpatch
 
 # the following config is for teaching kustomize how to do kustomization for CRDs.
