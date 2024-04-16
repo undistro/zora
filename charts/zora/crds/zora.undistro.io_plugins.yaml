@@ -17,7 +17,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: plugins.zora.undistro.io
 spec:
   group: zora.undistro.io
@@ -44,14 +44,19 @@ spec:
         description: Plugin is the Schema for the plugins API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -61,38 +66,40 @@ spec:
               annotations:
                 additionalProperties:
                   type: string
-                description: Annotations to set in plugin and worker containers. Cannot
-                  be updated.
+                description: |-
+                  Annotations to set in plugin and worker containers.
+                  Cannot be updated.
                 type: object
               args:
-                description: 'Arguments to the entrypoint. The docker image''s CMD
-                  is used if this is not provided. Variable references $(VAR_NAME)
-                  are expanded using the container''s environment. If a variable cannot
-                  be resolved, the reference in the input string will be unchanged.
-                  Double $$ are reduced to a single $, which allows for escaping the
-                  $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string
-                  literal "$(VAR_NAME)". Escaped references will never be expanded,
-                  regardless of whether the variable exists or not. Cannot be updated.
-                  More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell'
+                description: |-
+                  Arguments to the entrypoint.
+                  The docker image's CMD is used if this is not provided.
+                  Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
+                  cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced
+                  to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will
+                  produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
+                  of whether the variable exists or not. Cannot be updated.
+                  More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
                 items:
                   type: string
                 type: array
               command:
-                description: 'Entrypoint array. Not executed within a shell. The docker
-                  image''s ENTRYPOINT is used if this is not provided. Variable references
-                  $(VAR_NAME) are expanded using the container''s environment. If
-                  a variable cannot be resolved, the reference in the input string
-                  will be unchanged. Double $$ are reduced to a single $, which allows
-                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce
-                  the string literal "$(VAR_NAME)". Escaped references will never
-                  be expanded, regardless of whether the variable exists or not. Cannot
-                  be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell'
+                description: |-
+                  Entrypoint array. Not executed within a shell.
+                  The docker image's ENTRYPOINT is used if this is not provided.
+                  Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
+                  cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced
+                  to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will
+                  produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
+                  of whether the variable exists or not. Cannot be updated.
+                  More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
                 items:
                   type: string
                 type: array
               env:
-                description: List of environment variables to set in plugin and worker
-                  containers. Cannot be updated.
+                description: |-
+                  List of environment variables to set in plugin and worker containers.
+                  Cannot be updated.
                 items:
                   description: EnvVar represents an environment variable present in
                     a Container.
@@ -101,15 +108,16 @@ spec:
                       description: Name of the environment variable. Must be a C_IDENTIFIER.
                       type: string
                     value:
-                      description: 'Variable references $(VAR_NAME) are expanded using
-                        the previously defined environment variables in the container
-                        and any service environment variables. If a variable cannot
-                        be resolved, the reference in the input string will be unchanged.
-                        Double $$ are reduced to a single $, which allows for escaping
-                        the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the
-                        string literal "$(VAR_NAME)". Escaped references will never
-                        be expanded, regardless of whether the variable exists or
-                        not. Defaults to "".'
+                      description: |-
+                        Variable references $(VAR_NAME) are expanded
+                        using the previously defined environment variables in the container and
+                        any service environment variables. If a variable cannot be resolved,
+                        the reference in the input string will be unchanged. Double $$ are reduced
+                        to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                        "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                        Escaped references will never be expanded, regardless of whether the variable
+                        exists or not.
+                        Defaults to "".
                       type: string
                     valueFrom:
                       description: Source for the environment variable's value. Cannot
@@ -122,8 +130,10 @@ spec:
                               description: The key to select.
                               type: string
                             name:
-                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the ConfigMap or its key
@@ -134,10 +144,9 @@ spec:
                           type: object
                           x-kubernetes-map-type: atomic
                         fieldRef:
-                          description: 'Selects a field of the pod: supports metadata.name,
-                            metadata.namespace, `metadata.labels[''<KEY>'']`, `metadata.annotations[''<KEY>'']`,
-                            spec.nodeName, spec.serviceAccountName, status.hostIP,
-                            status.podIP, status.podIPs.'
+                          description: |-
+                            Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+                            spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
                           properties:
                             apiVersion:
                               description: Version of the schema the FieldPath is
@@ -152,10 +161,9 @@ spec:
                           type: object
                           x-kubernetes-map-type: atomic
                         resourceFieldRef:
-                          description: 'Selects a resource of the container: only
-                            resources limits and requests (limits.cpu, limits.memory,
-                            limits.ephemeral-storage, requests.cpu, requests.memory
-                            and requests.ephemeral-storage) are currently supported.'
+                          description: |-
+                            Selects a resource of the container: only resources limits and requests
+                            (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
                           properties:
                             containerName:
                               description: 'Container name: required for volumes,
@@ -184,8 +192,10 @@ spec:
                                 be a valid secret key.
                               type: string
                             name:
-                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the Secret or its key must
@@ -201,11 +211,11 @@ spec:
                   type: object
                 type: array
               envFrom:
-                description: List of sources to populate environment variables in
-                  plugin and worker containers. The keys defined within a source must
-                  be a C_IDENTIFIER. All invalid keys will be reported as an event
-                  when the container is starting. When a key exists in multiple sources,
-                  the value associated with the last source will take precedence.
+                description: |-
+                  List of sources to populate environment variables in plugin and worker containers.
+                  The keys defined within a source must be a C_IDENTIFIER. All invalid keys
+                  will be reported as an event when the container is starting. When a key exists in multiple
+                  sources, the value associated with the last source will take precedence.
                   Values defined by an Env with a duplicate key will take precedence.
                   Cannot be updated.
                 items:
@@ -215,8 +225,10 @@ spec:
                       description: The ConfigMap to select from
                       properties:
                         name:
-                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                            TODO: Add other useful fields. apiVersion, kind, uid?'
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            TODO: Add other useful fields. apiVersion, kind, uid?
                           type: string
                         optional:
                           description: Specify whether the ConfigMap must be defined
@@ -231,8 +243,10 @@ spec:
                       description: The Secret to select from
                       properties:
                         name:
-                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                            TODO: Add other useful fields. apiVersion, kind, uid?'
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            TODO: Add other useful fields. apiVersion, kind, uid?
                           type: string
                         optional:
                           description: Specify whether the Secret must be defined
@@ -242,34 +256,47 @@ spec:
                   type: object
                 type: array
               image:
-                description: 'Docker image name. More info: https://kubernetes.io/docs/concepts/containers/images'
+                description: |-
+                  Docker image name.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
                 type: string
               imagePullPolicy:
-                description: 'Image pull policy. One of Always, Never, IfNotPresent.
-                  Defaults to Always if :latest tag is specified, or IfNotPresent
-                  otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images'
+                description: |-
+                  Image pull policy.
+                  One of Always, Never, IfNotPresent.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                  Cannot be updated.
+                  More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
                 type: string
               mountCustomChecksVolume:
                 description: MountCustomChecksVolume specifies whether a volume with
                   the custom checks should be mounted
                 type: boolean
               resources:
-                description: 'Compute Resources required by this container. Cannot
-                  be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                description: |-
+                  Compute Resources required by this container.
+                  Cannot be updated.
+                  More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                 properties:
                   claims:
-                    description: "Claims lists the names of resources, defined in
-                      spec.resourceClaims, that are used by this container. \n This
-                      is an alpha field and requires enabling the DynamicResourceAllocation
-                      feature gate. \n This field is immutable. It can only be set
-                      for containers."
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+
+                      This is an alpha field and requires enabling the
+                      DynamicResourceAllocation feature gate.
+
+
+                      This field is immutable. It can only be set for containers.
                     items:
                       description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                       properties:
                         name:
-                          description: Name must match the name of one entry in pod.spec.resourceClaims
-                            of the Pod where this field is used. It makes that resource
-                            available inside a container.
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
                           type: string
                       required:
                       - name
@@ -285,8 +312,9 @@ spec:
                       - type: string
                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                       x-kubernetes-int-or-string: true
-                    description: 'Limits describes the maximum amount of compute resources
-                      allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                     type: object
                   requests:
                     additionalProperties:
@@ -295,31 +323,34 @@ spec:
                       - type: string
                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                       x-kubernetes-int-or-string: true
-                    description: 'Requests describes the minimum amount of compute
-                      resources required. If Requests is omitted for a container,
-                      it defaults to Limits if that is explicitly specified, otherwise
-                      to an implementation-defined value. Requests cannot exceed Limits.
-                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                     type: object
                 type: object
               securityContext:
-                description: 'SecurityContext defines the security options the container
-                  should be run with. If set, the fields of SecurityContext override
-                  the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/'
+                description: |-
+                  SecurityContext defines the security options the container should be run with.
+                  If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext.
+                  More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
                 properties:
                   allowPrivilegeEscalation:
-                    description: 'AllowPrivilegeEscalation controls whether a process
-                      can gain more privileges than its parent process. This bool
-                      directly controls if the no_new_privs flag will be set on the
-                      container process. AllowPrivilegeEscalation is true always when
-                      the container is: 1) run as Privileged 2) has CAP_SYS_ADMIN
-                      Note that this field cannot be set when spec.os.name is windows.'
+                    description: |-
+                      AllowPrivilegeEscalation controls whether a process can gain more
+                      privileges than its parent process. This bool directly controls if
+                      the no_new_privs flag will be set on the container process.
+                      AllowPrivilegeEscalation is true always when the container is:
+                      1) run as Privileged
+                      2) has CAP_SYS_ADMIN
+                      Note that this field cannot be set when spec.os.name is windows.
                     type: boolean
                   capabilities:
-                    description: The capabilities to add/drop when running containers.
-                      Defaults to the default set of capabilities granted by the container
-                      runtime. Note that this field cannot be set when spec.os.name
-                      is windows.
+                    description: |-
+                      The capabilities to add/drop when running containers.
+                      Defaults to the default set of capabilities granted by the container runtime.
+                      Note that this field cannot be set when spec.os.name is windows.
                     properties:
                       add:
                         description: Added capabilities
@@ -335,56 +366,60 @@ spec:
                         type: array
                     type: object
                   privileged:
-                    description: Run container in privileged mode. Processes in privileged
-                      containers are essentially equivalent to root on the host. Defaults
-                      to false. Note that this field cannot be set when spec.os.name
-                      is windows.
+                    description: |-
+                      Run container in privileged mode.
+                      Processes in privileged containers are essentially equivalent to root on the host.
+                      Defaults to false.
+                      Note that this field cannot be set when spec.os.name is windows.
                     type: boolean
                   procMount:
-                    description: procMount denotes the type of proc mount to use for
-                      the containers. The default is DefaultProcMount which uses the
-                      container runtime defaults for readonly paths and masked paths.
+                    description: |-
+                      procMount denotes the type of proc mount to use for the containers.
+                      The default is DefaultProcMount which uses the container runtime defaults for
+                      readonly paths and masked paths.
                       This requires the ProcMountType feature flag to be enabled.
                       Note that this field cannot be set when spec.os.name is windows.
                     type: string
                   readOnlyRootFilesystem:
-                    description: Whether this container has a read-only root filesystem.
-                      Default is false. Note that this field cannot be set when spec.os.name
-                      is windows.
+                    description: |-
+                      Whether this container has a read-only root filesystem.
+                      Default is false.
+                      Note that this field cannot be set when spec.os.name is windows.
                     type: boolean
                   runAsGroup:
-                    description: The GID to run the entrypoint of the container process.
-                      Uses runtime default if unset. May also be set in PodSecurityContext.  If
-                      set in both SecurityContext and PodSecurityContext, the value
-                      specified in SecurityContext takes precedence. Note that this
-                      field cannot be set when spec.os.name is windows.
+                    description: |-
+                      The GID to run the entrypoint of the container process.
+                      Uses runtime default if unset.
+                      May also be set in PodSecurityContext.  If set in both SecurityContext and
+                      PodSecurityContext, the value specified in SecurityContext takes precedence.
+                      Note that this field cannot be set when spec.os.name is windows.
                     format: int64
                     type: integer
                   runAsNonRoot:
-                    description: Indicates that the container must run as a non-root
-                      user. If true, the Kubelet will validate the image at runtime
-                      to ensure that it does not run as UID 0 (root) and fail to start
-                      the container if it does. If unset or false, no such validation
-                      will be performed. May also be set in PodSecurityContext.  If
-                      set in both SecurityContext and PodSecurityContext, the value
-                      specified in SecurityContext takes precedence.
+                    description: |-
+                      Indicates that the container must run as a non-root user.
+                      If true, the Kubelet will validate the image at runtime to ensure that it
+                      does not run as UID 0 (root) and fail to start the container if it does.
+                      If unset or false, no such validation will be performed.
+                      May also be set in PodSecurityContext.  If set in both SecurityContext and
+                      PodSecurityContext, the value specified in SecurityContext takes precedence.
                     type: boolean
                   runAsUser:
-                    description: The UID to run the entrypoint of the container process.
+                    description: |-
+                      The UID to run the entrypoint of the container process.
                       Defaults to user specified in image metadata if unspecified.
-                      May also be set in PodSecurityContext.  If set in both SecurityContext
-                      and PodSecurityContext, the value specified in SecurityContext
-                      takes precedence. Note that this field cannot be set when spec.os.name
-                      is windows.
+                      May also be set in PodSecurityContext.  If set in both SecurityContext and
+                      PodSecurityContext, the value specified in SecurityContext takes precedence.
+                      Note that this field cannot be set when spec.os.name is windows.
                     format: int64
                     type: integer
                   seLinuxOptions:
-                    description: The SELinux context to be applied to the container.
-                      If unspecified, the container runtime will allocate a random
-                      SELinux context for each container.  May also be set in PodSecurityContext.  If
-                      set in both SecurityContext and PodSecurityContext, the value
-                      specified in SecurityContext takes precedence. Note that this
-                      field cannot be set when spec.os.name is windows.
+                    description: |-
+                      The SELinux context to be applied to the container.
+                      If unspecified, the container runtime will allocate a random SELinux context for each
+                      container.  May also be set in PodSecurityContext.  If set in both SecurityContext and
+                      PodSecurityContext, the value specified in SecurityContext takes precedence.
+                      Note that this field cannot be set when spec.os.name is windows.
                     properties:
                       level:
                         description: Level is SELinux level label that applies to
@@ -404,60 +439,62 @@ spec:
                         type: string
                     type: object
                   seccompProfile:
-                    description: The seccomp options to use by this container. If
-                      seccomp options are provided at both the pod & container level,
-                      the container options override the pod options. Note that this
-                      field cannot be set when spec.os.name is windows.
+                    description: |-
+                      The seccomp options to use by this container. If seccomp options are
+                      provided at both the pod & container level, the container options
+                      override the pod options.
+                      Note that this field cannot be set when spec.os.name is windows.
                     properties:
                       localhostProfile:
-                        description: localhostProfile indicates a profile defined
-                          in a file on the node should be used. The profile must be
-                          preconfigured on the node to work. Must be a descending
-                          path, relative to the kubelet's configured seccomp profile
-                          location. Must be set if type is "Localhost". Must NOT be
-                          set for any other type.
+                        description: |-
+                          localhostProfile indicates a profile defined in a file on the node should be used.
+                          The profile must be preconfigured on the node to work.
+                          Must be a descending path, relative to the kubelet's configured seccomp profile location.
+                          Must be set if type is "Localhost". Must NOT be set for any other type.
                         type: string
                       type:
-                        description: "type indicates which kind of seccomp profile
-                          will be applied. Valid options are: \n Localhost - a profile
-                          defined in a file on the node should be used. RuntimeDefault
-                          - the container runtime default profile should be used.
-                          Unconfined - no profile should be applied."
+                        description: |-
+                          type indicates which kind of seccomp profile will be applied.
+                          Valid options are:
+
+
+                          Localhost - a profile defined in a file on the node should be used.
+                          RuntimeDefault - the container runtime default profile should be used.
+                          Unconfined - no profile should be applied.
                         type: string
                     required:
                     - type
                     type: object
                   windowsOptions:
-                    description: The Windows specific settings applied to all containers.
-                      If unspecified, the options from the PodSecurityContext will
-                      be used. If set in both SecurityContext and PodSecurityContext,
-                      the value specified in SecurityContext takes precedence. Note
-                      that this field cannot be set when spec.os.name is linux.
+                    description: |-
+                      The Windows specific settings applied to all containers.
+                      If unspecified, the options from the PodSecurityContext will be used.
+                      If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+                      Note that this field cannot be set when spec.os.name is linux.
                     properties:
                       gmsaCredentialSpec:
-                        description: GMSACredentialSpec is where the GMSA admission
-                          webhook (https://github.com/kubernetes-sigs/windows-gmsa)
-                          inlines the contents of the GMSA credential spec named by
-                          the GMSACredentialSpecName field.
+                        description: |-
+                          GMSACredentialSpec is where the GMSA admission webhook
+                          (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the
+                          GMSA credential spec named by the GMSACredentialSpecName field.
                         type: string
                       gmsaCredentialSpecName:
                         description: GMSACredentialSpecName is the name of the GMSA
                           credential spec to use.
                         type: string
                       hostProcess:
-                        description: HostProcess determines if a container should
-                          be run as a 'Host Process' container. All of a Pod's containers
-                          must have the same effective HostProcess value (it is not
-                          allowed to have a mix of HostProcess containers and non-HostProcess
-                          containers). In addition, if HostProcess is true then HostNetwork
-                          must also be set to true.
+                        description: |-
+                          HostProcess determines if a container should be run as a 'Host Process' container.
+                          All of a Pod's containers must have the same effective HostProcess value
+                          (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).
+                          In addition, if HostProcess is true then HostNetwork must also be set to true.
                         type: boolean
                       runAsUserName:
-                        description: The UserName in Windows to run the entrypoint
-                          of the container process. Defaults to the user specified
-                          in image metadata if unspecified. May also be set in PodSecurityContext.
-                          If set in both SecurityContext and PodSecurityContext, the
-                          value specified in SecurityContext takes precedence.
+                        description: |-
+                          The UserName in Windows to run the entrypoint of the container process.
+                          Defaults to the user specified in image metadata if unspecified.
+                          May also be set in PodSecurityContext. If set in both SecurityContext and
+                          PodSecurityContext, the value specified in SecurityContext takes precedence.
                         type: string
                     type: object
                 type: object

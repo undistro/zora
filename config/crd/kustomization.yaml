@@ -10,7 +10,7 @@ resources:
 - bases/zora.undistro.io_vulnerabilityreports.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
-patchesStrategicMerge:
+patches:
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 #- path: patches/webhook_in_clusters.yaml
@@ -33,6 +33,8 @@ patchesStrategicMerge:
 #- path: patches/cainjection_in_zora_customchecks.yaml
 #+kubebuilder:scaffold:crdkustomizecainjectionpatch
 
+# [WEBHOOK] To enable webhook, uncomment the following section
 # the following config is for teaching kustomize how to do kustomization for CRDs.
-configurations:
-- kustomizeconfig.yaml
+
+#configurations:
+#- kustomizeconfig.yaml
