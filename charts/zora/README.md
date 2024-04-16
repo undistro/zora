@@ -137,6 +137,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | customChecksConfigMap | string | `"zora-custom-checks"` | Custom checks ConfigMap name |
 | httpsProxy | string | `""` | HTTPS proxy URL |
 | noProxy | string | `"kubernetes.default.svc.*,127.0.0.1,localhost"` | Comma-separated list of URL patterns to be excluded from going through the proxy |
+| updateCRDs | bool | `true` for upgrades | Specifies whether CRDs should be updated by operator at startup |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

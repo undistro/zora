@@ -25,6 +25,7 @@ COPY cmd/main.go cmd/main.go
 COPY api/ api/
 COPY internal/ internal/
 COPY pkg/ pkg/
+COPY config/crd/bases/ config/crd/bases/
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o manager cmd/main.go
 

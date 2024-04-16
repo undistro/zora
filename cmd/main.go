@@ -23,15 +23,17 @@ import (
 	"strings"
 	"time"
 
-	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-	// to ensure that exec-entrypoint and run can make use of them.
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
 	"go.uber.org/zap/zapcore"
+	apiextensionsv1client "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
+
+	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
+	// to ensure that exec-entrypoint and run can make use of them.
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
@@ -41,6 +43,7 @@ import (
 	zorav1alpha2 "github.com/undistro/zora/api/zora/v1alpha2"
 	zoracontroller "github.com/undistro/zora/internal/controller/zora"
 	"github.com/undistro/zora/internal/saas"
+	"github.com/undistro/zora/pkg/crds"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -63,6 +66,7 @@ func main() {
 	var probeAddr string
 	var secureMetrics bool
 	var enableHTTP2 bool
+	var updateCRDs bool
 	var defaultPluginsNamespace string
 	var defaultPluginsNames string
 	var workerImage string
@@ -86,6 +90,8 @@ func main() {
 		"If set the metrics endpoint is served securely")
 	flag.BoolVar(&enableHTTP2, "enable-http2", false,
 		"If set, HTTP/2 will be enabled for the metrics and webhook servers")
+	flag.BoolVar(&updateCRDs, "update-crds", false,
+		"If set, operator will update Zora CRDs if needed")
 	flag.StringVar(&defaultPluginsNamespace, "default-plugins-namespace", "zora-system", "The namespace of default plugins")
 	flag.StringVar(&defaultPluginsNames, "default-plugins-names", "marvin,popeye", "Comma separated list of default plugins")
 	flag.StringVar(&workerImage, "worker-image", "ghcr.io/undistro/zora/worker:latest", "Docker image name of Worker container")
@@ -124,8 +130,8 @@ func main() {
 	if !enableHTTP2 {
 		tlsOpts = append(tlsOpts, disableHTTP2)
 	}
-
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+	restConfig := ctrl.GetConfigOrDie()
+	mgr, err := ctrl.NewManager(restConfig, ctrl.Options{
 		Scheme: scheme,
 		Metrics: metricsserver.Options{
 			BindAddress:   metricsAddr,
@@ -161,17 +167,11 @@ func main() {
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
-		Config:   mgr.GetConfig(),
+		Config:   restConfig,
 		OnUpdate: onClusterUpdate,
 		OnDelete: onClusterDelete,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
-		os.Exit(1)
-	}
-
-	kcli, err := kubernetes.NewForConfig(mgr.GetConfig())
-	if err != nil {
-		setupLog.Error(err, "unable to create Kubernetes clientset", "controller", "Cluster")
 		os.Exit(1)
 	}
 
@@ -182,7 +182,7 @@ func main() {
 	}
 	if err = (&zoracontroller.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
-		K8sClient:               kcli,
+		K8sClient:               kubernetes.NewForConfigOrDie(restConfig),
 		Scheme:                  mgr.GetScheme(),
 		Recorder:                mgr.GetEventRecorderFor("clusterscan-controller"),
 		DefaultPluginsNamespace: defaultPluginsNamespace,
@@ -219,9 +219,17 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+	ctx := ctrl.SetupSignalHandler()
+
+	if updateCRDs {
+		if err := crds.Update(ctrllog.IntoContext(ctx, setupLog), apiextensionsv1client.NewForConfigOrDie(restConfig)); err != nil {
+			setupLog.Error(err, "unable to update CRDs")
+			os.Exit(1)
+		}
+	}
 
 	setupLog.Info("starting manager")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+	if err := mgr.Start(ctx); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
