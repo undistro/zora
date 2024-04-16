@@ -67,7 +67,7 @@ generate-client:  ## Generate client
 		-e GROUPS_VERSION="zora:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
 		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		ghcr.io/slok/kube-code-generator:v1.27.0
+		ghcr.io/slok/kube-code-generator:v0.1.0
 
 .PHONY: generate-helm-docs
 generate-helm-docs: helm-docs ## Generate documentation for helm chart.
@@ -243,7 +243,7 @@ $(GOLANGCI_LINT): $(LOCALBIN)
 .PHONY: addlicense
 addlicense: $(ADDLICENSE) ## Download addlicense locally if necessary
 $(ADDLICENSE): $(LOCALBIN)
-	$(call go-install-tool,$(ADDLICENSE),github.com/google/addlicense,${ADDLICENSE_VERSION})
+	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@latest
 
 .PHONY: helm-docs
 helm-docs: $(HELM_DOCS) ## Download helm-docs locally if necessary
