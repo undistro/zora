@@ -243,7 +243,7 @@ $(GOLANGCI_LINT): $(LOCALBIN)
 .PHONY: addlicense
 addlicense: $(ADDLICENSE) ## Download addlicense locally if necessary
 $(ADDLICENSE): $(LOCALBIN)
-	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@latest
+	$(call go-install-tool,$(ADDLICENSE),github.com/google/addlicense,${ADDLICENSE_VERSION})
 
 .PHONY: helm-docs
 helm-docs: $(HELM_DOCS) ## Download helm-docs locally if necessary
