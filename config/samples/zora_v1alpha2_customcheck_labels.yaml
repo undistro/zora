@@ -1,4 +1,4 @@
-apiVersion: zora.undistro.io/v1alpha1
+apiVersion: zora.undistro.io/v1alpha2
 kind: CustomCheck
 metadata:
   labels:
@@ -20,9 +20,12 @@ spec:
   params:
     requiredLabels:
       - app
+  variables:
+    - expression: "'exempt' in object.metadata.labels && object.metadata.labels['exempt'] == 'true'"
+      name: exempt
   validations:
     - expression: >
-        has(object.metadata.labels) &&
+        variables.exempt ||
         !object.metadata.labels.all(label, 
           params.requiredLabels.all(
             req, req != label
