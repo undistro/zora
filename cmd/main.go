@@ -22,7 +22,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/undistro/zora/pkg/crds"
+	apiextensionsv1client "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -69,6 +72,7 @@ func main() {
 	var checksConfigMapName string
 	var kubexnsImage string
 	var trivyPVC string
+	var updateCRDs bool
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -88,6 +92,8 @@ func main() {
 	flag.StringVar(&checksConfigMapName, "checks-configmap-name", "zora-custom-checks", "Name of custom checks ConfigMap")
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
 	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
+	flag.BoolVar(&updateCRDs, "update-crds", false,
+		"If set, operator will update Zora CRDs if needed")
 
 	opts := zap.Options{
 		Development: true,
@@ -98,7 +104,8 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+	restConfig := ctrl.GetConfigOrDie()
+	mgr, err := ctrl.NewManager(restConfig, ctrl.Options{
 		Scheme:                 scheme,
 		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
 		HealthProbeBindAddress: probeAddr,
@@ -130,17 +137,11 @@ func main() {
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Recorder: mgr.GetEventRecorderFor("cluster-controller"),
-		Config:   mgr.GetConfig(),
+		Config:   restConfig,
 		OnUpdate: onClusterUpdate,
 		OnDelete: onClusterDelete,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Cluster")
-		os.Exit(1)
-	}
-
-	kcli, err := kubernetes.NewForConfig(mgr.GetConfig())
-	if err != nil {
-		setupLog.Error(err, "unable to create Kubernetes clientset", "controller", "Cluster")
 		os.Exit(1)
 	}
 
@@ -151,7 +152,7 @@ func main() {
 	}
 	if err = (&zoracontroller.ClusterScanReconciler{
 		Client:                  mgr.GetClient(),
-		K8sClient:               kcli,
+		K8sClient:               kubernetes.NewForConfigOrDie(restConfig),
 		Scheme:                  mgr.GetScheme(),
 		Recorder:                mgr.GetEventRecorderFor("clusterscan-controller"),
 		DefaultPluginsNamespace: defaultPluginsNamespace,
@@ -188,9 +189,17 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+	ctx := ctrl.SetupSignalHandler()
+
+	if updateCRDs {
+		if err := crds.Update(ctrllog.IntoContext(ctx, setupLog), apiextensionsv1client.NewForConfigOrDie(restConfig)); err != nil {
+			setupLog.Error(err, "unable to update CRDs")
+			os.Exit(1)
+		}
+	}
 
 	setupLog.Info("starting manager")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+	if err := mgr.Start(ctx); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
