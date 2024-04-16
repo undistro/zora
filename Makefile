@@ -3,7 +3,7 @@ IMG ?= controller:latest
 WORKER_IMG ?= worker:latest
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
-ENVTEST_K8S_VERSION = 1.27.1
+ENVTEST_K8S_VERSION = 1.29.3
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -61,7 +61,7 @@ generate-client:  ## Generate client
 		-e GROUPS_VERSION="zora:v1alpha1" \
 		-e GENERATION_TARGETS="client" \
 		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		ghcr.io/slok/kube-code-generator:v1.27.0
+		ghcr.io/slok/kube-code-generator:v0.1.0
 
 .PHONY: generate-helm-docs
 generate-helm-docs: helm-docs ## Generate documentation for helm chart.
@@ -206,10 +206,12 @@ KIND ?= $(LOCALBIN)/kind
 GOLANGCI_LINT = $(LOCALBIN)/golangci-lint
 
 ## Tool Versions
-KUSTOMIZE_VERSION ?= v5.2.1
-CONTROLLER_TOOLS_VERSION ?= v0.13.0
-HELM_DOCS_VERSION ?= v1.12.0
-KIND_VERSION ?= v0.20.0
+KUSTOMIZE_VERSION ?= v5.3.0
+CONTROLLER_TOOLS_VERSION ?= v0.14.0
+ENVTEST_VERSION ?= release-0.17
+HELM_DOCS_VERSION ?= v1.13.1
+ADDLICENSE_VERSION ?= v1.1.1
+KIND_VERSION ?= v0.22.0
 GOLANGCI_LINT_VERSION ?= v1.54.2
 
 .PHONY: kustomize
@@ -230,12 +232,12 @@ $(CONTROLLER_GEN): $(LOCALBIN)
 .PHONY: envtest
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
-	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@c7e1dc9
+	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@$(ENVTEST_VERSION)
 
 .PHONY: addlicense
 addlicense: $(ADDLICENSE) ## Download addlicense locally if necessary
 $(ADDLICENSE): $(LOCALBIN)
-	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@latest
+	test -s $(LOCALBIN)/addlicense || GOBIN=$(LOCALBIN) go install github.com/google/addlicense@$(ADDLICENSE_VERSION)
 
 .PHONY: helm-docs
 helm-docs: $(HELM_DOCS) ## Download helm-docs locally if necessary
