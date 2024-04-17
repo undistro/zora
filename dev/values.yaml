@@ -285,3 +285,7 @@ customChecksConfigMap: zora-custom-checks
 httpsProxy: ""
 # -- Comma-separated list of URL patterns to be excluded from going through the proxy
 noProxy: kubernetes.default.svc.*,127.0.0.1,localhost
+
+# -- (bool) Specifies whether CRDs should be updated by operator at startup
+# @default -- `true` for upgrades
+updateCRDs:
