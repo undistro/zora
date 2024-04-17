@@ -107,7 +107,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.marvin.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container |
 | scan.plugins.marvin.podAnnotations | object | `{}` | Annotations added to the marvin pods |
 | scan.plugins.marvin.image.repository | string | `"ghcr.io/undistro/marvin"` | marvin plugin image repository |
-| scan.plugins.marvin.image.tag | string | `"v0.2.1"` | marvin plugin image tag |
+| scan.plugins.marvin.image.tag | string | `"v0.2.3"` | marvin plugin image tag |
 | scan.plugins.marvin.env | list | `[]` | List of environment variables to set in marvin container. |
 | scan.plugins.marvin.envFrom | list | `[]` | List of sources to populate environment variables in marvin container. |
 | scan.plugins.trivy.ignoreUnfixed | bool | `false` | Specifies whether only fixed vulnerabilities should be reported |

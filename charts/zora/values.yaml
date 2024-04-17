@@ -190,7 +190,7 @@ scan:
         # -- marvin plugin image repository
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
-        tag: v0.2.1
+        tag: v0.2.3
       # -- List of environment variables to set in marvin container.
       env: []
       # -- List of sources to populate environment variables in marvin container.
