@@ -21,6 +21,7 @@ import (
 
 	marvin "github.com/undistro/marvin/pkg/types"
 	"github.com/undistro/marvin/pkg/validator"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,8 +34,6 @@ import (
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/yaml"
-
-	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
 )
 
 const (
@@ -59,7 +58,7 @@ type CustomCheckReconciler struct {
 func (r *CustomCheckReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := ctrllog.FromContext(ctx)
 
-	check := &zorav1alpha1.CustomCheck{}
+	check := &v1alpha2.CustomCheck{}
 	if err := r.Get(ctx, req.NamespacedName, check); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
@@ -104,7 +103,7 @@ func (r *CustomCheckReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, err
 }
 
-func (r *CustomCheckReconciler) apply(ctx context.Context, check *zorav1alpha1.CustomCheck) error {
+func (r *CustomCheckReconciler) apply(ctx context.Context, check *v1alpha2.CustomCheck) error {
 	log := ctrllog.FromContext(ctx)
 
 	compiled := check.ToMarvin()
@@ -128,7 +127,7 @@ func (r *CustomCheckReconciler) apply(ctx context.Context, check *zorav1alpha1.C
 	return nil
 }
 
-func (r *CustomCheckReconciler) onDelete(ctx context.Context, check *zorav1alpha1.CustomCheck) error {
+func (r *CustomCheckReconciler) onDelete(ctx context.Context, check *v1alpha2.CustomCheck) error {
 	cm := r.newConfigMap()
 	key := types.NamespacedName{Namespace: cm.Namespace, Name: cm.Name}
 	if err := r.Get(ctx, key, cm); err != nil {
@@ -154,7 +153,7 @@ func (r *CustomCheckReconciler) newConfigMap() *corev1.ConfigMap {
 	return &corev1.ConfigMap{ObjectMeta: metav1.ObjectMeta{Name: r.ConfigMapName, Namespace: r.ConfigMapNamespace}}
 }
 
-func (r *CustomCheckReconciler) mutateConfigMap(existing *corev1.ConfigMap, check *zorav1alpha1.CustomCheck, compiled *marvin.Check) controllerutil.MutateFn {
+func (r *CustomCheckReconciler) mutateConfigMap(existing *corev1.ConfigMap, check *v1alpha2.CustomCheck, compiled *marvin.Check) controllerutil.MutateFn {
 	return func() error {
 		if existing.Labels == nil {
 			existing.Labels = make(map[string]string)
@@ -175,6 +174,6 @@ func (r *CustomCheckReconciler) mutateConfigMap(existing *corev1.ConfigMap, chec
 // SetupWithManager sets up the controller with the Manager.
 func (r *CustomCheckReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&zorav1alpha1.CustomCheck{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&v1alpha2.CustomCheck{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }

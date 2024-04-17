@@ -3,7 +3,9 @@ resources:
 - zora_v1alpha1_cluster.yaml
 - zora_v1alpha1_plugin.yaml
 - zora_v1alpha1_clusterissue.yaml
-- zora_v1alpha1_clusterscan.yaml
-- zora_v1alpha1_customcheck.yaml
+- zora_v1alpha1_clusterscan_misconfig.yaml
+- zora_v1alpha1_clusterscan_vuln.yaml
+- zora_v1alpha1_customcheck_replicas.yaml.yaml
 - zora_v1alpha1_vulnerabilityreport.yaml
+- zora_v1alpha2_customcheck_labels.yaml.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
