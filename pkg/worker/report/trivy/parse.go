@@ -90,10 +90,12 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 func newSpec(img string, resource trivyreport.Resource) *v1alpha1.VulnerabilityReportSpec {
 	meta := resource.Metadata
 	s := &v1alpha1.VulnerabilityReportSpec{
-		Image:        img,
-		Tags:         meta.RepoTags,
-		Architecture: meta.ImageConfig.Architecture,
-		OS:           meta.ImageConfig.OS,
+		VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
+			Image:        img,
+			Tags:         meta.RepoTags,
+			Architecture: meta.ImageConfig.Architecture,
+			OS:           meta.ImageConfig.OS,
+		},
 	}
 	if len(meta.RepoDigests) > 0 {
 		s.Digest = meta.RepoDigests[0]
@@ -114,19 +116,23 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription b
 	}
 
 	return v1alpha1.Vulnerability{
-		ID:               vuln.VulnerabilityID,
-		Severity:         vuln.Severity,
-		Title:            vuln.Title,
-		Description:      description,
-		Package:          vuln.PkgName,
-		Version:          vuln.InstalledVersion,
-		FixVersion:       vuln.FixedVersion,
-		URL:              vuln.PrimaryURL,
-		Status:           vuln.Status.String(),
-		Score:            getScore(vuln),
-		Type:             t,
-		PublishedDate:    parseTime(vuln.PublishedDate),
-		LastModifiedDate: parseTime(vuln.LastModifiedDate),
+		VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
+			ID:               vuln.VulnerabilityID,
+			Severity:         vuln.Severity,
+			Title:            vuln.Title,
+			Description:      description,
+			URL:              vuln.PrimaryURL,
+			Score:            getScore(vuln),
+			PublishedDate:    parseTime(vuln.PublishedDate),
+			LastModifiedDate: parseTime(vuln.LastModifiedDate),
+		},
+		Package: v1alpha1.Package{
+			Package:    vuln.PkgName,
+			Status:     vuln.Status.String(),
+			Version:    vuln.InstalledVersion,
+			FixVersion: vuln.FixedVersion,
+			Type:       t,
+		},
 	}
 }
 
