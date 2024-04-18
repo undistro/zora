@@ -8,4 +8,5 @@ resources:
 - zora_v1alpha1_customcheck_replicas.yaml.yaml
 - zora_v1alpha1_vulnerabilityreport.yaml
 - zora_v1alpha2_customcheck_labels.yaml.yaml
+- zora_v1alpha2_vulnerabilityreport.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
