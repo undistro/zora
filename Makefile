@@ -55,19 +55,15 @@ manifests: controller-gen addlicense ## Generate WebhookConfiguration, ClusterRo
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
-PROJECT_PACKAGE ?= $(shell go list -m)
 .PHONY: generate-client
 generate-client:  ## Generate client
-	@rm -r pkg/clientset || echo -n
+	@rm -r pkg/clientset pkg/informers pkg/listers || echo -n
 	$(CONTAINER_TOOL) run -i --rm \
-		-v $(PWD):/go/src/$(PROJECT_PACKAGE) \
-		-e PROJECT_PACKAGE=$(PROJECT_PACKAGE) \
-		-e CLIENT_GENERATOR_OUT=$(PROJECT_PACKAGE)/pkg \
-		-e APIS_ROOT=$(PROJECT_PACKAGE)/api \
-		-e GROUPS_VERSION="zora:v1alpha1" \
-		-e GENERATION_TARGETS="client" \
-		-e BOILERPLATE_PATH="hack/boilerplate.go.txt" \
-		ghcr.io/slok/kube-code-generator:v0.1.0
+		-v $(PWD):/app \
+		ghcr.io/slok/kube-code-generator:v0.1.0 \
+		--apis-in ./api \
+		--go-gen-out ./pkg \
+		--debug
 
 .PHONY: generate-helm-docs
 generate-helm-docs: helm-docs ## Generate documentation for helm chart.

@@ -24,6 +24,7 @@ type ClusterIssuesGetter interface {
 type ClusterIssueInterface interface {
 	Create(ctx context.Context, clusterIssue *v1alpha1.ClusterIssue, opts v1.CreateOptions) (*v1alpha1.ClusterIssue, error)
 	Update(ctx context.Context, clusterIssue *v1alpha1.ClusterIssue, opts v1.UpdateOptions) (*v1alpha1.ClusterIssue, error)
+	UpdateStatus(ctx context.Context, clusterIssue *v1alpha1.ClusterIssue, opts v1.UpdateOptions) (*v1alpha1.ClusterIssue, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.ClusterIssue, error)
@@ -112,6 +113,22 @@ func (c *clusterIssues) Update(ctx context.Context, clusterIssue *v1alpha1.Clust
 		Namespace(c.ns).
 		Resource("clusterissues").
 		Name(clusterIssue.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(clusterIssue).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *clusterIssues) UpdateStatus(ctx context.Context, clusterIssue *v1alpha1.ClusterIssue, opts v1.UpdateOptions) (result *v1alpha1.ClusterIssue, err error) {
+	result = &v1alpha1.ClusterIssue{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("clusterissues").
+		Name(clusterIssue.Name).
+		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(clusterIssue).
 		Do(ctx).

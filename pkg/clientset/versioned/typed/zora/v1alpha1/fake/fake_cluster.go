@@ -8,6 +8,8 @@ import (
 	v1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	types "k8s.io/apimachinery/pkg/types"
+	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
 )
 
@@ -52,4 +54,72 @@ func (c *FakeClusters) List(ctx context.Context, opts v1.ListOptions) (result *v
 		}
 	}
 	return list, err
+}
+
+// Watch returns a watch.Interface that watches the requested clusters.
+func (c *FakeClusters) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+	return c.Fake.
+		InvokesWatch(testing.NewWatchAction(clustersResource, c.ns, opts))
+
+}
+
+// Create takes the representation of a cluster and creates it.  Returns the server's representation of the cluster, and an error, if there is any.
+func (c *FakeClusters) Create(ctx context.Context, cluster *v1alpha1.Cluster, opts v1.CreateOptions) (result *v1alpha1.Cluster, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewCreateAction(clustersResource, c.ns, cluster), &v1alpha1.Cluster{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Cluster), err
+}
+
+// Update takes the representation of a cluster and updates it. Returns the server's representation of the cluster, and an error, if there is any.
+func (c *FakeClusters) Update(ctx context.Context, cluster *v1alpha1.Cluster, opts v1.UpdateOptions) (result *v1alpha1.Cluster, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateAction(clustersResource, c.ns, cluster), &v1alpha1.Cluster{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Cluster), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeClusters) UpdateStatus(ctx context.Context, cluster *v1alpha1.Cluster, opts v1.UpdateOptions) (*v1alpha1.Cluster, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(clustersResource, "status", c.ns, cluster), &v1alpha1.Cluster{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Cluster), err
+}
+
+// Delete takes name of the cluster and deletes it. Returns an error if one occurs.
+func (c *FakeClusters) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+	_, err := c.Fake.
+		Invokes(testing.NewDeleteActionWithOptions(clustersResource, c.ns, name, opts), &v1alpha1.Cluster{})
+
+	return err
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *FakeClusters) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(clustersResource, c.ns, listOpts)
+
+	_, err := c.Fake.Invokes(action, &v1alpha1.ClusterList{})
+	return err
+}
+
+// Patch applies the patch and returns the patched cluster.
+func (c *FakeClusters) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Cluster, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(clustersResource, c.ns, name, pt, data, subresources...), &v1alpha1.Cluster{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Cluster), err
 }

@@ -81,7 +81,6 @@ type ClusterIssueStatus struct {
 
 // ClusterIssue is the Schema for the clusterissues API
 // +genclient
-// +genclient:noStatus
 type ClusterIssue struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

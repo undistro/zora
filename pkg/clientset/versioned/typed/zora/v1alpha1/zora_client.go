@@ -15,6 +15,8 @@ type ZoraV1alpha1Interface interface {
 	ClustersGetter
 	ClusterIssuesGetter
 	ClusterScansGetter
+	CustomChecksGetter
+	PluginsGetter
 	VulnerabilityReportsGetter
 }
 
@@ -33,6 +35,14 @@ func (c *ZoraV1alpha1Client) ClusterIssues(namespace string) ClusterIssueInterfa
 
 func (c *ZoraV1alpha1Client) ClusterScans(namespace string) ClusterScanInterface {
 	return newClusterScans(c, namespace)
+}
+
+func (c *ZoraV1alpha1Client) CustomChecks(namespace string) CustomCheckInterface {
+	return newCustomChecks(c, namespace)
+}
+
+func (c *ZoraV1alpha1Client) Plugins(namespace string) PluginInterface {
+	return newPlugins(c, namespace)
 }
 
 func (c *ZoraV1alpha1Client) VulnerabilityReports(namespace string) VulnerabilityReportInterface {

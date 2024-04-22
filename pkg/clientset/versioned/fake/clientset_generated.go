@@ -6,6 +6,8 @@ import (
 	clientset "github.com/undistro/zora/pkg/clientset/versioned"
 	zorav1alpha1 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1"
 	fakezorav1alpha1 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha1/fake"
+	zorav1alpha2 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha2"
+	fakezorav1alpha2 "github.com/undistro/zora/pkg/clientset/versioned/typed/zora/v1alpha2/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -66,4 +68,9 @@ var (
 // ZoraV1alpha1 retrieves the ZoraV1alpha1Client
 func (c *Clientset) ZoraV1alpha1() zorav1alpha1.ZoraV1alpha1Interface {
 	return &fakezorav1alpha1.FakeZoraV1alpha1{Fake: &c.Fake}
+}
+
+// ZoraV1alpha2 retrieves the ZoraV1alpha2Client
+func (c *Clientset) ZoraV1alpha2() zorav1alpha2.ZoraV1alpha2Interface {
+	return &fakezorav1alpha2.FakeZoraV1alpha2{Fake: &c.Fake}
 }
