@@ -26,6 +26,9 @@ var (
 	// GroupVersion is group version used to register these objects
 	GroupVersion = schema.GroupVersion{Group: "zora.undistro.io", Version: "v1alpha2"}
 
+	// SchemeGroupVersion is a copy of GroupVersion, used by client-gen
+	SchemeGroupVersion = GroupVersion
+
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
 
