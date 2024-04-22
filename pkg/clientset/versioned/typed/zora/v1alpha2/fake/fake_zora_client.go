@@ -16,6 +16,10 @@ func (c *FakeZoraV1alpha2) CustomChecks(namespace string) v1alpha2.CustomCheckIn
 	return &FakeCustomChecks{c, namespace}
 }
 
+func (c *FakeZoraV1alpha2) VulnerabilityReports(namespace string) v1alpha2.VulnerabilityReportInterface {
+	return &FakeVulnerabilityReports{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeZoraV1alpha2) RESTClient() rest.Interface {

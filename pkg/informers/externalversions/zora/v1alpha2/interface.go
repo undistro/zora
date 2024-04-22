@@ -10,6 +10,8 @@ import (
 type Interface interface {
 	// CustomChecks returns a CustomCheckInformer.
 	CustomChecks() CustomCheckInformer
+	// VulnerabilityReports returns a VulnerabilityReportInformer.
+	VulnerabilityReports() VulnerabilityReportInformer
 }
 
 type version struct {
@@ -26,4 +28,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // CustomChecks returns a CustomCheckInformer.
 func (v *version) CustomChecks() CustomCheckInformer {
 	return &customCheckInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// VulnerabilityReports returns a VulnerabilityReportInformer.
+func (v *version) VulnerabilityReports() VulnerabilityReportInformer {
+	return &vulnerabilityReportInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

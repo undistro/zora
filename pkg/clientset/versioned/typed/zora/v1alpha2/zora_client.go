@@ -13,6 +13,7 @@ import (
 type ZoraV1alpha2Interface interface {
 	RESTClient() rest.Interface
 	CustomChecksGetter
+	VulnerabilityReportsGetter
 }
 
 // ZoraV1alpha2Client is used to interact with features provided by the zora group.
@@ -22,6 +23,10 @@ type ZoraV1alpha2Client struct {
 
 func (c *ZoraV1alpha2Client) CustomChecks(namespace string) CustomCheckInterface {
 	return newCustomChecks(c, namespace)
+}
+
+func (c *ZoraV1alpha2Client) VulnerabilityReports(namespace string) VulnerabilityReportInterface {
+	return newVulnerabilityReports(c, namespace)
 }
 
 // NewForConfig creates a new ZoraV1alpha2Client for the given config.
