@@ -24,6 +24,14 @@ func (c *FakeZoraV1alpha1) ClusterScans(namespace string) v1alpha1.ClusterScanIn
 	return &FakeClusterScans{c, namespace}
 }
 
+func (c *FakeZoraV1alpha1) CustomChecks(namespace string) v1alpha1.CustomCheckInterface {
+	return &FakeCustomChecks{c, namespace}
+}
+
+func (c *FakeZoraV1alpha1) Plugins(namespace string) v1alpha1.PluginInterface {
+	return &FakePlugins{c, namespace}
+}
+
 func (c *FakeZoraV1alpha1) VulnerabilityReports(namespace string) v1alpha1.VulnerabilityReportInterface {
 	return &FakeVulnerabilityReports{c, namespace}
 }

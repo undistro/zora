@@ -92,8 +92,6 @@ func (in *ClusterStatus) SetResources(res discovery.ClusterResources) {
 
 // Cluster is the Schema for the clusters API
 // +genclient
-// +genclient:onlyVerbs=list,get
-// +genclient:noStatus
 type Cluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

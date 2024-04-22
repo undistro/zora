@@ -53,6 +53,7 @@ type CustomCheckStatus struct {
 //+kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type==\"Ready\")].status",priority=0
 
 // CustomCheck is the Schema for the customchecks API
+// +genclient
 type CustomCheck struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

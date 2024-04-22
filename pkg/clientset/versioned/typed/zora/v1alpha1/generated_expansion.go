@@ -8,4 +8,8 @@ type ClusterIssueExpansion interface{}
 
 type ClusterScanExpansion interface{}
 
+type CustomCheckExpansion interface{}
+
+type PluginExpansion interface{}
+
 type VulnerabilityReportExpansion interface{}
