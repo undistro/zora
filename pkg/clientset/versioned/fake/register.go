@@ -4,6 +4,7 @@ package fake
 
 import (
 	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
+	zorav1alpha2 "github.com/undistro/zora/api/zora/v1alpha2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -16,6 +17,7 @@ var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
 	zorav1alpha1.AddToScheme,
+	zorav1alpha2.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
