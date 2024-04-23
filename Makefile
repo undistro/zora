@@ -154,7 +154,8 @@ install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_popeye_all.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_marvin.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_trivy.yaml -n $(NAMESPACE)
-	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_customcheck_labels.yaml -n $(NAMESPACE)
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_customcheck_replicas.yaml -n $(NAMESPACE)
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha2_customcheck_labels.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/rbac/zora_plugins_role.yaml
 	@$(KUBECTL) create -f config/rbac/zora_plugins_role_binding.yaml || true
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_cluster.yaml -n $(NAMESPACE)
