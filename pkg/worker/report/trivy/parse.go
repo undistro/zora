@@ -24,22 +24,24 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquasecurity/trivy/pkg/fanal/types"
 	trivyreport "github.com/aquasecurity/trivy/pkg/k8s/report"
 	trivytypes "github.com/aquasecurity/trivy/pkg/types"
 	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 )
 
-func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityReportSpec, error) {
+func Parse(ctx context.Context, results io.Reader) ([]v1alpha2.VulnerabilityReportSpec, error) {
 	log := logr.FromContextOrDiscard(ctx)
 	report := &trivyreport.Report{}
 	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
 	ignoreDescriptions, _ := strconv.ParseBool(os.Getenv("TRIVY_IGNORE_VULN_DESCRIPTIONS"))
-	vulnsByImage := make(map[string]*v1alpha1.VulnerabilityReportSpec)
+	vulnsByImage := make(map[string]*v1alpha2.VulnerabilityReportSpec)
 
 	// map to control which image + class was parsed
 	parsed := make(map[string]bool)
@@ -74,12 +76,23 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 			}
 			parsed[k] = true
 
-			for _, vuln := range result.Vulnerabilities {
-				spec.Vulnerabilities = append(spec.Vulnerabilities, newVulnerability(vuln, ignoreDescriptions, string(result.Type)))
+			vulnsByID := make(map[string]*v1alpha2.Vulnerability)
+			for _, v := range result.Vulnerabilities {
+				// we are assuming that a repeated CVE in this list refers to another package
+				if _, ok := vulnsByID[v.VulnerabilityID]; !ok {
+					vulnsByID[v.VulnerabilityID] = newVulnerability(v, ignoreDescriptions)
+				}
+				pkg := newPackage(v, result.Type)
+				vulnsByID[v.VulnerabilityID].Packages = append(vulnsByID[v.VulnerabilityID].Packages, pkg)
+			}
+
+			// append all vulnerabilities to spec
+			for _, vuln := range vulnsByID {
+				spec.Vulnerabilities = append(spec.Vulnerabilities, *vuln)
 			}
 		}
 	}
-	specs := make([]v1alpha1.VulnerabilityReportSpec, 0, len(vulnsByImage))
+	specs := make([]v1alpha2.VulnerabilityReportSpec, 0, len(vulnsByImage))
 	for _, spec := range vulnsByImage {
 		summarize(spec)
 		specs = append(specs, *spec)
@@ -87,9 +100,9 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha1.VulnerabilityRepo
 	return specs, nil
 }
 
-func newSpec(img string, resource trivyreport.Resource) *v1alpha1.VulnerabilityReportSpec {
+func newSpec(img string, resource trivyreport.Resource) *v1alpha2.VulnerabilityReportSpec {
 	meta := resource.Metadata
-	s := &v1alpha1.VulnerabilityReportSpec{
+	s := &v1alpha2.VulnerabilityReportSpec{
 		VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 			Image:        img,
 			Tags:         meta.RepoTags,
@@ -109,13 +122,13 @@ func newSpec(img string, resource trivyreport.Resource) *v1alpha1.VulnerabilityR
 	return s
 }
 
-func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription bool, t string) v1alpha1.Vulnerability {
+func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription bool) *v1alpha2.Vulnerability {
 	description := ""
 	if !ignoreDescription {
 		description = vuln.Description
 	}
 
-	return v1alpha1.Vulnerability{
+	return &v1alpha2.Vulnerability{
 		VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 			ID:               vuln.VulnerabilityID,
 			Severity:         vuln.Severity,
@@ -126,13 +139,16 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription b
 			PublishedDate:    parseTime(vuln.PublishedDate),
 			LastModifiedDate: parseTime(vuln.LastModifiedDate),
 		},
-		Package: v1alpha1.Package{
-			Package:    vuln.PkgName,
-			Status:     vuln.Status.String(),
-			Version:    vuln.InstalledVersion,
-			FixVersion: vuln.FixedVersion,
-			Type:       t,
-		},
+	}
+}
+
+func newPackage(vuln trivytypes.DetectedVulnerability, t types.TargetType) v1alpha1.Package {
+	return v1alpha1.Package{
+		Package:    vuln.PkgName,
+		Status:     vuln.Status.String(),
+		Version:    vuln.InstalledVersion,
+		FixVersion: vuln.FixedVersion,
+		Type:       string(t),
 	}
 }
 
@@ -170,7 +186,7 @@ func getImage(resource trivyreport.Resource) string {
 	return ""
 }
 
-func addResource(spec *v1alpha1.VulnerabilityReportSpec, kind, namespace, name string) {
+func addResource(spec *v1alpha2.VulnerabilityReportSpec, kind, namespace, name string) {
 	if spec.Resources == nil {
 		spec.Resources = map[string][]string{}
 	}
@@ -189,7 +205,7 @@ func addResource(spec *v1alpha1.VulnerabilityReportSpec, kind, namespace, name s
 	spec.TotalResources++
 }
 
-func summarize(spec *v1alpha1.VulnerabilityReportSpec) {
+func summarize(spec *v1alpha2.VulnerabilityReportSpec) {
 	s := &v1alpha1.VulnerabilitySummary{}
 	for _, v := range spec.Vulnerabilities {
 		s.Total++

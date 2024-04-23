@@ -27,20 +27,21 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 )
 
 func TestParse(t *testing.T) {
 	tests := []struct {
 		name     string
 		testfile string
-		want     []v1alpha1.VulnerabilityReportSpec
+		want     []v1alpha2.VulnerabilityReportSpec
 		wantErr  bool
 	}{
 		{
 			name:     "ok",
 			testfile: "testdata/report.json",
 			wantErr:  false,
-			want: []v1alpha1.VulnerabilityReportSpec{
+			want: []v1alpha2.VulnerabilityReportSpec{
 				{
 					VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 						Image:          "registry.k8s.io/kube-apiserver:v1.27.3",
@@ -53,15 +54,15 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Pod": {"kube-system/kube-apiserver-kind-control-plane"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 1, High: 1},
 					},
-					Vulnerabilities: []v1alpha1.Vulnerability{
+					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "golang.org/x/net",
 								Version:    "v0.0.0-20220722155237-a158d28d115b",
 								FixVersion: "0.7.0",
 								Status:     "fixed",
 								Type:       "gobinary",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2022-41723",
 								Severity:         "HIGH",
@@ -85,16 +86,25 @@ func TestParse(t *testing.T) {
 						Distro:         &v1alpha1.Distro{Name: "alpine", Version: "3.16.3"},
 						TotalResources: 2,
 						Resources:      map[string][]string{"Deployment": {"apps/app1", "apps/app2"}},
-						Summary:        v1alpha1.VulnerabilitySummary{Total: 3, Critical: 1, High: 2},
+						Summary:        v1alpha1.VulnerabilitySummary{Total: 2, Critical: 1, High: 1},
 					},
-					Vulnerabilities: []v1alpha1.Vulnerability{
+					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
-							Package: v1alpha1.Package{
-								Package:    "libssl1.1",
-								Version:    "1.1.1s-r0",
-								FixVersion: "1.1.1t-r0",
-								Status:     "fixed",
-								Type:       "alpine",
+							Packages: []v1alpha1.Package{
+								{
+									Package:    "libssl1.1",
+									Version:    "1.1.1s-r0",
+									FixVersion: "1.1.1t-r0",
+									Status:     "fixed",
+									Type:       "alpine",
+								},
+								{
+									Package:    "libcrypto1.1",
+									Version:    "1.1.1s-r0",
+									FixVersion: "1.1.1t-r0",
+									Status:     "fixed",
+									Type:       "alpine",
+								},
 							},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2022-4450",
@@ -108,32 +118,13 @@ func TestParse(t *testing.T) {
 							},
 						},
 						{
-							Package: v1alpha1.Package{
-								Package:    "libcrypto1.1",
-								Version:    "1.1.1s-r0",
-								FixVersion: "1.1.1t-r0",
-								Status:     "fixed",
-								Type:       "alpine",
-							},
-							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
-								ID:               "CVE-2022-4450",
-								Severity:         "HIGH",
-								Title:            "double free after calling PEM_read_bio_ex",
-								Description:      "The function PEM_read_bio_ex() reads a PEM file from a BIO and parses and decodes the \"name\" (e.g. \"CERTIFICATE\"), any header data and the payload data. If the function succeeds then the \"name_out\", \"header\" and \"data\" arguments are populated with pointers to buffers containing the relevant decoded data. The caller is responsible for freeing those buffers. It is possible to construct a PEM file that results in 0 bytes of payload data. In this case PEM_read_bio_ex() will return a failure code but will populate the header argument with a pointer to a buffer that has already been freed. If the caller also frees this buffer then a double free will occur. This will most likely lead to a crash. This could be exploited by an attacker who has the ability to supply malicious PEM files for parsing to achieve a denial of service attack. The functions PEM_read_bio() and PEM_read() are simple wrappers around PEM_read_bio_ex() and therefore these functions are also directly affected. These functions are also called indirectly by a number of other OpenSSL functions including PEM_X509_INFO_read_bio_ex() and SSL_CTX_use_serverinfo_file() which are also vulnerable. Some OpenSSL internal uses of these functions are not vulnerable because the caller does not free the header argument if PEM_read_bio_ex() returns a failure code. These locations include the PEM_read_bio_TYPE() functions as well as the decoders introduced in OpenSSL 3.0. The OpenSSL asn1parse command line application is also impacted by this issue.",
-								URL:              "https://avd.aquasec.com/nvd/cve-2022-4450",
-								Score:            "7.5",
-								PublishedDate:    newTime("2023-02-08T20:15:00Z"),
-								LastModifiedDate: newTime("2023-07-19T00:57:00Z"),
-							},
-						},
-						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "certifi",
 								Version:    "2022.12.7",
 								FixVersion: "2023.7.22",
 								Status:     "fixed",
 								Type:       "python-pkg",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2023-37920",
 								Severity:         "CRITICAL",
@@ -159,15 +150,15 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Deployment": {"apps/app1"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 3, High: 1, Medium: 1, Unknown: 1},
 					},
-					Vulnerabilities: []v1alpha1.Vulnerability{
+					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "tzdata",
 								Version:    "2019c-0+deb9u1",
 								FixVersion: "2021a-0+deb9u4",
 								Status:     "fixed",
 								Type:       "debian",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "DLA-3051-1",
 								Severity:         "UNKNOWN",
@@ -180,13 +171,13 @@ func TestParse(t *testing.T) {
 							},
 						},
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "bsdutils",
 								Version:    "1:2.29.2-1+deb9u1",
 								FixVersion: "",
 								Status:     "affected",
 								Type:       "debian",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2016-2779",
 								Severity:         "HIGH",
@@ -199,13 +190,13 @@ func TestParse(t *testing.T) {
 							},
 						},
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "npm-registry-fetch",
 								Version:    "4.0.4",
 								FixVersion: "8.1.1, 4.0.5",
 								Status:     "fixed",
 								Type:       "node-pkg",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "GHSA-jmqm-f2gx-4fjv",
 								Severity:         "MEDIUM",
@@ -231,15 +222,15 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Deployment": {"apps/app2"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 2, High: 1, Low: 1},
 					},
-					Vulnerabilities: []v1alpha1.Vulnerability{
+					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "coreutils",
 								Version:    "8.30-3",
 								FixVersion: "",
 								Status:     "will_not_fix",
 								Type:       "debian",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2016-2781",
 								Severity:         "LOW",
@@ -252,13 +243,13 @@ func TestParse(t *testing.T) {
 							},
 						},
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "uri",
 								Version:    "0.10.0",
 								FixVersion: "~\u003e 0.10.0.1, ~\u003e 0.10.2, ~\u003e 0.11.1, \u003e= 0.12.1",
 								Status:     "fixed",
 								Type:       "gemspec",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2023-28755",
 								Severity:         "HIGH",
@@ -284,15 +275,15 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Deployment": {"default/nginx"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 1, Medium: 1},
 					},
-					Vulnerabilities: []v1alpha1.Vulnerability{
+					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
-							Package: v1alpha1.Package{
+							Packages: []v1alpha1.Package{{
 								Package:    "openssl",
 								Version:    "1.1.1n-0+deb11u4",
 								FixVersion: "",
 								Status:     "fix_deferred",
 								Type:       "debian",
-							},
+							}},
 							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 								ID:               "CVE-2023-3446",
 								Severity:         "MEDIUM",
@@ -329,13 +320,18 @@ func TestParse(t *testing.T) {
 	}
 }
 
-func sortVulns(specs []v1alpha1.VulnerabilityReportSpec) {
+func sortVulns(specs []v1alpha2.VulnerabilityReportSpec) {
 	sort.Slice(specs, func(i, j int) bool {
 		return strings.Compare(specs[i].Image, specs[j].Image) == -1
 	})
 	for _, s := range specs {
-		for _, v := range s.Resources {
-			sort.Strings(v)
+		for _, r := range s.Resources {
+			sort.Strings(r)
+		}
+		for _, v := range s.Vulnerabilities {
+			sort.Slice(v.Packages, func(i, j int) bool {
+				return strings.Compare(v.Packages[i].String(), v.Packages[j].String()) == -1
+			})
 		}
 		sort.Slice(s.Vulnerabilities, func(i, j int) bool {
 			return strings.Compare(s.Vulnerabilities[i].ID, s.Vulnerabilities[j].ID) == -1

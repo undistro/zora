@@ -30,6 +30,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 )
 
 var labels = map[string]string{
@@ -56,7 +57,7 @@ func TestParseVulnResults(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []v1alpha1.VulnerabilityReport
+		want    []v1alpha2.VulnerabilityReport
 		wantErr bool
 	}{
 		{
@@ -89,7 +90,7 @@ func TestParseVulnResults(t *testing.T) {
 				},
 				filename: "report/trivy/testdata/report.json",
 			},
-			want: []v1alpha1.VulnerabilityReport{
+			want: []v1alpha2.VulnerabilityReport{
 				{
 					TypeMeta: vulnReportTypeMeta,
 					ObjectMeta: metav1.ObjectMeta{
@@ -98,7 +99,7 @@ func TestParseVulnResults(t *testing.T) {
 						OwnerReferences: owners,
 						Labels:          labels,
 					},
-					Spec: v1alpha1.VulnerabilityReportSpec{
+					Spec: v1alpha2.VulnerabilityReportSpec{
 						VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 							Cluster:        "cluster",
 							Image:          "registry.k8s.io/kube-apiserver:v1.27.3",
@@ -111,7 +112,7 @@ func TestParseVulnResults(t *testing.T) {
 							TotalResources: 1,
 							Summary:        v1alpha1.VulnerabilitySummary{Total: 1, High: 1},
 						},
-						Vulnerabilities: []v1alpha1.Vulnerability{
+						Vulnerabilities: []v1alpha2.Vulnerability{
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 									ID:               "CVE-2022-41723",
@@ -123,13 +124,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2023-02-28T18:15:00Z"),
 									LastModifiedDate: newTime("2023-05-16T10:50:00Z"),
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "golang.org/x/net",
 									Version:    "v0.0.0-20220722155237-a158d28d115b",
 									FixVersion: "0.7.0",
 									Status:     "fixed",
 									Type:       "gobinary",
-								},
+								}},
 							},
 						},
 					},
@@ -142,7 +143,7 @@ func TestParseVulnResults(t *testing.T) {
 						OwnerReferences: owners,
 						Labels:          labels,
 					},
-					Spec: v1alpha1.VulnerabilityReportSpec{
+					Spec: v1alpha2.VulnerabilityReportSpec{
 						VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 							Cluster:        "cluster",
 							Image:          "quay.io/kiwigrid/k8s-sidecar:1.22.0",
@@ -153,9 +154,9 @@ func TestParseVulnResults(t *testing.T) {
 							Distro:         &v1alpha1.Distro{Name: "alpine", Version: "3.16.3"},
 							Resources:      map[string][]string{"Deployment": {"apps/app1", "apps/app2"}},
 							TotalResources: 2,
-							Summary:        v1alpha1.VulnerabilitySummary{Total: 3, Critical: 1, High: 2},
+							Summary:        v1alpha1.VulnerabilitySummary{Total: 2, Critical: 1, High: 1},
 						},
-						Vulnerabilities: []v1alpha1.Vulnerability{
+						Vulnerabilities: []v1alpha2.Vulnerability{
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 									ID:               "CVE-2022-4450",
@@ -167,31 +168,21 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2023-02-08T20:15:00Z"),
 									LastModifiedDate: newTime("2023-07-19T00:57:00Z"),
 								},
-								Package: v1alpha1.Package{
-									Package:    "libssl1.1",
-									Version:    "1.1.1s-r0",
-									FixVersion: "1.1.1t-r0",
-									Status:     "fixed",
-									Type:       "alpine",
-								},
-							},
-							{
-								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
-									ID:               "CVE-2022-4450",
-									Severity:         "HIGH",
-									Title:            "double free after calling PEM_read_bio_ex",
-									Description:      "The function PEM_read_bio_ex() reads a PEM file from a BIO and parses and decodes the \"name\" (e.g. \"CERTIFICATE\"), any header data and the payload data. If the function succeeds then the \"name_out\", \"header\" and \"data\" arguments are populated with pointers to buffers containing the relevant decoded data. The caller is responsible for freeing those buffers. It is possible to construct a PEM file that results in 0 bytes of payload data. In this case PEM_read_bio_ex() will return a failure code but will populate the header argument with a pointer to a buffer that has already been freed. If the caller also frees this buffer then a double free will occur. This will most likely lead to a crash. This could be exploited by an attacker who has the ability to supply malicious PEM files for parsing to achieve a denial of service attack. The functions PEM_read_bio() and PEM_read() are simple wrappers around PEM_read_bio_ex() and therefore these functions are also directly affected. These functions are also called indirectly by a number of other OpenSSL functions including PEM_X509_INFO_read_bio_ex() and SSL_CTX_use_serverinfo_file() which are also vulnerable. Some OpenSSL internal uses of these functions are not vulnerable because the caller does not free the header argument if PEM_read_bio_ex() returns a failure code. These locations include the PEM_read_bio_TYPE() functions as well as the decoders introduced in OpenSSL 3.0. The OpenSSL asn1parse command line application is also impacted by this issue.",
-									URL:              "https://avd.aquasec.com/nvd/cve-2022-4450",
-									Score:            "7.5",
-									PublishedDate:    newTime("2023-02-08T20:15:00Z"),
-									LastModifiedDate: newTime("2023-07-19T00:57:00Z"),
-								},
-								Package: v1alpha1.Package{
-									Package:    "libcrypto1.1",
-									Version:    "1.1.1s-r0",
-									FixVersion: "1.1.1t-r0",
-									Status:     "fixed",
-									Type:       "alpine",
+								Packages: []v1alpha1.Package{
+									{
+										Package:    "libssl1.1",
+										Version:    "1.1.1s-r0",
+										FixVersion: "1.1.1t-r0",
+										Status:     "fixed",
+										Type:       "alpine",
+									},
+									{
+										Package:    "libcrypto1.1",
+										Version:    "1.1.1s-r0",
+										FixVersion: "1.1.1t-r0",
+										Status:     "fixed",
+										Type:       "alpine",
+									},
 								},
 							},
 							{
@@ -205,13 +196,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2023-07-25T21:15:00Z"),
 									LastModifiedDate: newTime("2023-08-12T06:16:00Z"),
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "certifi",
 									Version:    "2022.12.7",
 									FixVersion: "2023.7.22",
 									Status:     "fixed",
 									Type:       "python-pkg",
-								},
+								}},
 							},
 						},
 					},
@@ -224,7 +215,7 @@ func TestParseVulnResults(t *testing.T) {
 						OwnerReferences: owners,
 						Labels:          labels,
 					},
-					Spec: v1alpha1.VulnerabilityReportSpec{
+					Spec: v1alpha2.VulnerabilityReportSpec{
 						VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 							Cluster:        "cluster",
 							Image:          "docker.io/istio/examples-bookinfo-ratings-v1:1.17.0",
@@ -237,7 +228,7 @@ func TestParseVulnResults(t *testing.T) {
 							TotalResources: 1,
 							Summary:        v1alpha1.VulnerabilitySummary{Total: 3, High: 1, Medium: 1, Unknown: 1},
 						},
-						Vulnerabilities: []v1alpha1.Vulnerability{
+						Vulnerabilities: []v1alpha2.Vulnerability{
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 									ID:               "DLA-3051-1",
@@ -248,13 +239,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    nil,
 									LastModifiedDate: nil,
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "tzdata",
 									Version:    "2019c-0+deb9u1",
 									FixVersion: "2021a-0+deb9u4",
 									Status:     "fixed",
 									Type:       "debian",
-								},
+								}},
 							},
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
@@ -267,13 +258,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2017-02-07T15:59:00Z"),
 									LastModifiedDate: newTime("2019-01-04T14:14:00Z"),
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "bsdutils",
 									Version:    "1:2.29.2-1+deb9u1",
 									FixVersion: "",
 									Status:     "affected",
 									Type:       "debian",
-								},
+								}},
 							},
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
@@ -286,13 +277,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    nil,
 									LastModifiedDate: nil,
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "npm-registry-fetch",
 									Version:    "4.0.4",
 									FixVersion: "8.1.1, 4.0.5",
 									Status:     "fixed",
 									Type:       "node-pkg",
-								},
+								}},
 							},
 						},
 					},
@@ -305,7 +296,7 @@ func TestParseVulnResults(t *testing.T) {
 						OwnerReferences: owners,
 						Labels:          labels,
 					},
-					Spec: v1alpha1.VulnerabilityReportSpec{
+					Spec: v1alpha2.VulnerabilityReportSpec{
 						VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 							Cluster:        "cluster",
 							Image:          "docker.io/istio/examples-bookinfo-details-v1:1.17.0",
@@ -318,7 +309,7 @@ func TestParseVulnResults(t *testing.T) {
 							TotalResources: 1,
 							Summary:        v1alpha1.VulnerabilitySummary{Total: 2, High: 1, Low: 1},
 						},
-						Vulnerabilities: []v1alpha1.Vulnerability{
+						Vulnerabilities: []v1alpha2.Vulnerability{
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 									ID:               "CVE-2016-2781",
@@ -330,13 +321,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2017-02-07T15:59:00Z"),
 									LastModifiedDate: newTime("2021-02-25T17:15:00Z"),
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "coreutils",
 									Version:    "8.30-3",
 									FixVersion: "",
 									Status:     "will_not_fix",
 									Type:       "debian",
-								},
+								}},
 							},
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
@@ -349,13 +340,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2023-03-31T04:15:00Z"),
 									LastModifiedDate: newTime("2023-05-30T17:17:00Z"),
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "uri",
 									Version:    "0.10.0",
 									FixVersion: "~\u003e 0.10.0.1, ~\u003e 0.10.2, ~\u003e 0.11.1, \u003e= 0.12.1",
 									Status:     "fixed",
 									Type:       "gemspec",
-								},
+								}},
 							},
 						},
 					},
@@ -368,7 +359,7 @@ func TestParseVulnResults(t *testing.T) {
 						OwnerReferences: owners,
 						Labels:          labels,
 					},
-					Spec: v1alpha1.VulnerabilityReportSpec{
+					Spec: v1alpha2.VulnerabilityReportSpec{
 						VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 							Cluster:        "cluster",
 							Image:          "nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305",
@@ -381,7 +372,7 @@ func TestParseVulnResults(t *testing.T) {
 							Resources:      map[string][]string{"Deployment": {"default/nginx"}},
 							Summary:        v1alpha1.VulnerabilitySummary{Total: 1, Medium: 1},
 						},
-						Vulnerabilities: []v1alpha1.Vulnerability{
+						Vulnerabilities: []v1alpha2.Vulnerability{
 							{
 								VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
 									ID:               "CVE-2023-3446",
@@ -393,13 +384,13 @@ func TestParseVulnResults(t *testing.T) {
 									PublishedDate:    newTime("2023-07-19T12:15:00Z"),
 									LastModifiedDate: newTime("2023-08-16T08:15:00Z"),
 								},
-								Package: v1alpha1.Package{
+								Packages: []v1alpha1.Package{{
 									Package:    "openssl",
 									Version:    "1.1.1n-0+deb11u4",
 									FixVersion: "",
 									Status:     "fix_deferred",
 									Type:       "debian",
-								},
+								}},
 							},
 						},
 					},
@@ -433,13 +424,18 @@ func TestParseVulnResults(t *testing.T) {
 	}
 }
 
-func sortVulns(vulns []v1alpha1.VulnerabilityReport) {
+func sortVulns(vulns []v1alpha2.VulnerabilityReport) {
 	sort.Slice(vulns, func(i, j int) bool {
 		return strings.Compare(vulns[i].Spec.Image, vulns[j].Spec.Image) == -1
 	})
 	for _, v := range vulns {
 		for _, r := range v.Spec.Resources {
 			sort.Strings(r)
+		}
+		for _, vuln := range v.Spec.Vulnerabilities {
+			sort.Slice(vuln.Packages, func(i, j int) bool {
+				return strings.Compare(vuln.Packages[i].String(), vuln.Packages[j].String()) == -1
+			})
 		}
 		sort.Slice(v.Spec.Vulnerabilities, func(i, j int) bool {
 			return strings.Compare(v.Spec.Vulnerabilities[i].ID, v.Spec.Vulnerabilities[j].ID) == -1
