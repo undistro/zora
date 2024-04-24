@@ -237,7 +237,7 @@ func (r *CronJobMutator) pluginContainer() corev1.Container {
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
 		c.VolumeMounts = append(c.VolumeMounts, customChecksVolume)
 	}
-	if r.Plugin.Name == "trivy" {
+	if r.Plugin.Name == "trivy" && r.TrivyPVC != "" {
 		c.VolumeMounts = append(c.VolumeMounts, trivyDBVolumeMount)
 	}
 	return c
