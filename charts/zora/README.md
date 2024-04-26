@@ -133,7 +133,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.popeye.env | list | `[]` | List of environment variables to set in popeye container. |
 | scan.plugins.popeye.envFrom | list | `[]` | List of sources to populate environment variables in popeye container. |
 | kubexnsImage.repository | string | `"ghcr.io/undistro/kubexns"` | kubexns image repository |
-| kubexnsImage.tag | string | `"v0.1.3"` | kubexns image tag |
+| kubexnsImage.tag | string | `"v0.1.4"` | kubexns image tag |
 | customChecksConfigMap | string | `"zora-custom-checks"` | Custom checks ConfigMap name |
 | httpsProxy | string | `""` | HTTPS proxy URL |
 | noProxy | string | `"kubernetes.default.svc.*,127.0.0.1,localhost"` | Comma-separated list of URL patterns to be excluded from going through the proxy |
