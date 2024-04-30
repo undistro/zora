@@ -147,9 +147,12 @@ ifndef ignore-not-found
 endif
 
 NAMESPACE ?= zora-system
-.PHONY: install
-install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
+.PHONY: install-crds
+install-crds: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | $(KUBECTL) apply -f -
+
+.PHONY: install
+install: install-crds ## Install CRs (plugins, custom checks, cluster, and scan) into the K8s cluster specified in ~/.kube/config.
 	@$(KUBECTL) create namespace $(NAMESPACE) || true
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_popeye_all.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_marvin.yaml -n $(NAMESPACE)
