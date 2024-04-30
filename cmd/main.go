@@ -23,8 +23,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/undistro/zora/pkg/crds"
 	apiextensionsv1client "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1"
+
+	"github.com/undistro/zora/pkg/crds"
+
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -209,6 +211,12 @@ func main() {
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "CustomCheck")
 		os.Exit(1)
+	}
+	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
+		if err = (&zorav1alpha1.VulnerabilityReport{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "VulnerabilityReport")
+			os.Exit(1)
+		}
 	}
 	//+kubebuilder:scaffold:builder
 
