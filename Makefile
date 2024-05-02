@@ -47,10 +47,10 @@ help: ## Display this help.
 
 NAMESPACE ?= zora-system
 .PHONY: manifests
-manifests: controller-gen addlicense ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+manifests: controller-gen addlicense yq ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 	cd config/chart-crd && $(KUSTOMIZE) edit set namespace ${NAMESPACE}
-	$(KUSTOMIZE) build config/chart-crd | yq -s '"charts/zora/crds/" + .spec.group + "_" + .spec.names.plural + ".yaml"'
+	$(KUSTOMIZE) build config/chart-crd | $(YQ) -s '"charts/zora/crds/" + .spec.group + "_" + .spec.names.plural + ".yaml"'
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore ".github/**" -ignore ".idea/**" -ignore "dist/**" -ignore "site/**" -ignore "config/**" -ignore "docs/overrides/**" -ignore "docs/stylesheets/**" .
 
 .PHONY: generate
@@ -211,6 +211,7 @@ GOLANGCI_LINT = $(LOCALBIN)/golangci-lint-$(GOLANGCI_LINT_VERSION)
 ADDLICENSE ?= $(LOCALBIN)/addlicense-$(ADDLICENSE_VERSION)
 HELM_DOCS ?= $(LOCALBIN)/helm-docs-$(HELM_DOCS_VERSION)
 KIND ?= $(LOCALBIN)/kind-$(KIND_VERSION)
+YQ ?= $(LOCALBIN)/yq-$(YQ_VERSION)
 
 ## Tool Versions
 KUSTOMIZE_VERSION ?= v5.3.0
@@ -220,6 +221,7 @@ GOLANGCI_LINT_VERSION ?= v1.54.2
 HELM_DOCS_VERSION ?= v1.13.1
 ADDLICENSE_VERSION ?= v1.1.1
 KIND_VERSION ?= v0.22.0
+YQ_VERSION ?= v4.43.1
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
@@ -255,6 +257,11 @@ $(HELM_DOCS): $(LOCALBIN)
 kind: $(KIND) ## Download kind locally if necessary
 $(KIND): $(LOCALBIN)
 	$(call go-install-tool,$(KIND),sigs.k8s.io/kind,${KIND_VERSION})
+
+.PHONY: yq
+yq: $(YQ) ## Download yq locally if necessary
+$(YQ): $(LOCALBIN)
+	$(call go-install-tool,$(YQ),github.com/mikefarah/yq/v4,${YQ_VERSION})
 
 # go-install-tool will 'go install' any package with custom target and name of binary, if it doesn't exist
 # $1 - target path with name of binary (ideally with version)
