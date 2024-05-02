@@ -26,467 +26,432 @@ spec:
     listKind: ClusterScanList
     plural: clusterscans
     shortNames:
-    - scan
-    - scans
+      - scan
+      - scans
     singular: clusterscan
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.clusterRef.name
-      name: Cluster
-      type: string
-    - jsonPath: .spec.schedule
-      name: Schedule
-      type: string
-    - jsonPath: .status.suspend
-      name: Suspend
-      type: boolean
-    - jsonPath: .status.pluginNames
-      name: Plugins
-      type: string
-    - jsonPath: .status.lastStatus
-      name: Last Status
-      type: string
-    - jsonPath: .status.lastScheduleTime
-      name: Last Schedule
-      type: date
-    - jsonPath: .status.lastSuccessfulTime
-      name: Last Successful
-      type: date
-    - jsonPath: .status.conditions[?(@.type=="Ready")].status
-      name: Ready
-      type: string
-    - jsonPath: .metadata.creationTimestamp
-      name: Age
-      type: date
-    - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
-      name: SaaS
-      priority: 1
-      type: string
-    - jsonPath: .status.nextScheduleTime
-      name: Next Schedule
-      priority: 1
-      type: string
-    name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: ClusterScan is the Schema for the clusterscans API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: ClusterScanSpec defines the desired state of ClusterScan
-            properties:
-              clusterRef:
-                description: ClusterRef is a reference to a Cluster in the same namespace
-                properties:
-                  name:
-                    description: |-
-                      Name of the referent.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
-              failedScansHistoryLimit:
-                default: 1
-                description: |-
-                  The number of failed finished scans to retain. Value must be non-negative integer.
-                  Defaults to 1.
-                format: int32
-                minimum: 0
-                type: integer
-              plugins:
-                description: The list of Plugin references that are used to scan the
-                  referenced Cluster.  Defaults to 'popeye'
-                items:
+    - additionalPrinterColumns:
+        - jsonPath: .spec.clusterRef.name
+          name: Cluster
+          type: string
+        - jsonPath: .spec.schedule
+          name: Schedule
+          type: string
+        - jsonPath: .status.suspend
+          name: Suspend
+          type: boolean
+        - jsonPath: .status.pluginNames
+          name: Plugins
+          type: string
+        - jsonPath: .status.lastStatus
+          name: Last Status
+          type: string
+        - jsonPath: .status.lastScheduleTime
+          name: Last Schedule
+          type: date
+        - jsonPath: .status.lastSuccessfulTime
+          name: Last Successful
+          type: date
+        - jsonPath: .status.conditions[?(@.type=="Ready")].status
+          name: Ready
+          type: string
+        - jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+        - jsonPath: .status.conditions[?(@.type=="SaaS")].reason
+          name: SaaS
+          priority: 1
+          type: string
+        - jsonPath: .status.nextScheduleTime
+          name: Next Schedule
+          priority: 1
+          type: string
+      name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: ClusterScan is the Schema for the clusterscans API
+          properties:
+            apiVersion:
+              description: |-
+                APIVersion defines the versioned schema of this representation of an object.
+                Servers should convert recognized schemas to the latest internal value, and
+                may reject unrecognized values.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: |-
+                Kind is a string value representing the REST resource this object represents.
+                Servers may infer this from the endpoint the client submits requests to.
+                Cannot be updated.
+                In CamelCase.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: ClusterScanSpec defines the desired state of ClusterScan
+              properties:
+                clusterRef:
+                  description: ClusterRef is a reference to a Cluster in the same namespace
                   properties:
-                    env:
-                      description: List of environment variables to set in the Plugin
-                        container.
-                      items:
-                        description: EnvVar represents an environment variable present
-                          in a Container.
-                        properties:
-                          name:
-                            description: Name of the environment variable. Must be
-                              a C_IDENTIFIER.
-                            type: string
-                          value:
-                            description: |-
-                              Variable references $(VAR_NAME) are expanded
-                              using the previously defined environment variables in the container and
-                              any service environment variables. If a variable cannot be resolved,
-                              the reference in the input string will be unchanged. Double $$ are reduced
-                              to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
-                              "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
-                              Escaped references will never be expanded, regardless of whether the variable
-                              exists or not.
-                              Defaults to "".
-                            type: string
-                          valueFrom:
-                            description: Source for the environment variable's value.
-                              Cannot be used if value is not empty.
-                            properties:
-                              configMapKeyRef:
-                                description: Selects a key of a ConfigMap.
-                                properties:
-                                  key:
-                                    description: The key to select.
-                                    type: string
-                                  name:
-                                    description: |-
-                                      Name of the referent.
-                                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                      TODO: Add other useful fields. apiVersion, kind, uid?
-                                    type: string
-                                  optional:
-                                    description: Specify whether the ConfigMap or
-                                      its key must be defined
-                                    type: boolean
-                                required:
-                                - key
-                                type: object
-                                x-kubernetes-map-type: atomic
-                              fieldRef:
-                                description: |-
-                                  Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
-                                  spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
-                                properties:
-                                  apiVersion:
-                                    description: Version of the schema the FieldPath
-                                      is written in terms of, defaults to "v1".
-                                    type: string
-                                  fieldPath:
-                                    description: Path of the field to select in the
-                                      specified API version.
-                                    type: string
-                                required:
-                                - fieldPath
-                                type: object
-                                x-kubernetes-map-type: atomic
-                              resourceFieldRef:
-                                description: |-
-                                  Selects a resource of the container: only resources limits and requests
-                                  (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
-                                properties:
-                                  containerName:
-                                    description: 'Container name: required for volumes,
-                                      optional for env vars'
-                                    type: string
-                                  divisor:
-                                    anyOf:
-                                    - type: integer
-                                    - type: string
-                                    description: Specifies the output format of the
-                                      exposed resources, defaults to "1"
-                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                    x-kubernetes-int-or-string: true
-                                  resource:
-                                    description: 'Required: resource to select'
-                                    type: string
-                                required:
-                                - resource
-                                type: object
-                                x-kubernetes-map-type: atomic
-                              secretKeyRef:
-                                description: Selects a key of a secret in the pod's
-                                  namespace
-                                properties:
-                                  key:
-                                    description: The key of the secret to select from.  Must
-                                      be a valid secret key.
-                                    type: string
-                                  name:
-                                    description: |-
-                                      Name of the referent.
-                                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                      TODO: Add other useful fields. apiVersion, kind, uid?
-                                    type: string
-                                  optional:
-                                    description: Specify whether the Secret or its
-                                      key must be defined
-                                    type: boolean
-                                required:
-                                - key
-                                type: object
-                                x-kubernetes-map-type: atomic
-                            type: object
-                        required:
-                        - name
-                        type: object
-                      type: array
                     name:
-                      description: Name is unique within a namespace to reference
-                        a Plugin resource.
+                      description: |-
+                        Name of the referent.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        TODO: Add other useful fields. apiVersion, kind, uid?
                       type: string
-                    namespace:
-                      description: Namespace defines the space within which the Plugin
-                        name must be unique.
-                      type: string
-                  required:
-                  - name
                   type: object
-                type: array
-              schedule:
-                description: The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
-                type: string
-              successfulScansHistoryLimit:
-                default: 3
-                description: |-
-                  The number of successful finished scans and their issues to retain. Value must be non-negative integer.
-                  Defaults to 3.
-                format: int32
-                minimum: 0
-                type: integer
-              suspend:
-                description: |-
-                  This flag tells the controller to suspend subsequent executions, it does
-                  not apply to already started executions.  Defaults to false.
-                type: boolean
-            required:
-            - clusterRef
-            - schedule
-            type: object
-          status:
-            description: ClusterScanStatus defines the observed state of ClusterScan
-            properties:
-              conditions:
-                description: Conditions the latest available observations of a resource's
-                  current state.
-                items:
-                  description: "Condition contains details for one aspect of the current
-                    state of this API Resource.\n---\nThis struct is intended for
-                    direct use as an array at the field path .status.conditions.  For
-                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
-                    observations of a foo's current state.\n\t    // Known .status.conditions.type
-                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
-                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
-                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
-                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
-                    \   // other fields\n\t}"
-                  properties:
-                    lastTransitionTime:
-                      description: |-
-                        lastTransitionTime is the last time the condition transitioned from one status to another.
-                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                      format: date-time
-                      type: string
-                    message:
-                      description: |-
-                        message is a human readable message indicating details about the transition.
-                        This may be an empty string.
-                      maxLength: 32768
-                      type: string
-                    observedGeneration:
-                      description: |-
-                        observedGeneration represents the .metadata.generation that the condition was set based upon.
-                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                        with respect to the current state of the instance.
-                      format: int64
-                      minimum: 0
-                      type: integer
-                    reason:
-                      description: |-
-                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                        Producers of specific condition types may define expected values and meanings for this field,
-                        and whether the values are considered a guaranteed API.
-                        The value should be a CamelCase string.
-                        This field may not be empty.
-                      maxLength: 1024
-                      minLength: 1
-                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                      type: string
-                    status:
-                      description: status of the condition, one of True, False, Unknown.
-                      enum:
-                      - "True"
-                      - "False"
-                      - Unknown
-                      type: string
-                    type:
-                      description: |-
-                        type of condition in CamelCase or in foo.example.com/CamelCase.
-                        ---
-                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
-                        useful (see .node.status.conditions), the ability to deconflict is important.
-                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
-                      maxLength: 316
-                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                      type: string
-                  required:
-                  - lastTransitionTime
-                  - message
-                  - reason
-                  - status
-                  - type
-                  type: object
-                type: array
-              lastFinishedStatus:
-                description: Status of the last finished scan. Complete or Failed
-                type: string
-              lastFinishedTime:
-                description: Information when was the last time the job was finished.
-                format: date-time
-                type: string
-              lastScheduleTime:
-                description: Information when was the last time the job was scheduled.
-                format: date-time
-                type: string
-              lastStatus:
-                description: Status of the last scan. Active, Complete or Failed
-                type: string
-              lastSuccessfulTime:
-                description: Information when was the last time the job successfully
-                  completed.
-                format: date-time
-                type: string
-              nextScheduleTime:
-                description: Time when the next job will schedule.
-                format: date-time
-                type: string
-              observedGeneration:
-                description: |-
-                  ObservedGeneration is the 'Generation' of the resource that
-                  was last processed by the controller.
-                format: int64
-                type: integer
-              pluginNames:
-                description: Comma separated list of plugins
-                type: string
-              plugins:
-                additionalProperties:
-                  properties:
-                    lastErrorMsg:
-                      description: LastErrorMsg contains a plugin error message from
-                        the last failed scan.
-                      type: string
-                    lastFinishedStatus:
-                      description: Status of the last finished plugin scan. Complete
-                        or Failed
-                      type: string
-                    lastFinishedTime:
-                      description: Information when was the last time the job was
-                        finished.
-                      format: date-time
-                      type: string
-                    lastScanID:
-                      description: ID of the last plugin scan
-                      type: string
-                    lastScheduleTime:
-                      description: Information when was the last time the job was
-                        scheduled.
-                      format: date-time
-                      type: string
-                    lastStatus:
-                      description: Status of the last plugin scan. Active, Complete
-                        or Failed
-                      type: string
-                    lastSuccessfulScanID:
-                      description: ID of the last successful plugin scan
-                      type: string
-                    lastSuccessfulTime:
-                      description: Information when was the last time the job successfully
-                        completed.
-                      format: date-time
-                      type: string
-                    nextScheduleTime:
-                      description: Time when the next job will schedule.
-                      format: date-time
-                      type: string
-                    totalIssues:
-                      description: TotalIssues holds the sum of ClusterIssues found
-                        in the last successful scan.
-                      type: integer
-                  type: object
-                description: Information of the last scans of plugins
-                type: object
-              processedMisconfigurations:
-                additionalProperties:
+                  x-kubernetes-map-type: atomic
+                failedScansHistoryLimit:
+                  default: 1
+                  description: |-
+                    The number of failed finished scans to retain. Value must be non-negative integer.
+                    Defaults to 1.
+                  format: int32
+                  minimum: 0
+                  type: integer
+                plugins:
+                  description: The list of Plugin references that are used to scan the referenced Cluster.  Defaults to 'popeye'
+                  items:
+                    properties:
+                      env:
+                        description: List of environment variables to set in the Plugin container.
+                        items:
+                          description: EnvVar represents an environment variable present in a Container.
+                          properties:
+                            name:
+                              description: Name of the environment variable. Must be a C_IDENTIFIER.
+                              type: string
+                            value:
+                              description: |-
+                                Variable references $(VAR_NAME) are expanded
+                                using the previously defined environment variables in the container and
+                                any service environment variables. If a variable cannot be resolved,
+                                the reference in the input string will be unchanged. Double $$ are reduced
+                                to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                                "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                                Escaped references will never be expanded, regardless of whether the variable
+                                exists or not.
+                                Defaults to "".
+                              type: string
+                            valueFrom:
+                              description: Source for the environment variable's value. Cannot be used if value is not empty.
+                              properties:
+                                configMapKeyRef:
+                                  description: Selects a key of a ConfigMap.
+                                  properties:
+                                    key:
+                                      description: The key to select.
+                                      type: string
+                                    name:
+                                      description: |-
+                                        Name of the referent.
+                                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                        TODO: Add other useful fields. apiVersion, kind, uid?
+                                      type: string
+                                    optional:
+                                      description: Specify whether the ConfigMap or its key must be defined
+                                      type: boolean
+                                  required:
+                                    - key
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                fieldRef:
+                                  description: |-
+                                    Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+                                    spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+                                  properties:
+                                    apiVersion:
+                                      description: Version of the schema the FieldPath is written in terms of, defaults to "v1".
+                                      type: string
+                                    fieldPath:
+                                      description: Path of the field to select in the specified API version.
+                                      type: string
+                                  required:
+                                    - fieldPath
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                resourceFieldRef:
+                                  description: |-
+                                    Selects a resource of the container: only resources limits and requests
+                                    (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+                                  properties:
+                                    containerName:
+                                      description: 'Container name: required for volumes, optional for env vars'
+                                      type: string
+                                    divisor:
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      description: Specifies the output format of the exposed resources, defaults to "1"
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    resource:
+                                      description: 'Required: resource to select'
+                                      type: string
+                                  required:
+                                    - resource
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                secretKeyRef:
+                                  description: Selects a key of a secret in the pod's namespace
+                                  properties:
+                                    key:
+                                      description: The key of the secret to select from.  Must be a valid secret key.
+                                      type: string
+                                    name:
+                                      description: |-
+                                        Name of the referent.
+                                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                        TODO: Add other useful fields. apiVersion, kind, uid?
+                                      type: string
+                                    optional:
+                                      description: Specify whether the Secret or its key must be defined
+                                      type: boolean
+                                  required:
+                                    - key
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                              type: object
+                          required:
+                            - name
+                          type: object
+                        type: array
+                      name:
+                        description: Name is unique within a namespace to reference a Plugin resource.
+                        type: string
+                      namespace:
+                        description: Namespace defines the space within which the Plugin name must be unique.
+                        type: string
+                    required:
+                      - name
+                    type: object
+                  type: array
+                schedule:
+                  description: The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
+                  type: string
+                successfulScansHistoryLimit:
+                  default: 3
+                  description: |-
+                    The number of successful finished scans and their issues to retain. Value must be non-negative integer.
+                    Defaults to 3.
+                  format: int32
+                  minimum: 0
+                  type: integer
+                suspend:
+                  description: |-
+                    This flag tells the controller to suspend subsequent executions, it does
+                    not apply to already started executions.  Defaults to false.
+                  type: boolean
+              required:
+                - clusterRef
+                - schedule
+              type: object
+            status:
+              description: ClusterScanStatus defines the observed state of ClusterScan
+              properties:
+                conditions:
+                  description: Conditions the latest available observations of a resource's current state.
+                  items:
+                    description: "Condition contains details for one aspect of the current state of this API Resource.\n---\nThis struct is intended for direct use as an array at the field path .status.conditions.  For example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the observations of a foo's current state.\n\t    // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    // +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t    // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t    // other fields\n\t}"
+                    properties:
+                      lastTransitionTime:
+                        description: |-
+                          lastTransitionTime is the last time the condition transitioned from one status to another.
+                          This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                        format: date-time
+                        type: string
+                      message:
+                        description: |-
+                          message is a human readable message indicating details about the transition.
+                          This may be an empty string.
+                        maxLength: 32768
+                        type: string
+                      observedGeneration:
+                        description: |-
+                          observedGeneration represents the .metadata.generation that the condition was set based upon.
+                          For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                          with respect to the current state of the instance.
+                        format: int64
+                        minimum: 0
+                        type: integer
+                      reason:
+                        description: |-
+                          reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                          Producers of specific condition types may define expected values and meanings for this field,
+                          and whether the values are considered a guaranteed API.
+                          The value should be a CamelCase string.
+                          This field may not be empty.
+                        maxLength: 1024
+                        minLength: 1
+                        pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                        type: string
+                      status:
+                        description: status of the condition, one of True, False, Unknown.
+                        enum:
+                          - "True"
+                          - "False"
+                          - Unknown
+                        type: string
+                      type:
+                        description: |-
+                          type of condition in CamelCase or in foo.example.com/CamelCase.
+                          ---
+                          Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                          useful (see .node.status.conditions), the ability to deconflict is important.
+                          The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                        maxLength: 316
+                        pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                        type: string
+                    required:
+                      - lastTransitionTime
+                      - message
+                      - reason
+                      - status
+                      - type
+                    type: object
+                  type: array
+                lastFinishedStatus:
+                  description: Status of the last finished scan. Complete or Failed
+                  type: string
+                lastFinishedTime:
+                  description: Information when was the last time the job was finished.
+                  format: date-time
+                  type: string
+                lastScheduleTime:
+                  description: Information when was the last time the job was scheduled.
+                  format: date-time
+                  type: string
+                lastStatus:
+                  description: Status of the last scan. Active, Complete or Failed
+                  type: string
+                lastSuccessfulTime:
+                  description: Information when was the last time the job successfully completed.
+                  format: date-time
+                  type: string
+                nextScheduleTime:
+                  description: Time when the next job will schedule.
+                  format: date-time
+                  type: string
+                observedGeneration:
+                  description: |-
+                    ObservedGeneration is the 'Generation' of the resource that
+                    was last processed by the controller.
+                  format: int64
+                  type: integer
+                pluginNames:
+                  description: Comma separated list of plugins
+                  type: string
+                plugins:
                   additionalProperties:
-                    type: string
+                    properties:
+                      lastErrorMsg:
+                        description: LastErrorMsg contains a plugin error message from the last failed scan.
+                        type: string
+                      lastFinishedStatus:
+                        description: Status of the last finished plugin scan. Complete or Failed
+                        type: string
+                      lastFinishedTime:
+                        description: Information when was the last time the job was finished.
+                        format: date-time
+                        type: string
+                      lastScanID:
+                        description: ID of the last plugin scan
+                        type: string
+                      lastScheduleTime:
+                        description: Information when was the last time the job was scheduled.
+                        format: date-time
+                        type: string
+                      lastStatus:
+                        description: Status of the last plugin scan. Active, Complete or Failed
+                        type: string
+                      lastSuccessfulScanID:
+                        description: ID of the last successful plugin scan
+                        type: string
+                      lastSuccessfulTime:
+                        description: Information when was the last time the job successfully completed.
+                        format: date-time
+                        type: string
+                      nextScheduleTime:
+                        description: Time when the next job will schedule.
+                        format: date-time
+                        type: string
+                      totalIssues:
+                        description: TotalIssues holds the sum of ClusterIssues found in the last successful scan.
+                        type: integer
+                    type: object
+                  description: Information of the last scans of plugins
                   type: object
-                description: Resource versions of processed misconfigurations
-                type: object
-              processedPluginStatus:
-                additionalProperties:
-                  description: PluginStatus defines the observed state of Plugin
-                  properties:
-                    issueCount:
-                      description: The number of misconfiguration issues discovered
-                        in the last successful scan.
-                      type: integer
-                    lastFinishedScanTime:
-                      description: When the last scan finished.
-                      format: date-time
-                      type: string
-                    lastSuccessfulScanID:
-                      description: The Scan ID of the last successful scan.
-                      type: string
-                    lastSuccessfulScanTime:
-                      description: When the last successful scan occurred.
-                      format: date-time
-                      type: string
-                    nextScheduleScanTime:
-                      description: When the next scan will occurr.
-                      format: date-time
-                      type: string
-                    scan:
-                      description: The scan status information.
-                      properties:
-                        id:
-                          description: The status of the last scan.
-                          type: string
-                        message:
-                          description: The message for the last scan.
-                          type: string
-                        status:
-                          description: The status of the last scan.
-                          type: string
-                        suspend:
-                          description: True is the scan is currently suspended.
-                          type: boolean
-                      type: object
-                    schedule:
-                      description: The schedule of the scan.
-                      type: string
-                  type: object
-                description: Processed Status information for each plugin
-                type: object
-              processedVulnerabilities:
-                additionalProperties:
+                processedMisconfigurations:
                   additionalProperties:
-                    type: string
+                    additionalProperties:
+                      type: string
+                    type: object
+                  description: Resource versions of processed misconfigurations
                   type: object
-                description: Resource versions of processed vulnerabilities
-                type: object
-              suspend:
-                description: Suspend field value from ClusterScan spec
-                type: boolean
-              totalIssues:
-                description: Total of ClusterIssues reported in the last successful
-                  scan
-                type: integer
-            required:
-            - suspend
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
+                processedPluginStatus:
+                  additionalProperties:
+                    description: PluginStatus defines the observed state of Plugin
+                    properties:
+                      issueCount:
+                        description: The number of misconfiguration issues discovered in the last successful scan.
+                        type: integer
+                      lastFinishedScanTime:
+                        description: When the last scan finished.
+                        format: date-time
+                        type: string
+                      lastSuccessfulScanID:
+                        description: The Scan ID of the last successful scan.
+                        type: string
+                      lastSuccessfulScanTime:
+                        description: When the last successful scan occurred.
+                        format: date-time
+                        type: string
+                      nextScheduleScanTime:
+                        description: When the next scan will occurr.
+                        format: date-time
+                        type: string
+                      scan:
+                        description: The scan status information.
+                        properties:
+                          id:
+                            description: The status of the last scan.
+                            type: string
+                          message:
+                            description: The message for the last scan.
+                            type: string
+                          status:
+                            description: The status of the last scan.
+                            type: string
+                          suspend:
+                            description: True is the scan is currently suspended.
+                            type: boolean
+                        type: object
+                      schedule:
+                        description: The schedule of the scan.
+                        type: string
+                    type: object
+                  description: Processed Status information for each plugin
+                  type: object
+                processedVulnerabilities:
+                  additionalProperties:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  description: Resource versions of processed vulnerabilities
+                  type: object
+                suspend:
+                  description: Suspend field value from ClusterScan spec
+                  type: boolean
+                totalIssues:
+                  description: Total of ClusterIssues reported in the last successful scan
+                  type: integer
+              required:
+                - suspend
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}

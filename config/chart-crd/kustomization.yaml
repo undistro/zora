@@ -1,0 +1,14 @@
+namespace: zora-system
+
+resources:
+- ../crd/bases/zora.undistro.io_clusters.yaml
+- ../crd/bases/zora.undistro.io_plugins.yaml
+- ../crd/bases/zora.undistro.io_clusterissues.yaml
+- ../crd/bases/zora.undistro.io_clusterscans.yaml
+- ../crd/bases/zora.undistro.io_customchecks.yaml
+- ../crd/bases/zora.undistro.io_vulnerabilityreports.yaml
+#+kubebuilder:scaffold:crdkustomizeresource
+
+patches:
+- path: ../crd/patches/webhook_in_zora_vulnerabilityreports.yaml
+#+kubebuilder:scaffold:crdkustomizewebhookpatch

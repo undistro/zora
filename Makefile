@@ -45,10 +45,12 @@ help: ## Display this help.
 
 ##@ Development
 
+NAMESPACE ?= zora-system
 .PHONY: manifests
 manifests: controller-gen addlicense ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
-	@cp -r config/crd/bases/*.yaml charts/zora/crds/
+	cd config/chart-crd && $(KUSTOMIZE) edit set namespace ${NAMESPACE}
+	$(KUSTOMIZE) build config/chart-crd | yq -s '"charts/zora/crds/" + .spec.group + "_" + .spec.names.plural + ".yaml"'
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore ".github/**" -ignore ".idea/**" -ignore "dist/**" -ignore "site/**" -ignore "config/**" -ignore "docs/overrides/**" -ignore "docs/stylesheets/**" .
 
 .PHONY: generate
@@ -146,7 +148,6 @@ ifndef ignore-not-found
   ignore-not-found = false
 endif
 
-NAMESPACE ?= zora-system
 .PHONY: install-crds
 install-crds: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | $(KUBECTL) apply -f -
