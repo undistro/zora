@@ -26,15 +26,17 @@ import (
 	"k8s.io/apimachinery/pkg/api/equality"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/yaml"
 )
 
-var CRDs []apiextensionsv1.CustomResourceDefinition
+var (
+	log  = logf.Log.WithName("crds")
+	CRDs []apiextensionsv1.CustomResourceDefinition
+)
 
 // Update updates Zora CRDs if needed
 func Update(ctx context.Context, client *apiextensionsv1client.ApiextensionsV1Client) error {
-	log := ctrllog.FromContext(ctx)
 	for _, crd := range CRDs {
 		existing, err := client.CustomResourceDefinitions().Get(ctx, crd.Name, metav1.GetOptions{})
 		if err != nil {
@@ -64,6 +66,16 @@ func merge(existing, desired apiextensionsv1.CustomResourceDefinition) (*apiexte
 	}
 	result := existing.DeepCopy()
 	var updatedFields []string
+
+	if !equality.Semantic.DeepEqual(result.ObjectMeta.Annotations, desired.ObjectMeta.Annotations) {
+		for k, v := range desired.ObjectMeta.Annotations {
+			if result.ObjectMeta.Annotations == nil {
+				result.ObjectMeta.Annotations = make(map[string]string, len(desired.ObjectMeta.Annotations))
+			}
+			result.ObjectMeta.Annotations[k] = v
+		}
+		updatedFields = append(updatedFields, "metadata.annotations")
+	}
 
 	if result.Spec.PreserveUnknownFields != desired.Spec.PreserveUnknownFields {
 		result.Spec.PreserveUnknownFields = desired.Spec.PreserveUnknownFields

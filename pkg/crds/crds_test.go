@@ -27,7 +27,10 @@ import (
 
 var (
 	exampleCRD = v1.CustomResourceDefinition{
-		ObjectMeta: metav1.ObjectMeta{Name: "examples.zora.undistro.io"},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        "examples.zora.undistro.io",
+			Annotations: map[string]string{"keep": "true"},
+		},
 		Spec: v1.CustomResourceDefinitionSpec{
 			Group: "zora.undistro.io",
 			Names: v1.CustomResourceDefinitionNames{
@@ -134,6 +137,7 @@ func TestMergeCRDs(t *testing.T) {
 			args: args{
 				existing: exampleCRD,
 				updateFunc: func(crd *v1.CustomResourceDefinition) {
+					crd.ObjectMeta.Annotations = map[string]string{"foo": "bar"}
 					crd.Spec.PreserveUnknownFields = true
 					crd.Spec.Conversion = &v1.CustomResourceConversion{Strategy: v1.WebhookConverter}
 					crd.Spec.Names.ShortNames = append(crd.Spec.Names.ShortNames, "new")
@@ -147,6 +151,7 @@ func TestMergeCRDs(t *testing.T) {
 				},
 			},
 			fields: []string{
+				"metadata.annotations",
 				"spec.preserveUnknownFields",
 				"spec.conversion",
 				"spec.names.shortNames",
@@ -159,7 +164,13 @@ func TestMergeCRDs(t *testing.T) {
 				`spec.versions[?(@.name=="v1alpha2")]`,
 			},
 			want: &v1.CustomResourceDefinition{
-				ObjectMeta: metav1.ObjectMeta{Name: "examples.zora.undistro.io"},
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "examples.zora.undistro.io",
+					Annotations: map[string]string{
+						"keep": "true",
+						"foo":  "bar",
+					},
+				},
 				Spec: v1.CustomResourceDefinitionSpec{
 					Group: "zora.undistro.io",
 					Names: v1.CustomResourceDefinitionNames{
