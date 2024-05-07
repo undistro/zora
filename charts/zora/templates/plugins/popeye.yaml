@@ -51,6 +51,7 @@ spec:
     - /bin/sh
     - -c
     - |
+      sleep 30
       start=$(date +%s)
       echo Scanning...
       {{- if .Values.scan.plugins.popeye.skipInternalResources }}
