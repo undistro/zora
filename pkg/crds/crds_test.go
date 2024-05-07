@@ -89,38 +89,27 @@ var (
 			},
 		}},
 	}
-	exampleConversion = apiextensionsv1.CustomResourceConversion{
-		Strategy: apiextensionsv1.WebhookConverter,
-		Webhook: &apiextensionsv1.WebhookConversion{
-			ConversionReviewVersions: []string{"v1"},
-			ClientConfig: &apiextensionsv1.WebhookClientConfig{
-				Service: &apiextensionsv1.ServiceReference{
-					Name:      "zora-webhook",
-					Namespace: "zora-system",
-					Path:      pointer.String("/convert"),
-				},
-				CABundle: []byte("dGVzdA=="),
-			},
-		},
-	}
 )
 
 func TestMergeCRDs(t *testing.T) {
+	tmpDir, caPath := setupTempCerts(t)
 	type args struct {
 		existing   v1.CustomResourceDefinition
 		updateFunc func(*v1.CustomResourceDefinition)
-		conversion *apiextensionsv1.CustomResourceConversion
+		opts       ConversionOptions
 	}
 	tests := []struct {
-		name   string
-		args   args
-		want   *v1.CustomResourceDefinition
-		fields []string
+		name    string
+		args    args
+		want    *v1.CustomResourceDefinition
+		fields  []string
+		wantErr bool
 	}{
 		{
 			name: "equal",
 			args: args{
 				existing: exampleCRD,
+				opts:     ConversionOptions{Enabled: true},
 				updateFunc: func(crd *v1.CustomResourceDefinition) {
 					// just sorting update
 					crd.Spec.Names.ShortNames = []string{"exs", "ex"}
@@ -134,9 +123,23 @@ func TestMergeCRDs(t *testing.T) {
 			fields: nil,
 		},
 		{
+			name: "disabled injection and annotated CRD",
+			args: args{
+				existing: exampleCRD,
+				opts:     ConversionOptions{Enabled: false},
+				updateFunc: func(crd *v1.CustomResourceDefinition) {
+					crd.Annotations[AnnotationInjectConversion] = "true"
+				},
+			},
+			want:    annotateCRD(exampleCRD),
+			fields:  []string{"metadata.annotations"},
+			wantErr: false,
+		},
+		{
 			name: "ignored fields",
 			args: args{
 				existing: exampleCRD,
+				opts:     ConversionOptions{Enabled: true},
 				updateFunc: func(crd *v1.CustomResourceDefinition) {
 					crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties["new"] = v1.JSONSchemaProps{Type: "string"}
 					crd.Spec.Scope = "Cluster"
@@ -154,6 +157,13 @@ func TestMergeCRDs(t *testing.T) {
 			name: "allowed updates",
 			args: args{
 				existing: exampleCRD,
+				opts: ConversionOptions{
+					Enabled:                 true,
+					WebhookServiceName:      "zora-webhook",
+					WebhookServiceNamespace: "zora-system",
+					WebhookServicePath:      "/convert",
+					CAPath:                  caPath,
+				},
 				updateFunc: func(crd *v1.CustomResourceDefinition) {
 					crd.ObjectMeta.Annotations = map[string]string{
 						"foo":                      "bar",
@@ -170,7 +180,6 @@ func TestMergeCRDs(t *testing.T) {
 					crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties["status"] = v1.JSONSchemaProps{Type: "string"}
 					crd.Spec.Versions = append(crd.Spec.Versions, v1alpha2Version)
 				},
-				conversion: &exampleConversion,
 			},
 			fields: []string{
 				"metadata.annotations",
@@ -227,17 +236,43 @@ func TestMergeCRDs(t *testing.T) {
 						},
 						v1alpha2Version,
 					},
-					Conversion:            &exampleConversion,
+					Conversion: &apiextensionsv1.CustomResourceConversion{
+						Strategy: apiextensionsv1.WebhookConverter,
+						Webhook: &apiextensionsv1.WebhookConversion{
+							ConversionReviewVersions: []string{"v1"},
+							ClientConfig: &apiextensionsv1.WebhookClientConfig{
+								Service: &apiextensionsv1.ServiceReference{
+									Name:      "zora-webhook",
+									Namespace: "zora-system",
+									Path:      pointer.String("/convert"),
+								},
+								CABundle: []byte("dGVzdA=="),
+							},
+						},
+					},
 					PreserveUnknownFields: true,
 				},
 			},
+		},
+		{
+			name: "certificate file not found",
+			args: args{
+				existing:   *annotateCRD(exampleCRD),
+				updateFunc: func(crd *v1.CustomResourceDefinition) {},
+				opts:       ConversionOptions{Enabled: true, CAPath: filepath.Join(tmpDir, "foo.crt")},
+			},
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			desired := tt.args.existing.DeepCopy()
 			tt.args.updateFunc(desired)
-			got, fields := merge(tt.args.existing, *desired, tt.args.conversion)
+			got, fields, err := merge(tt.args.existing, *desired, tt.args.opts)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("merge() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("merge() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
@@ -250,60 +285,17 @@ func TestMergeCRDs(t *testing.T) {
 	}
 }
 
-func TestNewConversion(t *testing.T) {
+func setupTempCerts(t *testing.T) (string, string) {
 	tmpDir := t.TempDir()
 	caPath := filepath.Join(tmpDir, "ca.crt")
 	if err := os.WriteFile(caPath, []byte("test"), 0644); err != nil {
 		t.Fatal(err)
 	}
+	return tmpDir, caPath
+}
 
-	tests := []struct {
-		name    string
-		opts    ConversionOptions
-		want    *apiextensionsv1.CustomResourceConversion
-		wantErr bool
-	}{
-		{
-			name: "OK",
-			opts: ConversionOptions{
-				WebhookServiceName:      "zora-webhook",
-				WebhookServiceNamespace: "zora-system",
-				WebhookServicePath:      "/convert",
-				CAPath:                  caPath,
-			},
-			want: &apiextensionsv1.CustomResourceConversion{
-				Strategy: apiextensionsv1.WebhookConverter,
-				Webhook: &apiextensionsv1.WebhookConversion{
-					ConversionReviewVersions: []string{"v1"},
-					ClientConfig: &apiextensionsv1.WebhookClientConfig{
-						Service: &apiextensionsv1.ServiceReference{
-							Name:      "zora-webhook",
-							Namespace: "zora-system",
-							Path:      pointer.String("/convert"),
-						},
-						CABundle: []byte("dGVzdA=="),
-					},
-				},
-			},
-			wantErr: false,
-		},
-		{
-			name:    "certificate file not found",
-			opts:    ConversionOptions{CAPath: filepath.Join(tmpDir, "foo.crt")},
-			want:    nil,
-			wantErr: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := newConversion(tt.opts)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("newConversion() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("newConversion() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
-			}
-		})
-	}
+func annotateCRD(crd v1.CustomResourceDefinition) *v1.CustomResourceDefinition {
+	c := crd.DeepCopy()
+	c.Annotations[AnnotationInjectConversion] = "true"
+	return c
 }
