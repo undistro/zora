@@ -27,6 +27,7 @@ spec:
   {{- end }}
   mountCustomChecksVolume: false
   securityContext:
+    runAsNonRoot: true
     allowPrivilegeEscalation: false
     privileged: false
   {{- with .Values.scan.plugins.trivy.envFrom }}
