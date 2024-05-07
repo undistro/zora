@@ -11,7 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+{{ $secretName := printf "%s-serving-cert" (include "zora.fullname" .) -}}
+{{- $serviceName := printf "%s-webhook" (include "zora.fullname" .) -}}
+{{- if and .Values.operator.webhook.enabled (not (lookup "v1" "Secret" .Release.Namespace $secretName)) -}}
+  {{- $cn := $serviceName -}}
+  {{- $ca := genCA $cn 3650 -}}
+  {{- $altNames := list ( printf "%s.%s" $serviceName .Release.Namespace ) ( printf "%s.%s.svc" $serviceName .Release.Namespace ) ( printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace ) -}}
+  {{- $cert := genSignedCert $cn nil $altNames 3650 $ca -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $secretName }}
+type: kubernetes.io/tls
+data:
+  tls.key: {{ b64enc $cert.Key }}
+  tls.crt: {{ b64enc $cert.Cert }}
+  ca.crt: {{ b64enc $ca.Cert }}
+---
+{{- end -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -92,6 +109,9 @@ spec:
             - --checks-configmap-name={{ .Values.customChecksConfigMap }}
             - --kubexns-image={{ printf "%s:%s" .Values.kubexnsImage.repository .Values.kubexnsImage.tag }}
             - --update-crds={{ .Values.updateCRDs | default .Release.IsUpgrade }}
+            - --inject-conversion={{ .Values.operator.webhook.enabled }}
+            - --webhook-service-name={{ $serviceName }}
+            - --webhook-service-namespace={{ .Release.Namespace }}
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           ports:
@@ -101,6 +121,15 @@ spec:
             - containerPort: 8080
               protocol: TCP
               name: metrics
+          {{- if .Values.operator.webhook.enabled }}
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /tmp/k8s-webhook-server/serving-certs
+              name: cert
+              readOnly: true
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
@@ -117,6 +146,14 @@ spec:
             {{- toYaml .Values.operator.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.operator.securityContext | nindent 12 }}
+      {{- if .Values.operator.webhook.enabled }}
+      volumes:
+        - name: cert
+          secret:
+            defaultMode: 420
+            secretName: {{ $secretName }}
+            optional: true
+      {{- end }}
       securityContext:
         {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "zora.operatorServiceAccountName" . }}
