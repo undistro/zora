@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.19">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.21">
     
     
       
@@ -1708,6 +1708,12 @@ You're not viewing the latest version.
 <td>marvin plugin image tag</td>
 </tr>
 <tr>
+<td>scan.plugins.marvin.image.pullPolicy</td>
+<td>string</td>
+<td><code>"IfNotPresent"</code></td>
+<td>Image pull policy</td>
+</tr>
+<tr>
 <td>scan.plugins.marvin.env</td>
 <td>list</td>
 <td><code>[]</code></td>
@@ -1751,9 +1757,15 @@ You're not viewing the latest version.
 </tr>
 <tr>
 <td>scan.plugins.trivy.image.tag</td>
-<td>string</td>
-<td><code>"0.50.1-1"</code></td>
+<td>float</td>
+<td><code>0.51</code></td>
 <td>trivy plugin image tag</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.image.pullPolicy</td>
+<td>string</td>
+<td><code>"Always"</code></td>
+<td>Image pull policy</td>
 </tr>
 <tr>
 <td>scan.plugins.trivy.env</td>
@@ -1835,9 +1847,15 @@ You're not viewing the latest version.
 </tr>
 <tr>
 <td>scan.plugins.popeye.image.tag</td>
-<td>string</td>
-<td><code>"0.21.3-6"</code></td>
+<td>float</td>
+<td><code>0.21</code></td>
 <td>popeye plugin image tag</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.image.pullPolicy</td>
+<td>string</td>
+<td><code>"Always"</code></td>
+<td>Image pull policy</td>
 </tr>
 <tr>
 <td>scan.plugins.popeye.env</td>
@@ -2012,7 +2030,7 @@ You're not viewing the latest version.
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      <script src="../assets/javascripts/bundle.a7c05c9e.min.js"></script>
       
     
   </body>
