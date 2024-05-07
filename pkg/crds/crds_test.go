@@ -246,7 +246,7 @@ func TestMergeCRDs(t *testing.T) {
 									Namespace: "zora-system",
 									Path:      pointer.String("/convert"),
 								},
-								CABundle: []byte("dGVzdA=="),
+								CABundle: []byte("test"),
 							},
 						},
 					},

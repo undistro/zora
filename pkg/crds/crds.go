@@ -16,7 +16,6 @@ package crds
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -177,13 +176,11 @@ func (opts ConversionOptions) getConversion() (*apiextensionsv1.CustomResourceCo
 	if opts.conversion != nil {
 		return opts.conversion, nil
 	}
-	b, err := os.ReadFile(opts.CAPath)
+	ca, err := os.ReadFile(opts.CAPath)
 	if err != nil {
 		log.Error(err, "failed to read certificate")
 		return nil, err
 	}
-	caBundle := make([]byte, base64.StdEncoding.EncodedLen(len(b)))
-	base64.StdEncoding.Encode(caBundle, b)
 	opts.conversion = &apiextensionsv1.CustomResourceConversion{
 		Strategy: apiextensionsv1.WebhookConverter,
 		Webhook: &apiextensionsv1.WebhookConversion{
@@ -194,7 +191,7 @@ func (opts ConversionOptions) getConversion() (*apiextensionsv1.CustomResourceCo
 					Name:      opts.WebhookServiceName,
 					Path:      &opts.WebhookServicePath,
 				},
-				CABundle: caBundle,
+				CABundle: ca,
 			},
 		},
 	}
