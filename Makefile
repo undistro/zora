@@ -45,7 +45,6 @@ help: ## Display this help.
 
 ##@ Development
 
-NAMESPACE ?= zora-system
 .PHONY: manifests
 manifests: controller-gen addlicense yq ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
@@ -152,6 +151,7 @@ endif
 install-crds: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | $(KUBECTL) apply -f -
 
+NAMESPACE ?= zora-system
 .PHONY: install
 install: install-crds ## Install CRs (plugins, custom checks, cluster, and scan) into the K8s cluster specified in ~/.kube/config.
 	@$(KUBECTL) create namespace $(NAMESPACE) || true
