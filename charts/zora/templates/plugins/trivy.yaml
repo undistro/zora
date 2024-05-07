@@ -21,6 +21,9 @@ metadata:
 spec:
   type: vulnerability
   image: "{{ .Values.scan.plugins.trivy.image.repository }}:{{ .Values.scan.plugins.trivy.image.tag }}"
+  {{- if .Values.scan.plugins.trivy.image.pullPolicy }}
+  imagePullPolicy: "{{ .Values.scan.plugins.trivy.image.pullPolicy }}"
+  {{- end }}
   {{- if .Values.scan.plugins.trivy.resources }}
   resources:
     {{- toYaml .Values.scan.plugins.trivy.resources | nindent 4 }}
@@ -58,7 +61,6 @@ spec:
       time trivy k8s \
         --debug \
         --no-progress \
-        --all-namespaces \
         --scanners=vuln \
         -f=json \
         --cache-dir=/tmp/trivy-cache \
@@ -69,8 +71,7 @@ spec:
         --ignore-unfixed \
         {{- end }}
         --timeout={{ .Values.scan.plugins.trivy.timeout | quote }} \
-        -o $(DONE_DIR)/results.json \
-        cluster
+        -o $(DONE_DIR)/results.json
 
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then
