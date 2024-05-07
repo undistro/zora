@@ -191,6 +191,8 @@ scan:
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
         tag: v0.2.3
+        # -- Image pull policy
+        pullPolicy: IfNotPresent
       # -- List of environment variables to set in marvin container.
       env: []
       # -- List of sources to populate environment variables in marvin container.
@@ -209,7 +211,9 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/undistro/trivy
         # -- trivy plugin image tag
-        tag: 0.50.1-1
+        tag: 0.51
+        # -- Image pull policy
+        pullPolicy: Always
       # -- List of environment variables to set in trivy container.
       env: []
       #  - name: AWS_REGION
@@ -266,7 +270,9 @@ scan:
         # -- popeye plugin image repository
         repository: ghcr.io/undistro/popeye
         # -- popeye plugin image tag
-        tag: 0.21.3-6
+        tag: 0.21
+        # -- Image pull policy
+        pullPolicy: Always
       # -- List of environment variables to set in popeye container.
       env: []
       # -- List of sources to populate environment variables in popeye container.

@@ -21,6 +21,9 @@ metadata:
 spec:
   type: misconfiguration
   image: "{{ .Values.scan.plugins.popeye.image.repository }}:{{ .Values.scan.plugins.popeye.image.tag }}"
+  {{- if .Values.scan.plugins.popeye.image.pullPolicy }}
+  imagePullPolicy: "{{ .Values.scan.plugins.popeye.image.pullPolicy }}"
+  {{- end }}
   {{- if .Values.scan.plugins.popeye.resources }}
   resources:
     {{- toYaml .Values.scan.plugins.popeye.resources | nindent 4 }}
