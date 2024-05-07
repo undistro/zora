@@ -35,7 +35,6 @@ patches:
 #- path: patches/cainjection_in_vulnerabilityreports.yaml
 #- path: patches/cainjection_in_zora_customchecks.yaml
 #- path: patches/cainjection_in_zora_vulnerabilityreports.yaml
-- path: patches/conversion_injection_in_zora_vulnerabilityreports.yaml
 #+kubebuilder:scaffold:crdkustomizecainjectionpatch
 
 # [WEBHOOK] To enable webhook, uncomment the following section

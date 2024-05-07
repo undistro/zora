@@ -49,7 +49,8 @@ NAMESPACE ?= zora-system
 .PHONY: manifests
 manifests: controller-gen addlicense yq ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
-	$(KUSTOMIZE) build config/crd | $(YQ) -s '"charts/zora/crds/" + .spec.group + "_" + .spec.names.plural + ".yaml"'
+	$(YQ) -i '.metadata.annotations."zora.undistro.io/inject-conversion" = "true"' config/crd/bases/zora.undistro.io_vulnerabilityreports.yaml
+	@cp -r config/crd/bases/*.yaml charts/zora/crds/
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore ".github/**" -ignore ".idea/**" -ignore "dist/**" -ignore "site/**" -ignore "config/**" -ignore "docs/overrides/**" -ignore "docs/stylesheets/**" .
 
 .PHONY: generate
