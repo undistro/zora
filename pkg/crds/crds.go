@@ -16,7 +16,9 @@ package crds
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
 
@@ -30,13 +32,26 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+const AnnotationInjectConversion = "zora.undistro.io/inject-conversion"
+
 var (
 	log  = logf.Log.WithName("crds")
 	CRDs []apiextensionsv1.CustomResourceDefinition
 )
 
+type ConversionOptions struct {
+	WebhookServiceName      string
+	WebhookServiceNamespace string
+	WebhookServicePath      string
+	CAPath                  string
+}
+
+func NewConversionOptions(svcName string, svcNamespace string, svcPath string, caPath string) *ConversionOptions {
+	return &ConversionOptions{WebhookServiceName: svcName, WebhookServiceNamespace: svcNamespace, WebhookServicePath: svcPath, CAPath: caPath}
+}
+
 // Update updates Zora CRDs if needed
-func Update(ctx context.Context, client *apiextensionsv1client.ApiextensionsV1Client) error {
+func Update(ctx context.Context, client *apiextensionsv1client.ApiextensionsV1Client, opts ConversionOptions) error {
 	for _, crd := range CRDs {
 		existing, err := client.CustomResourceDefinitions().Get(ctx, crd.Name, metav1.GetOptions{})
 		if err != nil {
@@ -46,7 +61,11 @@ func Update(ctx context.Context, client *apiextensionsv1client.ApiextensionsV1Cl
 			}
 			return err
 		}
-		obj, updatedFields := merge(*existing, crd)
+		conversion, err := newConversion(opts)
+		if err != nil {
+			return err
+		}
+		obj, updatedFields := merge(*existing, crd, conversion)
 		if len(updatedFields) == 0 {
 			log.Info("Unchanged CRD", "name", crd.Name)
 			continue
@@ -59,7 +78,7 @@ func Update(ctx context.Context, client *apiextensionsv1client.ApiextensionsV1Cl
 	return nil
 }
 
-func merge(existing, desired apiextensionsv1.CustomResourceDefinition) (*apiextensionsv1.CustomResourceDefinition, []string) {
+func merge(existing, desired apiextensionsv1.CustomResourceDefinition, conversion *apiextensionsv1.CustomResourceConversion) (*apiextensionsv1.CustomResourceDefinition, []string) {
 	existingVersions := make(map[string]apiextensionsv1.CustomResourceDefinitionVersion, len(existing.Spec.Versions))
 	for _, v := range existing.Spec.Versions {
 		existingVersions[v.Name] = v
@@ -67,12 +86,12 @@ func merge(existing, desired apiextensionsv1.CustomResourceDefinition) (*apiexte
 	result := existing.DeepCopy()
 	var updatedFields []string
 
-	if !equality.Semantic.DeepEqual(result.ObjectMeta.Annotations, desired.ObjectMeta.Annotations) {
-		for k, v := range desired.ObjectMeta.Annotations {
-			if result.ObjectMeta.Annotations == nil {
-				result.ObjectMeta.Annotations = make(map[string]string, len(desired.ObjectMeta.Annotations))
+	if !equality.Semantic.DeepEqual(result.Annotations, desired.Annotations) {
+		for k, v := range desired.Annotations {
+			if result.Annotations == nil {
+				result.Annotations = make(map[string]string, len(desired.Annotations))
 			}
-			result.ObjectMeta.Annotations[k] = v
+			result.Annotations[k] = v
 		}
 		updatedFields = append(updatedFields, "metadata.annotations")
 	}
@@ -82,8 +101,16 @@ func merge(existing, desired apiextensionsv1.CustomResourceDefinition) (*apiexte
 		updatedFields = append(updatedFields, "spec.preserveUnknownFields")
 	}
 
+	conversionUpdated := false
 	if !equality.Semantic.DeepEqual(conversionOrNone(result.Spec.Conversion), conversionOrNone(desired.Spec.Conversion)) {
 		result.Spec.Conversion = desired.Spec.Conversion
+		conversionUpdated = true
+	}
+	if shouldInjectConversion(result) {
+		result.Spec.Conversion = conversion
+		conversionUpdated = true
+	}
+	if conversionUpdated {
 		updatedFields = append(updatedFields, "spec.conversion")
 	}
 
@@ -132,6 +159,38 @@ func merge(existing, desired apiextensionsv1.CustomResourceDefinition) (*apiexte
 	return result, updatedFields
 }
 
+// shouldInjectConversion returns true if the given object is annotated for conversion injecting
+func shouldInjectConversion(object metav1.Object) bool {
+	a := object.GetAnnotations()
+	return a != nil && a[AnnotationInjectConversion] == "true"
+}
+
+// newConversion returns a CustomResourceConversion from the given options
+func newConversion(opts ConversionOptions) (*apiextensionsv1.CustomResourceConversion, error) {
+	b, err := os.ReadFile(opts.CAPath)
+	if err != nil {
+		log.Error(err, "failed to read certificate")
+		return nil, err
+	}
+	caBundle := make([]byte, base64.StdEncoding.EncodedLen(len(b)))
+	base64.StdEncoding.Encode(caBundle, b)
+	return &apiextensionsv1.CustomResourceConversion{
+		Strategy: apiextensionsv1.WebhookConverter,
+		Webhook: &apiextensionsv1.WebhookConversion{
+			ConversionReviewVersions: []string{"v1"},
+			ClientConfig: &apiextensionsv1.WebhookClientConfig{
+				Service: &apiextensionsv1.ServiceReference{
+					Namespace: opts.WebhookServiceNamespace,
+					Name:      opts.WebhookServiceName,
+					Path:      &opts.WebhookServicePath,
+				},
+				CABundle: caBundle,
+			},
+		},
+	}, nil
+}
+
+// conversionOrNone returns a CustomResourceConversion with None strategy if the given parameter is nil
 func conversionOrNone(c *apiextensionsv1.CustomResourceConversion) *apiextensionsv1.CustomResourceConversion {
 	if c != nil {
 		return c

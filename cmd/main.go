@@ -82,6 +82,10 @@ func main() {
 	var kubexnsImage string
 	var trivyPVC string
 	var updateCRDs bool
+	var caPath string
+	var webhookServiceName string
+	var webhookServiceNamespace string
+	var webhookServicePath string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -107,6 +111,14 @@ func main() {
 	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
 	flag.BoolVar(&updateCRDs, "update-crds", false,
 		"If set, operator will update Zora CRDs if needed")
+	flag.StringVar(&caPath, "ca-path", "/tmp/k8s-webhook-server/serving-certs/ca.crt",
+		"Path of CA file to be injected in CRDs")
+	flag.StringVar(&webhookServiceName, "webhook-service-name", "zora-webhook",
+		"Webhook service name")
+	flag.StringVar(&webhookServiceNamespace, "webhook-service-namespace", "zora-system",
+		"Webhook service namespace")
+	flag.StringVar(&webhookServicePath, "webhook-service-path", "/convert",
+		"URL path for webhook conversion")
 
 	opts := zap.Options{
 		Development: true,
@@ -235,7 +247,9 @@ func main() {
 	ctx := ctrl.SetupSignalHandler()
 
 	if updateCRDs {
-		if err := crds.Update(ctrllog.IntoContext(ctx, setupLog), apiextensionsv1client.NewForConfigOrDie(restConfig)); err != nil {
+		extClient := apiextensionsv1client.NewForConfigOrDie(restConfig)
+		copts := crds.NewConversionOptions(webhookServiceName, webhookServiceNamespace, webhookServicePath, caPath)
+		if err := crds.Update(ctrllog.IntoContext(ctx, setupLog), extClient, *copts); err != nil {
 			setupLog.Error(err, "unable to update CRDs")
 			os.Exit(1)
 		}

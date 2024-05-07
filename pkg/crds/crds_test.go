@@ -15,11 +15,14 @@
 package crds
 
 import (
+	"os"
+	"path/filepath"
 	"reflect"
 	"sort"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
@@ -86,12 +89,27 @@ var (
 			},
 		}},
 	}
+	exampleConversion = apiextensionsv1.CustomResourceConversion{
+		Strategy: apiextensionsv1.WebhookConverter,
+		Webhook: &apiextensionsv1.WebhookConversion{
+			ConversionReviewVersions: []string{"v1"},
+			ClientConfig: &apiextensionsv1.WebhookClientConfig{
+				Service: &apiextensionsv1.ServiceReference{
+					Name:      "zora-webhook",
+					Namespace: "zora-system",
+					Path:      pointer.String("/convert"),
+				},
+				CABundle: []byte("dGVzdA=="),
+			},
+		},
+	}
 )
 
 func TestMergeCRDs(t *testing.T) {
 	type args struct {
 		existing   v1.CustomResourceDefinition
 		updateFunc func(*v1.CustomResourceDefinition)
+		conversion *apiextensionsv1.CustomResourceConversion
 	}
 	tests := []struct {
 		name   string
@@ -137,7 +155,10 @@ func TestMergeCRDs(t *testing.T) {
 			args: args{
 				existing: exampleCRD,
 				updateFunc: func(crd *v1.CustomResourceDefinition) {
-					crd.ObjectMeta.Annotations = map[string]string{"foo": "bar"}
+					crd.ObjectMeta.Annotations = map[string]string{
+						"foo":                      "bar",
+						AnnotationInjectConversion: "true",
+					}
 					crd.Spec.PreserveUnknownFields = true
 					crd.Spec.Conversion = &v1.CustomResourceConversion{Strategy: v1.WebhookConverter}
 					crd.Spec.Names.ShortNames = append(crd.Spec.Names.ShortNames, "new")
@@ -149,6 +170,7 @@ func TestMergeCRDs(t *testing.T) {
 					crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties["status"] = v1.JSONSchemaProps{Type: "string"}
 					crd.Spec.Versions = append(crd.Spec.Versions, v1alpha2Version)
 				},
+				conversion: &exampleConversion,
 			},
 			fields: []string{
 				"metadata.annotations",
@@ -167,8 +189,9 @@ func TestMergeCRDs(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "examples.zora.undistro.io",
 					Annotations: map[string]string{
-						"keep": "true",
-						"foo":  "bar",
+						"keep":                     "true",
+						"foo":                      "bar",
+						AnnotationInjectConversion: "true",
 					},
 				},
 				Spec: v1.CustomResourceDefinitionSpec{
@@ -204,7 +227,7 @@ func TestMergeCRDs(t *testing.T) {
 						},
 						v1alpha2Version,
 					},
-					Conversion:            &v1.CustomResourceConversion{Strategy: "Webhook"},
+					Conversion:            &exampleConversion,
 					PreserveUnknownFields: true,
 				},
 			},
@@ -214,7 +237,7 @@ func TestMergeCRDs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			desired := tt.args.existing.DeepCopy()
 			tt.args.updateFunc(desired)
-			got, fields := merge(tt.args.existing, *desired)
+			got, fields := merge(tt.args.existing, *desired, tt.args.conversion)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("merge() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
@@ -222,6 +245,64 @@ func TestMergeCRDs(t *testing.T) {
 			sort.Strings(tt.fields)
 			if !reflect.DeepEqual(fields, tt.fields) {
 				t.Errorf("merge() updated fields mismatch (-want +got):\n%s", cmp.Diff(tt.fields, fields))
+			}
+		})
+	}
+}
+
+func TestNewConversion(t *testing.T) {
+	tmpDir := t.TempDir()
+	caPath := filepath.Join(tmpDir, "ca.crt")
+	if err := os.WriteFile(caPath, []byte("test"), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		name    string
+		opts    ConversionOptions
+		want    *apiextensionsv1.CustomResourceConversion
+		wantErr bool
+	}{
+		{
+			name: "OK",
+			opts: ConversionOptions{
+				WebhookServiceName:      "zora-webhook",
+				WebhookServiceNamespace: "zora-system",
+				WebhookServicePath:      "/convert",
+				CAPath:                  caPath,
+			},
+			want: &apiextensionsv1.CustomResourceConversion{
+				Strategy: apiextensionsv1.WebhookConverter,
+				Webhook: &apiextensionsv1.WebhookConversion{
+					ConversionReviewVersions: []string{"v1"},
+					ClientConfig: &apiextensionsv1.WebhookClientConfig{
+						Service: &apiextensionsv1.ServiceReference{
+							Name:      "zora-webhook",
+							Namespace: "zora-system",
+							Path:      pointer.String("/convert"),
+						},
+						CABundle: []byte("dGVzdA=="),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "certificate file not found",
+			opts:    ConversionOptions{CAPath: filepath.Join(tmpDir, "foo.crt")},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := newConversion(tt.opts)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("newConversion() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("newConversion() mismatch (-want +got):\n%s", cmp.Diff(tt.want, got))
 			}
 		})
 	}
