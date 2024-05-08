@@ -24,13 +24,14 @@ import (
 	"time"
 
 	"github.com/undistro/zora/pkg/crds"
-	apiextensionsv1client "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1"
+
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"go.uber.org/zap/zapcore"
+	apiextensionsv1client "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -39,6 +40,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	zorav1alpha1 "github.com/undistro/zora/api/zora/v1alpha1"
 	zorav1alpha2 "github.com/undistro/zora/api/zora/v1alpha2"
@@ -80,6 +82,11 @@ func main() {
 	var kubexnsImage string
 	var trivyPVC string
 	var updateCRDs bool
+	var injectConversion bool
+	var caPath string
+	var webhookServiceName string
+	var webhookServiceNamespace string
+	var webhookServicePath string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -104,7 +111,17 @@ func main() {
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
 	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
 	flag.BoolVar(&updateCRDs, "update-crds", false,
-		"If set, operator will update Zora CRDs if needed")
+		"If set to true, operator will update Zora CRDs if needed")
+	flag.BoolVar(&injectConversion, "inject-conversion", false,
+		"If set to true, operator will inject webhook conversion in annotated CRDs")
+	flag.StringVar(&caPath, "ca-path", "/tmp/k8s-webhook-server/serving-certs/ca.crt",
+		"Path of CA file to be injected in CRDs")
+	flag.StringVar(&webhookServiceName, "webhook-service-name", "zora-webhook",
+		"Webhook service name")
+	flag.StringVar(&webhookServiceNamespace, "webhook-service-namespace", "zora-system",
+		"Webhook service namespace")
+	flag.StringVar(&webhookServicePath, "webhook-service-path", "/convert",
+		"URL path for webhook conversion")
 
 	opts := zap.Options{
 		Development: true,
@@ -130,6 +147,9 @@ func main() {
 	if !enableHTTP2 {
 		tlsOpts = append(tlsOpts, disableHTTP2)
 	}
+	webhookServer := webhook.NewServer(webhook.Options{
+		TLSOpts: tlsOpts,
+	})
 
 	restConfig := ctrl.GetConfigOrDie()
 	mgr, err := ctrl.NewManager(restConfig, ctrl.Options{
@@ -142,6 +162,7 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "e0f4eef4.zora.undistro.io",
+		WebhookServer:          webhookServer,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
@@ -210,6 +231,12 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "CustomCheck")
 		os.Exit(1)
 	}
+	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
+		if err = (&zorav1alpha1.VulnerabilityReport{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "VulnerabilityReport")
+			os.Exit(1)
+		}
+	}
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
@@ -222,8 +249,10 @@ func main() {
 	}
 	ctx := ctrl.SetupSignalHandler()
 
-	if updateCRDs {
-		if err := crds.Update(ctrllog.IntoContext(ctx, setupLog), apiextensionsv1client.NewForConfigOrDie(restConfig)); err != nil {
+	if updateCRDs || injectConversion {
+		extClient := apiextensionsv1client.NewForConfigOrDie(restConfig)
+		copts := crds.NewConversionOptions(injectConversion, webhookServiceName, webhookServiceNamespace, webhookServicePath, caPath)
+		if err := crds.Update(ctrllog.IntoContext(ctx, setupLog), extClient, *copts); err != nil {
 			setupLog.Error(err, "unable to update CRDs")
 			os.Exit(1)
 		}

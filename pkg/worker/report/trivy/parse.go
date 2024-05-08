@@ -94,7 +94,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha2.VulnerabilityRepo
 	}
 	specs := make([]v1alpha2.VulnerabilityReportSpec, 0, len(vulnsByImage))
 	for _, spec := range vulnsByImage {
-		summarize(spec)
+		spec.Summarize()
 		specs = append(specs, *spec)
 	}
 	return specs, nil
@@ -203,24 +203,4 @@ func addResource(spec *v1alpha2.VulnerabilityReportSpec, kind, namespace, name s
 	}
 	spec.Resources[kind] = append(spec.Resources[kind], id)
 	spec.TotalResources++
-}
-
-func summarize(spec *v1alpha2.VulnerabilityReportSpec) {
-	s := &v1alpha1.VulnerabilitySummary{}
-	for _, v := range spec.Vulnerabilities {
-		s.Total++
-		switch v.Severity {
-		case "CRITICAL":
-			s.Critical++
-		case "HIGH":
-			s.High++
-		case "MEDIUM":
-			s.Medium++
-		case "LOW":
-			s.Low++
-		default:
-			s.Unknown++
-		}
-	}
-	spec.Summary = *s
 }

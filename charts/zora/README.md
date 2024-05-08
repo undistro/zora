@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.8.5-rc2](https://img.shields.io/badge/Version-0.8.5--rc2-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.8.5-rc2](https://img.shields.io/badge/AppVersion-v0.8.5--rc2-informational?style=flat-square&color=3CA9DD)
+![Version: 0.8.5-rc3](https://img.shields.io/badge/Version-0.8.5--rc3-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.8.5-rc3](https://img.shields.io/badge/AppVersion-v0.8.5--rc3-informational?style=flat-square&color=3CA9DD)
 
 A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
 
@@ -13,7 +13,7 @@ helm repo add undistro https://charts.undistro.io --force-update
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.8.5-rc2 \
+  --version 0.8.5-rc3 \
   --create-namespace \
   --wait \
   --set clusterName="$(kubectl config current-context)"
@@ -93,6 +93,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.log.level | string | `"info"` | Log level to configure the verbosity of logging. Can be one of 'debug', 'info', 'error', or any integer value > 0 which corresponds to custom debug levels of increasing verbosity |
 | operator.log.stacktraceLevel | string | `"error"` | Log level at and above which stacktraces are captured (one of 'info', 'error' or 'panic') |
 | operator.log.timeEncoding | string | `"rfc3339"` | Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano') |
+| operator.webhook.enabled | bool | `true` | Specifies whether webhook server is enabled |
 | scan.misconfiguration.enabled | bool | `true` | Specifies whether misconfiguration scan is enabled |
 | scan.misconfiguration.schedule | string | Cron expression for every hour at the current minute + 5 minutes | Cluster scan schedule in Cron format for misconfiguration scan |
 | scan.misconfiguration.successfulScansHistoryLimit | int | `1` | The number of successful finished scans and their issues to retain. |
