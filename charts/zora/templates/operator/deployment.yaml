@@ -13,20 +13,25 @@
 # limitations under the License.
 {{ $secretName := printf "%s-serving-cert" (include "zora.fullname" .) -}}
 {{- $serviceName := printf "%s-webhook" (include "zora.fullname" .) -}}
-{{- if and .Values.operator.webhook.enabled (not (lookup "v1" "Secret" .Release.Namespace $secretName)) -}}
-  {{- $cn := $serviceName -}}
-  {{- $ca := genCA $cn 3650 -}}
-  {{- $altNames := list ( printf "%s.%s" $serviceName .Release.Namespace ) ( printf "%s.%s.svc" $serviceName .Release.Namespace ) ( printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace ) -}}
-  {{- $cert := genSignedCert $cn nil $altNames 3650 $ca -}}
+{{- if .Values.operator.webhook.enabled -}}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
 apiVersion: v1
 kind: Secret
 metadata:
   name: {{ $secretName }}
 type: kubernetes.io/tls
 data:
+{{- if $existingSecret }}
+  {{- toYaml $existingSecret.data | nindent 2 }}
+{{- else }}
+  {{- $cn := $serviceName }}
+  {{- $ca := genCA $cn 3650 }}
+  {{- $altNames := list ( printf "%s.%s" $serviceName .Release.Namespace ) ( printf "%s.%s.svc" $serviceName .Release.Namespace ) ( printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace ) }}
+  {{- $cert := genSignedCert $cn nil $altNames 3650 $ca }}
   tls.key: {{ b64enc $cert.Key }}
   tls.crt: {{ b64enc $cert.Cert }}
   ca.crt: {{ b64enc $ca.Cert }}
+{{- end }}
 ---
 {{- end -}}
 apiVersion: apps/v1
