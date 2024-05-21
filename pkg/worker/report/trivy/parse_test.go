@@ -54,6 +54,8 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Pod": {"kube-system/kube-apiserver-kind-control-plane"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 1, High: 1},
 					},
+					TotalPackages:       1,
+					TotalUniquePackages: 1,
 					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
 							Packages: []v1alpha1.Package{{
@@ -86,8 +88,10 @@ func TestParse(t *testing.T) {
 						Distro:         &v1alpha1.Distro{Name: "alpine", Version: "3.16.3"},
 						TotalResources: 2,
 						Resources:      map[string][]string{"Deployment": {"apps/app1", "apps/app2"}},
-						Summary:        v1alpha1.VulnerabilitySummary{Total: 2, Critical: 1, High: 1},
+						Summary:        v1alpha1.VulnerabilitySummary{Total: 3, Critical: 1, High: 2},
 					},
+					TotalPackages:       4,
+					TotalUniquePackages: 3,
 					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
 							Packages: []v1alpha1.Package{
@@ -136,6 +140,27 @@ func TestParse(t *testing.T) {
 								LastModifiedDate: newTime("2023-08-12T06:16:00Z"),
 							},
 						},
+						{
+							Packages: []v1alpha1.Package{
+								{
+									Package:    "libssl1.1",
+									Version:    "1.1.1s-r0",
+									FixVersion: "1.1.1t-r0",
+									Status:     "fixed",
+									Type:       "alpine",
+								},
+							},
+							VulnerabilityCommon: v1alpha1.VulnerabilityCommon{
+								ID:               "CVE-2023-0286",
+								Severity:         "HIGH",
+								Title:            "openssl: X.400 address type confusion in X.509 GeneralName",
+								Description:      "There is a type confusion vulnerability relating to X.400 address processing\ninside an X.509 GeneralName. X.400 addresses were parsed as an ASN1_STRING but\nthe public structure definition for GENERAL_NAME incorrectly specified the type\nof the x400Address field as ASN1_TYPE. This field is subsequently interpreted by\nthe OpenSSL function GENERAL_NAME_cmp as an ASN1_TYPE rather than an\nASN1_STRING.\n\nWhen CRL checking is enabled (i.e. the application sets the\nX509_V_FLAG_CRL_CHECK flag), this vulnerability may allow an attacker to pass\narbitrary pointers to a memcmp call, enabling them to read memory contents or\nenact a denial of service. In most cases, the attack requires the attacker to\nprovide both the certificate chain and CRL, neither of which need to have a\nvalid signature. If the attacker only controls one of these inputs, the other\ninput must already contain an X.400 address as a CRL distribution point, which\nis uncommon. As such, this vulnerability is most likely to only affect\napplications which have implemented their own functionality for retrieving CRLs\nover a network.\n\n",
+								URL:              "https://avd.aquasec.com/nvd/cve-2023-0286",
+								Score:            "7.4",
+								PublishedDate:    newTime("2023-02-08T20:15:24.267Z"),
+								LastModifiedDate: newTime("2024-02-04T09:15:09.113Z"),
+							},
+						},
 					},
 				},
 				{
@@ -150,6 +175,8 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Deployment": {"apps/app1"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 3, High: 1, Medium: 1, Unknown: 1},
 					},
+					TotalPackages:       3,
+					TotalUniquePackages: 3,
 					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
 							Packages: []v1alpha1.Package{{
@@ -222,6 +249,8 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Deployment": {"apps/app2"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 2, High: 1, Low: 1},
 					},
+					TotalPackages:       2,
+					TotalUniquePackages: 2,
 					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
 							Packages: []v1alpha1.Package{{
@@ -275,6 +304,8 @@ func TestParse(t *testing.T) {
 						Resources:      map[string][]string{"Deployment": {"default/nginx"}},
 						Summary:        v1alpha1.VulnerabilitySummary{Total: 1, Medium: 1},
 					},
+					TotalPackages:       1,
+					TotalUniquePackages: 1,
 					Vulnerabilities: []v1alpha2.Vulnerability{
 						{
 							Packages: []v1alpha1.Package{{
