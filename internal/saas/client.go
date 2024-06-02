@@ -123,7 +123,6 @@ func (r *client) PutClusterScan(ctx context.Context, namespace, name string, plu
 }
 
 func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha2.VulnerabilityReport) error {
-	// TODO v1alpha2 API is not implemented yet
 	u := r.clusterURL("v1alpha2", namespace, name, "vulnerabilityreports")
 	b, err := json.Marshal(vulnReport)
 	if err != nil {
