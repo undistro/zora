@@ -46,8 +46,9 @@ help: ## Display this help.
 ##@ Development
 
 .PHONY: manifests
-manifests: controller-gen addlicense ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+manifests: controller-gen addlicense yq ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	$(YQ) -i '.metadata.annotations."zora.undistro.io/inject-conversion" = "true"' config/crd/bases/zora.undistro.io_vulnerabilityreports.yaml
 	@cp -r config/crd/bases/*.yaml charts/zora/crds/
 	$(ADDLICENSE) -c "Undistro Authors" -l "apache" -ignore ".github/**" -ignore ".idea/**" -ignore "dist/**" -ignore "site/**" -ignore "config/**" -ignore "docs/overrides/**" -ignore "docs/stylesheets/**" .
 
@@ -146,15 +147,19 @@ ifndef ignore-not-found
   ignore-not-found = false
 endif
 
+.PHONY: install-crds
+install-crds: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
+	$(KUSTOMIZE) build config/crd | $(KUBECTL) apply -f -
+
 NAMESPACE ?= zora-system
 .PHONY: install
-install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
-	$(KUSTOMIZE) build config/crd | $(KUBECTL) apply -f -
+install: install-crds ## Install CRs (plugins, custom checks, cluster, and scan) into the K8s cluster specified in ~/.kube/config.
 	@$(KUBECTL) create namespace $(NAMESPACE) || true
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_popeye_all.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_marvin.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_plugin_trivy.yaml -n $(NAMESPACE)
-	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_customcheck_labels.yaml -n $(NAMESPACE)
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_customcheck_replicas.yaml -n $(NAMESPACE)
+	@$(KUBECTL) apply -f config/samples/zora_v1alpha2_customcheck_labels.yaml -n $(NAMESPACE)
 	@$(KUBECTL) apply -f config/rbac/zora_plugins_role.yaml
 	@$(KUBECTL) create -f config/rbac/zora_plugins_role_binding.yaml || true
 	@$(KUBECTL) apply -f config/samples/zora_v1alpha1_cluster.yaml -n $(NAMESPACE)
@@ -206,6 +211,7 @@ GOLANGCI_LINT = $(LOCALBIN)/golangci-lint-$(GOLANGCI_LINT_VERSION)
 ADDLICENSE ?= $(LOCALBIN)/addlicense-$(ADDLICENSE_VERSION)
 HELM_DOCS ?= $(LOCALBIN)/helm-docs-$(HELM_DOCS_VERSION)
 KIND ?= $(LOCALBIN)/kind-$(KIND_VERSION)
+YQ ?= $(LOCALBIN)/yq-$(YQ_VERSION)
 
 ## Tool Versions
 KUSTOMIZE_VERSION ?= v5.3.0
@@ -215,6 +221,7 @@ GOLANGCI_LINT_VERSION ?= v1.54.2
 HELM_DOCS_VERSION ?= v1.13.1
 ADDLICENSE_VERSION ?= v1.1.1
 KIND_VERSION ?= v0.22.0
+YQ_VERSION ?= v4.43.1
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
@@ -250,6 +257,11 @@ $(HELM_DOCS): $(LOCALBIN)
 kind: $(KIND) ## Download kind locally if necessary
 $(KIND): $(LOCALBIN)
 	$(call go-install-tool,$(KIND),sigs.k8s.io/kind,${KIND_VERSION})
+
+.PHONY: yq
+yq: $(YQ) ## Download yq locally if necessary
+$(YQ): $(LOCALBIN)
+	$(call go-install-tool,$(YQ),github.com/mikefarah/yq/v4,${YQ_VERSION})
 
 # go-install-tool will 'go install' any package with custom target and name of binary, if it doesn't exist
 # $1 - target path with name of binary (ideally with version)

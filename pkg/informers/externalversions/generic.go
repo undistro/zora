@@ -54,6 +54,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=zora, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("customchecks"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Zora().V1alpha2().CustomChecks().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("vulnerabilityreports"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Zora().V1alpha2().VulnerabilityReports().Informer()}, nil
 
 	}
 

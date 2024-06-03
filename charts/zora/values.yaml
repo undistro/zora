@@ -141,7 +141,9 @@ operator:
     stacktraceLevel: error
     # -- Log time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano')
     timeEncoding: rfc3339
-
+  webhook:
+    # -- Specifies whether webhook server is enabled
+    enabled: true
 scan:
   misconfiguration:
     # -- Specifies whether misconfiguration scan is enabled

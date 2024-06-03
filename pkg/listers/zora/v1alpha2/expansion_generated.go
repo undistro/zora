@@ -9,3 +9,11 @@ type CustomCheckListerExpansion interface{}
 // CustomCheckNamespaceListerExpansion allows custom methods to be added to
 // CustomCheckNamespaceLister.
 type CustomCheckNamespaceListerExpansion interface{}
+
+// VulnerabilityReportListerExpansion allows custom methods to be added to
+// VulnerabilityReportLister.
+type VulnerabilityReportListerExpansion interface{}
+
+// VulnerabilityReportNamespaceListerExpansion allows custom methods to be added to
+// VulnerabilityReportNamespaceLister.
+type VulnerabilityReportNamespaceListerExpansion interface{}

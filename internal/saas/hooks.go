@@ -26,6 +26,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 )
 
 type ClusterHook func(ctx context.Context, cluster *v1alpha1.Cluster) error
@@ -160,13 +161,12 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 
 	pluginProcessedResources := getVulnerabilityProcessedResources(metaList.Items)
 	if reflect.DeepEqual(pluginProcessedResources, cs.Status.ProcessedVulnerabilities) {
-		log := log.FromContext(ctx)
-		log.Info("Skipping vulnerabilities, no changes from processed vulnerabilities")
+		log.FromContext(ctx).Info("Skipping vulnerabilities, no changes from processed vulnerabilities")
 		return nil
 	}
 
 	for _, i := range metaList.Items {
-		vulnReport := &v1alpha1.VulnerabilityReport{}
+		vulnReport := &v1alpha2.VulnerabilityReport{}
 		if err := cl.Get(ctx, types.NamespacedName{Namespace: i.Namespace, Name: i.Name}, vulnReport); err != nil {
 			return err
 		}

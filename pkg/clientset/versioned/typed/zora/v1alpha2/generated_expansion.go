@@ -3,3 +3,5 @@
 package v1alpha2
 
 type CustomCheckExpansion interface{}
+
+type VulnerabilityReportExpansion interface{}

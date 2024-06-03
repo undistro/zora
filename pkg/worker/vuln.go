@@ -25,17 +25,18 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 	zora "github.com/undistro/zora/pkg/clientset/versioned"
 	"github.com/undistro/zora/pkg/worker/report/trivy"
 )
 
-var vulnPlugins = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha1.VulnerabilityReportSpec, error){
+var vulnPlugins = map[string]func(ctx context.Context, reader io.Reader) ([]v1alpha2.VulnerabilityReportSpec, error){
 	"trivy": trivy.Parse,
 }
 
 var vulnReportTypeMeta = metav1.TypeMeta{
 	Kind:       "VulnerabilityReport",
-	APIVersion: v1alpha1.SchemeGroupVersion.String(),
+	APIVersion: v1alpha2.SchemeGroupVersion.String(),
 }
 
 var nonAlphanumericRegex = regexp.MustCompile(`\W+`)
@@ -47,7 +48,7 @@ func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, cl
 		return err
 	}
 	for _, vuln := range vulns {
-		v, err := client.ZoraV1alpha1().VulnerabilityReports(cfg.Namespace).Create(ctx, &vuln, createOpts)
+		v, err := client.ZoraV1alpha2().VulnerabilityReports(cfg.Namespace).Create(ctx, &vuln, createOpts)
 		if err != nil {
 			return fmt.Errorf("failed to create VulnerabilityReport %q: %v", vuln.Name, err)
 		}
@@ -56,7 +57,7 @@ func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, cl
 	return nil
 }
 
-func parseVulnResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha1.VulnerabilityReport, error) {
+func parseVulnResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha2.VulnerabilityReport, error) {
 	parseFunc, ok := vulnPlugins[cfg.PluginName]
 	if !ok {
 		return nil, fmt.Errorf("invalid plugin %q", cfg.PluginName)
@@ -66,16 +67,16 @@ func parseVulnResults(ctx context.Context, cfg *config, results io.Reader) ([]v1
 		return nil, fmt.Errorf("failed to parse %q results: %v", cfg.PluginName, err)
 	}
 	owner := ownerReference(cfg)
-	vulns := make([]v1alpha1.VulnerabilityReport, 0, len(specs))
+	vulns := make([]v1alpha2.VulnerabilityReport, 0, len(specs))
 	for _, spec := range specs {
 		vulns = append(vulns, newVulnReport(cfg, spec, owner))
 	}
 	return vulns, nil
 }
 
-func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner metav1.OwnerReference) v1alpha1.VulnerabilityReport {
+func newVulnReport(cfg *config, spec v1alpha2.VulnerabilityReportSpec, owner metav1.OwnerReference) v1alpha2.VulnerabilityReport {
 	spec.Cluster = cfg.ClusterName
-	return v1alpha1.VulnerabilityReport{
+	return v1alpha2.VulnerabilityReport{
 		TypeMeta: vulnReportTypeMeta,
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            vulnReportName(cfg, spec),
@@ -92,7 +93,7 @@ func newVulnReport(cfg *config, spec v1alpha1.VulnerabilityReportSpec, owner met
 	}
 }
 
-func vulnReportName(cfg *config, spec v1alpha1.VulnerabilityReportSpec) string {
+func vulnReportName(cfg *config, spec v1alpha2.VulnerabilityReportSpec) string {
 	return fmt.Sprintf("%s-%s-%s", cfg.ClusterName, strings.ToLower(cleanString(spec.Image)), cfg.suffix)
 }
 

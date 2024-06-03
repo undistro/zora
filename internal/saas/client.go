@@ -23,13 +23,12 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/undistro/zora/api/zora/v1alpha1"
+	"github.com/undistro/zora/api/zora/v1alpha2"
 )
 
 const (
-	workspacePathF = "zora/api/v1alpha1/workspaces/%s"
-	clusterPathF   = "namespaces/%s/clusters/%s"
-	versionHeader  = "x-zora-version"
+	clusterPathF  = "zora/api/%s/workspaces/%s/namespaces/%s/clusters/%s"
+	versionHeader = "x-zora-version"
 )
 
 var allowedStatus = []int{
@@ -44,7 +43,7 @@ type Client interface {
 	DeleteCluster(ctx context.Context, namespace, name string) error
 	PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 	DeleteClusterScan(ctx context.Context, namespace, name string) error
-	PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha1.VulnerabilityReport) error
+	PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha2.VulnerabilityReport) error
 	PutClusterStatus(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 }
 
@@ -60,7 +59,6 @@ func NewClient(baseURL, version, workspaceID string, httpclient *http.Client) (C
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path.Join(u.Path, fmt.Sprintf(workspacePathF, workspaceID))
 	return &client{
 		version:     version,
 		baseURL:     u,
@@ -70,7 +68,7 @@ func NewClient(baseURL, version, workspaceID string, httpclient *http.Client) (C
 }
 
 func (r *client) PutCluster(ctx context.Context, cluster Cluster) error {
-	u := r.clusterURL(cluster.Namespace, cluster.Name)
+	u := r.clusterURL("v1alpha1", cluster.Namespace, cluster.Name)
 	b, err := json.Marshal(cluster)
 	if err != nil {
 		return err
@@ -90,7 +88,7 @@ func (r *client) PutCluster(ctx context.Context, cluster Cluster) error {
 }
 
 func (r *client) DeleteCluster(ctx context.Context, namespace, name string) error {
-	u := r.clusterURL(namespace, name)
+	u := r.clusterURL("v1alpha1", namespace, name)
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, u, nil)
 	if err != nil {
 		return err
@@ -105,7 +103,7 @@ func (r *client) DeleteCluster(ctx context.Context, namespace, name string) erro
 }
 
 func (r *client) PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error {
-	u := r.clusterURL(namespace, name, "scan")
+	u := r.clusterURL("v1alpha1", namespace, name, "scan")
 	b, err := json.Marshal(pluginStatus)
 	if err != nil {
 		return err
@@ -124,8 +122,8 @@ func (r *client) PutClusterScan(ctx context.Context, namespace, name string, plu
 	return validateStatus(res)
 }
 
-func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha1.VulnerabilityReport) error {
-	u := r.clusterURL(namespace, name, "vulnerabilityreports")
+func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha2.VulnerabilityReport) error {
+	u := r.clusterURL("v1alpha2", namespace, name, "vulnerabilityreports")
 	b, err := json.Marshal(vulnReport)
 	if err != nil {
 		return err
@@ -145,7 +143,7 @@ func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name str
 }
 
 func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) error {
-	u := r.clusterURL(namespace, name, "scan")
+	u := r.clusterURL("v1alpha1", namespace, name, "scan")
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, u, nil)
 	if err != nil {
 		return err
@@ -160,7 +158,7 @@ func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) 
 }
 
 func (r *client) PutClusterStatus(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error {
-	u := r.clusterURL(namespace, name, "status")
+	u := r.clusterURL("v1alpha1", namespace, name, "status")
 	b, err := json.Marshal(pluginStatus)
 	if err != nil {
 		return err
@@ -179,8 +177,8 @@ func (r *client) PutClusterStatus(ctx context.Context, namespace, name string, p
 	return validateStatus(res)
 }
 
-func (r *client) clusterURL(namespace, name string, extra ...string) string {
-	p := path.Join(r.baseURL.Path, fmt.Sprintf(clusterPathF, namespace, name))
+func (r *client) clusterURL(version, namespace, name string, extra ...string) string {
+	p := path.Join(r.baseURL.Path, fmt.Sprintf(clusterPathF, version, r.workspaceID, namespace, name))
 	if len(extra) > 0 {
 		tmp := []string{p}
 		p = path.Join(append(tmp, extra...)...)
