@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.8.5-rc4](https://img.shields.io/badge/Version-0.8.5--rc4-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.8.5-rc4](https://img.shields.io/badge/AppVersion-v0.8.5--rc4-informational?style=flat-square&color=3CA9DD)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.9.0](https://img.shields.io/badge/AppVersion-v0.9.0-informational?style=flat-square&color=3CA9DD)
 
 A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
 
@@ -13,7 +13,7 @@ helm repo add undistro https://charts.undistro.io --force-update
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.8.5-rc4 \
+  --version 0.9.0 \
   --create-namespace \
   --wait \
   --set clusterName="$(kubectl config current-context)"
