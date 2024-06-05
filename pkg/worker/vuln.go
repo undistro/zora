@@ -39,7 +39,7 @@ var vulnReportTypeMeta = metav1.TypeMeta{
 	APIVersion: v1alpha2.SchemeGroupVersion.String(),
 }
 
-var nonAlphanumericRegex = regexp.MustCompile(`\W+`)
+var nonAlphanumericRegex = regexp.MustCompile(`[\W|_]+`)
 
 func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, client *zora.Clientset) error {
 	log := logr.FromContextOrDiscard(ctx)
