@@ -1804,6 +1804,12 @@ You're not viewing the latest version.
 <td>Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim</td>
 </tr>
 <tr>
+<td>scan.plugins.trivy.persistence.fsGroup</td>
+<td>int</td>
+<td><code>0</code></td>
+<td>Specifies the fsGroup to use when mounting the persistent volume</td>
+</tr>
+<tr>
 <td>scan.plugins.trivy.persistence.accessMode</td>
 <td>string</td>
 <td><code>"ReadWriteOnce"</code></td>
