@@ -481,3 +481,24 @@ func newTime(s string) *metav1.Time {
 	}
 	return &metav1.Time{Time: p}
 }
+
+func Test_cleanString(t *testing.T) {
+	tests := []struct {
+		name string
+		arg  string
+		want string
+	}{
+		{
+			name: "ok",
+			arg:  `asdfghjklç"!@#$%¨&*()_+'1234567890-=¬¹²³£¢¬{[]}\§[]{}ªº´~^,.;/<>:?°\|àáãâ`,
+			want: "asdfghjkl1234567890",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := cleanString(tt.arg); got != tt.want {
+				t.Errorf("cleanString() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
