@@ -2,97 +2,97 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/dashboard/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/faq/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/helm-chart/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/authenticated-registries/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/custom-checks/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/https-proxy/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/resources/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/retain-issues/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/scan-schedule/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/suspend-scan/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/vulnerability-database-persistence/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/private-registries/acr/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/configuration/private-registries/ecr/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/getting-started/installation/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/plugins/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/plugins/marvin/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/plugins/popeye/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/v0.9/plugins/trivy/</loc>
-         <lastmod>2024-06-03</lastmod>
+         <lastmod>2024-06-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
