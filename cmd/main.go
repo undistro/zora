@@ -81,6 +81,7 @@ func main() {
 	var checksConfigMapName string
 	var kubexnsImage string
 	var trivyPVC string
+	var trivyFSGroup int64
 	var updateCRDs bool
 	var injectConversion bool
 	var caPath string
@@ -110,6 +111,7 @@ func main() {
 	flag.StringVar(&checksConfigMapName, "checks-configmap-name", "zora-custom-checks", "Name of custom checks ConfigMap")
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
 	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
+	flag.Int64Var(&trivyFSGroup, "trivy-db-fsgroup", 0, "PersistentVolumeClaim FSGroup for Trivy DB")
 	flag.BoolVar(&updateCRDs, "update-crds", false,
 		"If set to true, operator will update Zora CRDs if needed")
 	flag.BoolVar(&injectConversion, "inject-conversion", false,
@@ -217,6 +219,7 @@ func main() {
 		OnDelete:                onClusterScanDelete,
 		KubexnsImage:            kubexnsImage,
 		TrivyPVC:                trivyPVC,
+		TrivyFSGroup:            &trivyFSGroup,
 		ChecksConfigMap:         fmt.Sprintf("%s/%s", checksConfigMapNamespace, checksConfigMapName),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")

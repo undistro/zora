@@ -21,6 +21,8 @@ spec:
   ttlSecondsAfterFinished: 0
   template:
     spec:
+      securityContext:
+        fsGroup: 0
       volumes:
         - name: trivy-db
           persistentVolumeClaim:
@@ -52,7 +54,7 @@ spec:
                 --download-java-db-only \
                 {{- end }}
                 --download-db-only \
-              && chgrp -R 0 /tmp/trivy-cache/* && chmod -R g+rwX /tmp/trivy-cache/*
+              && chgrp -R {{ .Values.scan.plugins.trivy.persistence.fsGroup }} /tmp/trivy-cache/* && chmod -R g+rwX /tmp/trivy-cache/*
           env:
             - name: SSL_CERT_DIR
               value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"

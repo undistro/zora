@@ -97,6 +97,7 @@ type CronJobMutator struct {
 	KubexnsImage       string
 	ChecksConfigMap    string
 	TrivyPVC           string
+	TrivyFSGroup       *int64
 	ClusterUID         types.UID
 }
 
@@ -151,6 +152,11 @@ func (r *CronJobMutator) Mutate() error {
 				PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{ClaimName: r.TrivyPVC},
 			},
 		})
+		if r.TrivyFSGroup != nil {
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
+				FSGroup: r.TrivyFSGroup,
+			}
+		}
 	}
 
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
