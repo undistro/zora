@@ -106,7 +106,7 @@ func main() {
 	flag.StringVar(&cronJobAnnotations, "cronjob-serviceaccount-annotations", "annotaion1=value1,annotation2=value2", "Annotations to be applied to the CronJob Service Account")
 	flag.StringVar(&saasWorkspaceID, "saas-workspace-id", "", "Your workspace ID in Zora SaaS")
 	flag.StringVar(&saasServer, "saas-server", "http://localhost:3003", "Address for Zora's saas server")
-	flag.StringVar(&version, "version", "0.9.1", "Zora version")
+	flag.StringVar(&version, "version", "0.9.2", "Zora version")
 	flag.StringVar(&checksConfigMapNamespace, "checks-configmap-namespace", "zora-system", "Namespace of custom checks ConfigMap")
 	flag.StringVar(&checksConfigMapName, "checks-configmap-name", "zora-custom-checks", "Name of custom checks ConfigMap")
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
