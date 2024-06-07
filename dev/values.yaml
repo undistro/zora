@@ -245,7 +245,7 @@ scan:
         # -- [Persistence storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/). Set to empty for default storage class
         storageClass: ""
         # -- Persistence storage size
-        storageRequest: 1Gi
+        storageRequest: 2Gi
         # -- Specifies whether Java vulnerability database should be downloaded on helm install/upgrade
         downloadJavaDB: false
 
