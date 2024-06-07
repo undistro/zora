@@ -50,10 +50,16 @@ spec:
                 {{- if .Values.scan.plugins.trivy.insecure }}
                 --insecure \
                 {{- end }}
-                {{- if .Values.scan.plugins.trivy.persistence.downloadJavaDB }}
-                --download-java-db-only \
+                --download-db-only{{- if .Values.scan.plugins.trivy.persistence.downloadJavaDB }} && \
+              time trivy image \
+                --debug \
+                --no-progress \
+                --cache-dir=/tmp/trivy-cache \
+                {{- if .Values.scan.plugins.trivy.insecure }}
+                --insecure \
                 {{- end }}
-                --download-db-only
+                --download-java-db-only
+              {{- end }}
           env:
             - name: SSL_CERT_DIR
               value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"
