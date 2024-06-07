@@ -25,4 +25,5 @@ var providerPrefixes = map[string]string{
 	"doks.digitalocean.com/": "digitalocean",
 	"oke.oraclecloud.com/":   "oraclecloud",
 	"node.openshift.io/":     "openshift",
+	"cce.cloud.com/":         "huaweicloud",
 }
