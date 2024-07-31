@@ -62,6 +62,7 @@ type ClusterScanReconciler struct {
 	ClusterRoleBindingName  string
 	ServiceAccountName      string
 	KubexnsImage            string
+	KubexnsPullPolicy       string
 	ChecksConfigMap         string
 	TrivyPVC                string
 	TrivyFSGroup            *int64
@@ -218,6 +219,7 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			ServiceAccountName: r.ServiceAccountName,
 			Suspend:            notReadyErr != nil,
 			KubexnsImage:       r.KubexnsImage,
+			KubexnsPullPolicy:  r.KubexnsPullPolicy,
 			ChecksConfigMap:    r.ChecksConfigMap,
 			TrivyPVC:           r.TrivyPVC,
 			TrivyFSGroup:       r.TrivyFSGroup,
