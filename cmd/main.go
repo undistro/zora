@@ -80,6 +80,7 @@ func main() {
 	var checksConfigMapNamespace string
 	var checksConfigMapName string
 	var kubexnsImage string
+	var kubexnsPullPolicy string
 	var trivyPVC string
 	var trivyFSGroup int64
 	var updateCRDs bool
@@ -110,6 +111,7 @@ func main() {
 	flag.StringVar(&checksConfigMapNamespace, "checks-configmap-namespace", "zora-system", "Namespace of custom checks ConfigMap")
 	flag.StringVar(&checksConfigMapName, "checks-configmap-name", "zora-custom-checks", "Name of custom checks ConfigMap")
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
+	flag.StringVar(&kubexnsPullPolicy, "kubexns-pull-policy", "Always", "kubexns image pull policy")
 	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
 	flag.Int64Var(&trivyFSGroup, "trivy-db-fsgroup", 0, "PersistentVolumeClaim FSGroup for Trivy DB")
 	flag.BoolVar(&updateCRDs, "update-crds", false,
@@ -218,6 +220,7 @@ func main() {
 		OnUpdate:                onClusterScanUpdate,
 		OnDelete:                onClusterScanDelete,
 		KubexnsImage:            kubexnsImage,
+		KubexnsPullPolicy:       kubexnsPullPolicy,
 		TrivyPVC:                trivyPVC,
 		TrivyFSGroup:            &trivyFSGroup,
 		ChecksConfigMap:         fmt.Sprintf("%s/%s", checksConfigMapNamespace, checksConfigMapName),

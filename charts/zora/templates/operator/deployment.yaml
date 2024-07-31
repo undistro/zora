@@ -114,6 +114,7 @@ spec:
             - --checks-configmap-namespace={{ .Release.Namespace }}
             - --checks-configmap-name={{ .Values.customChecksConfigMap }}
             - --kubexns-image={{ printf "%s:%s" .Values.kubexnsImage.repository .Values.kubexnsImage.tag }}
+            - --kubexns-pull-policy={{ .Values.kubexnsImage.pullPolicy }}
             - --update-crds={{ .Values.updateCRDs | default .Release.IsUpgrade }}
             - --inject-conversion={{ .Values.operator.webhook.enabled }}
             - --webhook-service-name={{ $serviceName }}

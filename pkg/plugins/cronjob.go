@@ -95,6 +95,7 @@ type CronJobMutator struct {
 	ServiceAccountName string
 	Suspend            bool
 	KubexnsImage       string
+	KubexnsPullPolicy  string
 	ChecksConfigMap    string
 	TrivyPVC           string
 	TrivyFSGroup       *int64
@@ -260,7 +261,7 @@ func (r *CronJobMutator) initContainer() corev1.Container {
 			{Name: "IGNORE_NOT_FOUND", Value: "true"},
 		},
 		VolumeMounts:    []corev1.VolumeMount{customChecksVolume},
-		ImagePullPolicy: corev1.PullIfNotPresent,
+		ImagePullPolicy: corev1.PullPolicy(r.KubexnsPullPolicy),
 		Resources:       r.Plugin.Spec.Resources,
 		SecurityContext: &corev1.SecurityContext{
 			RunAsNonRoot:             pointer.Bool(true),
