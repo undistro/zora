@@ -192,9 +192,9 @@ scan:
         # -- marvin plugin image repository
         repository: ghcr.io/undistro/marvin
         # -- marvin plugin image tag
-        tag: v0.2.3
+        tag: v0.2
         # -- Image pull policy
-        pullPolicy: IfNotPresent
+        pullPolicy: Always
       # -- List of environment variables to set in marvin container.
       env: []
       # -- List of sources to populate environment variables in marvin container.
@@ -213,7 +213,7 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/undistro/trivy
         # -- trivy plugin image tag
-        tag: 0.51
+        tag: 0.53
         # -- Image pull policy
         pullPolicy: Always
       # -- List of environment variables to set in trivy container.
@@ -245,7 +245,7 @@ scan:
         # -- [Persistence storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/). Set to empty for default storage class
         storageClass: ""
         # -- Persistence storage size
-        storageRequest: 1Gi
+        storageRequest: 2Gi
         # -- Specifies whether Java vulnerability database should be downloaded on helm install/upgrade
         downloadJavaDB: false
 
@@ -286,7 +286,9 @@ kubexnsImage:
   # -- kubexns image repository
   repository: ghcr.io/undistro/kubexns
   # -- kubexns image tag
-  tag: v0.1.4
+  tag: v0.1
+  # -- Image pull policy
+  pullPolicy: Always
 
 # -- Custom checks ConfigMap name
 customChecksConfigMap: zora-custom-checks
