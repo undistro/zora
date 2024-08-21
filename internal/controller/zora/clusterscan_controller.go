@@ -65,7 +65,6 @@ type ClusterScanReconciler struct {
 	KubexnsPullPolicy       string
 	ChecksConfigMap         string
 	TrivyPVC                string
-	TrivyFSGroup            *int64
 	Annotations             map[string]string
 	OnUpdate                saas.ClusterScanHook
 	OnDelete                saas.ClusterScanHook
@@ -222,7 +221,6 @@ func (r *ClusterScanReconciler) reconcile(ctx context.Context, clusterscan *v1al
 			KubexnsPullPolicy:  r.KubexnsPullPolicy,
 			ChecksConfigMap:    r.ChecksConfigMap,
 			TrivyPVC:           r.TrivyPVC,
-			TrivyFSGroup:       r.TrivyFSGroup,
 			ClusterUID:         cluster.UID,
 		}
 

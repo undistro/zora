@@ -16,7 +16,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: trivy-db-pvc
+  name: trivy-db-volume
 spec:
   {{- if .Values.scan.plugins.trivy.persistence.storageClass }}
   storageClassName: {{ .Values.scan.plugins.trivy.persistence.storageClass | quote }}
