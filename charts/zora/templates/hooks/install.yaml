@@ -49,6 +49,11 @@ spec:
               "revision" .Release.Revision) }}'
       securityContext:
         allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
         readOnlyRootFilesystem: true
+        seccompProfile:
+          type: "RuntimeDefault"
   restartPolicy: Never
 {{- end }}

@@ -21,12 +21,10 @@ spec:
   ttlSecondsAfterFinished: 0
   template:
     spec:
-      securityContext:
-        fsGroup: 0
       volumes:
         - name: trivy-db
           persistentVolumeClaim:
-            claimName: trivy-db-pvc
+            claimName: trivy-db-volume
       containers:
         - name: trivy-download-db
           image: "{{ .Values.scan.plugins.trivy.image.repository }}:{{ .Values.scan.plugins.trivy.image.tag }}"
@@ -35,7 +33,13 @@ spec:
           {{- end }}
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
             privileged: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: "RuntimeDefault"
           volumeMounts:
             - mountPath: /tmp/trivy-cache
               name: trivy-db
@@ -70,4 +74,5 @@ spec:
               value: {{ .Values.noProxy | quote }}
             {{- end }}
       restartPolicy: OnFailure
+      serviceAccountName: zora-plugins
 {{- end }}

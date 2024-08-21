@@ -238,8 +238,6 @@ scan:
       persistence:
         # -- Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim
         enabled: true
-        # -- Specifies the fsGroup to use when mounting the persistent volume
-        fsGroup: 0
         # -- [Persistence access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes)
         accessMode: ReadWriteOnce
         # -- [Persistence storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/). Set to empty for default storage class
