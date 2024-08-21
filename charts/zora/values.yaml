@@ -206,7 +206,13 @@ scan:
       # -- Specifies whether vulnerability descriptions should be ignored
       ignoreDescriptions: false
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
-      resources: {}
+      resources:
+        requests:
+          cpu: 500
+          memory: 2048Mi
+        limits:
+          cpu: 1500m
+          memory: 4096Mi
       # -- Annotations added to the trivy pods
       podAnnotations: {}
       image:
