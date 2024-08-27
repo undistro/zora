@@ -114,7 +114,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.marvin.envFrom | list | `[]` | List of sources to populate environment variables in marvin container. |
 | scan.plugins.trivy.ignoreUnfixed | bool | `false` | Specifies whether only fixed vulnerabilities should be reported |
 | scan.plugins.trivy.ignoreDescriptions | bool | `false` | Specifies whether vulnerability descriptions should be ignored |
-| scan.plugins.trivy.resources | object | `{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":500,"memory":"2048Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
+| scan.plugins.trivy.resources | object | `{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":"500m","memory":"2048Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |
 | scan.plugins.trivy.image.tag | float | `0.53` | trivy plugin image tag |
