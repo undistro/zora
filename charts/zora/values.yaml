@@ -305,3 +305,54 @@ noProxy: kubernetes.default.svc.*,127.0.0.1,localhost
 # -- (bool) Specifies whether CRDs should be updated by operator at startup
 # @default -- `true` for upgrades
 updateCRDs:
+
+tokenRefresh:
+  image:
+    # -- tokenrefresh image repository
+    repository: ghcr.io/undistro/zora/tokenrefresh
+    # -- Overrides the image tag whose default is the chart appVersion
+    tag: ""
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
+  rbac:
+    # -- Specifies whether Roles and RoleBindings should be created
+    create: true
+    serviceAccount:
+      # -- Specifies whether a service account should be created
+      create: true
+      # -- Annotations to be added to service account
+      annotations: {}
+      # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+      name: ""
+  # -- Minimum time to wait before checking for token refresh
+  minRefreshTime: "1m"
+  # -- Threshold relative to the token expiry timestamp, after which a token can be refreshed.
+  refreshThreshold: "2h"
+  # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+  nodeSelector: {}
+  # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+  tolerations: []
+  # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+  affinity: {}
+  # -- Annotations to be added to pods
+  podAnnotations:
+    kubectl.kubernetes.io/default-container: manager
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
+  podSecurityContext:
+    runAsNonRoot: true
+  # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+
+zoraauth:
+  # -- The domain associated with the tokens
+  domain: ""
+  # -- The client id associated with the tokens
+  clientId: ""
+  # -- The access token authorizing access to the SaaS API server
+  accessToken: ""
+  # -- The type of the access token
+  tokenType: "Bearer"
+  # -- The refresh token for obtaining a new access token
+  refreshToken: ""

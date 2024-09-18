@@ -24,6 +24,8 @@ import (
 	"path"
 
 	"github.com/undistro/zora/api/zora/v1alpha2"
+	"github.com/undistro/zora/pkg/authentication"
+	"github.com/undistro/zora/pkg/filemonitor"
 )
 
 const (
@@ -48,22 +50,29 @@ type Client interface {
 }
 
 type client struct {
-	client      *http.Client
-	baseURL     *url.URL
-	workspaceID string
-	version     string
+	client       *http.Client
+	baseURL      *url.URL
+	workspaceID  string
+	version      string
+	tokenMonitor *filemonitor.FileMonitor
 }
 
-func NewClient(baseURL, version, workspaceID string, httpclient *http.Client) (Client, error) {
+func NewClient(baseURL, version, workspaceID string, httpclient *http.Client, tokenPath string, done <-chan struct{}) (Client, error) {
 	u, err := validateURL(baseURL)
 	if err != nil {
 		return nil, err
 	}
+	tokenMonitor := filemonitor.NewFileMonitor(tokenPath, func(content []byte) (any, error) {
+		return authentication.ParseTokenData(content)
+	})
+	go tokenMonitor.MonitorFile(done)
+
 	return &client{
-		version:     version,
-		baseURL:     u,
-		workspaceID: workspaceID,
-		client:      httpclient,
+		version:      version,
+		baseURL:      u,
+		workspaceID:  workspaceID,
+		client:       httpclient,
+		tokenMonitor: tokenMonitor,
 	}, nil
 }
 
@@ -77,6 +86,7 @@ func (r *client) PutCluster(ctx context.Context, cluster Cluster) error {
 	if err != nil {
 		return err
 	}
+	r.addAuthorizationHeader(req)
 	req.Header.Set("content-type", "application/json")
 	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
@@ -93,6 +103,7 @@ func (r *client) DeleteCluster(ctx context.Context, namespace, name string) erro
 	if err != nil {
 		return err
 	}
+	r.addAuthorizationHeader(req)
 	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
 	if err != nil {
@@ -112,6 +123,7 @@ func (r *client) PutClusterScan(ctx context.Context, namespace, name string, plu
 	if err != nil {
 		return err
 	}
+	r.addAuthorizationHeader(req)
 	req.Header.Set("content-type", "application/json")
 	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
@@ -132,6 +144,7 @@ func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name str
 	if err != nil {
 		return err
 	}
+	r.addAuthorizationHeader(req)
 	req.Header.Set("content-type", "application/json")
 	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
@@ -148,8 +161,9 @@ func (r *client) DeleteClusterScan(ctx context.Context, namespace, name string) 
 	if err != nil {
 		return err
 	}
-	res, err := r.client.Do(req)
+	r.addAuthorizationHeader(req)
 	req.Header.Set(versionHeader, r.version)
+	res, err := r.client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -167,6 +181,7 @@ func (r *client) PutClusterStatus(ctx context.Context, namespace, name string, p
 	if err != nil {
 		return err
 	}
+	r.addAuthorizationHeader(req)
 	req.Header.Set("content-type", "application/json")
 	req.Header.Set(versionHeader, r.version)
 	res, err := r.client.Do(req)
@@ -186,6 +201,15 @@ func (r *client) clusterURL(version, namespace, name string, extra ...string) st
 	u := *r.baseURL
 	u.Path = p
 	return u.String()
+}
+
+func (r *client) addAuthorizationHeader(req *http.Request) {
+	tokenContent := r.tokenMonitor.GetContent()
+	if tokenContent != nil {
+		if tokenData, ok := tokenContent.(*authentication.TokenData); ok {
+			req.Header.Add("Authorization", fmt.Sprintf("%s %s", tokenData.TokenType, tokenData.AccessToken))
+		}
+	}
 }
 
 func validateURL(u string) (*url.URL, error) {

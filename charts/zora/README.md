@@ -143,6 +143,26 @@ The following table lists the configurable parameters of the Zora chart and thei
 | httpsProxy | string | `""` | HTTPS proxy URL |
 | noProxy | string | `"kubernetes.default.svc.*,127.0.0.1,localhost"` | Comma-separated list of URL patterns to be excluded from going through the proxy |
 | updateCRDs | bool | `true` for upgrades | Specifies whether CRDs should be updated by operator at startup |
+| tokenRefresh.image.repository | string | `"ghcr.io/undistro/zora/tokenrefresh"` | tokenrefresh image repository |
+| tokenRefresh.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
+| tokenRefresh.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| tokenRefresh.rbac.create | bool | `true` | Specifies whether Roles and RoleBindings should be created |
+| tokenRefresh.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| tokenRefresh.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
+| tokenRefresh.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| tokenRefresh.minRefreshTime | string | `"1m"` | Minimum time to wait before checking for token refresh |
+| tokenRefresh.refreshThreshold | string | `"2h"` | Threshold relative to the token expiry timestamp, after which a token can be refreshed. |
+| tokenRefresh.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
+| tokenRefresh.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
+| tokenRefresh.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
+| tokenRefresh.podAnnotations | object | `{"kubectl.kubernetes.io/default-container":"manager"}` | Annotations to be added to pods |
+| tokenRefresh.podSecurityContext | object | `{"runAsNonRoot":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| tokenRefresh.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
+| zoraauth.domain | string | `""` | The domain associated with the tokens |
+| zoraauth.clientId | string | `""` | The client id associated with the tokens |
+| zoraauth.accessToken | string | `""` | The access token authorizing access to the SaaS API server |
+| zoraauth.tokenType | string | `"Bearer"` | The type of the access token |
+| zoraauth.refreshToken | string | `""` | The refresh token for obtaining a new access token |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
