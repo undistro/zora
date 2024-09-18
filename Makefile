@@ -1,6 +1,7 @@
 # Image URL to use all building/pushing image targets
 IMG ?= operator:latest
 WORKER_IMG ?= worker:latest
+TOKENREFRESH_IMG ?= tokenrefresh:latest
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.29.3
@@ -97,9 +98,10 @@ lint-fix: golangci-lint ## Run golangci-lint linter and perform fixes
 ##@ Build
 
 .PHONY: build
-build: manifests generate fmt vet ## Build manager and worker binaries.
+build: manifests generate fmt vet ## Build manager, worker and tokenrefresh binaries.
 	go build -o bin/manager cmd/main.go
 	go build -o bin/worker cmd/worker/main.go
+	go build -o bin/tokenrefresh cmd/tokenrefresh/main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
@@ -116,6 +118,10 @@ docker-build: test ## Build docker image with the manager.
 docker-build-worker: test ## Build docker image with worker.
 	$(CONTAINER_TOOL) build -t ${WORKER_IMG} -f cmd/worker/Dockerfile .
 
+.PHONY: docker-build-tokenrefresh
+docker-build-tokenrefresh: test ## Build docker image with tokenrefresh.
+	$(CONTAINER_TOOL) build -t ${TOKENREFRESH_IMG} -f cmd/tokenrefresh/Dockerfile .
+
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
 	$(CONTAINER_TOOL) push ${IMG}
@@ -123,6 +129,10 @@ docker-push: ## Push docker image with the manager.
 .PHONY: docker-push-worker
 docker-push-worker: ## Push docker image with worker.
 	$(CONTAINER_TOOL) push ${WORKER_IMG}
+
+.PHONY: docker-push-tokenrefresh
+docker-push-tokenrefresh: ## Push docker image with tokenrefresh.
+	$(CONTAINER_TOOL) push ${TOKENREFRESH_IMG}
 
 # PLATFORMS defines the target platforms for  the manager image be build to provide support to multiple
 # architectures. (i.e. make docker-buildx IMG=myregistry/myoperator:0.0.1). To use this option you need to:
@@ -191,9 +201,10 @@ kind-create-cluster: kind ## Create a local Kubernetes cluster with Kind
 	$(KIND) create cluster --name $(CLUSTER_NAME)
 
 .PHONY: kind-load-images
-kind-load-images: kind docker-build docker-build-worker ## Build and load docker images into Kind nodes
-	$(KIND) load docker-image ${IMG}
-	$(KIND) load docker-image ${WORKER_IMG}
+kind-load-images: kind docker-build docker-build-worker docker-build-tokenrefresh ## Build and load docker images into Kind nodes
+	$(KIND) load docker-image -n $(CLUSTER_NAME) ${IMG}
+	$(KIND) load docker-image -n $(CLUSTER_NAME) ${WORKER_IMG}
+	$(KIND) load docker-image -n $(CLUSTER_NAME) ${TOKENREFRESH_IMG}
 
 ##@ Build Dependencies
 

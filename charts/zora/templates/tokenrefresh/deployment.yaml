@@ -1,0 +1,93 @@
+# Copyright 2022 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+{{- if .Values.saas.workspaceID -}}
+{{ $secretName := (include "zora.saasTokenSecretName" .) -}}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $secretName }}
+type: undistro.io/jwtTokens
+data:
+{{- if $existingSecret }}
+  {{- toYaml $existingSecret.data | nindent 2 }}
+{{- else }}
+  token: {{ printf "{ \"access_token\": \"%s\", \"refresh_token\": \"%s\", \"token_type\": \"%s\" }" .Values.zoraauth.accessToken .Values.zoraauth.refreshToken .Values.zoraauth.tokenType | b64enc }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "zora.fullname" . }}-tokenrefresh
+  labels:
+    {{- include "zora.tokenRefreshSelectorLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "zora.tokenRefreshSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.tokenRefresh.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "zora.tokenRefreshSelectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: tokenrefresh
+          {{- if .Values.httpsProxy }}
+          env:
+            - name: HTTPS_PROXY
+              value: {{ .Values.httpsProxy | quote }}
+            - name: NO_PROXY
+              value: {{ .Values.noProxy | quote }}
+          {{- end }}
+          command:
+            - /tokenrefresh
+          args:
+            - --secret-name={{ $secretName }}
+            - --namespace={{ .Release.Namespace }}
+            - --domain={{ .Values.zoraauth.domain }}
+            - --client-id={{ .Values.zoraauth.clientId }}
+            - --min-refresh-time={{ .Values.tokenRefresh.minRefreshTime }}
+            - --refresh-threshold={{ .Values.tokenRefresh.refreshThreshold }}
+          image: "{{ .Values.tokenRefresh.image.repository }}:{{ .Values.tokenRefresh.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.tokenRefresh.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.tokenRefresh.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.tokenRefresh.securityContext | nindent 12 }}
+      volumes:
+        - name: jwt-tokens
+          secret:
+            defaultMode: 420
+            secretName: {{ $secretName }}
+      securityContext:
+        {{- toYaml .Values.tokenRefresh.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "zora.tokenRefreshServiceAccountName" . }}
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.tokenRefresh.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tokenRefresh.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tokenRefresh.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

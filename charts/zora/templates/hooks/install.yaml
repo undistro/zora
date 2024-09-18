@@ -37,6 +37,7 @@ spec:
         - |
           curl -kfsS -X POST '{{ tpl .Values.saas.installURL . }}' \
             -H 'content-type: application/json' \
+            -H 'Authorization: {{ .Values.zoraauth.tokenType }} {{ .Values.zoraauth.accessToken }}' \
           {{- if .Values.httpsProxy }}
             -x '{{ .Values.httpsProxy}}' \
           {{- end }}

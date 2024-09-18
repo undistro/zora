@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ $secretName := printf "%s-serving-cert" (include "zora.fullname" .) -}}
+{{ $saasTokensSecretName := (include "zora.saasTokenSecretName" .) -}}
 {{- $serviceName := printf "%s-webhook" (include "zora.fullname" .) -}}
 {{- if .Values.operator.webhook.enabled -}}
 {{- $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
@@ -118,6 +119,7 @@ spec:
             - --inject-conversion={{ .Values.operator.webhook.enabled }}
             - --webhook-service-name={{ $serviceName }}
             - --webhook-service-namespace={{ .Release.Namespace }}
+            - --token-path=/tmp/jwt-tokens/token
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
           ports:
@@ -131,11 +133,16 @@ spec:
             - containerPort: 9443
               name: webhook-server
               protocol: TCP
+          {{- end }}
           volumeMounts:
+          {{- if .Values.operator.webhook.enabled }}
             - mountPath: /tmp/k8s-webhook-server/serving-certs
               name: cert
               readOnly: true
           {{- end }}
+            - mountPath: /tmp/jwt-tokens
+              name: jwt-tokens
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /healthz
@@ -152,14 +159,19 @@ spec:
             {{- toYaml .Values.operator.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.operator.securityContext | nindent 12 }}
-      {{- if .Values.operator.webhook.enabled }}
       volumes:
+      {{- if .Values.operator.webhook.enabled }}
         - name: cert
           secret:
             defaultMode: 420
             secretName: {{ $secretName }}
             optional: true
       {{- end }}
+        - name: jwt-tokens
+          secret:
+            defaultMode: 420
+            secretName: {{ $saasTokensSecretName }}
+            optional: true
       securityContext:
         {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "zora.operatorServiceAccountName" . }}

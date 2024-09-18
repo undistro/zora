@@ -88,6 +88,7 @@ func main() {
 	var webhookServiceName string
 	var webhookServiceNamespace string
 	var webhookServicePath string
+	var tokenPath string
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
@@ -124,6 +125,11 @@ func main() {
 		"Webhook service namespace")
 	flag.StringVar(&webhookServicePath, "webhook-service-path", "/convert",
 		"URL path for webhook conversion")
+	flag.StringVar(&tokenPath, "token-path", "/tmp/jwt-tokens/tokens",
+		"URL path for authorization tokens")
+
+	done := make(chan struct{})
+	defer close(done)
 
 	opts := zap.Options{
 		Development: true,
@@ -175,7 +181,7 @@ func main() {
 	var onClusterScanUpdate, onClusterScanDelete saas.ClusterScanHook
 	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyFromEnvironment}}
 	if saasWorkspaceID != "" {
-		saasClient, err := saas.NewClient(saasServer, version, saasWorkspaceID, client)
+		saasClient, err := saas.NewClient(saasServer, version, saasWorkspaceID, client, tokenPath, done)
 		if err != nil {
 			setupLog.Error(err, "unable to create SaaS client", "workspaceID", saasWorkspaceID)
 			os.Exit(1)

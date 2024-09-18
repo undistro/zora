@@ -77,6 +77,25 @@ Create the name of the service account to use in Operator
 {{- end }}
 {{- end }}
 
+{{/*
+TokenRefresh selector labels
+*/}}
+{{- define "zora.tokenRefreshSelectorLabels" -}}
+{{ include "zora.selectorLabels" . }}
+app.kubernetes.io/component: token-refresh
+{{- end }}
+
+{{/*
+Create the name of the service account to use in TokenRefresh
+*/}}
+{{- define "zora.tokenRefreshServiceAccountName" -}}
+{{- if .Values.tokenRefresh.rbac.serviceAccount.create }}
+{{- default (printf "%s-%s" (include "zora.fullname" .) "token-refresh") .Values.tokenRefresh.rbac.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.tokenRefresh.rbac.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
 {{- define "zora.imagePullSecret" }}
 {{- with .Values.imageCredentials }}
 {{- printf "{\"auths\":{\"%s\":{\"auth\":\"%s\"}}}" .registry (printf "%s:%s" .username .password | b64enc) | b64enc }}
@@ -149,3 +168,7 @@ Truncate a name to a specific length
 {{- $isHourBad := not (mustRegexMatch "^(?:\\d|[0-5]\\d)$" $hour) -}}
 {{- or $isMinuteBad $isHourBad -}}
 {{- end -}}
+
+{{- define "zora.saasTokenSecretName" -}}
+{{- printf "%s-saas-tokens" (include "zora.fullname" .) -}}
+{{- end }}
