@@ -11,9 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-{{- if .Values.saas.workspaceID -}}
+
+{{ if .Values.saas.workspaceID -}}
 {{ $secretName := (include "zora.saasTokenSecretName" .) -}}
-{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
+{{ $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
 apiVersion: v1
 kind: Secret
 metadata:
