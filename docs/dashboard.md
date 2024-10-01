@@ -15,42 +15,65 @@ across all your clusters. You can also invite users to your workspace.
    <a href="https://zora-dashboard.undistro.io/" class="md-button">Try Zora Dashboard</a>
 </div>
 
-Currently, it's free for up to 3 clusters.
-Please [contact us](https://undistro.io/contact){:target="_blank"} if you need unlock more clusters in Zora Dashboard.
+Zora Dashboard offers a ***starter plan for 14 days***, after which it will revert to the free plan which provides access for 2 clusters with up to 10 nodes per cluster.
+Please [contact us](https://undistro.io/contact){:target="_blank"} if you need to discuss a tailored solution.
 
 ## Getting started
 
-To integrate your cluster with Zora Dashboard, you need to provide the workspace ID
-as an additional parameter in Zora OSS installation command.
+To integrate your Zora OSS installation with Zora Dashboard, you need to first authenticate with the authorization server and then provide your `saas.workspaceID` parameter in the Zora OSS installation command.
 
-1. Sign in at [Zora Dashboard](https://zora-dashboard.undistro.io){:target="_blank"};
-2. Click on "Connect cluster" button and copy the workspace ID;
-3. Then provide it in `saas.workspaceID` parameter in [Zora OSS installation command](getting-started/installation.md):
+### Authenticating with the Authorization server
+Authenticating with the authorization server is simplified through the use of a helm plugin, `zoraauth`, which can be installed by executing
+
+```console
+helm plugin install https://github.com/undistro/helm-zoraauth
+```
+and updated by executing
+```console
+helm plugin update zoraauth
+```
+The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request.  The instructions within the Zora Dashboard console will include the appropriate parameters for the plugin, these can be obtained through the `Connect cluster` option once you have signed in to the Zora Dashboard.
+
+To authenticate with the authorization server, copy and run the `helm zoraauth` command and then follow the instructions within your terminal
+```console
+helm zoraauth --audience="zora_prod" \
+  --client-id="<client id>" \
+  --domain="login.undistro.io"
+Initiating Device Authorization Flow...
+Please visit https://login.undistro.io/activate and enter code: BFNS-NWFF, or visit: https://login.undistro.io/activate?user_code=BFNS-NWFF
+```
+Entering the login URL within your browser will present you with a screen similar to the following
+
+<img src="assets/zora-device-confirmation.png" width="409" height="465"/>
+
+Once you have confirmed the request you should see the following message on your terminal
+
+```console
+Tokens saved to tokens.yaml
+```
+
+You can then install Zora OSS by providing the `saas.workspaceID` parameter in the [Zora OSS installation command](getting-started/installation.md):
 
 === "HTTP chart repository"
     
-    ```shell hl_lines="9"
+    ```shell hl_lines="7"
     helm repo add undistro https://charts.undistro.io --force-update
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
-      -n zora-system \
-      --version 0.10.0 \
-      --create-namespace \
-      --wait \
+      -n zora-system --create-namespace --wait \
       --set clusterName="$(kubectl config current-context)" \
-      --set saas.workspaceID=<YOUR WORKSPACE ID HERE>
+      --set saas.workspaceID=<YOUR WORKSPACE ID HERE> \
+      --values tokens.yaml
     ```
 
 === "OCI registry"
 
-    ```shell hl_lines="7"
+    ```shell hl_lines="5"
     helm upgrade --install zora oci://ghcr.io/undistro/helm-charts/zora \
-      -n zora-system \
-      --version 0.10.0 \
-      --create-namespace \
-      --wait \
+      -n zora-system --create-namespace --wait \
       --set clusterName="$(kubectl config current-context)" \
-      --set saas.workspaceID=<YOUR WORKSPACE ID HERE>
+      --set saas.workspaceID=<YOUR WORKSPACE ID HERE> \
+      --values tokens.yaml
     ```
 
 
