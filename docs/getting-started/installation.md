@@ -31,7 +31,7 @@ Then, run the following command to install Zora [Helm chart](https://helm.sh/doc
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
       -n zora-system \
-      --version 0.10.0 \
+      --version 0.10.1 \
       --create-namespace \
       --wait \
       --set clusterName="$(kubectl config current-context)"
@@ -42,7 +42,7 @@ Then, run the following command to install Zora [Helm chart](https://helm.sh/doc
     ```shell
     helm upgrade --install zora oci://ghcr.io/undistro/helm-charts/zora \
       -n zora-system \
-      --version 0.10.0 \
+      --version 0.10.1 \
       --create-namespace \
       --wait \
       --set clusterName="$(kubectl config current-context)"
