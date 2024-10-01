@@ -51,7 +51,7 @@ Then, run the following command to install Zora [Helm chart](https://helm.sh/doc
 This command will install Zora in `zora-system` namespace, creating the namespace if it doesn't already exist.
 
 !!! info "Zora OSS + Zora Dashboard"
-    To integrate your Zora OSS installation with Zora Dashboard, you need to provide `saas.workspaceID` parameter in installation command. 
+    To integrate your Zora OSS installation with Zora Dashboard, you need to authenticate with the authorization server and provide `saas.workspaceID` parameter in installation command.
     For more information, please refer to [this page](../dashboard.md#getting-started).
 
 With the following commands, you can verify if Zora has been successfully installed and retrieve installation notes:
