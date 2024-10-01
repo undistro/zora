@@ -49,5 +49,5 @@ subjects:
   name: {{ include "zora.tokenRefreshServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
-{{- end -}}
+{{- end }}
 ---
