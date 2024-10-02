@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
     
     
       
@@ -1109,6 +1109,21 @@ You're not viewing the latest version.
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Getting started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authenticating-with-the-authorization-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authenticating with the Authorization server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1256,6 +1271,21 @@ You're not viewing the latest version.
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Getting started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authenticating-with-the-authorization-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authenticating with the Authorization server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1308,38 +1338,49 @@ across all your clusters. You can also invite users to your workspace.</p>
    <a href="https://zora-dashboard.undistro.io/" class="md-button">Try Zora Dashboard</a>
 </div>
 
-<p>Currently, it's free for up to 3 clusters.
-Please <a href="https://undistro.io/contact" target="_blank">contact us</a> if you need unlock more clusters in Zora Dashboard.</p>
+<p>Zora Dashboard offers a <strong><em>starter plan for 14 days</em></strong>, after which it will revert to the free plan which provides access for 2 clusters with up to 10 nodes per cluster.
+Please <a href="https://undistro.io/contact" target="_blank">contact us</a> if you need to discuss a tailored solution.</p>
 <h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>To integrate your cluster with Zora Dashboard, you need to provide the workspace ID
-as an additional parameter in Zora OSS installation command.</p>
-<ol>
-<li>Sign in at <a href="https://zora-dashboard.undistro.io" target="_blank">Zora Dashboard</a>;</li>
-<li>Click on "Connect cluster" button and copy the workspace ID;</li>
-<li>Then provide it in <code>saas.workspaceID</code> parameter in <a href="../getting-started/installation/">Zora OSS installation command</a>:</li>
-</ol>
+<p>To integrate your Zora OSS installation with Zora Dashboard, you need to first authenticate with the authorization server and then provide your <code>saas.workspaceID</code> parameter in the Zora OSS installation command.</p>
+<h3 id="authenticating-with-the-authorization-server">Authenticating with the Authorization server<a class="headerlink" href="#authenticating-with-the-authorization-server" title="Permanent link">&para;</a></h3>
+<p>Authenticating with the authorization server is simplified through the use of a helm plugin, <code>zoraauth</code>, which can be installed by executing</p>
+<p><div class="highlight"><pre><span></span><code><span class="go">helm plugin install https://github.com/undistro/helm-zoraauth</span>
+</code></pre></div>
+and updated by executing
+<div class="highlight"><pre><span></span><code><span class="go">helm plugin update zoraauth</span>
+</code></pre></div>
+The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request.  The instructions within the Zora Dashboard console will include the appropriate parameters for the plugin, these can be obtained through the <code>Connect cluster</code> option once you have signed in to the Zora Dashboard.</p>
+<p>To authenticate with the authorization server, copy and run the <code>helm zoraauth</code> command and then follow the instructions within your terminal
+<div class="highlight"><pre><span></span><code><span class="go">helm zoraauth --audience=&quot;zora_prod&quot; \</span>
+<span class="go">  --client-id=&quot;&lt;client id&gt;&quot; \</span>
+<span class="go">  --domain=&quot;login.undistro.io&quot;</span>
+<span class="go">Initiating Device Authorization Flow...</span>
+<span class="go">Please visit https://login.undistro.io/activate and enter code: BFNS-NWFF, or visit: https://login.undistro.io/activate?user_code=BFNS-NWFF</span>
+</code></pre></div>
+Entering the login URL within your browser will present you with a screen similar to the following</p>
+<p><img src="assets/zora-device-confirmation.png" width="409" height="465"/></p>
+<p>Once you have confirmed the request you should see the following message on your terminal</p>
+<div class="highlight"><pre><span></span><code><span class="go">Tokens saved to tokens.yaml</span>
+</code></pre></div>
+<p>You can then install Zora OSS by providing the <code>saas.workspaceID</code> parameter in the <a href="../getting-started/installation/">Zora OSS installation command</a>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">HTTP chart repository</label><label for="__tabbed_1_2">OCI registry</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>undistro<span class="w"> </span>https://charts.undistro.io<span class="w"> </span>--force-update
 helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> </span>undistro
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.10.0<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--wait<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span>--create-namespace<span class="w"> </span>--wait<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="hll"><span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;
+<span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="w">  </span>--values<span class="w"> </span>tokens.yaml
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>oci://ghcr.io/undistro/helm-charts/zora<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.10.0<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--wait<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span>--create-namespace<span class="w"> </span>--wait<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="hll"><span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;
+<span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="w">  </span>--values<span class="w"> </span>tokens.yaml
 </span></code></pre></div>
 </div>
 </div>
@@ -1483,7 +1524,7 @@ and those you have invited to your workspace.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
       
     
   </body>
