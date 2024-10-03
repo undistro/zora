@@ -44,7 +44,9 @@ Please visit https://login.undistro.io/activate and enter code: BFNS-NWFF, or vi
 ```
 Entering the login URL within your browser will present you with a screen similar to the following
 
-<img src="assets/zora-device-confirmation.png" width="409" height="465"/>
+<figure markdown="span">
+  ![Zora Device Confirmation](assets/zora-device-confirmation.png){ width="300" }
+</figure>
 
 Once you have confirmed the request you should see the following message on your terminal
 
@@ -56,7 +58,7 @@ You can then install Zora OSS by providing the `saas.workspaceID` parameter in t
 
 === "HTTP chart repository"
     
-    ```shell hl_lines="7"
+    ```shell hl_lines="6 7"
     helm repo add undistro https://charts.undistro.io --force-update
     helm repo update undistro
     helm upgrade --install zora undistro/zora \
@@ -68,7 +70,7 @@ You can then install Zora OSS by providing the `saas.workspaceID` parameter in t
 
 === "OCI registry"
 
-    ```shell hl_lines="5"
+    ```shell hl_lines="4 5"
     helm upgrade --install zora oci://ghcr.io/undistro/helm-charts/zora \
       -n zora-system --create-namespace --wait \
       --set clusterName="$(kubectl config current-context)" \
