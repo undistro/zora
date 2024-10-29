@@ -17,7 +17,7 @@ name: zora
 description: A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
 icon: https://zora-docs.undistro.io/v0.7/assets/logo.svg
 type: application
-version: 0.10.2-rc1
-appVersion: "v0.10.2-rc1"
+version: 0.10.2
+appVersion: "v0.10.2"
 sources:
   - https://github.com/undistro/zora
