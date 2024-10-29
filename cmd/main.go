@@ -82,6 +82,7 @@ func main() {
 	var kubexnsImage string
 	var kubexnsPullPolicy string
 	var trivyPVC string
+	var trivyFSGroup int64
 	var updateCRDs bool
 	var injectConversion bool
 	var caPath string
@@ -113,6 +114,7 @@ func main() {
 	flag.StringVar(&kubexnsImage, "kubexns-image", "ghcr.io/undistro/kubexns:latest", "kubexns image")
 	flag.StringVar(&kubexnsPullPolicy, "kubexns-pull-policy", "Always", "kubexns image pull policy")
 	flag.StringVar(&trivyPVC, "trivy-db-pvc", "", "PersistentVolumeClaim name for Trivy DB")
+	flag.Int64Var(&trivyFSGroup, "trivy-fs-group", 0, "fsGroup for Trivy")
 	flag.BoolVar(&updateCRDs, "update-crds", false,
 		"If set to true, operator will update Zora CRDs if needed")
 	flag.BoolVar(&injectConversion, "inject-conversion", false,
@@ -226,6 +228,7 @@ func main() {
 		KubexnsImage:            kubexnsImage,
 		KubexnsPullPolicy:       kubexnsPullPolicy,
 		TrivyPVC:                trivyPVC,
+		TrivyFSGroup:            trivyFSGroup,
 		ChecksConfigMap:         fmt.Sprintf("%s/%s", checksConfigMapNamespace, checksConfigMapName),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterScan")
