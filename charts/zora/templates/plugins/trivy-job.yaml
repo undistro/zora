@@ -25,6 +25,10 @@ spec:
         - name: trivy-db
           persistentVolumeClaim:
             claimName: trivy-db-volume
+      {{- if .Values.scan.plugins.trivy.fsGroup }}
+      securityContext:
+        fsGroup: {{ .Values.scan.plugins.trivy.fsGroup }}
+      {{- end }}
       containers:
         - name: trivy-download-db
           image: "{{ .Values.scan.plugins.trivy.image.repository }}:{{ .Values.scan.plugins.trivy.image.tag }}"

@@ -98,6 +98,7 @@ type CronJobMutator struct {
 	KubexnsPullPolicy  string
 	ChecksConfigMap    string
 	TrivyPVC           string
+	TrivyFSGroup       int64
 	ClusterUID         types.UID
 }
 
@@ -145,13 +146,18 @@ func (r *CronJobMutator) Mutate() error {
 		})
 	}
 
-	if r.Plugin.Name == "trivy" && r.TrivyPVC != "" {
-		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
-			Name: trivyDBVolumeName,
-			VolumeSource: corev1.VolumeSource{
-				PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{ClaimName: r.TrivyPVC},
-			},
-		})
+	if r.Plugin.Name == "trivy" {
+		if r.TrivyPVC != "" {
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
+				Name: trivyDBVolumeName,
+				VolumeSource: corev1.VolumeSource{
+					PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{ClaimName: r.TrivyPVC},
+				},
+			})
+		}
+		if r.TrivyFSGroup != 0 {
+			r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{FSGroup: &r.TrivyFSGroup}
+		}
 	}
 
 	if pointer.BoolDeref(r.Plugin.Spec.MountCustomChecksVolume, false) {
