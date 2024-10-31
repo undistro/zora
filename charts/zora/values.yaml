@@ -237,7 +237,7 @@ scan:
       #  - secretRef:
       #      name: trivy-credentials
       # -- Trivy timeout
-      timeout: 10m
+      timeout: 40m
       # -- Allow insecure server connections for Trivy
       insecure: false
 

@@ -121,7 +121,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.image.pullPolicy | string | `"Always"` | Image pull policy |
 | scan.plugins.trivy.env | list | `[]` | List of environment variables to set in trivy container. |
 | scan.plugins.trivy.envFrom | list | `[]` | List of sources to populate environment variables in trivy container. |
-| scan.plugins.trivy.timeout | string | `"10m"` | Trivy timeout |
+| scan.plugins.trivy.timeout | string | `"40m"` | Trivy timeout |
 | scan.plugins.trivy.insecure | bool | `false` | Allow insecure server connections for Trivy |
 | scan.plugins.trivy.fsGroup | int | `nil` | Trivy fsGroup. Should be greater than 0. |
 | scan.plugins.trivy.persistence.enabled | bool | `true` | Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim |

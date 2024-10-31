@@ -45,12 +45,12 @@ The `ClusterScan` will have a `Failed` status. You will see a log entry similar 
 Trivy's scan duration may vary depending on the total images in your cluster 
 and the time to download the vulnerability database when needed. 
 
-By default, Zora sets a timeout of **10 minutes** for Trivy scan completion.
+By default, Zora sets a timeout of **40 minutes** for Trivy scan completion.
 
 To adjust this timeout, use the following Helm parameter:
 
 ```shell
---set scan.plugins.trivy.timeout=15m
+--set scan.plugins.trivy.timeout=60m
 ```
 
 Once this parameter is updated, the next scan will use the specified value.
