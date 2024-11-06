@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.43">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -1366,9 +1366,9 @@ The <code>ClusterScan</code> will have a <code>Failed</code> status. You will se
 <h2 id="scan-timeout">Scan timeout<a class="headerlink" href="#scan-timeout" title="Permanent link">&para;</a></h2>
 <p>Trivy's scan duration may vary depending on the total images in your cluster 
 and the time to download the vulnerability database when needed. </p>
-<p>By default, Zora sets a timeout of <strong>10 minutes</strong> for Trivy scan completion.</p>
+<p>By default, Zora sets a timeout of <strong>40 minutes</strong> for Trivy scan completion.</p>
 <p>To adjust this timeout, use the following Helm parameter:</p>
-<div class="highlight"><pre><span></span><code>--set<span class="w"> </span>scan.plugins.trivy.timeout<span class="o">=</span>15m
+<div class="highlight"><pre><span></span><code>--set<span class="w"> </span>scan.plugins.trivy.timeout<span class="o">=</span>60m
 </code></pre></div>
 <p>Once this parameter is updated, the next scan will use the specified value.</p>
 
