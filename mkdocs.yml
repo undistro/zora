@@ -87,11 +87,12 @@ nav:
           - Compute resources: configuration/resources.md
           - Suspending scans: configuration/suspend-scan.md
           - Retain issues: configuration/retain-issues.md
+          - Convert to CSV: configuration/convert-to-csv.md
           - HTTPS proxy: configuration/https-proxy.md
           - Ignore unfixed vulnerabilities: plugins/trivy/#large-vulnerability-reports
           - Vulnerability scan timeout: plugins/trivy/#scan-timeout
-          - Authenticated registries: configuration/authenticated-registries.md
           - Vulnerability database persistence: configuration/vulnerability-database-persistence.md
+          - Authenticated registries: configuration/authenticated-registries.md
           - Private registries:
               - AWS ECR: configuration/private-registries/ecr.md
               - Azure ACR: configuration/private-registries/acr.md
