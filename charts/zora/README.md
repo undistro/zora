@@ -123,7 +123,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.envFrom | list | `[]` | List of sources to populate environment variables in trivy container. |
 | scan.plugins.trivy.timeout | string | `"40m"` | Trivy timeout |
 | scan.plugins.trivy.insecure | bool | `false` | Allow insecure server connections for Trivy |
-| scan.plugins.trivy.fsGroup | int | `nil` | Trivy fsGroup. Should be greater than 0. |
+| scan.plugins.trivy.fsGroup | int | `3000` | Specifies the fsGroup to use when mounting the persistent volume. Should be greater than 0. |
 | scan.plugins.trivy.persistence.enabled | bool | `true` | Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim |
 | scan.plugins.trivy.persistence.accessMode | string | `"ReadWriteOnce"` | [Persistence access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) |
 | scan.plugins.trivy.persistence.storageClass | string | `""` | [Persistence storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/). Set to empty for default storage class |

@@ -241,8 +241,8 @@ scan:
       # -- Allow insecure server connections for Trivy
       insecure: false
 
-      # -- (int) Trivy fsGroup. Should be greater than 0.
-      fsGroup: null
+      # -- Specifies the fsGroup to use when mounting the persistent volume. Should be greater than 0.
+      fsGroup: 3000
 
       persistence:
         # -- Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim
