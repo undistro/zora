@@ -1,0 +1,28 @@
+{{- if .Capabilities.APIVersions.Has "security.openshift.io/v1" }}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: zora-scc
+fsGroup:
+  type: MustRunAs
+  ranges:
+  - min: {{ .Values.scan.plugins.trivy.fsGroup }}
+    max: {{ .Values.scan.plugins.trivy.fsGroup }}
+runAsUser:
+  type: MustRunAsNonRoot
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- runtime/default
+volumes:
+- configMap
+- csi
+- downwardAPI
+- emptyDir
+- ephemeral
+- persistentVolumeClaim
+- projected
+- secret
+users:
+- system:serviceaccount:{{ .Release.Namespace }}:zora-plugins
+{{- end }}

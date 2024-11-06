@@ -24,11 +24,9 @@ spec:
       volumes:
         - name: trivy-db
           persistentVolumeClaim:
-            claimName: trivy-db-volume
-      {{- if .Values.scan.plugins.trivy.fsGroup }}
+            claimName: trivy-dbs-volume
       securityContext:
         fsGroup: {{ .Values.scan.plugins.trivy.fsGroup }}
-      {{- end }}
       containers:
         - name: trivy-download-db
           image: "{{ .Values.scan.plugins.trivy.image.repository }}:{{ .Values.scan.plugins.trivy.image.tag }}"
@@ -42,6 +40,7 @@ spec:
               - ALL
             privileged: false
             runAsNonRoot: true
+            runAsGroup: {{ .Values.scan.plugins.trivy.fsGroup }}
             seccompProfile:
               type: "RuntimeDefault"
           volumeMounts:
@@ -66,8 +65,9 @@ spec:
                 {{- if .Values.scan.plugins.trivy.insecure }}
                 --insecure \
                 {{- end }}
-                --download-java-db-only
-              {{- end }}
+                --download-java-db-only {{- end }} && \
+                find /tmp/trivy-cache ! -group {{ .Values.scan.plugins.trivy.fsGroup }} | xargs -r chgrp -f {{ .Values.scan.plugins.trivy.fsGroup }} && \
+                find /tmp/trivy-cache ! -perm -070 | xargs -r chmod -f g+rwX
           env:
             - name: SSL_CERT_DIR
               value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"

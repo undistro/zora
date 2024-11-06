@@ -146,6 +146,7 @@ func (r *CronJobMutator) Mutate() error {
 		})
 	}
 
+	setRunAsGroup := false
 	if r.Plugin.Name == "trivy" {
 		if r.TrivyPVC != "" {
 			r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes = append(r.Existing.Spec.JobTemplate.Spec.Template.Spec.Volumes, corev1.Volume{
@@ -155,8 +156,9 @@ func (r *CronJobMutator) Mutate() error {
 				},
 			})
 		}
-		if r.TrivyFSGroup != 0 {
+		if r.TrivyFSGroup > 0 {
 			r.Existing.Spec.JobTemplate.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{FSGroup: &r.TrivyFSGroup}
+			setRunAsGroup = true
 		}
 	}
 
@@ -202,6 +204,12 @@ func (r *CronJobMutator) Mutate() error {
 			containers = append(containers, c)
 		}
 		r.Existing.Spec.JobTemplate.Spec.Template.Spec.Containers = containers
+	}
+
+	if setRunAsGroup {
+		for _, container := range r.Existing.Spec.JobTemplate.Spec.Template.Spec.Containers {
+			container.SecurityContext.RunAsGroup = &r.TrivyFSGroup
+		}
 	}
 
 	return ctrl.SetControllerReference(r.ClusterScan, r.Existing, r.Scheme)
