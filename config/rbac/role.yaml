@@ -8,6 +8,7 @@ rules:
   - ""
   resources:
   - configmaps
+  - serviceaccounts
   verbs:
   - create
   - delete
@@ -31,18 +32,6 @@ rules:
   verbs:
   - get
   - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - serviceaccounts
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - ""
@@ -76,6 +65,7 @@ rules:
   - batch
   resources:
   - cronjobs/status
+  - jobs/status
   verbs:
   - get
 - apiGroups:
@@ -86,12 +76,6 @@ rules:
   - get
   - list
   - watch
-- apiGroups:
-  - batch
-  resources:
-  - jobs/status
-  verbs:
-  - get
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
@@ -112,6 +96,10 @@ rules:
   - zora.undistro.io
   resources:
   - clusterissues
+  - clusters
+  - clusterscans
+  - customchecks
+  - vulnerabilityreports
   verbs:
   - create
   - delete
@@ -129,77 +117,18 @@ rules:
 - apiGroups:
   - zora.undistro.io
   resources:
-  - clusters
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - zora.undistro.io
-  resources:
   - clusters/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - zora.undistro.io
-  resources:
-  - clusters/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - zora.undistro.io
-  resources:
-  - clusterscans
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - zora.undistro.io
-  resources:
   - clusterscans/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - zora.undistro.io
-  resources:
-  - clusterscans/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - zora.undistro.io
-  resources:
-  - customchecks
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - zora.undistro.io
-  resources:
   - customchecks/finalizers
   verbs:
   - update
 - apiGroups:
   - zora.undistro.io
   resources:
+  - clusters/status
+  - clusterscans/status
   - customchecks/status
+  - vulnerabilityreports/status
   verbs:
   - get
   - patch
@@ -212,23 +141,3 @@ rules:
   - get
   - list
   - watch
-- apiGroups:
-  - zora.undistro.io
-  resources:
-  - vulnerabilityreports
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - zora.undistro.io
-  resources:
-  - vulnerabilityreports/status
-  verbs:
-  - get
-  - patch
-  - update

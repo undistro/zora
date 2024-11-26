@@ -65,9 +65,11 @@ spec:
                 {{- if .Values.scan.plugins.trivy.insecure }}
                 --insecure \
                 {{- end }}
-                --download-java-db-only {{- end }} && \
-                find /tmp/trivy-cache ! -group {{ .Values.scan.plugins.trivy.fsGroup }} | xargs -r chgrp -f {{ .Values.scan.plugins.trivy.fsGroup }} && \
+                --download-java-db-only {{- end }}
+                exitcode=$(echo $?)
+                find /tmp/trivy-cache ! -group {{ .Values.scan.plugins.trivy.fsGroup }} | xargs -r chgrp -f {{ .Values.scan.plugins.trivy.fsGroup }} ;
                 find /tmp/trivy-cache ! -perm -070 | xargs -r chmod -f g+rwX
+                exit $exitcode
           env:
             - name: SSL_CERT_DIR
               value: "/etc/ssl/:/run/secrets/kubernetes.io/serviceaccount/"

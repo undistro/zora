@@ -64,10 +64,16 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha2.VulnerabilityRepo
 				log.Info("skipping result without vulnerabilities")
 				continue
 			}
-			if _, ok := vulnsByImage[img]; !ok {
-				vulnsByImage[img] = newSpec(img, r)
-			}
 			spec := vulnsByImage[img]
+			if spec == nil {
+				var err error
+				spec, err = newSpec(img, r)
+				if err != nil {
+					log.Info(fmt.Sprintf("error creating spec for %q \"%s/%s\": %s", r.Kind, r.Namespace, r.Name, err))
+					continue
+				}
+				vulnsByImage[img] = spec
+			}
 			addResource(spec, r.Kind, r.Namespace, r.Name)
 
 			k := fmt.Sprintf("%s;%s", img, result.Class)
@@ -100,8 +106,13 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha2.VulnerabilityRepo
 	return specs, nil
 }
 
-func newSpec(img string, resource trivyreport.Resource) *v1alpha2.VulnerabilityReportSpec {
-	meta := resource.Metadata
+func newSpec(img string, resource trivyreport.Resource) (*v1alpha2.VulnerabilityReportSpec, error) {
+	// The metadata is now an array for reporting multi-container pods etc., however
+	// each container is still reported separately
+	if len(resource.Metadata) != 1 {
+		return nil, fmt.Errorf("expected only one metadata element, however we discovered %d\n", len(resource.Metadata))
+	}
+	meta := resource.Metadata[0]
 	s := &v1alpha2.VulnerabilityReportSpec{
 		VulnerabilityReportCommon: v1alpha1.VulnerabilityReportCommon{
 			Image:        img,
@@ -119,7 +130,7 @@ func newSpec(img string, resource trivyreport.Resource) *v1alpha2.VulnerabilityR
 			Version: o.Name,
 		}
 	}
-	return s
+	return s, nil
 }
 
 func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription bool) *v1alpha2.Vulnerability {
