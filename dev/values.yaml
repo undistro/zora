@@ -219,7 +219,7 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/undistro/trivy
         # -- trivy plugin image tag
-        tag: 0.53
+        tag: 0.57
         # -- Image pull policy
         pullPolicy: Always
       # -- List of environment variables to set in trivy container.
