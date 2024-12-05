@@ -12,24 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
+# permissions for end users to edit clusterissues.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
   labels:
-    control-plane: controller-manager
-    app.kubernetes.io/name: service
-    app.kubernetes.io/instance: controller-manager-metrics-service
-    app.kubernetes.io/component: kube-rbac-proxy
-    app.kubernetes.io/created-by: zora
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-  name: controller-manager-metrics-service
-  namespace: system
-spec:
-  ports:
-  - name: https
-    port: 8443
-    protocol: TCP
-    targetPort: https
-  selector:
-    control-plane: controller-manager
+  name: clusterissue-editor-role
+rules:
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusterissues
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - zora.undistro.io
+  resources:
+  - clusterissues/status
+  verbs:
+  - get

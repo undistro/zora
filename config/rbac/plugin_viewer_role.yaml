@@ -12,23 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# permissions for end users to view clusterscans.
+# permissions for end users to view plugins.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: clusterscan-viewer-role
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: zora
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-  name: clusterscan-viewer-role
+  name: plugin-viewer-role
 rules:
 - apiGroups:
   - zora.undistro.io
   resources:
-  - clusterscans
+  - plugins
   verbs:
   - get
   - list
@@ -36,6 +32,6 @@ rules:
 - apiGroups:
   - zora.undistro.io
   resources:
-  - clusterscans/status
+  - plugins/status
   verbs:
   - get

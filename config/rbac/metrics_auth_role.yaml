@@ -12,30 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# permissions for end users to view clusters.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: cluster-viewer-role
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: zora
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-  name: cluster-viewer-role
+  name: metrics-auth-role
 rules:
 - apiGroups:
-  - zora.undistro.io
+  - authentication.k8s.io
   resources:
-  - clusters
+  - tokenreviews
   verbs:
-  - get
-  - list
-  - watch
+  - create
 - apiGroups:
-  - zora.undistro.io
+  - authorization.k8s.io
   resources:
-  - clusters/status
+  - subjectaccessreviews
   verbs:
-  - get
+  - create

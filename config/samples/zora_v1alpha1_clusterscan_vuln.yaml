@@ -2,11 +2,8 @@ apiVersion: zora.undistro.io/v1alpha1
 kind: ClusterScan
 metadata:
   labels:
-    app.kubernetes.io/name: clusterscan
-    app.kubernetes.io/instance: mycluster-vuln
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: zora
   name: mycluster-vuln
 spec:
   clusterRef:

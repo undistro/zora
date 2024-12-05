@@ -65,22 +65,6 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: kube-rbac-proxy
-          args:
-            - --secure-listen-address=0.0.0.0:8443
-            - --upstream=http://127.0.0.1:8080/
-            - --logtostderr=true
-            - --v=0
-          image: "{{ .Values.operator.rbacProxy.image.repository }}:{{ .Values.operator.rbacProxy.image.tag }}"
-          imagePullPolicy: {{ .Values.operator.rbacProxy.image.pullPolicy }}
-          ports:
-            - containerPort: 8443
-              name: https
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.operator.rbacProxy.resources | nindent 12 }}
-          securityContext:
-            {{- toYaml .Values.operator.rbacProxy.securityContext | nindent 12 }}
         - name: manager
           {{- if .Values.httpsProxy }}
           env:
@@ -93,7 +77,7 @@ spec:
             - /manager
           args:
             - --health-probe-bind-address=:8081
-            - --metrics-bind-address=127.0.0.1:8080
+            - --metrics-bind-address=:8443
             - --leader-elect
             - --zap-encoder={{ .Values.operator.log.encoding }}
             - --zap-log-level={{ .Values.operator.log.level }}
@@ -106,9 +90,9 @@ spec:
             - --cronjob-serviceaccount-name=zora-plugins
             - --trivy-db-pvc={{- if .Values.scan.plugins.trivy.persistence.enabled }}trivy-dbs-volume{{- end }}
             - --trivy-fs-group={{ .Values.scan.plugins.trivy.fsGroup }}
-{{- if .Values.scan.plugins.annotations}}
+            {{- if .Values.scan.plugins.annotations }}
             - --cronjob-serviceaccount-annotations={{ $first := true }}{{- range $key, $value := .Values.scan.plugins.annotations }}{{if not $first}},{{else}}{{$first = false}}{{end}}{{ $key }}={{$value}}{{- end }}
-{{- end }}
+            {{- end }}
             - --saas-workspace-id={{ .Values.saas.workspaceID }}
             - --saas-server={{ .Values.saas.server }}
             - --version={{ .Chart.Version }}
@@ -127,7 +111,7 @@ spec:
             - containerPort: 8081
               protocol: TCP
               name: probe
-            - containerPort: 8080
+            - containerPort: 8443
               protocol: TCP
               name: metrics
           {{- if .Values.operator.webhook.enabled }}

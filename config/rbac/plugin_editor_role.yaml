@@ -12,27 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# permissions for end users to edit plugins.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: proxy-role
-    app.kubernetes.io/component: kube-rbac-proxy
-    app.kubernetes.io/created-by: zora
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-  name: proxy-role
+  name: plugin-editor-role
 rules:
 - apiGroups:
-  - authentication.k8s.io
+  - zora.undistro.io
   resources:
-  - tokenreviews
+  - plugins
   verbs:
   - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
-  - authorization.k8s.io
+  - zora.undistro.io
   resources:
-  - subjectaccessreviews
+  - plugins/status
   verbs:
-  - create
+  - get
