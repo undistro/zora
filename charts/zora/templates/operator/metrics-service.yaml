@@ -24,6 +24,6 @@ spec:
     - name: https
       port: {{ .Values.operator.metricsService.port }}
       protocol: TCP
-      targetPort: https
+      targetPort: metrics
   selector:
     {{- include "zora.operatorSelectorLabels" . | nindent 4 }}

@@ -2,11 +2,8 @@ apiVersion: zora.undistro.io/v1alpha2
 kind: CustomCheck
 metadata:
   labels:
-    app.kubernetes.io/name: customcheck
-    app.kubernetes.io/instance: custom-002
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: zora
   name: custom-002
 spec:
   message: "Required labels"

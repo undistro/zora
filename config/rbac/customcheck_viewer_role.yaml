@@ -3,11 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: customcheck-viewer-role
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: zora
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
   name: customcheck-viewer-role
 rules:

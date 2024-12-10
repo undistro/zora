@@ -2,10 +2,7 @@ apiVersion: zora.undistro.io/v1alpha1
 kind: Cluster
 metadata:
   labels:
-    app.kubernetes.io/name: cluster
-    app.kubernetes.io/instance: mycluster
-    app.kubernetes.io/part-of: zora
+    app.kubernetes.io/name: zora
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: zora
   name: mycluster
 spec: {}
