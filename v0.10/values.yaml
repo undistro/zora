@@ -102,29 +102,6 @@ operator:
     requests:
       cpu: 10m
       memory: 64Mi
-  rbacProxy:
-    image:
-      # -- `kube-rbac-proxy` image repository
-      repository: gcr.io/kubebuilder/kube-rbac-proxy
-      # -- `kube-rbac-proxy` image tag
-      tag: v0.15.0
-      # -- Image pull policy
-      pullPolicy: IfNotPresent
-    # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `kube-rbac-proxy` container
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop:
-          - ALL
-    # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `kube-rbac-proxy` container
-    resources:
-      limits:
-        cpu: 500m
-        memory: 128Mi
-      requests:
-        cpu: 5m
-        memory: 64Mi
   # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
   nodeSelector: {}
   # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
@@ -219,7 +196,7 @@ scan:
         # -- trivy plugin image repository
         repository: ghcr.io/undistro/trivy
         # -- trivy plugin image tag
-        tag: 0.53
+        tag: 0.57
         # -- Image pull policy
         pullPolicy: Always
       # -- List of environment variables to set in trivy container.
@@ -237,12 +214,12 @@ scan:
       #  - secretRef:
       #      name: trivy-credentials
       # -- Trivy timeout
-      timeout: 10m
+      timeout: 40m
       # -- Allow insecure server connections for Trivy
       insecure: false
 
-      # -- (int) Trivy fsGroup. Should be greater than 0.
-      fsGroup: null
+      # -- Specifies the fsGroup to use when mounting the persistent volume. Should be greater than 0.
+      fsGroup: 3000
 
       persistence:
         # -- Specifies whether Trivy vulnerabilities database should be persisted between the scans, using PersistentVolumeClaim
