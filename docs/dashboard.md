@@ -54,7 +54,7 @@ Once you have confirmed the request you should see the following message on your
 Tokens saved to tokens.yaml
 ```
 
-You can then install Zora OSS by providing the `saas.workspaceID` parameter in the [Zora OSS installation command](getting-started/installation.md):
+You can then install or upgrade Zora OSS by providing the `saas.workspaceID` parameter in the [Zora OSS installation command](getting-started/installation.md):
 
 === "HTTP chart repository"
     

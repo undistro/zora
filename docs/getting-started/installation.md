@@ -22,7 +22,7 @@ First, [ensure that your current context of `kubectl` refer to the Kubernetes cl
 
     - Use the context for the Kind cluster: `kubectl config use-context kind-kind`
 
-Then, run the following command to install Zora [Helm chart](https://helm.sh/docs/topics/charts/){:target="_blank"}:
+Then, run the following command to install or upgrade Zora [Helm chart](https://helm.sh/docs/topics/charts/){:target="_blank"}:
 
 === "HTTP chart repository"
     
