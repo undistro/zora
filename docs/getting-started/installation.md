@@ -9,7 +9,7 @@ where the `zora-operator` deployment is created and scans are automatically sche
 - Kubectl
 - Helm 3.8+
 
-## Install with Helm
+## Install or Upgrade with Helm
 
 First, [ensure that your current context of `kubectl` refer to the Kubernetes cluster you wish to install Zora into](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/){:target="_blank"}.
 
@@ -48,7 +48,7 @@ Then, run the following command to install Zora [Helm chart](https://helm.sh/doc
       --set clusterName="$(kubectl config current-context)"
     ```
 
-This command will install Zora in `zora-system` namespace, creating the namespace if it doesn't already exist.
+This command will install or upgrade Zora in `zora-system` namespace, creating the namespace if it doesn't already exist.
 
 !!! info "Zora OSS + Zora Dashboard"
     To integrate your Zora OSS installation with Zora Dashboard, you need to authenticate with the authorization server and provide `saas.workspaceID` parameter in installation command.
