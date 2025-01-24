@@ -1370,7 +1370,7 @@ Please <a href="https://undistro.io/contact" target="_blank">contact us</a> if y
 and updated by executing
 <div class="highlight"><pre><span></span><code><span class="go">helm plugin update zoraauth</span>
 </code></pre></div>
-The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request.  The instructions within the Zora Dashboard console will include the appropriate parameters for the plugin, these can be obtained through the <code>Connect cluster</code> option once you have signed in to the Zora Dashboard.</p>
+The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request. The instructions within the <a href="https://zora-dashboard.undistro.io/" target="_blank">Zora Dashboard</a> console will include the appropriate parameters for the plugin, these can be obtained through the <code>Connect cluster</code> option once you have signed in to the <a href="https://zora-dashboard.undistro.io/" target="_blank">Zora Dashboard</a>.</p>
 <p>To authenticate with the authorization server, copy and run the <code>helm zoraauth</code> command and then follow the instructions within your terminal
 <div class="highlight"><pre><span></span><code><span class="go">helm zoraauth --audience=&quot;zora_prod&quot; \</span>
 <span class="go">  --client-id=&quot;&lt;client id&gt;&quot; \</span>
@@ -1385,7 +1385,7 @@ Entering the login URL within your browser will present you with a screen simila
 <p>Once you have confirmed the request you should see the following message on your terminal</p>
 <div class="highlight"><pre><span></span><code><span class="go">Tokens saved to tokens.yaml</span>
 </code></pre></div>
-<p>You can then install Zora OSS by providing the <code>saas.workspaceID</code> parameter in the <a href="../getting-started/installation/">Zora OSS installation command</a>:</p>
+<p>You can then install or upgrade Zora OSS by providing the <code>saas.workspaceID</code> parameter in the <a href="../getting-started/installation/">Zora OSS installation command</a>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">HTTP chart repository</label><label for="__tabbed_1_2">OCI registry</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
