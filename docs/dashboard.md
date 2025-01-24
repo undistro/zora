@@ -32,7 +32,7 @@ and updated by executing
 ```console
 helm plugin update zoraauth
 ```
-The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request.  The instructions within the Zora Dashboard console will include the appropriate parameters for the plugin, these can be obtained through the `Connect cluster` option once you have signed in to the Zora Dashboard.
+The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request. The instructions within the [Zora Dashboard](https://zora-dashboard.undistro.io/){:target="_blank"} console will include the appropriate parameters for the plugin, these can be obtained through the `Connect cluster` option once you have signed in to the [Zora Dashboard](https://zora-dashboard.undistro.io/){:target="_blank"}.
 
 To authenticate with the authorization server, copy and run the `helm zoraauth` command and then follow the instructions within your terminal
 ```console
@@ -54,7 +54,7 @@ Once you have confirmed the request you should see the following message on your
 Tokens saved to tokens.yaml
 ```
 
-You can then install Zora OSS by providing the `saas.workspaceID` parameter in the [Zora OSS installation command](getting-started/installation.md):
+You can then install or upgrade Zora OSS by providing the `saas.workspaceID` parameter in the [Zora OSS installation command](getting-started/installation.md):
 
 === "HTTP chart repository"
     
