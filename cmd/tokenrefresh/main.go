@@ -65,6 +65,7 @@ type SecretStatus struct {
 
 type Controller struct {
 	clientset *kubernetes.Clientset
+	client    *http.Client
 	refreshCh chan struct{}
 	mutex     sync.Mutex
 }
@@ -100,6 +101,7 @@ func main() {
 	}
 
 	controller := &Controller{
+		client:    &http.Client{Transport: &http.Transport{Proxy: http.ProxyFromEnvironment}},
 		clientset: clientset,
 		refreshCh: make(chan struct{}, 1),
 	}
@@ -226,7 +228,7 @@ func (c *Controller) refreshTokenIfNeeded(ctx context.Context) {
 			}
 		}
 	} else {
-		tokenData, err = refreshToken(domain, clientID, tokenData.RefreshToken)
+		tokenData, err = c.refreshToken(domain, clientID, tokenData.RefreshToken)
 		if err != nil {
 			slog.Error(fmt.Sprintf("Error refreshing token: %v", err))
 			return
@@ -242,11 +244,11 @@ func (c *Controller) refreshTokenIfNeeded(ctx context.Context) {
 	}
 }
 
-func refreshToken(domain, clientID, refreshToken string) (*authentication.TokenData, error) {
+func (c *Controller) refreshToken(domain, clientID, refreshToken string) (*authentication.TokenData, error) {
 	url := fmt.Sprintf("https://%s/oauth/token", domain)
 	data := fmt.Sprintf("grant_type=refresh_token&client_id=%s&refresh_token=%s", clientID, refreshToken)
 
-	resp, err := http.Post(url, "application/x-www-form-urlencoded", bytes.NewBufferString(data))
+	resp, err := c.client.Post(url, "application/x-www-form-urlencoded", bytes.NewBufferString(data))
 	if err != nil {
 		return nil, fmt.Errorf("failed to request device code: %w", err)
 	}
