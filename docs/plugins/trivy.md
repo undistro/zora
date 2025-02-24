@@ -11,7 +11,7 @@ in different targets like containers, code repositories and **Kubernetes cluster
 
 :octicons-codescan-24: **Type**: `vulnerability`
 
-:simple-docker: **Image**: `ghcr.io/undistro/trivy:0.50.1-1`
+:simple-docker: **Image**: `ghcr.io/undistro/trivy:0.57`
 
 :simple-github: **GitHub repository**: [https://github.com/aquasecurity/trivy](https://github.com/aquasecurity/trivy){:target="_blank"}
 
