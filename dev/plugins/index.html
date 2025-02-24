@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -1383,9 +1383,9 @@ as plugins to perform scans on Kubernetes clusters.</p>
 <p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>plugins<span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>NAME     IMAGE                               TYPE               AGE
-marvin   ghcr.io/undistro/marvin:v0.2.1      misconfiguration   14m
-popeye   ghcr.io/undistro/popeye:0.21.3-6    misconfiguration   14m
-trivy    ghcr.io/undistro/trivy:0.50.1-1     vulnerability      14m
+marvin   ghcr.io/undistro/marvin:v0.2        misconfiguration   14m
+popeye   ghcr.io/undistro/popeye:0.21        misconfiguration   14m
+trivy    ghcr.io/undistro/trivy:0.57         vulnerability      14m
 </code></pre></div></p>
 <p>Each item listed above is an instance of <code>Plugin</code> CRD and represents the execution configuration of a plugin.
 More details can be seen by getting the YAML output of a plugin: </p>
