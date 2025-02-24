@@ -1367,7 +1367,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.10.3" src="https://img.shields.io/badge/Version-0.10.3-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.3" src="https://img.shields.io/badge/AppVersion-v0.10.3-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.10.4" src="https://img.shields.io/badge/Version-0.10.4-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.4" src="https://img.shields.io/badge/AppVersion-v0.10.4-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1375,7 +1375,7 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.10.3 \</span>
+<span class="go">  --version 0.10.4 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
 <span class="go">  --set clusterName=&quot;$(kubectl config current-context)&quot;</span>
@@ -1598,36 +1598,6 @@ You're not viewing the latest version.
 <td>object</td>
 <td><code>{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>manager</code> container</td>
-</tr>
-<tr>
-<td>operator.rbacProxy.image.repository</td>
-<td>string</td>
-<td><code>"gcr.io/kubebuilder/kube-rbac-proxy"</code></td>
-<td><code>kube-rbac-proxy</code> image repository</td>
-</tr>
-<tr>
-<td>operator.rbacProxy.image.tag</td>
-<td>string</td>
-<td><code>"v0.15.0"</code></td>
-<td><code>kube-rbac-proxy</code> image tag</td>
-</tr>
-<tr>
-<td>operator.rbacProxy.image.pullPolicy</td>
-<td>string</td>
-<td><code>"IfNotPresent"</code></td>
-<td>Image pull policy</td>
-</tr>
-<tr>
-<td>operator.rbacProxy.securityContext</td>
-<td>object</td>
-<td><code>{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to <code>kube-rbac-proxy</code> container</td>
-</tr>
-<tr>
-<td>operator.rbacProxy.resources</td>
-<td>object</td>
-<td><code>{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>kube-rbac-proxy</code> container</td>
 </tr>
 <tr>
 <td>operator.nodeSelector</td>
