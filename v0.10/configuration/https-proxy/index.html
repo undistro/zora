@@ -1289,9 +1289,11 @@ parameter when running <code>helm upgrade --install</code> command.</p>
 <p>Additionally, you can specify URLs that should bypass the proxy, by setting the <code>noProxy</code> parameter in comma-separated 
 list format. Note that this parameter already has a default value: <code>kubernetes.default.svc.*,127.0.0.1,localhost</code>.</p>
 <p>Configuring proxy settings enables <code>trivy</code> plugin, <code>zora-operator</code> and <code>zora-tokenrefresh</code> to use the proxy for external requests.</p>
-<p>Zora OSS installations integrated with <a href="../../dashboard/">Zora Dashboard</a> communicate with the addresses below:
-- <code>https://zora-dashboard.undistro.io</code> for sending scan results
-- <code>https://login.undistro.io/oauth/token</code> for refreshing authentication token</p>
+<p>Zora OSS installations integrated with <a href="../../dashboard/">Zora Dashboard</a> communicate with the addresses below:</p>
+<ul>
+<li><code>https://zora-dashboard.undistro.io</code> for sending scan results</li>
+<li><code>https://login.undistro.io/oauth/token</code> for refreshing authentication token</li>
+</ul>
 <p>While <a href="../../plugins/trivy/">Trivy</a> downloads vulnerability databases during scans from the following external sources:</p>
 <ul>
 <li><code>ghcr.io/aquasecurity/trivy-db</code> </li>
