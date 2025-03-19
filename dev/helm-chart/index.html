@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.9">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1367,7 +1367,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.10.4" src="https://img.shields.io/badge/Version-0.10.4-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.4" src="https://img.shields.io/badge/AppVersion-v0.10.4-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.10.5" src="https://img.shields.io/badge/Version-0.10.5-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.5" src="https://img.shields.io/badge/AppVersion-v0.10.5-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1375,7 +1375,7 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.10.4 \</span>
+<span class="go">  --version 0.10.5 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
 <span class="go">  --set clusterName=&quot;$(kubectl config current-context)&quot;</span>
@@ -1756,6 +1756,12 @@ You're not viewing the latest version.
 <td>List of sources to populate environment variables in marvin container.</td>
 </tr>
 <tr>
+<td>scan.plugins.trivy.args</td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Specifies custom arguments for the Trivy command-line.</td>
+</tr>
+<tr>
 <td>scan.plugins.trivy.ignoreUnfixed</td>
 <td>bool</td>
 <td><code>false</code></td>
@@ -1766,6 +1772,18 @@ You're not viewing the latest version.
 <td>bool</td>
 <td><code>false</code></td>
 <td>Specifies whether vulnerability descriptions should be ignored</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.dbRepository</td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Specifies a custom OCI repository(ies) to retrieve vulnerability database.</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.javaDbRepository</td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Specifies a custom OCI repository(ies) to retrieve Java vulnerability database.</td>
 </tr>
 <tr>
 <td>scan.plugins.trivy.resources</td>
@@ -2192,7 +2210,7 @@ You're not viewing the latest version.
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   </body>

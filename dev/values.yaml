@@ -178,10 +178,16 @@ scan:
       envFrom: []
 
     trivy:
+      # -- Specifies custom arguments for the Trivy command-line.
+      args: ""
       # -- Specifies whether only fixed vulnerabilities should be reported
       ignoreUnfixed: false
       # -- Specifies whether vulnerability descriptions should be ignored
       ignoreDescriptions: false
+      # -- Specifies a custom OCI repository(ies) to retrieve vulnerability database.
+      dbRepository: ""
+      # -- Specifies a custom OCI repository(ies) to retrieve Java vulnerability database.
+      javaDbRepository: ""
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
       resources:
         requests:

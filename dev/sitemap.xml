@@ -2,82 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://zora-docs.undistro.io/dev/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/dashboard/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/faq/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/helm-chart/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/authenticated-registries/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/convert-to-csv/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/custom-checks/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/https-proxy/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/resources/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/retain-issues/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/scan-schedule/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/suspend-scan/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/vulnerability-database-persistence/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/private-registries/acr/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/configuration/private-registries/ecr/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/getting-started/installation/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/plugins/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/plugins/marvin/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/plugins/popeye/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
     <url>
          <loc>https://zora-docs.undistro.io/dev/plugins/trivy/</loc>
-         <lastmod>2025-02-24</lastmod>
+         <lastmod>2025-03-19</lastmod>
     </url>
 </urlset>
