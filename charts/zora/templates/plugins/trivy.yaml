@@ -72,7 +72,15 @@ spec:
         --ignore-unfixed \
         {{- end }}
         --timeout={{ .Values.scan.plugins.trivy.timeout | quote }} \
-        -o $(DONE_DIR)/results.json
+        {{- if .Values.scan.plugins.trivy.dbRepository }}
+        --db-repository={{ .Values.scan.plugins.trivy.dbRepository | quote }} \
+        {{- end }}
+        {{- if .Values.scan.plugins.trivy.javaDbRepository }}
+        --java-db-repository={{ .Values.scan.plugins.trivy.javaDbRepository | quote }} \
+        {{- end }}
+        -o $(DONE_DIR)/results.json {{- if .Values.scan.plugins.trivy.args }} \
+        {{ .Values.scan.plugins.trivy.args }}
+        {{- end }}
 
       exitcode=$(echo $?)
       if [ $exitcode -ne 0 ]; then

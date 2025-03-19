@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.10.4](https://img.shields.io/badge/Version-0.10.4-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.10.4](https://img.shields.io/badge/AppVersion-v0.10.4-informational?style=flat-square&color=3CA9DD)
+![Version: 0.10.5](https://img.shields.io/badge/Version-0.10.5-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.10.5](https://img.shields.io/badge/AppVersion-v0.10.5-informational?style=flat-square&color=3CA9DD)
 
 A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
 
@@ -13,7 +13,7 @@ helm repo add undistro https://charts.undistro.io --force-update
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.10.4 \
+  --version 0.10.5 \
   --create-namespace \
   --wait \
   --set clusterName="$(kubectl config current-context)"
@@ -107,8 +107,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.marvin.image.pullPolicy | string | `"Always"` | Image pull policy |
 | scan.plugins.marvin.env | list | `[]` | List of environment variables to set in marvin container. |
 | scan.plugins.marvin.envFrom | list | `[]` | List of sources to populate environment variables in marvin container. |
+| scan.plugins.trivy.args | string | `""` | Specifies custom arguments for the Trivy command-line. |
 | scan.plugins.trivy.ignoreUnfixed | bool | `false` | Specifies whether only fixed vulnerabilities should be reported |
 | scan.plugins.trivy.ignoreDescriptions | bool | `false` | Specifies whether vulnerability descriptions should be ignored |
+| scan.plugins.trivy.dbRepository | string | `""` | Specifies a custom OCI repository(ies) to retrieve vulnerability database. |
+| scan.plugins.trivy.javaDbRepository | string | `""` | Specifies a custom OCI repository(ies) to retrieve Java vulnerability database. |
 | scan.plugins.trivy.resources | object | `{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":"500m","memory":"2048Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |

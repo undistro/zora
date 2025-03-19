@@ -24,3 +24,14 @@ While [Trivy](../plugins/trivy.md) downloads vulnerability databases during scan
 - `ghcr.io/aquasecurity/trivy-java-db`
 - `mirror.gcr.io/aquasec/trivy-db`
 - `mirror.gcr.io/aquasec/trivy-java-db`
+
+!!! note
+    A custom vulnerability database repository can be specified using the parameters `scan.plugins.trivy.dbRepository`
+    and `scan.plugins.trivy.javaDbRepository`.
+    You can use [skopeo](https://github.com/containers/skopeo/){:target="_blank"} to copy the official database to your 
+    own OCI-compliant registry with the command below.
+    Keep in mind that the original database is **continuously updated with new vulnerabilities**, 
+    so it's important to regularly synchronize your copy if you choose to host it yourself.
+    ```
+    skopeo copy docker://ghcr.io/aquasecurity/trivy-db:2 docker://registry.example.com/trivy-db:2
+    ```
