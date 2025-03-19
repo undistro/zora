@@ -15,6 +15,7 @@ list format. Note that this parameter already has a default value: `kubernetes.d
 Configuring proxy settings enables `trivy` plugin, `zora-operator` and `zora-tokenrefresh` to use the proxy for external requests.
 
 Zora OSS installations integrated with [Zora Dashboard](../dashboard.md) communicate with the addresses below:
+
 - `https://zora-dashboard.undistro.io` for sending scan results
 - `https://login.undistro.io/oauth/token` for refreshing authentication token
 
