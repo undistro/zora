@@ -108,7 +108,7 @@ func (r *CustomCheckReconciler) apply(ctx context.Context, check *v1alpha2.Custo
 	log := ctrllog.FromContext(ctx)
 
 	compiled := check.ToMarvin()
-	if _, err := validator.Compile(*compiled, nil, nil); err != nil {
+	if _, err := validator.Compile(*compiled, nil, nil, 0); err != nil {
 		log.Error(err, "failed to compile CustomCheck")
 		check.SetReadyStatus(false, "CompileError", err.Error())
 		return nil

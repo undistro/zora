@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type TokenData struct {
@@ -44,7 +44,7 @@ func ParseTokenData(data []byte) (*TokenData, error) {
 
 func GetJWTExpiry(tokenData *TokenData) (time.Time, error) {
 	if tokenData == nil {
-		return time.Time{}, errors.New("Missing token data")
+		return time.Time{}, errors.New("missing token data")
 	}
 
 	token := tokenData.AccessToken
