@@ -1,6 +1,6 @@
 module github.com/undistro/zora
 
-go 1.22.12
+go 1.25.4
 
 require (
 	github.com/aquasecurity/trivy v0.57.1
