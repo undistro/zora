@@ -24,9 +24,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aquasecurity/trivy/pkg/fanal/types"
-	trivyreport "github.com/aquasecurity/trivy/pkg/k8s/report"
-	trivytypes "github.com/aquasecurity/trivy/pkg/types"
 	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -36,7 +33,7 @@ import (
 
 func Parse(ctx context.Context, results io.Reader) ([]v1alpha2.VulnerabilityReportSpec, error) {
 	log := logr.FromContextOrDiscard(ctx)
-	report := &trivyreport.Report{}
+	report := &Report{}
 	if err := json.NewDecoder(results).Decode(report); err != nil {
 		return nil, err
 	}
@@ -106,7 +103,7 @@ func Parse(ctx context.Context, results io.Reader) ([]v1alpha2.VulnerabilityRepo
 	return specs, nil
 }
 
-func newSpec(img string, resource trivyreport.Resource) (*v1alpha2.VulnerabilityReportSpec, error) {
+func newSpec(img string, resource Resource) (*v1alpha2.VulnerabilityReportSpec, error) {
 	// The metadata is now an array for reporting multi-container pods etc., however
 	// each container is still reported separately
 	if len(resource.Metadata) != 1 {
@@ -125,15 +122,12 @@ func newSpec(img string, resource trivyreport.Resource) (*v1alpha2.Vulnerability
 		s.Digest = meta.RepoDigests[0]
 	}
 	if o := meta.OS; o != nil {
-		s.Distro = &v1alpha1.Distro{
-			Name:    string(o.Family),
-			Version: o.Name,
-		}
+		s.Distro = &v1alpha1.Distro{Name: o.Family, Version: o.Name}
 	}
 	return s, nil
 }
 
-func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription bool) *v1alpha2.Vulnerability {
+func newVulnerability(vuln DetectedVulnerability, ignoreDescription bool) *v1alpha2.Vulnerability {
 	description := ""
 	if !ignoreDescription {
 		description = vuln.Description
@@ -153,13 +147,13 @@ func newVulnerability(vuln trivytypes.DetectedVulnerability, ignoreDescription b
 	}
 }
 
-func newPackage(vuln trivytypes.DetectedVulnerability, t types.TargetType) v1alpha1.Package {
+func newPackage(vuln DetectedVulnerability, t string) v1alpha1.Package {
 	return v1alpha1.Package{
 		Package:    vuln.PkgName,
-		Status:     vuln.Status.String(),
+		Status:     vuln.Status,
 		Version:    vuln.InstalledVersion,
 		FixVersion: vuln.FixedVersion,
-		Type:       string(t),
+		Type:       t,
 	}
 }
 
@@ -170,14 +164,14 @@ func parseTime(t *time.Time) *metav1.Time {
 	return &metav1.Time{Time: *t}
 }
 
-func getScore(vuln trivytypes.DetectedVulnerability) string {
+func getScore(vuln DetectedVulnerability) string {
 	var vendor *float64
 	for id, cvss := range vuln.CVSS {
 		cvss := cvss
 		if cvss.V3Score == 0.0 {
 			continue
 		}
-		if string(id) == "nvd" {
+		if id == "nvd" {
 			return fmt.Sprintf("%v", cvss.V3Score)
 		}
 		vendor = &cvss.V3Score
@@ -188,9 +182,9 @@ func getScore(vuln trivytypes.DetectedVulnerability) string {
 	return fmt.Sprintf("%v", *vendor)
 }
 
-func getImage(resource trivyreport.Resource) string {
+func getImage(resource Resource) string {
 	for _, r := range resource.Results {
-		if r.Class == trivytypes.ClassOSPkg {
+		if r.IsOS() {
 			return strings.SplitN(r.Target, " (", 2)[0]
 		}
 	}

@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/caarlos0/env/v9"
+	"github.com/caarlos0/env/v11"
 )
 
 // config represents worker configuration
