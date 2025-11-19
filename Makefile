@@ -104,6 +104,9 @@ build: manifests generate fmt vet ## Build manager, worker and tokenrefresh bina
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./cmd/main.go
 
+.PHONY: docker-build-all
+docker-build-all: docker-build docker-build-worker docker-build-tokenrefresh ## Build all docker images.
+
 # If you wish built the manager image targeting other platforms you can use the --platform flag.
 # (i.e. docker build --platform linux/arm64 ). However, you must enable docker buildKit for it.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
