@@ -60,6 +60,7 @@ spec:
     - -c
     - |
       time trivy k8s \
+        --disable-node-collector \
         --debug \
         --no-progress \
         --scanners=vuln \
