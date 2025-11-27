@@ -25,20 +25,29 @@ configuration options regarding vulnerability database persistence.
 
 ## Large vulnerability reports
 
-Vulnerability reports can be large.
-If you encounter issues with etcd request payload limit, you can ignore unfixed vulnerabilities from reports 
-by providing the following flag to `helm upgrade --install` command:
+Vulnerability reports can be large depending on the scanned image.
 
-```
---set 'scan.plugins.trivy.ignoreUnfixed=true'
-```
+Zora automatically handles oversized reports:
 
-To identify this issue, check the logs of worker container in trivy pod.
-The `ClusterScan` will have a `Failed` status. You will see a log entry similar to the following example:
+- Zora automatically splits vulnerability reports recursively when errors such as `etcdserver: request is too large` or `Request entity too large` occur. This is an example of how reports are split for an image with 4499 vulnerabilities:
+  ```shell
+  kubectl get vulns -l zora.undistro.io/name=kind-python37-b8z6h -n zora-system
+  NAME                      CLUSTER   IMAGE        TOTAL   CRITICAL   HIGH   AGE
+  kind-python37-b8z6h-1-1   kind      python:3.7   1124    4          256    20h
+  kind-python37-b8z6h-1-2   kind      python:3.7   1125    3          287    20h
+  kind-python37-b8z6h-2-1   kind      python:3.7   1125    7          279    20h
+  kind-python37-b8z6h-2-2   kind      python:3.7   1125    8          262    20h
+  ```
+- Vulnerability descriptions are automatically truncated to 300 characters to reduce the payload size.
 
-```
-2023-09-26T14:18:02Z	ERROR	worker	failed to run worker	{"error": "failed to create VulnerabilityReport \"kind-kind-usdockerpkgdevgooglesamplescontainersgkegbfrontendsha256dc8de8e0d569d2f828b187528c9317bd6b605c273ac5a282aebe471f630420fc-rzntw\": etcdserver: request is too large"}
-```
+
+You can also further reduce report size using the following configurations:
+
+| Helm Parameter                                     | Description                                           |
+|----------------------------------------------------|-------------------------------------------------------|
+| `--set scan.plugins.trivy.ignoreUnfixed=true`      | Ignore unfixed vulnerabilities                        |
+| `--set scan.plugins.trivy.ignoreDescriptions=true` | Do not store vulnerability descriptions (only titles) |
+
 
 ## Scan timeout
 
