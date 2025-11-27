@@ -36,6 +36,7 @@ const (
 	LabelCategory   = "category"
 	LabelPlugin     = "plugin"
 	LabelCustom     = "custom"
+	LabelName       = "zora.undistro.io/name"
 )
 
 // ClusterIssueSpec defines the desired state of ClusterIssue

@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/undistro/zora/api/zora/v1alpha1"
@@ -42,19 +43,49 @@ var vulnReportTypeMeta = metav1.TypeMeta{
 var nonAlphanumericRegex = regexp.MustCompile(`[\W|_]+`)
 
 func handleVulnerability(ctx context.Context, cfg *config, results io.Reader, client *zora.Clientset) error {
-	log := logr.FromContextOrDiscard(ctx)
 	vulns, err := parseVulnResults(ctx, cfg, results)
 	if err != nil {
 		return err
 	}
 	for _, vuln := range vulns {
-		v, err := client.ZoraV1alpha2().VulnerabilityReports(cfg.Namespace).Create(ctx, &vuln, createOpts)
-		if err != nil {
-			return fmt.Errorf("failed to create VulnerabilityReport %q: %v", vuln.Name, err)
+		if err := createVulnerabilityReport(ctx, client, cfg.Namespace, &vuln); err != nil {
+			return err
 		}
-		log.Info(fmt.Sprintf("VulnerabilityReport %q successfully created", v.Name), "resourceVersion", v.ResourceVersion)
 	}
 	return nil
+}
+
+func createVulnerabilityReport(ctx context.Context, client *zora.Clientset, ns string, vr *v1alpha2.VulnerabilityReport) error {
+	log := logr.FromContextOrDiscard(ctx)
+	log.Info("creating vulnerability report", "totalVulns", len(vr.Spec.Vulnerabilities))
+	v, err := client.ZoraV1alpha2().VulnerabilityReports(ns).Create(ctx, vr, createOpts)
+	if err != nil {
+		if isRequestTooLargeError(err) {
+			log.Info("vulnerability report is too large, splitting...")
+			if len(vr.Spec.Vulnerabilities) == 1 {
+				return fmt.Errorf("cannot store even a single vulnerability, giving up: %s", vr.Spec.Vulnerabilities[0].ID)
+			}
+			left, right := vr.Split()
+			if err := createVulnerabilityReport(ctx, client, ns, left); err != nil {
+				return err
+			}
+			return createVulnerabilityReport(ctx, client, ns, right)
+		}
+		return fmt.Errorf("failed to create VulnerabilityReport %q: %v", vr.Name, err)
+	}
+	log.Info(fmt.Sprintf("VulnerabilityReport %q successfully created", v.Name), "resourceVersion", v.ResourceVersion)
+	return nil
+}
+
+func isRequestTooLargeError(err error) bool {
+	if err == nil {
+		return false
+	}
+	errMsg := err.Error()
+	return apierrors.IsRequestEntityTooLargeError(err) ||
+		strings.Contains(errMsg, "etcdserver: request is too large") ||
+		strings.Contains(errMsg, "trying to send message larger than max") ||
+		strings.Contains(errMsg, "Request entity too large")
 }
 
 func parseVulnResults(ctx context.Context, cfg *config, results io.Reader) ([]v1alpha2.VulnerabilityReport, error) {
