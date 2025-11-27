@@ -43,10 +43,11 @@ Zora automatically handles oversized reports:
 
 You can also further reduce report size using the following configurations:
 
-| Helm Parameter                                     | Description                                           |
-|----------------------------------------------------|-------------------------------------------------------|
-| `--set scan.plugins.trivy.ignoreUnfixed=true`      | Ignore unfixed vulnerabilities                        |
-| `--set scan.plugins.trivy.ignoreDescriptions=true` | Do not store vulnerability descriptions (only titles) |
+| Helm Parameter                                                               | Description                                           |
+|------------------------------------------------------------------------------|-------------------------------------------------------|
+| `--set scan.plugins.trivy.ignoreUnfixed=true`                                | Ignore unfixed vulnerabilities                        |
+| `--set scan.plugins.trivy.ignoreDescriptions=true`                           | Do not store vulnerability descriptions (only titles) |
+| `--set scan.plugins.trivy.args="--exclude-namespaces kube-system,openshift"` | Indicate namespaces excluded from scanning            |
 
 
 ## Scan timeout
