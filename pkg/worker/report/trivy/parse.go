@@ -138,7 +138,7 @@ func newVulnerability(vuln DetectedVulnerability, ignoreDescription bool) *v1alp
 			ID:               vuln.VulnerabilityID,
 			Severity:         vuln.Severity,
 			Title:            vuln.Title,
-			Description:      description,
+			Description:      truncate(description, "...", 300),
 			URL:              vuln.PrimaryURL,
 			Score:            getScore(vuln),
 			PublishedDate:    parseTime(vuln.PublishedDate),
@@ -208,4 +208,15 @@ func addResource(spec *v1alpha2.VulnerabilityReportSpec, kind, namespace, name s
 	}
 	spec.Resources[kind] = append(spec.Resources[kind], id)
 	spec.TotalResources++
+}
+
+func truncate(s, suffix string, max int) string {
+	if max <= 0 {
+		return ""
+	}
+	runes := []rune(s)
+	if len(runes) <= max {
+		return s
+	}
+	return string(runes[:max]) + suffix
 }
