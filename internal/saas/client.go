@@ -45,7 +45,7 @@ type Client interface {
 	DeleteCluster(ctx context.Context, namespace, name string) error
 	PutClusterScan(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 	DeleteClusterScan(ctx context.Context, namespace, name string) error
-	PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha2.VulnerabilityReport) error
+	PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport *v1alpha2.VulnerabilityReport) error
 	PutClusterStatus(ctx context.Context, namespace, name string, pluginStatus map[string]*PluginStatus) error
 }
 
@@ -134,7 +134,10 @@ func (r *client) PutClusterScan(ctx context.Context, namespace, name string, plu
 	return validateStatus(res)
 }
 
-func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport v1alpha2.VulnerabilityReport) error {
+func (r *client) PutVulnerabilityReport(ctx context.Context, namespace, name string, vulnReport *v1alpha2.VulnerabilityReport) error {
+	if vulnReport == nil {
+		return nil
+	}
 	u := r.clusterURL("v1alpha2", namespace, name, "vulnerabilityreports")
 	b, err := json.Marshal(vulnReport)
 	if err != nil {

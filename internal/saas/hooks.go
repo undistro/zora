@@ -164,8 +164,14 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 		log.FromContext(ctx).Info("Skipping vulnerabilities, no changes from processed vulnerabilities")
 		return nil
 	}
-
+	split := map[string][]metav1.PartialObjectMetadata{}
 	for _, i := range metaList.Items {
+		if i.Labels != nil {
+			if name, ok := i.Labels[v1alpha1.LabelName]; ok {
+				split[name] = append(split[name], i)
+				continue
+			}
+		}
 		vulnReport := &v1alpha2.VulnerabilityReport{}
 		if err := cl.Get(ctx, types.NamespacedName{Namespace: i.Namespace, Name: i.Name}, vulnReport); err != nil {
 			return err
@@ -173,7 +179,7 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 		if vulnReport.SaaSStatusIsTrue() {
 			continue
 		}
-		if err := scl.PutVulnerabilityReport(ctx, cs.Namespace, cs.Spec.ClusterRef.Name, *vulnReport); err != nil {
+		if err := scl.PutVulnerabilityReport(ctx, cs.Namespace, cs.Spec.ClusterRef.Name, vulnReport); err != nil {
 			cs.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
 			vulnReport.SetSaaSStatus(metav1.ConditionTrue, "Error", err.Error())
 			_ = cl.Status().Update(ctx, vulnReport)
@@ -182,6 +188,45 @@ func pushVulns(scl Client, cl ctrlClient.Client, ctx context.Context, cs *v1alph
 		vulnReport.SetSaaSStatus(metav1.ConditionTrue, "OK", "VulnerabilityReport successfully pushed to SaaS")
 		if err := cl.Status().Update(ctx, vulnReport); err != nil {
 			return err
+		}
+	}
+	for name, objs := range split {
+		var merged *v1alpha2.VulnerabilityReport
+		var reports []*v1alpha2.VulnerabilityReport
+		for _, i := range objs {
+			vr := &v1alpha2.VulnerabilityReport{}
+			if err := cl.Get(ctx, types.NamespacedName{Namespace: i.Namespace, Name: i.Name}, vr); err != nil {
+				return err
+			}
+			if vr.SaaSStatusIsTrue() {
+				continue
+			}
+			reports = append(reports, vr)
+			if merged == nil {
+				merged = vr.DeepCopy()
+				merged.Name = name
+			} else {
+				merged.Spec.Vulnerabilities = append(merged.Spec.Vulnerabilities, vr.Spec.Vulnerabilities...)
+			}
+		}
+		if merged != nil {
+			merged.Spec.Summarize()
+		}
+		if err := scl.PutVulnerabilityReport(ctx, cs.Namespace, cs.Spec.ClusterRef.Name, merged); err != nil {
+			cs.SetSaaSStatus(metav1.ConditionFalse, "Error", err.Error())
+			// update status of all reports
+			for _, vr := range reports {
+				vr.SetSaaSStatus(metav1.ConditionTrue, "Error", err.Error())
+				_ = cl.Status().Update(ctx, vr)
+			}
+			return err
+		}
+		// update status of all reports
+		for _, vr := range reports {
+			vr.SetSaaSStatus(metav1.ConditionTrue, "OK", "VulnerabilityReport successfully pushed to SaaS")
+			if err := cl.Status().Update(ctx, vr); err != nil {
+				return err
+			}
 		}
 	}
 	cs.Status.ProcessedVulnerabilities = pluginProcessedResources
