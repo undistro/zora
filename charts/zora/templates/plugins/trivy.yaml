@@ -64,6 +64,7 @@ spec:
         --debug \
         {{- if semverCompare ">=0.67" (.Values.scan.plugins.trivy.image.tag | toString) }}
         --skip-version-check \
+        --disable-telemetry \
         {{- end }}
         --no-progress \
         --scanners=vuln \

@@ -23,6 +23,7 @@ spec:
         --disable-node-collector \
         --debug \
         --skip-version-check \
+        --disable-telemetry \
         --no-progress \
         --all-namespaces \
         --scanners=vuln \
