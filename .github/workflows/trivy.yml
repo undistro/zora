@@ -38,6 +38,9 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: setup qemu
+        uses: docker/setup-qemu-action@v3
+
       - name: setup docker buildx
         uses: docker/setup-buildx-action@v3
 
