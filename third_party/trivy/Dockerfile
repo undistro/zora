@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM goreleaser/goreleaser:v2.12.7 AS goreleaser
-
-FROM --platform=$BUILDPLATFORM goreleaser AS source
-
+FROM --platform=$BUILDPLATFORM goreleaser/goreleaser:v2.12.7 AS builder
+ARG TARGETOS=linux
+ARG TARGETARCH
 ARG REPO="https://github.com/aquasecurity/trivy.git"
 ARG BRANCH=v0.67.2
 ARG EXPECTED_COMMIT=60c57ad5ad7f270cecb51dff2dbf4d680114f6f8
@@ -32,23 +31,16 @@ RUN go get github.com/containerd/containerd@v1.7.29 && \
     go get github.com/opencontainers/selinux@v1.13.0 && \
     go get golang.org/x/crypto@v0.45.0
 
-FROM --platform=$BUILDPLATFORM goreleaser AS builder
-ARG TARGETOS
-ARG TARGETARCH
-
-WORKDIR /workspace
-
-COPY --from=source /trivy .
 RUN GOOS="$TARGETOS" GOARCH="$TARGETARCH" goreleaser build --id build-linux --single-target --clean --skip=validate -o dist/trivy
 
-FROM alpine:3.22 AS final
+FROM alpine:3.22
 
 RUN apk update && apk upgrade && \
     apk --no-cache add ca-certificates git && \
     rm -rf /var/cache/apk
 
-COPY --from=builder /workspace/dist/trivy /usr/local/bin/trivy.bin
-COPY --from=builder /workspace/contrib/*.tpl contrib/
+COPY --from=builder /trivy/dist/trivy /usr/local/bin/trivy.bin
+COPY --from=builder /trivy/contrib/*.tpl contrib/
 
 RUN echo '#!/bin/sh' > /usr/local/bin/trivy && \
     echo 'umask 002 && echo "umask set to $(umask)" && /usr/local/bin/trivy.bin "$@"' >> /usr/local/bin/trivy && \
