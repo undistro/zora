@@ -1,0 +1,13 @@
+diff --git a/pkg/cache/fs.go b/pkg/cache/fs.go
+index fb331b4..71c7df9 100644
+--- a/pkg/cache/fs.go
++++ b/pkg/cache/fs.go
+@@ -30,7 +30,7 @@ func NewFSCache(cacheDir string) (FSCache, error) {
+ 		return FSCache{}, xerrors.Errorf("failed to create cache dir: %w", err)
+ 	}
+ 
+-	db, err := bolt.Open(filepath.Join(dir, "fanal.db"), 0o600, &bolt.Options{
++	db, err := bolt.Open(filepath.Join(dir, "fanal.db"), 0660, &bolt.Options{
+ 		Timeout: defaultFSCacheTimeout,
+ 	})
+ 	if err != nil {
