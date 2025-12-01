@@ -62,6 +62,10 @@ spec:
       time trivy k8s \
         --disable-node-collector \
         --debug \
+        {{- if semverCompare ">=0.67" (.Values.scan.plugins.trivy.image.tag | toString) }}
+        --skip-version-check \
+        --disable-telemetry \
+        {{- end }}
         --no-progress \
         --scanners=vuln \
         -f=json \

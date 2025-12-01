@@ -1,0 +1,76 @@
+name: Build Trivy
+on:
+  push:
+    # e.g. trivy-0.67.2-patch
+    tags: [ "trivy-*" ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        default: dev
+        required: true
+        description: Trivy image tag (e.g. 0.67.2-patch)
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    name: Build Trivy
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: "${{ github.repository_owner }}/trivy"
+    steps:
+      - name: cleanup
+        run: |
+          df -h
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /usr/local/lib/android \
+            /opt/ghc \
+            /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          sudo docker builder prune -a
+          df -h
+
+      - name: version
+        id: version
+        env:
+          TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          TAG="${TAG#trivy-}"
+          echo "$TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          FLOATING_TAG="${TAG%.*}"
+          echo "$FLOATING_TAG"
+          echo "floating=$FLOATING_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup qemu
+        uses: docker/setup-qemu-action@v3
+
+      - name: setup docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm64,linux/amd64
+          file: third_party/trivy/Dockerfile
+          context: third_party/trivy/
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.floating }}

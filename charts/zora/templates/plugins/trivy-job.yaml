@@ -51,6 +51,10 @@ spec:
             - -c
             - |
               time trivy image \
+                {{- if semverCompare ">=0.67" (.Values.scan.plugins.trivy.image.tag | toString) }}
+                --skip-version-check \
+                --disable-telemetry \
+                {{- end }}
                 --debug \
                 --no-progress \
                 --cache-dir=/tmp/trivy-cache \
@@ -62,6 +66,10 @@ spec:
                 {{- end }}
                 --download-db-only{{- if .Values.scan.plugins.trivy.persistence.downloadJavaDB }} && \
               time trivy image \
+                {{- if semverCompare ">= 0.67" (.Values.scan.plugins.trivy.image.tag | toString) }}
+                --skip-version-check \
+                --disable-telemetry \
+                {{- end }}
                 --debug \
                 --no-progress \
                 --cache-dir=/tmp/trivy-cache \

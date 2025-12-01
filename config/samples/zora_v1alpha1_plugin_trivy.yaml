@@ -7,7 +7,7 @@ metadata:
   name: trivy
 spec:
   type: vulnerability
-  image: ghcr.io/undistro/trivy:0.50.1-1
+  image: ghcr.io/undistro/trivy:0.67
   securityContext:
     allowPrivilegeEscalation: false
   env:
@@ -22,6 +22,8 @@ spec:
       time trivy k8s \
         --disable-node-collector \
         --debug \
+        --skip-version-check \
+        --disable-telemetry \
         --no-progress \
         --all-namespaces \
         --scanners=vuln \
