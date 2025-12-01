@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.10.6](https://img.shields.io/badge/Version-0.10.6-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.10.6](https://img.shields.io/badge/AppVersion-v0.10.6-informational?style=flat-square&color=3CA9DD)
+![Version: 0.10.7](https://img.shields.io/badge/Version-0.10.7-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.10.7](https://img.shields.io/badge/AppVersion-v0.10.7-informational?style=flat-square&color=3CA9DD)
 
 A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
 
@@ -13,7 +13,7 @@ helm repo add undistro https://charts.undistro.io --force-update
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.10.6 \
+  --version 0.10.7 \
   --create-namespace \
   --wait \
   --set clusterName="$(kubectl config current-context)"
@@ -115,7 +115,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.resources | object | `{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":"500m","memory":"2048Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |
-| scan.plugins.trivy.image.tag | float | `0.57` | trivy plugin image tag |
+| scan.plugins.trivy.image.tag | float | `0.67` | trivy plugin image tag |
 | scan.plugins.trivy.image.pullPolicy | string | `"Always"` | Image pull policy |
 | scan.plugins.trivy.env | list | `[]` | List of environment variables to set in trivy container. |
 | scan.plugins.trivy.envFrom | list | `[]` | List of sources to populate environment variables in trivy container. |
