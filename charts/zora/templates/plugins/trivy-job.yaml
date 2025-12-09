@@ -27,6 +27,15 @@ spec:
             claimName: trivy-dbs-volume
       securityContext:
         fsGroup: {{ .Values.scan.plugins.trivy.fsGroup }}
+      {{- if .Values.imageCredentials.create  }}
+      imagePullSecrets:
+        - name: {{ include "zora.fullname" . }}-registry-cred
+      {{- else if not (eq (len .Values.imagePullSecrets) 0) }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       containers:
         - name: trivy-download-db
           image: "{{ .Values.scan.plugins.trivy.image.repository }}:{{ .Values.scan.plugins.trivy.image.tag }}"

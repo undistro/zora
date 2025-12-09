@@ -121,6 +121,7 @@ func (r *CronJobMutator) Mutate() error {
 	}
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.NodeSelector = r.Plugin.Spec.NodeSelector
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Affinity = r.Plugin.Spec.Affinity
+	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ImagePullSecrets = r.Plugin.Spec.ImagePullSecrets
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Tolerations = r.Plugin.Spec.Tolerations
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
