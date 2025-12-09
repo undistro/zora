@@ -20,7 +20,7 @@ The following example sets `1Gi` as memory limit for `marvin` plugin.
 --set scan.plugins.marvin.resources.limits.memory=1Gi
 ```
 
-Resources requests and limits can also be set for `worker` container ([See how plugins work](../plugins/#how-plugins-work)):
+Resources requests and limits can also be set for `worker` container ([See how plugins work](../../plugins/#how-plugins-work)):
 ```
 --set scan.plugins.trivy.workerResources.limits.memory=1Gi
 ```
