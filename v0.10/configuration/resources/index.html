@@ -1531,6 +1531,9 @@ You can do this by setting specific parameters using <code>--set</code> argument
 The following example sets <code>1Gi</code> as memory limit for <code>marvin</code> plugin.</p>
 <div class="highlight"><pre><span></span><code>--set scan.plugins.marvin.resources.limits.memory=1Gi
 </code></pre></div>
+<p>Resources requests and limits can also be set for <code>worker</code> container (<a href="../../plugins/#how-plugins-work">See how plugins work</a>):
+<div class="highlight"><pre><span></span><code>--set scan.plugins.trivy.workerResources.limits.memory=1Gi
+</code></pre></div></p>
 
 
 
