@@ -1,18 +1,18 @@
 module github.com/undistro/zora
 
-go 1.25.4
+go 1.25.5
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/go-logr/logr v1.4.3
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/go-cmp v0.7.0
-	github.com/onsi/ginkgo/v2 v2.27.2
-	github.com/onsi/gomega v1.38.2
+	github.com/onsi/ginkgo/v2 v2.27.3
+	github.com/onsi/gomega v1.38.3
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.11.1
 	github.com/undistro/marvin v0.2.12
-	go.uber.org/zap v1.27.0
+	go.uber.org/zap v1.27.1
 	k8s.io/api v0.34.2
 	k8s.io/apiextensions-apiserver v0.34.2
 	k8s.io/apimachinery v0.34.2
