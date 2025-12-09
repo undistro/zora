@@ -67,10 +67,21 @@ type PluginSpec struct {
 	// Cannot be updated.
 	Annotations map[string]string `json:"annotations,omitempty"`
 
-	// Compute Resources required by this container.
-	// Cannot be updated.
-	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// Compute Resources required by this plugin.
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+
+	// Compute Resources required by Worker.
+	WorkerResources *corev1.ResourceRequirements `json:"workerResources,omitempty"`
+
+	// NodeSelector is a selector which must be true for the pod to fit on a node.
+	// Selector which must match a node's labels for the pod to be scheduled on that node.
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
+	// If specified, the pod's scheduling constraints
+	Affinity *corev1.Affinity `json:"affinity,omitempty"`
+
+	// If specified, the pod's tolerations.
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 
 	// Image pull policy.
 	// One of Always, Never, IfNotPresent.
@@ -86,6 +97,13 @@ type PluginSpec struct {
 
 	// MountCustomChecksVolume specifies whether a volume with the custom checks should be mounted
 	MountCustomChecksVolume *bool `json:"mountCustomChecksVolume,omitempty"`
+}
+
+func (in *PluginSpec) WorkerResourcesOrDefault() corev1.ResourceRequirements {
+	if in.WorkerResources != nil {
+		return *in.WorkerResources
+	}
+	return in.Resources
 }
 
 func (in *PluginSpec) GetImagePullPolicy() corev1.PullPolicy {

@@ -100,7 +100,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.worker.image.repository | string | `"ghcr.io/undistro/zora/worker"` | worker image repository |
 | scan.worker.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | scan.plugins.annotations | object | `{}` | Annotations added to the plugin service account |
+| scan.plugins.marvin.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
+| scan.plugins.marvin.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
+| scan.plugins.marvin.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.plugins.marvin.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container |
+| scan.plugins.marvin.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
 | scan.plugins.marvin.podAnnotations | object | `{}` | Annotations added to the marvin pods |
 | scan.plugins.marvin.image.repository | string | `"ghcr.io/undistro/marvin"` | marvin plugin image repository |
 | scan.plugins.marvin.image.tag | string | `"v0.2"` | marvin plugin image tag |
@@ -112,7 +116,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.ignoreDescriptions | bool | `false` | Specifies whether vulnerability descriptions should be ignored |
 | scan.plugins.trivy.dbRepository | string | `""` | Specifies a custom OCI repository(ies) to retrieve vulnerability database. |
 | scan.plugins.trivy.javaDbRepository | string | `""` | Specifies a custom OCI repository(ies) to retrieve Java vulnerability database. |
+| scan.plugins.trivy.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
+| scan.plugins.trivy.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
+| scan.plugins.trivy.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.plugins.trivy.resources | object | `{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":"500m","memory":"2048Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
+| scan.plugins.trivy.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |
 | scan.plugins.trivy.image.tag | float | `0.67` | trivy plugin image tag |
@@ -128,7 +136,11 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.persistence.storageRequest | string | `"2Gi"` | Persistence storage size |
 | scan.plugins.trivy.persistence.downloadJavaDB | bool | `false` | Specifies whether Java vulnerability database should be downloaded on helm install/upgrade |
 | scan.plugins.popeye.skipInternalResources | bool | `false` | Specifies whether the following resources should be skipped by `popeye` scans. 1. resources from `kube-system`, `kube-public` and `kube-node-lease` namespaces; 2. kubernetes system reserved RBAC (prefixed with `system:`); 3. `kube-root-ca.crt` configmaps; 4. `default` namespace; 5. `default` serviceaccounts; 6. Helm secrets (prefixed with `sh.helm.release`); 7. Zora components. See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml |
+| scan.plugins.popeye.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
+| scan.plugins.popeye.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
+| scan.plugins.popeye.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
+| scan.plugins.popeye.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
 | scan.plugins.popeye.podAnnotations | object | `{}` | Annotations added to the popeye pods |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | float | `0.21` | popeye plugin image tag |

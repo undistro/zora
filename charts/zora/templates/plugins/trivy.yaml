@@ -28,6 +28,22 @@ spec:
   resources:
     {{- toYaml .Values.scan.plugins.trivy.resources | nindent 4 }}
   {{- end }}
+  {{- if .Values.scan.plugins.trivy.workerResources }}
+  workerResources:
+    {{- toYaml .Values.scan.plugins.trivy.workerResources | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.trivy.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.trivy.affinity }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.trivy.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   mountCustomChecksVolume: false
   securityContext:
     runAsNonRoot: true

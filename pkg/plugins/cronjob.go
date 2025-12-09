@@ -116,8 +116,12 @@ func (r *CronJobMutator) Mutate() error {
 
 	r.Existing.Spec.Suspend = &r.Suspend
 	if !r.Suspend {
-		r.Existing.Spec.Suspend = r.ClusterScan.Spec.Suspend
+		suspend := pointer.BoolDeref(r.ClusterScan.Spec.Suspend, false)
+		r.Existing.Spec.Suspend = &suspend
 	}
+	r.Existing.Spec.JobTemplate.Spec.Template.Spec.NodeSelector = r.Plugin.Spec.NodeSelector
+	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Affinity = r.Plugin.Spec.Affinity
+	r.Existing.Spec.JobTemplate.Spec.Template.Spec.Tolerations = r.Plugin.Spec.Tolerations
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
 	r.Existing.Spec.JobTemplate.Spec.BackoffLimit = pointer.Int32(0)
 	r.Existing.Spec.JobTemplate.Spec.Template.Spec.ServiceAccountName = r.ServiceAccountName
@@ -222,7 +226,7 @@ func (r *CronJobMutator) workerContainer() corev1.Container {
 		Image:           r.WorkerImage,
 		Env:             r.workerEnv(),
 		EnvFrom:         r.Plugin.Spec.EnvFrom,
-		Resources:       r.Plugin.Spec.Resources,
+		Resources:       r.Plugin.Spec.WorkerResourcesOrDefault(),
 		VolumeMounts:    commonVolumeMounts,
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		SecurityContext: &corev1.SecurityContext{
@@ -270,7 +274,7 @@ func (r *CronJobMutator) initContainer() corev1.Container {
 		},
 		VolumeMounts:    []corev1.VolumeMount{customChecksVolume},
 		ImagePullPolicy: corev1.PullPolicy(r.KubexnsPullPolicy),
-		Resources:       r.Plugin.Spec.Resources,
+		Resources:       r.Plugin.Spec.WorkerResourcesOrDefault(),
 		SecurityContext: &corev1.SecurityContext{
 			RunAsNonRoot:             pointer.Bool(true),
 			AllowPrivilegeEscalation: pointer.Bool(false),

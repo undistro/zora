@@ -28,6 +28,22 @@ spec:
   resources:
     {{- toYaml .Values.scan.plugins.popeye.resources | nindent 4 }}
   {{- end }}
+  {{- if .Values.scan.plugins.popeye.workerResources }}
+  workerResources:
+    {{- toYaml .Values.scan.plugins.popeye.workerResources | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.popeye.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.popeye.affinity }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.popeye.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if or .Values.scan.plugins.popeye.skipInternalResources .Values.scan.plugins.popeye.envFrom }}
   envFrom:
   {{- end }}

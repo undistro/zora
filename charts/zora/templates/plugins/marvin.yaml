@@ -28,6 +28,22 @@ spec:
   resources:
     {{- toYaml .Values.scan.plugins.marvin.resources | nindent 4 }}
   {{- end }}
+  {{- if .Values.scan.plugins.marvin.workerResources }}
+  workerResources:
+    {{- toYaml .Values.scan.plugins.marvin.workerResources | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.marvin.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.marvin.affinity }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.scan.plugins.marvin.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   mountCustomChecksVolume: true
   securityContext:
     runAsNonRoot: true
