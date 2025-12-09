@@ -155,6 +155,12 @@ scan:
     # -- Annotations added to the plugin service account
     annotations: {}
     marvin:
+      # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+      nodeSelector: {}
+      # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+      tolerations: []
+      # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+      affinity: {}
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container
       resources:
         requests:
@@ -163,6 +169,14 @@ scan:
         limits:
           cpu: 500m
           memory: 500Mi
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container
+      workerResources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 10m
+          memory: 64Mi
       # -- Annotations added to the marvin pods
       podAnnotations: {}
       image:
@@ -188,6 +202,12 @@ scan:
       dbRepository: ""
       # -- Specifies a custom OCI repository(ies) to retrieve Java vulnerability database.
       javaDbRepository: ""
+      # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+      nodeSelector: {}
+      # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+      tolerations: []
+      # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+      affinity: {}
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container
       resources:
         requests:
@@ -196,6 +216,14 @@ scan:
         limits:
           cpu: 1500m
           memory: 4096Mi
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container
+      workerResources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 10m
+          memory: 64Mi
       # -- Annotations added to the trivy pods
       podAnnotations: {}
       image:
@@ -250,6 +278,12 @@ scan:
       # 7. Zora components.
       # See `popeye` configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml
       skipInternalResources: false
+      # -- [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s)
+      nodeSelector: {}
+      # -- [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment
+      tolerations: []
+      # -- Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration)
+      affinity: {}
       # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container
       resources:
         requests:
@@ -258,6 +292,14 @@ scan:
         limits:
           cpu: 500m
           memory: 500Mi
+      # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container
+      workerResources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 10m
+          memory: 64Mi
       # -- Annotations added to the popeye pods
       podAnnotations: {}
       image:

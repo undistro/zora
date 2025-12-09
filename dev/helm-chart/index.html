@@ -1969,10 +1969,34 @@ You're not viewing the latest version.
 <td>Annotations added to the plugin service account</td>
 </tr>
 <tr>
+<td>scan.plugins.marvin.nodeSelector</td>
+<td>object</td>
+<td><code>{}</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
+</tr>
+<tr>
+<td>scan.plugins.marvin.tolerations</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
+</tr>
+<tr>
+<td>scan.plugins.marvin.affinity</td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
+</tr>
+<tr>
 <td>scan.plugins.marvin.resources</td>
 <td>object</td>
 <td><code>{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}</code></td>
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>marvin</code> container</td>
+</tr>
+<tr>
+<td>scan.plugins.marvin.workerResources</td>
+<td>object</td>
+<td><code>{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>worker</code> container</td>
 </tr>
 <tr>
 <td>scan.plugins.marvin.podAnnotations</td>
@@ -2041,10 +2065,34 @@ You're not viewing the latest version.
 <td>Specifies a custom OCI repository(ies) to retrieve Java vulnerability database.</td>
 </tr>
 <tr>
+<td>scan.plugins.trivy.nodeSelector</td>
+<td>object</td>
+<td><code>{}</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.tolerations</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.affinity</td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
+</tr>
+<tr>
 <td>scan.plugins.trivy.resources</td>
 <td>object</td>
 <td><code>{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":"500m","memory":"2048Mi"}}</code></td>
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>trivy</code> container</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.workerResources</td>
+<td>object</td>
+<td><code>{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>worker</code> container</td>
 </tr>
 <tr>
 <td>scan.plugins.trivy.podAnnotations</td>
@@ -2137,10 +2185,34 @@ You're not viewing the latest version.
 <td>Specifies whether the following resources should be skipped by <code>popeye</code> scans. 1. resources from <code>kube-system</code>, <code>kube-public</code> and <code>kube-node-lease</code> namespaces; 2. kubernetes system reserved RBAC (prefixed with <code>system:</code>); 3. <code>kube-root-ca.crt</code> configmaps; 4. <code>default</code> namespace; 5. <code>default</code> serviceaccounts; 6. Helm secrets (prefixed with <code>sh.helm.release</code>); 7. Zora components. See <code>popeye</code> configuration file that is used for this case: https://github.com/undistro/zora/blob/main/charts/zora/templates/plugins/popeye-config.yaml</td>
 </tr>
 <tr>
+<td>scan.plugins.popeye.nodeSelector</td>
+<td>object</td>
+<td><code>{}</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.tolerations</td>
+<td>list</td>
+<td><code>[]</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.affinity</td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
+</tr>
+<tr>
 <td>scan.plugins.popeye.resources</td>
 <td>object</td>
 <td><code>{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}</code></td>
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>popeye</code> container</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.workerResources</td>
+<td>object</td>
+<td><code>{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
+<td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>worker</code> container</td>
 </tr>
 <tr>
 <td>scan.plugins.popeye.podAnnotations</td>
