@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM --platform=$BUILDPLATFORM goreleaser/goreleaser:v2.12.7 AS builder
+FROM --platform=$BUILDPLATFORM goreleaser/goreleaser:v2.13.1 AS builder
 ARG TARGETOS=linux
 ARG TARGETARCH
 ARG REPO="https://github.com/aquasecurity/trivy.git"
