@@ -12,11 +12,6 @@ Once the cluster is successfully scanned, you can check issues by running:
 
 Visit our documentation for in-depth information: https://zora-docs.undistro.io
 
-{{- if .Values.saas.workspaceID }}
-
-Visit Zora Dashboard to explore your clusters and issues: {{ .Values.saas.server }}
-{{- end }}
-
 {{- $warnMisconfig := and .Values.scan.misconfiguration.schedule (include "zora.IsMisconfigScheduleMoreOftenThanHourly" .) }}
 {{- if eq $warnMisconfig "true" }}
 

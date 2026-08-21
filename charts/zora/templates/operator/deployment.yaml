@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+{{- if .Values.saas.workspaceID }}
+{{- fail "Zora Dashboard integration was discontinued on August 24, 2026; remove saas.workspaceID from the Helm values." }}
+{{- end }}
 {{ $secretName := printf "%s-serving-cert" (include "zora.fullname" .) -}}
 {{ $saasTokensSecretName := (include "zora.saasTokenSecretName" .) -}}
 {{- $serviceName := printf "%s-webhook" (include "zora.fullname" .) -}}
