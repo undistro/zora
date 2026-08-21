@@ -22,8 +22,6 @@ jobs:
             image: operator
           - dockerfile: cmd/worker/Dockerfile
             image: worker
-          - dockerfile: cmd/tokenrefresh/Dockerfile
-            image: tokenrefresh
     steps:
       - name: checkout
         uses: actions/checkout@v4
