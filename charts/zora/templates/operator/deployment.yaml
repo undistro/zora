@@ -96,8 +96,6 @@ spec:
             {{- if .Values.scan.plugins.annotations }}
             - --cronjob-serviceaccount-annotations={{ $first := true }}{{- range $key, $value := .Values.scan.plugins.annotations }}{{if not $first}},{{else}}{{$first = false}}{{end}}{{ $key }}={{$value}}{{- end }}
             {{- end }}
-            - --saas-workspace-id={{ .Values.saas.workspaceID }}
-            - --saas-server={{ .Values.saas.server }}
             - --version={{ .Chart.Version }}
             - --checks-configmap-namespace={{ .Release.Namespace }}
             - --checks-configmap-name={{ .Values.customChecksConfigMap }}
