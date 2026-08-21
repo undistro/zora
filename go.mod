@@ -6,7 +6,7 @@ require (
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-logr/logr v1.4.3
-	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/go-cmp v0.7.0
 	github.com/google/go-containerregistry v0.20.2
 	github.com/onsi/ginkgo/v2 v2.27.3
