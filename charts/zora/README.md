@@ -119,7 +119,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |
-| scan.plugins.trivy.image.tag | float | `0.67` | trivy plugin image tag |
+| scan.plugins.trivy.image.tag | float | `0.74` | trivy plugin image tag |
 | scan.plugins.trivy.image.pullPolicy | string | `"Always"` | Image pull policy |
 | scan.plugins.trivy.env | list | `[]` | List of environment variables to set in trivy container. |
 | scan.plugins.trivy.envFrom | list | `[]` | List of sources to populate environment variables in trivy container. |
