@@ -50,10 +50,6 @@ Then, run the following command to install or upgrade Zora [Helm chart](https://
 
 This command will install or upgrade Zora in `zora-system` namespace, creating the namespace if it doesn't already exist.
 
-!!! info "Zora OSS + Zora Dashboard"
-    To integrate your Zora OSS installation with Zora Dashboard, you need to authenticate with the authorization server and provide `saas.workspaceID` parameter in installation command.
-    For more information, please refer to [this page](../dashboard.md#getting-started).
-
 With the following commands, you can verify if Zora has been successfully installed and retrieve installation notes:
 
 ```shell
@@ -92,8 +88,8 @@ to offer a clearer understanding of your cluster's security posture.
 
 #### Full Integration with Zora Dashboard
 
-Zora 0.8 introduces the integration of Vulnerability Reports with the Zora Dashboard.
-Now, alongside misconfigurations, you can centrally explore images and vulnerabilities across your clusters.
+This historical release note describes an integration that is no longer available. Zora Dashboard was
+discontinued on August 24, 2026; Zora OSS installations continue to store reports in the cluster.
 
 ### Migration guide
 

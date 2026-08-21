@@ -10,12 +10,15 @@ industry-leading frameworks.
 By scanning your cluster with multiple plugins at scheduled times, 
 Zora identifies potential issues, misconfigurations, and vulnerabilities.
 
-## Zora OSS vs Zora Dashboard
+## Zora OSS
 
 [Zora OSS is open-source](https://github.com/undistro/zora){:target="_blank"}, available under Apache 2.0 license,
-and can be used either as standalone tool or integrated with [Zora Dashboard](dashboard.md), 
-a SaaS platform which centralize all your clusters providing a full experience. 
-Please refer to [Zora Dashboard page](dashboard.md) for more details.
+and runs in your Kubernetes cluster. Scan results remain available as Kubernetes resources and can be queried with
+`kubectl`.
+
+!!! warning "Zora Dashboard discontinued"
+    Zora Dashboard was discontinued on August 24, 2026. This change applies only to the Dashboard;
+    Zora OSS remains free and open source. No action is required for Zora OSS installations.
 
 ## Key features
 
@@ -57,11 +60,13 @@ are managed in CRDs (Custom Resource Definitions).
 ![Zora architecture diagram](assets/oss-arch-light.png#only-light){ loading=lazy }
 ![Zora architecture diagram](assets/oss-arch-dark.png#only-dark){ loading=lazy }
 
-!!! note "Zora Dashboard"
-    When a Zora OSS installation is integrated with Zora Dashboard, 
-    scan results are automatically sent to Zora Dashboard SaaS by `zora-operator`.
-    
-    Check out [Zora Dashboard architecture](dashboard.md#architecture) for more details.
+!!! tip "View scan results"
+    Scan results are stored in your cluster and can be queried with `kubectl`, for example:
+
+    ```shell
+    kubectl get vulnerabilities -n zora-system
+    kubectl get misconfigurations -n zora-system
+    ```
 
 ## Zora origins
 
