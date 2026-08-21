@@ -54,11 +54,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
 | clusterName | string | `""` | Cluster name. Should be set by `kubectl config current-context`. |
-| saas.workspaceID | string | `""` | Your SaaS workspace ID |
-| saas.server | string | `"https://zora-dashboard.undistro.io"` | SaaS server URL |
-| saas.installURL | string | `"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"` | SaaS URL template to notify installation |
-| hooks.install.image.repository | string | `"curlimages/curl"` | Post-install hook image repository |
-| hooks.install.image.tag | string | `"8.7.1"` | Post-install hook image tag |
+| saas.workspaceID | string | `""` | Deprecated: Zora Dashboard workspace ID. The Dashboard integration was discontinued on August 24, 2026. |
 | hooks.delete.image.repository | string | `"rancher/kubectl"` | Pre-delete hook image repository |
 | hooks.delete.image.tag | string | `"v1.29.2"` | Pre-delete hook image tag |
 | imageCredentials.create | bool | `false` | Specifies whether the secret should be created by providing credentials |
@@ -154,26 +150,6 @@ The following table lists the configurable parameters of the Zora chart and thei
 | httpsProxy | string | `""` | HTTPS proxy URL |
 | noProxy | string | `"kubernetes.default.svc.*,127.0.0.1,localhost"` | Comma-separated list of URL patterns to be excluded from going through the proxy |
 | updateCRDs | bool | `true` for upgrades | Specifies whether CRDs should be updated by operator at startup |
-| tokenRefresh.image.repository | string | `"ghcr.io/undistro/zora/tokenrefresh"` | tokenrefresh image repository |
-| tokenRefresh.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
-| tokenRefresh.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| tokenRefresh.rbac.create | bool | `true` | Specifies whether Roles and RoleBindings should be created |
-| tokenRefresh.rbac.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| tokenRefresh.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
-| tokenRefresh.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| tokenRefresh.minRefreshTime | string | `"1m"` | Minimum time to wait before checking for token refresh |
-| tokenRefresh.refreshThreshold | string | `"2h"` | Threshold relative to the token expiry timestamp, after which a token can be refreshed. |
-| tokenRefresh.nodeSelector | object | `{}` | [Node selection](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node) to constrain a Pod to only be able to run on particular Node(s) |
-| tokenRefresh.tolerations | list | `[]` | [Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for pod assignment |
-| tokenRefresh.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
-| tokenRefresh.podAnnotations | object | `{"kubectl.kubernetes.io/default-container":"manager"}` | Annotations to be added to pods |
-| tokenRefresh.podSecurityContext | object | `{"runAsNonRoot":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
-| tokenRefresh.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
-| zoraauth.domain | string | `""` | The domain associated with the tokens |
-| zoraauth.clientId | string | `""` | The client id associated with the tokens |
-| zoraauth.accessToken | string | `""` | The access token authorizing access to the SaaS API server |
-| zoraauth.tokenType | string | `"Bearer"` | The type of the access token |
-| zoraauth.refreshToken | string | `""` | The refresh token for obtaining a new access token |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
