@@ -1,0 +1,471 @@
+From dc3c56eed58ab21c7e08d26757c517bc946a86c5 Mon Sep 17 00:00:00 2001
+From: Nikita Pivkin <nikita.pivkin@smartforce.io>
+Date: Fri, 21 Aug 2026 13:10:25 +0000
+Subject: [PATCH] chore: bump Go to 1.27 (#11127)
+
+---
+ .github/workflows/cache-test-assets.yaml           |  4 +---
+ .github/workflows/test.yaml                        |  4 +---
+ .golangci.yaml                                     |  6 +++++-
+ cmd/trivy/main.go                                  |  6 ++----
+ go.mod                                             |  2 +-
+ goreleaser-canary.yml                              |  1 -
+ goreleaser.yml                                     |  4 ----
+ integration/README.md                              |  4 ++--
+ magefiles/magefile.go                              | 14 +++++++-------
+ pkg/dependency/parser/java/pom/repository.go       |  3 +--
+ pkg/fanal/analyzer/pkg/rpm/archive.go              |  3 +--
+ pkg/fanal/artifact/image/image_test.go             |  2 +-
+ pkg/fanal/image/image_test.go                      |  9 +++++++--
+ pkg/iac/rego/convert/struct.go                     |  6 +++---
+ pkg/iac/rego/scanner.go                            |  2 +-
+ .../scanners/cloudformation/parser/parameter.go    |  3 ++-
+ pkg/iac/scanners/helm/scanner.go                   |  2 +-
+ pkg/iac/scanners/terraform/parser/parser.go        |  3 +--
+ pkg/misconf/scanner.go                             |  3 +--
+ pkg/plugin/plugin.go                               |  3 +--
+ pkg/remote/remote.go                               |  3 +--
+ pkg/result/filter.go                               |  2 +-
+ pkg/x/json/json.go                                 |  4 +++-
+ 23 files changed, 44 insertions(+), 49 deletions(-)
+
+diff --git a/.github/workflows/cache-test-assets.yaml b/.github/workflows/cache-test-assets.yaml
+index 23784b5..7b93df1 100644
+--- a/.github/workflows/cache-test-assets.yaml
++++ b/.github/workflows/cache-test-assets.yaml
+@@ -89,7 +89,5 @@ jobs:
+       - name: Run golangci-lint for caching
+         uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+         with:
+-          version: v2.12
++          version: v2.13.1
+           args: --verbose
+-        env:
+-          GOEXPERIMENT: jsonv2
+diff --git a/.github/workflows/test.yaml b/.github/workflows/test.yaml
+index d4b77ef..79f6f86 100644
+--- a/.github/workflows/test.yaml
++++ b/.github/workflows/test.yaml
+@@ -39,11 +39,9 @@ jobs:
+         id: lint
+         uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+         with:
+-          version: v2.12
++          version: v2.13.1
+           args: --verbose
+           skip-save-cache: true  # Restore cache from main branch but don't save new cache
+-        env:
+-          GOEXPERIMENT: jsonv2
+         if: matrix.operating-system == 'ubuntu-latest'
+ 
+       - name: Check if linter failed
+diff --git a/.golangci.yaml b/.golangci.yaml
+index e4df8b2..066b2b5 100644
+--- a/.golangci.yaml
++++ b/.golangci.yaml
+@@ -143,6 +143,10 @@ linters:
+     testifylint:
+       enable-all: true
+ 
++    modernize:
++      disable:
++        - embedlit
++
+   default: none
+ 
+   enable:
+@@ -198,7 +202,7 @@ linters:
+     warn-unused: true
+ 
+ run:
+-  go: "1.26"
++  go: "1.27"
+   timeout: 30m
+ 
+ formatters:
+diff --git a/cmd/trivy/main.go b/cmd/trivy/main.go
+index 33bd254..21d73f0 100644
+--- a/cmd/trivy/main.go
++++ b/cmd/trivy/main.go
+@@ -17,13 +17,11 @@ import (
+ 
+ func main() {
+ 	if err := run(); err != nil {
+-		var exitError *types.ExitError
+-		if errors.As(err, &exitError) {
++		if exitError, ok := errors.AsType[*types.ExitError](err); ok {
+ 			os.Exit(exitError.Code)
+ 		}
+ 
+-		var userErr *types.UserError
+-		if errors.As(err, &userErr) {
++		if userErr, ok := errors.AsType[*types.UserError](err); ok {
+ 			log.Fatal("Error", log.Err(userErr))
+ 		}
+ 
+diff --git a/go.mod b/go.mod
+index 666e9e0..f9cdd5c 100644
+--- a/go.mod
++++ b/go.mod
+@@ -1,6 +1,6 @@
+ module github.com/aquasecurity/trivy
+ 
+-go 1.26.3
++go 1.27.0
+ 
+ require (
+ 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.22.0
+diff --git a/goreleaser-canary.yml b/goreleaser-canary.yml
+index effc097..4d52d9e 100644
+--- a/goreleaser-canary.yml
++++ b/goreleaser-canary.yml
+@@ -11,7 +11,6 @@ builds:
+       - -X github.com/aquasecurity/trivy/pkg/version/app.ver={{.Version}}
+     env:
+       - CGO_ENABLED=0
+-      - GOEXPERIMENT=jsonv2
+     goos:
+       - darwin
+       - linux
+diff --git a/goreleaser.yml b/goreleaser.yml
+index 83ec015..09b196d 100644
+--- a/goreleaser.yml
++++ b/goreleaser.yml
+@@ -11,7 +11,6 @@ builds:
+       - -X github.com/aquasecurity/trivy/pkg/version/app.ver={{.Version}}
+     env:
+       - CGO_ENABLED=0
+-      - GOEXPERIMENT=jsonv2
+     goos:
+       - linux
+     goarch:
+@@ -32,7 +31,6 @@ builds:
+       - -X github.com/aquasecurity/trivy/pkg/version/app.ver={{.Version}}
+     env:
+       - CGO_ENABLED=0
+-      - GOEXPERIMENT=jsonv2
+     goos:
+       - freebsd
+     goarch:
+@@ -49,7 +47,6 @@ builds:
+       - -X github.com/aquasecurity/trivy/pkg/version/app.ver={{.Version}}
+     env:
+       - CGO_ENABLED=0
+-      - GOEXPERIMENT=jsonv2
+     goos:
+       - darwin
+     goarch:
+@@ -66,7 +63,6 @@ builds:
+       - -X github.com/aquasecurity/trivy/pkg/version/app.ver={{.Version}}
+     env:
+       - CGO_ENABLED=0
+-      - GOEXPERIMENT=jsonv2
+     goos:
+       - windows
+     goarch:
+diff --git a/integration/README.md b/integration/README.md
+index 34c1529..0ab3807 100644
+--- a/integration/README.md
++++ b/integration/README.md
+@@ -18,7 +18,7 @@ mage test:k8s          # Kubernetes integration tests
+ 
+ ### Run specific test
+ ```bash
+-GOEXPERIMENT=jsonv2 go test -tags=integration -run TestRepository ./integration -v
++go test -tags=integration -run TestRepository ./integration -v
+ ```
+ 
+ ## Golden Files
+@@ -40,7 +40,7 @@ mage test:updateModuleGolden
+ mage test:updateVMGolden
+ 
+ # Update specific golden files manually
+-GOEXPERIMENT=jsonv2 go test -tags=integration -run TestRepository ./integration -v -update
++go test -tags=integration -run TestRepository ./integration -v -update
+ ```
+ 
+ **Important**:
+diff --git a/magefiles/magefile.go b/magefiles/magefile.go
+index ab6e187..17d3cae 100644
+--- a/magefiles/magefile.go
++++ b/magefiles/magefile.go
+@@ -28,9 +28,10 @@ var (
+ 	GOPATH = os.Getenv("GOPATH")
+ 	GOBIN  = filepath.Join(GOPATH, "bin")
+ 
++	golangciLint = filepath.Join(GOBIN, "golangci-lint")
++
+ 	ENV = map[string]string{
+-		"CGO_ENABLED":  "0",
+-		"GOEXPERIMENT": "jsonv2",
++		"CGO_ENABLED": "0",
+ 	}
+ )
+ 
+@@ -75,9 +76,8 @@ func (Tool) PipTools() error {
+ 
+ // GolangciLint installs golangci-lint
+ func (t Tool) GolangciLint() error {
+-	const version = "v2.12.2"
+-	bin := filepath.Join(GOBIN, "golangci-lint")
+-	if exists(bin) && t.matchGolangciLintVersion(bin, version) {
++	const version = "v2.13.1"
++	if exists(golangciLint) && t.matchGolangciLintVersion(golangciLint, version) {
+ 		return nil
+ 	}
+ 	// TODO: use `go install tool`
+@@ -348,13 +348,13 @@ type Lint mg.Namespace
+ // Run runs linters
+ func (l Lint) Run() error {
+ 	mg.Deps(Tool{}.GolangciLint, Tool{}.Install)
+-	return sh.RunWithV(ENV, "golangci-lint", "run", "--build-tags=integration")
++	return sh.RunWithV(ENV, golangciLint, "run", "--build-tags=integration")
+ }
+ 
+ // Fix auto fixes linters
+ func (l Lint) Fix() error {
+ 	mg.Deps(Tool{}.GolangciLint, Tool{}.Install)
+-	return sh.RunWithV(ENV, "golangci-lint", "run", "--fix", "--build-tags=integration")
++	return sh.RunWithV(ENV, golangciLint, "run", "--fix", "--build-tags=integration")
+ }
+ 
+ // Fmt formats Go code
+diff --git a/pkg/dependency/parser/java/pom/repository.go b/pkg/dependency/parser/java/pom/repository.go
+index ed446ac..36952e7 100644
+--- a/pkg/dependency/parser/java/pom/repository.go
++++ b/pkg/dependency/parser/java/pom/repository.go
+@@ -51,8 +51,7 @@ func resolvePomRepos(servers []Server, pomRepos []pomRepository) []repository {
+ 
+ 		repoURL, err := url.Parse(rep.URL)
+ 		if err != nil {
+-			var ue *url.Error
+-			if errors.As(err, &ue) {
++			if ue, ok := errors.AsType[*url.Error](err); ok {
+ 				err = ue.Unwrap()
+ 			}
+ 			logger.Debug("Unable to parse remote repository url", log.String("id", rep.ID), log.Err(err))
+diff --git a/pkg/fanal/analyzer/pkg/rpm/archive.go b/pkg/fanal/analyzer/pkg/rpm/archive.go
+index 0fe4f6b..ce9c117 100644
+--- a/pkg/fanal/analyzer/pkg/rpm/archive.go
++++ b/pkg/fanal/analyzer/pkg/rpm/archive.go
+@@ -147,8 +147,7 @@ func (a *rpmArchiveAnalyzer) generatePURL(pkg *types.Package) *packageurl.Packag
+ }
+ 
+ func (a *rpmArchiveAnalyzer) unexpectedError(err error) error {
+-	var rerr rpmutils.NoSuchTagError
+-	if errors.As(err, &rerr) {
++	if rerr, ok := errors.AsType[rpmutils.NoSuchTagError](err); ok {
+ 		a.logger.Debug("RPM tag not found", log.Err(rerr))
+ 		return nil
+ 	}
+diff --git a/pkg/fanal/artifact/image/image_test.go b/pkg/fanal/artifact/image/image_test.go
+index 5ddacd3..fc6bcb4 100644
+--- a/pkg/fanal/artifact/image/image_test.go
++++ b/pkg/fanal/artifact/image/image_test.go
+@@ -2182,7 +2182,7 @@ func TestArtifact_InspectWithMaxImageSize(t *testing.T) {
+ 			artifactOpt: artifact.Option{
+ 				ImageOption: types.ImageOptions{MaxImageSize: units.KB * 1},
+ 			},
+-			wantErr: "compressed image size 2.44kB exceeds maximum allowed size 1kB",
++			wantErr: "compressed image size 2.39kB exceeds maximum allowed size 1kB",
+ 		},
+ 		{
+ 			name: "uncompressed layers size is larger than the maximum",
+diff --git a/pkg/fanal/image/image_test.go b/pkg/fanal/image/image_test.go
+index 99f0947..a2bae26 100644
+--- a/pkg/fanal/image/image_test.go
++++ b/pkg/fanal/image/image_test.go
+@@ -51,6 +51,11 @@ func TestNewDockerImage(t *testing.T) {
+ 	}()
+ 	serverAddr := tr.Listener.Addr().String()
+ 
++	// The registry computes the manifest digest by compressing the layers of the tarball,
++	// so the value depends on the compressor of the toolchain the tests are built with.
++	imgDigest, err := localImage(t).Digest()
++	require.NoError(t, err)
++
+ 	type args struct {
+ 		imageName string
+ 		option    types.ImageOptions
+@@ -154,7 +159,7 @@ func TestNewDockerImage(t *testing.T) {
+ 			wantID:       "sha256:af341ccd2df8b0e2d67cf8dd32e087bfda4e5756ebd1c76bbf3efa0dc246590e",
+ 			wantRepoTags: []string{serverAddr + "/library/alpine:3.10"},
+ 			wantRepoDigests: []string{
+-				serverAddr + "/library/alpine@sha256:e10ea963554297215478627d985466ada334ed15c56d3d6bb808ceab98374d91",
++				serverAddr + "/library/alpine@" + imgDigest.String(),
+ 			},
+ 			wantConfigFile: &v1.ConfigFile{
+ 				Architecture:  "amd64",
+@@ -213,7 +218,7 @@ func TestNewDockerImage(t *testing.T) {
+ 			wantID:       "sha256:af341ccd2df8b0e2d67cf8dd32e087bfda4e5756ebd1c76bbf3efa0dc246590e",
+ 			wantRepoTags: []string{serverAddr + "/library/alpine:3.10"},
+ 			wantRepoDigests: []string{
+-				serverAddr + "/library/alpine@sha256:e10ea963554297215478627d985466ada334ed15c56d3d6bb808ceab98374d91",
++				serverAddr + "/library/alpine@" + imgDigest.String(),
+ 			},
+ 			wantConfigFile: &v1.ConfigFile{
+ 				Architecture:  "amd64",
+diff --git a/pkg/iac/rego/convert/struct.go b/pkg/iac/rego/convert/struct.go
+index ab4c3b2..32bdc98 100644
+--- a/pkg/iac/rego/convert/struct.go
++++ b/pkg/iac/rego/convert/struct.go
+@@ -37,7 +37,7 @@ func StructToRego(inputValue reflect.Value) map[string]any {
+ 			continue
+ 		}
+ 
+-		if _, ok := field.Interface().(types.Metadata); ok && name == "Metadata" {
++		if _, ok := reflect.TypeAssert[types.Metadata](field); ok && name == "Metadata" {
+ 			continue
+ 		}
+ 
+@@ -52,13 +52,13 @@ func StructToRego(inputValue reflect.Value) map[string]any {
+ 
+ 	if inputValue.Type().Implements(metadataInterface) {
+ 		returns := inputValue.MethodByName("GetMetadata").Call(nil)
+-		if metadata, ok := returns[0].Interface().(types.Metadata); ok {
++		if metadata, ok := reflect.TypeAssert[types.Metadata](returns[0]); ok {
+ 			output["__defsec_metadata"] = metadata.ToRego()
+ 		}
+ 	} else {
+ 		metaVal := inputValue.FieldByName("Metadata")
+ 		if metaVal.Kind() == reflect.Struct {
+-			if meta, ok := metaVal.Interface().(types.Metadata); ok {
++			if meta, ok := reflect.TypeAssert[types.Metadata](metaVal); ok {
+ 				output["__defsec_metadata"] = meta.ToRego()
+ 			}
+ 		}
+diff --git a/pkg/iac/rego/scanner.go b/pkg/iac/rego/scanner.go
+index 9fc3ae8..6a642d8 100644
+--- a/pkg/iac/rego/scanner.go
++++ b/pkg/iac/rego/scanner.go
+@@ -207,7 +207,7 @@ func (s *Scanner) ScanInput(ctx context.Context, sourceType types.Source, inputs
+ 		}
+ 
+ 		namespace := getModuleNamespace(module)
+-		topLevel := strings.Split(namespace, ".")[0]
++		topLevel, _, _ := strings.Cut(namespace, ".")
+ 		if !s.ruleNamespaces.Contains(topLevel) {
+ 			continue
+ 		}
+diff --git a/pkg/iac/scanners/cloudformation/parser/parameter.go b/pkg/iac/scanners/cloudformation/parser/parameter.go
+index 10b1368..1baa2b0 100644
+--- a/pkg/iac/scanners/cloudformation/parser/parameter.go
++++ b/pkg/iac/scanners/cloudformation/parser/parameter.go
+@@ -54,7 +54,8 @@ func unmarshalIntFirst(dec *jsontext.Decoder, v *any) error {
+ 		}
+ 		return nil
+ 	}
+-	return json.SkipFunc
++	// Fall back to the default decoding.
++	return errors.ErrUnsupported
+ }
+ 
+ func (p *Parameter) Type() cftypes.CfType {
+diff --git a/pkg/iac/scanners/helm/scanner.go b/pkg/iac/scanners/helm/scanner.go
+index c82ab4d..f0ae04f 100644
+--- a/pkg/iac/scanners/helm/scanner.go
++++ b/pkg/iac/scanners/helm/scanner.go
+@@ -169,7 +169,7 @@ func unpackedChartExists(fsys fs.FS, archivePath string) bool {
+ 	if path.IsAbs(name) {
+ 		return false
+ 	}
+-	firstComponent := strings.SplitN(name, "/", 2)[0]
++	firstComponent, _, _ := strings.Cut(name, "/")
+ 	if firstComponent == "." || firstComponent == ".." {
+ 		return false
+ 	}
+diff --git a/pkg/iac/scanners/terraform/parser/parser.go b/pkg/iac/scanners/terraform/parser/parser.go
+index f303253..e81e93f 100644
+--- a/pkg/iac/scanners/terraform/parser/parser.go
++++ b/pkg/iac/scanners/terraform/parser/parser.go
+@@ -194,8 +194,7 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
+ 		if p.stopOnHCLError {
+ 			return err
+ 		}
+-		var diags hcl.Diagnostics
+-		if errors.As(err, &diags) {
++		if diags, ok := errors.AsType[hcl.Diagnostics](err); ok {
+ 			errc := p.showParseErrors(p.moduleFS, path, diags)
+ 			if errc == nil {
+ 				continue
+diff --git a/pkg/misconf/scanner.go b/pkg/misconf/scanner.go
+index 12262fa..6533338 100644
+--- a/pkg/misconf/scanner.go
++++ b/pkg/misconf/scanner.go
+@@ -158,8 +158,7 @@ func (s *Scanner) Scan(ctx context.Context, fsys fs.FS) ([]types.Misconfiguratio
+ 	log.DebugContext(ctx, "Scanning files for misconfigurations...", log.String("scanner", s.scanner.Name()))
+ 	results, err := s.scanner.ScanFS(ctx, newfs, ".")
+ 	if err != nil {
+-		var invalidContentError *cfparser.InvalidContentError
+-		if errors.As(err, &invalidContentError) {
++		if _, ok := errors.AsType[*cfparser.InvalidContentError](err); ok {
+ 			log.ErrorContext(ctx, "scan was broken with InvalidContentError", s.scanner.Name(), log.Err(err))
+ 			return nil, nil
+ 		}
+diff --git a/pkg/plugin/plugin.go b/pkg/plugin/plugin.go
+index 7af8ede..fce18f0 100644
+--- a/pkg/plugin/plugin.go
++++ b/pkg/plugin/plugin.go
+@@ -108,8 +108,7 @@ func (p *Plugin) Run(ctx context.Context, opts Options) error {
+ 	// out if the error was from not being able to execute the plugin or
+ 	// an error set by the plugin itself.
+ 	if err = cmd.Run(); err != nil {
+-		var execError *exec.ExitError
+-		if errors.As(err, &execError) {
++		if execError, ok := errors.AsType[*exec.ExitError](err); ok {
+ 			return &types.ExitError{
+ 				Code: execError.ExitCode(),
+ 			}
+diff --git a/pkg/remote/remote.go b/pkg/remote/remote.go
+index c46f707..9950267 100644
+--- a/pkg/remote/remote.go
++++ b/pkg/remote/remote.go
+@@ -89,9 +89,8 @@ func tryWithMirrors[T any](ref name.Reference, option types.RegistryOptions, fn
+ 	for _, r := range append(mirrors, ref) {
+ 		result, err := fn(r)
+ 		if err != nil {
+-			var multiErr *multierror.Error
+ 			// All auth options failed, try the next mirror/host
+-			if errors.As(err, &multiErr) {
++			if multiErr, ok := errors.AsType[*multierror.Error](err); ok {
+ 				errs = multierror.Append(errs, multiErr.Errors...)
+ 				continue
+ 			}
+diff --git a/pkg/result/filter.go b/pkg/result/filter.go
+index 4b31446..16de149 100644
+--- a/pkg/result/filter.go
++++ b/pkg/result/filter.go
+@@ -304,7 +304,7 @@ func filterFindingsByRego[T types.Finding](
+ 
+ func evaluate[T types.Finding](ctx context.Context, query rego.PreparedEvalQuery, finding T) (bool, error) {
+ 	type regoInput struct {
+-		Data T      `json:",inline"`
++		Data T      `json:",embed"`
+ 		Type string `json:"Type"`
+ 	}
+ 
+diff --git a/pkg/x/json/json.go b/pkg/x/json/json.go
+index e0d5e7d..85cf59a 100644
+--- a/pkg/x/json/json.go
++++ b/pkg/x/json/json.go
+@@ -4,6 +4,7 @@ import (
+ 	"bytes"
+ 	"encoding/json/jsontext"
+ 	"encoding/json/v2"
++	"errors"
+ 	"io"
+ 
+ 	"golang.org/x/xerrors"
+@@ -106,7 +107,8 @@ func unmarshaler[T any](r *lineReader, visited set.Set[int], hooks ...DecodeHook
+ 
+ 		// Check visited set to avoid infinity loops
+ 		if visited.Contains(start) {
+-			return json.SkipFunc
++			// Fall back to the default decoding.
++			return errors.ErrUnsupported
+ 		}
+ 		visited.Append(start)
+ 
+-- 
+2.34.1
+

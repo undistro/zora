@@ -40,6 +40,3 @@ This also applies to vulnerability scans and `VulnerabilityReport` results.
     Note that results are stored as CRDs in your Kubernetes cluster. 
     Be cautious not to set a high value that could potentially affect 
     the performance and storage capacity of your Kubernetes cluster
-
-!!! note
-    That applies only to Zora OSS. Zora Dashboard always shows results from the last scan.

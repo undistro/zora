@@ -44,6 +44,7 @@ theme:
     - navigation.tabs.sticky
     - navigation.instant
     - navigation.footer
+    - announce.dismiss
 plugins:
   - search
   - mike:
@@ -105,7 +106,7 @@ nav:
             - Trivy: plugins/trivy.md
       - "🔄 Migrating to 0.8": getting-started/installation/#migrating-to-08
 #      - "🔐 Data privacy": data-privacy.md
-      - "📊 Zora Dashboard": dashboard.md
+      - "⚠️ Zora Dashboard": dashboard.md
 #      - "🗃️ Troubleshooting": troubleshooting.md
       - "❓ FAQ": faq.md
   - Helm Chart:

@@ -11,16 +11,12 @@ ask it on our [discussion board](https://github.com/undistro/zora/discussions/ca
 
 ## Is Zora open source?
 
-There are two Zora tools: Zora OSS and Zora Dashboard.
+There are two components documented here: Zora OSS and the now-discontinued Zora Dashboard.
 
 [Zora OSS is open-source](https://github.com/undistro/zora){:target="_blank"}, available under Apache 2.0 license, 
-and can be used either as standalone tool or integrated with Zora Dashboard.
+and is used as a standalone tool. Zora Dashboard was discontinued on August 24, 2026.
 
-On the other hand, Zora Dashboard is a SaaS platform that provides a full experience, 
-centralizing the security posture management of all your clusters.
-It's free for up to 3 clusters. Visit the [Zora Dashboard page](dashboard.md) for more information.
-
-## Can I use Zora OSS standalone without Zora Dashboard?
+## Can I use Zora OSS standalone?
 
 Yes, you can use Zora OSS as a standalone tool and access scan results (misconfigurations and vulnerabilities) 
 via `kubectl` one cluster at a time.
@@ -47,19 +43,13 @@ Feel free to [open an issue](https://github.com/undistro/zora/issues/new/choose)
 [start a discussion](https://github.com/undistro/zora/discussions/categories/q-a){:target="_blank"} with any suggestions 
 regarding this process.
 
-## Which data is sent to Zora Dashboard (SaaS)?
+## What happens to data collected by Zora OSS?
 
-When integrated with Zora Dashboard, **only scan results are sent to the SaaS** platform. 
+Scan results remain in the cluster where Zora OSS is installed and can be accessed through the Kubernetes API or
+`kubectl`. For example, use `kubectl get vulnerabilities -n zora-system` and
+`kubectl get misconfigurations -n zora-system`.
 
-**No sensitive information is collected or exposed**. 
+## Is there an on-premise replacement for Zora Dashboard?
 
-Scans are performed in your cluster and the results are securely sent via HTTPS to Zora Dashboard, 
-where only you and the users you've invited to your workspace will have access.
-
-## Can I host Zora Dashboard on-premise?
-
-Currently, Zora Dashboard is available as a SaaS platform. 
-While we do not offer an on-premise version of Zora Dashboard at this time, we're continuously working to enhance and 
-expand our offerings. If you have specific requirements or are interested in on-premise solutions, 
-please [contact us](https://undistro.io/contact){:target="_blank"}, and we'll be happy to discuss potential options and 
-explore how we can meet your needs.
+No. Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains available as open source and runs in
+your own Kubernetes cluster.

@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+{{- if .Values.saas.workspaceID }}
+{{- fail "Zora Dashboard integration was discontinued on August 24, 2026; remove saas.workspaceID from the Helm values." }}
+{{- end }}
 {{ $secretName := printf "%s-serving-cert" (include "zora.fullname" .) -}}
 {{ $saasTokensSecretName := (include "zora.saasTokenSecretName" .) -}}
 {{- $serviceName := printf "%s-webhook" (include "zora.fullname" .) -}}
@@ -93,8 +96,6 @@ spec:
             {{- if .Values.scan.plugins.annotations }}
             - --cronjob-serviceaccount-annotations={{ $first := true }}{{- range $key, $value := .Values.scan.plugins.annotations }}{{if not $first}},{{else}}{{$first = false}}{{end}}{{ $key }}={{$value}}{{- end }}
             {{- end }}
-            - --saas-workspace-id={{ .Values.saas.workspaceID }}
-            - --saas-server={{ .Values.saas.server }}
             - --version={{ .Chart.Version }}
             - --checks-configmap-namespace={{ .Release.Namespace }}
             - --checks-configmap-name={{ .Values.customChecksConfigMap }}

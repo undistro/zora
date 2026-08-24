@@ -1,7 +1,7 @@
 name: Build Trivy
 on:
   push:
-    # e.g. trivy-0.67.2-patch
+    # e.g. trivy-0.74.0-patch
     tags: [ "trivy-*" ]
   workflow_dispatch:
     inputs:
@@ -9,7 +9,7 @@ on:
         type: string
         default: dev
         required: true
-        description: Trivy image tag (e.g. 0.67.2-patch)
+        description: Trivy image tag (e.g. 0.74.0-patch)
 
 permissions:
   contents: read
