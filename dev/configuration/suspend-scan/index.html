@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -94,6 +94,23 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains free and open source.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -1331,7 +1348,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    📊 Zora Dashboard
+    ⚠️ Zora Dashboard
   
 
     
@@ -1521,7 +1538,7 @@ You're not viewing the latest version.
 can be suspended by setting <code>spec.suspend</code> to <code>true</code> in a <code>ClusterScan</code> object. 
 This action will suspend subsequent scans, it does not apply to already started scans.</p>
 <p>The command below suspends the <code>mycluster-vuln</code> scan.</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>scan<span class="w"> </span>mycluster-vuln<span class="w"> </span>--type<span class="o">=</span><span class="s1">&#39;merge&#39;</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;suspend&quot;:true}}&#39;</span><span class="w"> </span>-n<span class="w"> </span>zora-system
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>scan<span class="w"> </span>mycluster-vuln<span class="w"> </span>--type<span class="o">=</span><span class="s1">'merge'</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">'{"spec":{"suspend":true}}'</span><span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1529,7 +1546,7 @@ This action will suspend subsequent scans, it does not apply to already started 
 unlike if the <code>ClusterScan</code> had been deleted, in which case the results would also be removed.</p>
 </div>
 <p>Setting <code>spec.suspend</code> back to <code>false</code>, the scans are resume:</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>scan<span class="w"> </span>mycluster-vuln<span class="w"> </span>--type<span class="o">=</span><span class="s1">&#39;merge&#39;</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;suspend&quot;:false}}&#39;</span><span class="w"> </span>-n<span class="w"> </span>zora-system
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>scan<span class="w"> </span>mycluster-vuln<span class="w"> </span>--type<span class="o">=</span><span class="s1">'merge'</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">'{"spec":{"suspend":false}}'</span><span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
 
 
@@ -1661,10 +1678,10 @@ unlike if the <code>ClusterScan</code> had been deleted, in which case the resul
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
