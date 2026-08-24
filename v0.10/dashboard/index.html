@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -94,6 +94,23 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains free and open source.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -1321,24 +1338,6 @@ You're not viewing the latest version.
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    📊 Zora Dashboard
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1346,7 +1345,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    📊 Zora Dashboard
+    ⚠️ Zora Dashboard
   
 
     
@@ -1355,64 +1354,6 @@ You're not viewing the latest version.
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting started
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authenticating-with-the-authorization-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authenticating with the Authorization server
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -1559,53 +1500,6 @@ You're not viewing the latest version.
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting started
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authenticating-with-the-authorization-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authenticating with the Authorization server
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1638,71 +1532,17 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-dashboard">Zora Dashboard<a class="headerlink" href="#zora-dashboard" title="Permanent link">&para;</a></h1>
-<p>Zora Dashboard is a SaaS platform designed to seamlessly centralize the security posture management of all your
-Kubernetes clusters, providing a full experience powered by Zora OSS.</p>
-<p>It features a powerful UI that allows you to navigate, filter and explore details of issues and affected resources
-across all your clusters. You can also invite users to your workspace.</p>
-<p><img alt="Zora Dashboard Screenshot" src="../assets/zora-dashboard-screenshot.png" /></p>
-<div align="center">
-   <a href="https://zora-dashboard.undistro.io/" class="md-button">Try Zora Dashboard</a>
+<div class="admonition warning">
+<p class="admonition-title">Service discontinued</p>
+<p>Zora Dashboard was discontinued on August 24, 2026. New users and new integrations are no longer accepted.
+This change applies only to the Dashboard. Zora OSS remains free and open source, with scan results available
+in the Kubernetes cluster through the Kubernetes API and <code>kubectl</code>.</p>
 </div>
-
-<p>Zora Dashboard offers a <strong><em>starter plan for 14 days</em></strong>, after which it will revert to the free plan which provides access for 2 clusters with up to 10 nodes per cluster.
-Please <a href="https://undistro.io/contact" target="_blank">contact us</a> if you need to discuss a tailored solution.</p>
-<h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>To integrate your Zora OSS installation with Zora Dashboard, you need to first authenticate with the authorization server and then provide your <code>saas.workspaceID</code> parameter in the Zora OSS installation command.</p>
-<h3 id="authenticating-with-the-authorization-server">Authenticating with the Authorization server<a class="headerlink" href="#authenticating-with-the-authorization-server" title="Permanent link">&para;</a></h3>
-<p>Authenticating with the authorization server is simplified through the use of a helm plugin, <code>zoraauth</code>, which can be installed by executing</p>
-<p><div class="highlight"><pre><span></span><code><span class="go">helm plugin install https://github.com/undistro/helm-zoraauth</span>
+<p>For Zora OSS, use commands such as:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>vulnerabilities<span class="w"> </span>-n<span class="w"> </span>zora-system
+kubectl<span class="w"> </span>get<span class="w"> </span>misconfigurations<span class="w"> </span>-n<span class="w"> </span>zora-system
 </code></pre></div>
-and updated by executing
-<div class="highlight"><pre><span></span><code><span class="go">helm plugin update zoraauth</span>
-</code></pre></div>
-The authentication process will occur when the plugin is executed, and you visit the authorization server to confirm the request. The instructions within the <a href="https://zora-dashboard.undistro.io/" target="_blank">Zora Dashboard</a> console will include the appropriate parameters for the plugin, these can be obtained through the <code>Connect cluster</code> option once you have signed in to the <a href="https://zora-dashboard.undistro.io/" target="_blank">Zora Dashboard</a>.</p>
-<p>To authenticate with the authorization server, copy and run the <code>helm zoraauth</code> command and then follow the instructions within your terminal
-<div class="highlight"><pre><span></span><code><span class="go">helm zoraauth --audience=&quot;zora_prod&quot; \</span>
-<span class="go">  --client-id=&quot;&lt;client id&gt;&quot; \</span>
-<span class="go">  --domain=&quot;login.undistro.io&quot;</span>
-<span class="go">Initiating Device Authorization Flow...</span>
-<span class="go">Please visit https://login.undistro.io/activate and enter code: BFNS-NWFF, or visit: https://login.undistro.io/activate?user_code=BFNS-NWFF</span>
-</code></pre></div>
-Entering the login URL within your browser will present you with a screen similar to the following</p>
-<figure>
-  <img alt="Zora Device Confirmation" src="../assets/zora-device-confirmation.png" width="300" />
-</figure>
-<p>Once you have confirmed the request you should see the following message on your terminal</p>
-<div class="highlight"><pre><span></span><code><span class="go">Tokens saved to tokens.yaml</span>
-</code></pre></div>
-<p>You can then install or upgrade Zora OSS by providing the <code>saas.workspaceID</code> parameter in the <a href="../getting-started/installation/">Zora OSS installation command</a>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">HTTP chart repository</label><label for="__tabbed_1_2">OCI registry</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>undistro<span class="w"> </span>https://charts.undistro.io<span class="w"> </span>--force-update
-helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> </span>undistro
-helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span>--create-namespace<span class="w"> </span>--wait<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="hll"><span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;<span class="w"> </span><span class="se">\</span>
-</span><span class="hll"><span class="w">  </span>--values<span class="w"> </span>tokens.yaml
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>oci://ghcr.io/undistro/helm-charts/zora<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span>--create-namespace<span class="w"> </span>--wait<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="hll"><span class="w">  </span>--set<span class="w"> </span>saas.workspaceID<span class="o">=</span>&lt;YOUR<span class="w"> </span>WORKSPACE<span class="w"> </span>ID<span class="w"> </span>HERE&gt;<span class="w"> </span><span class="se">\</span>
-</span><span class="hll"><span class="w">  </span>--values<span class="w"> </span>tokens.yaml
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p>Zora OSS acts as the engine of Zora Dashboard, meaning that once scans are completed,
-<strong>only the results are sent to Zora Dashboard</strong>, where they are accessible by you
-and those you have invited to your workspace.</p>
-<p><img alt="Zora Architecture Diagram" src="../assets/dashboard-arch-light.png#only-light" />
-<img alt="Zora Architecture Diagram" src="../assets/dashboard-arch-dark.png#only-dark" /></p>
-<p>Note that these results do not contain sensitive information or specific data about your cluster configuration.</p>
+<p>The remainder of this page is retained as historical documentation for previous Dashboard integrations.</p>
 
 
 
@@ -1836,10 +1676,10 @@ and those you have invited to your workspace.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

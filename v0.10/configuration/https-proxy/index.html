@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -94,6 +94,23 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains free and open source.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -1331,7 +1348,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    📊 Zora Dashboard
+    ⚠️ Zora Dashboard
   
 
     
@@ -1519,18 +1536,13 @@ You're not viewing the latest version.
 <h1 id="https-proxy">HTTPS Proxy<a class="headerlink" href="#https-proxy" title="Permanent link">&para;</a></h1>
 <p>If your network environment requires the use of a proxy, you must ensure proper configuration of the <code>httpsProxy</code>
 parameter when running <code>helm upgrade --install</code> command.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># omitted &quot;helm upgrade --install&quot; command and parameters</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># omitted "helm upgrade --install" command and parameters</span>
 
---set<span class="w"> </span><span class="nv">httpsProxy</span><span class="o">=</span><span class="s2">&quot;https://secure.proxy.tld&quot;</span>
+--set<span class="w"> </span><span class="nv">httpsProxy</span><span class="o">=</span><span class="s2">"https://secure.proxy.tld"</span>
 </code></pre></div>
 <p>Additionally, you can specify URLs that should bypass the proxy, by setting the <code>noProxy</code> parameter in comma-separated 
 list format. Note that this parameter already has a default value: <code>kubernetes.default.svc.*,127.0.0.1,localhost</code>.</p>
 <p>Configuring proxy settings enables <code>trivy</code> plugin, <code>zora-operator</code> and <code>zora-tokenrefresh</code> to use the proxy for external requests.</p>
-<p>Zora OSS installations integrated with <a href="../../dashboard/">Zora Dashboard</a> communicate with the addresses below:</p>
-<ul>
-<li><code>https://zora-dashboard.undistro.io</code> for sending scan results</li>
-<li><code>https://login.undistro.io/oauth/token</code> for refreshing authentication token</li>
-</ul>
 <p>While <a href="../../plugins/trivy/">Trivy</a> downloads vulnerability databases during scans from the following external sources:</p>
 <ul>
 <li><code>ghcr.io/aquasecurity/trivy-db</code> </li>
@@ -1679,10 +1691,10 @@ so it's important to regularly synchronize your copy if you choose to host it yo
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

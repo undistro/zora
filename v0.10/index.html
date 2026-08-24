@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
@@ -92,6 +92,23 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains free and open source.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -525,10 +542,10 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#zora-oss-vs-zora-dashboard" class="md-nav__link">
+  <a href="#zora-oss" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zora OSS vs Zora Dashboard
+        Zora OSS
       
     </span>
   </a>
@@ -1471,7 +1488,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    📊 Zora Dashboard
+    ⚠️ Zora Dashboard
   
 
     
@@ -1643,10 +1660,10 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#zora-oss-vs-zora-dashboard" class="md-nav__link">
+  <a href="#zora-oss" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zora OSS vs Zora Dashboard
+        Zora OSS
       
     </span>
   </a>
@@ -1776,11 +1793,15 @@ You're not viewing the latest version.
 industry-leading frameworks.</p>
 <p>By scanning your cluster with multiple plugins at scheduled times, 
 Zora identifies potential issues, misconfigurations, and vulnerabilities.</p>
-<h2 id="zora-oss-vs-zora-dashboard">Zora OSS vs Zora Dashboard<a class="headerlink" href="#zora-oss-vs-zora-dashboard" title="Permanent link">&para;</a></h2>
+<h2 id="zora-oss">Zora OSS<a class="headerlink" href="#zora-oss" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/undistro/zora" target="_blank">Zora OSS is open-source</a>, available under Apache 2.0 license,
-and can be used either as standalone tool or integrated with <a href="dashboard/">Zora Dashboard</a>, 
-a SaaS platform which centralize all your clusters providing a full experience. 
-Please refer to <a href="dashboard/">Zora Dashboard page</a> for more details.</p>
+and runs in your Kubernetes cluster. Scan results remain available as Kubernetes resources and can be queried with
+<code>kubectl</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Zora Dashboard discontinued</p>
+<p>Zora Dashboard was discontinued on August 24, 2026. This change applies only to the Dashboard;
+Zora OSS remains free and open source. No action is required for Zora OSS installations.</p>
+</div>
 <h2 id="key-features">Key features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <h4 id="multi-plugin-architecture"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4 8H2.5a1 1 0 0 0-1 1v5.25a.75.75 0 0 1-1.5 0V9a2.5 2.5 0 0 1 2.5-2.5H4V5.133a1.75 1.75 0 0 1 1.533-1.737l2.831-.353.76-.913c.332-.4.825-.63 1.344-.63h.782c.966 0 1.75.784 1.75 1.75V4h2.25a.75.75 0 0 1 0 1.5H13v4h2.25a.75.75 0 0 1 0 1.5H13v.75a1.75 1.75 0 0 1-1.75 1.75h-.782c-.519 0-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75 1.75 0 0 1 4 9.867Zm6.276-4.91-.95 1.14a.75.75 0 0 1-.483.265l-3.124.39a.25.25 0 0 0-.219.248v4.734c0 .126.094.233.219.249l3.124.39a.75.75 0 0 1 .483.264l.95 1.14a.25.25 0 0 0 .192.09h.782a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25h-.782a.25.25 0 0 0-.192.09"/></svg></span> Multi-plugin architecture<a class="headerlink" href="#multi-plugin-architecture" title="Permanent link">&para;</a></h4>
 <p>Zora seamlessly integrates open-source tools like 
@@ -1809,11 +1830,12 @@ where both scan and plugin configurations, as well as the results (misconfigurat
 are managed in CRDs (Custom Resource Definitions).</p>
 <p><img alt="Zora architecture diagram" loading="lazy" src="assets/oss-arch-light.png#only-light" />
 <img alt="Zora architecture diagram" loading="lazy" src="assets/oss-arch-dark.png#only-dark" /></p>
-<div class="admonition note">
-<p class="admonition-title">Zora Dashboard</p>
-<p>When a Zora OSS installation is integrated with Zora Dashboard, 
-scan results are automatically sent to Zora Dashboard SaaS by <code>zora-operator</code>.</p>
-<p>Check out <a href="dashboard/#architecture">Zora Dashboard architecture</a> for more details.</p>
+<div class="admonition tip">
+<p class="admonition-title">View scan results</p>
+<p>Scan results are stored in your cluster and can be queried with <code>kubectl</code>, for example:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>vulnerabilities<span class="w"> </span>-n<span class="w"> </span>zora-system
+kubectl<span class="w"> </span>get<span class="w"> </span>misconfigurations<span class="w"> </span>-n<span class="w"> </span>zora-system
+</code></pre></div>
 </div>
 <h2 id="zora-origins">Zora origins<a class="headerlink" href="#zora-origins" title="Permanent link">&para;</a></h2>
 <p>In the early days of the cloud native era, <a href="https://en.wikipedia.org/wiki/Borg" target="_blank">Borg</a> 
@@ -1942,10 +1964,10 @@ scan your clusters looking for misconfigurations and vulnerabilities.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer", "announce.dismiss"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

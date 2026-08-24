@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -94,6 +94,23 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains free and open source.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -1468,7 +1485,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    📊 Zora Dashboard
+    ⚠️ Zora Dashboard
   
 
     
@@ -1795,29 +1812,24 @@ where the <code>zora-operator</code> deployment is created and scans are automat
 helm<span class="w"> </span>repo<span class="w"> </span>update<span class="w"> </span>undistro
 helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>undistro/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.10.8<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.10.9<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--wait<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>zora<span class="w"> </span>oci://ghcr.io/undistro/helm-charts/zora<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>zora-system<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.10.8<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--version<span class="w"> </span><span class="m">0</span>.10.9<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--wait<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">  </span>--set<span class="w"> </span><span class="nv">clusterName</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 </div>
 </div>
 </div>
 <p>This command will install or upgrade Zora in <code>zora-system</code> namespace, creating the namespace if it doesn't already exist.</p>
-<div class="admonition info">
-<p class="admonition-title">Zora OSS + Zora Dashboard</p>
-<p>To integrate your Zora OSS installation with Zora Dashboard, you need to authenticate with the authorization server and provide <code>saas.workspaceID</code> parameter in installation command.
-For more information, please refer to <a href="../../dashboard/#getting-started">this page</a>.</p>
-</div>
 <p>With the following commands, you can verify if Zora has been successfully installed and retrieve installation notes:</p>
 <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span>zora-system
 helm<span class="w"> </span>get<span class="w"> </span>notes<span class="w"> </span>zora<span class="w"> </span>-n<span class="w"> </span>zora-system
@@ -1844,8 +1856,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>vulnerabilities<span c
 Additionally, details about vulnerabilities, such as <code>publishedDate</code> and <code>lastModifiedDate</code>, have been included 
 to offer a clearer understanding of your cluster's security posture.</p>
 <h4 id="full-integration-with-zora-dashboard">Full Integration with Zora Dashboard<a class="headerlink" href="#full-integration-with-zora-dashboard" title="Permanent link">&para;</a></h4>
-<p>Zora 0.8 introduces the integration of Vulnerability Reports with the Zora Dashboard.
-Now, alongside misconfigurations, you can centrally explore images and vulnerabilities across your clusters.</p>
+<p>This historical release note describes an integration that is no longer available. Zora Dashboard was
+discontinued on August 24, 2026; Zora OSS installations continue to store reports in the cluster.</p>
 <h3 id="migration-guide">Migration guide<a class="headerlink" href="#migration-guide" title="Permanent link">&para;</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Version 0.7 or earlier</p>
@@ -1861,7 +1873,7 @@ for essential information and considerations to ensure a smooth transition.</p>
 </code></pre></div>
 <p>By design, <a href="https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations" target="_blank">Helm doesn't upgrade or delete CRDs</a>.
 You can permanently delete Zora CRDs and any remaining associated resources from your cluster, using the following command.</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>crd<span class="w"> </span>-o<span class="o">=</span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>--color<span class="o">=</span>never<span class="w"> </span><span class="s1">&#39;zora.undistro.io&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>kubectl<span class="w"> </span>delete
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>crd<span class="w"> </span>-o<span class="o">=</span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>--color<span class="o">=</span>never<span class="w"> </span><span class="s1">'zora.undistro.io'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>kubectl<span class="w"> </span>delete
 </code></pre></div>
 <p>You can also delete the <code>zora-system</code> namespace using the command below.</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>zora-system
@@ -1996,10 +2008,10 @@ You can permanently delete Zora CRDs and any remaining associated resources from
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

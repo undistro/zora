@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -92,6 +92,23 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  Zora Dashboard was discontinued on August 24, 2026. Zora OSS remains free and open source.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -1310,7 +1327,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    📊 Zora Dashboard
+    ⚠️ Zora Dashboard
   
 
     
@@ -1622,7 +1639,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.10.8" src="https://img.shields.io/badge/Version-0.10.8-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.8" src="https://img.shields.io/badge/AppVersion-v0.10.8-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.10.9" src="https://img.shields.io/badge/Version-0.10.9-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.9" src="https://img.shields.io/badge/AppVersion-v0.10.9-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1630,10 +1647,10 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.10.8 \</span>
+<span class="go">  --version 0.10.9 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
-<span class="go">  --set clusterName=&quot;$(kubectl config current-context)&quot;</span>
+<span class="go">  --set clusterName="$(kubectl config current-context)"</span>
 </code></pre></div>
 <p>These commands deploy Zora on the Kubernetes cluster with the default configuration.</p>
 <p>The <a href="#parameters">Parameters</a> section lists the available parameters that can be configured during installation.</p>
@@ -1696,31 +1713,7 @@ You're not viewing the latest version.
 <td>saas.workspaceID</td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Your SaaS workspace ID</td>
-</tr>
-<tr>
-<td>saas.server</td>
-<td>string</td>
-<td><code>"https://zora-dashboard.undistro.io"</code></td>
-<td>SaaS server URL</td>
-</tr>
-<tr>
-<td>saas.installURL</td>
-<td>string</td>
-<td><code>"{{.Values.saas.server}}/zora/api/v1alpha1/workspaces/{{.Values.saas.workspaceID}}/helmreleases"</code></td>
-<td>SaaS URL template to notify installation</td>
-</tr>
-<tr>
-<td>hooks.install.image.repository</td>
-<td>string</td>
-<td><code>"curlimages/curl"</code></td>
-<td>Post-install hook image repository</td>
-</tr>
-<tr>
-<td>hooks.install.image.tag</td>
-<td>string</td>
-<td><code>"8.7.1"</code></td>
-<td>Post-install hook image tag</td>
+<td>Deprecated: Zora Dashboard workspace ID. The Dashboard integration was discontinued on August 24, 2026.</td>
 </tr>
 <tr>
 <td>hooks.delete.image.repository</td>
@@ -2109,7 +2102,7 @@ You're not viewing the latest version.
 <tr>
 <td>scan.plugins.trivy.image.tag</td>
 <td>float</td>
-<td><code>0.67</code></td>
+<td><code>0.74</code></td>
 <td>trivy plugin image tag</td>
 </tr>
 <tr>
@@ -2292,126 +2285,6 @@ You're not viewing the latest version.
 <td><code>true</code> for upgrades</td>
 <td>Specifies whether CRDs should be updated by operator at startup</td>
 </tr>
-<tr>
-<td>tokenRefresh.image.repository</td>
-<td>string</td>
-<td><code>"ghcr.io/undistro/zora/tokenrefresh"</code></td>
-<td>tokenrefresh image repository</td>
-</tr>
-<tr>
-<td>tokenRefresh.image.tag</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>Overrides the image tag whose default is the chart appVersion</td>
-</tr>
-<tr>
-<td>tokenRefresh.image.pullPolicy</td>
-<td>string</td>
-<td><code>"IfNotPresent"</code></td>
-<td>Image pull policy</td>
-</tr>
-<tr>
-<td>tokenRefresh.rbac.create</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Specifies whether Roles and RoleBindings should be created</td>
-</tr>
-<tr>
-<td>tokenRefresh.rbac.serviceAccount.create</td>
-<td>bool</td>
-<td><code>true</code></td>
-<td>Specifies whether a service account should be created</td>
-</tr>
-<tr>
-<td>tokenRefresh.rbac.serviceAccount.annotations</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Annotations to be added to service account</td>
-</tr>
-<tr>
-<td>tokenRefresh.rbac.serviceAccount.name</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</td>
-</tr>
-<tr>
-<td>tokenRefresh.minRefreshTime</td>
-<td>string</td>
-<td><code>"1m"</code></td>
-<td>Minimum time to wait before checking for token refresh</td>
-</tr>
-<tr>
-<td>tokenRefresh.refreshThreshold</td>
-<td>string</td>
-<td><code>"2h"</code></td>
-<td>Threshold relative to the token expiry timestamp, after which a token can be refreshed.</td>
-</tr>
-<tr>
-<td>tokenRefresh.nodeSelector</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node">Node selection</a> to constrain a Pod to only be able to run on particular Node(s)</td>
-</tr>
-<tr>
-<td>tokenRefresh.tolerations</td>
-<td>list</td>
-<td><code>[]</code></td>
-<td><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">Tolerations</a> for pod assignment</td>
-</tr>
-<tr>
-<td>tokenRefresh.affinity</td>
-<td>object</td>
-<td><code>{}</code></td>
-<td>Map of node/pod <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration">affinities</a></td>
-</tr>
-<tr>
-<td>tokenRefresh.podAnnotations</td>
-<td>object</td>
-<td><code>{"kubectl.kubernetes.io/default-container":"manager"}</code></td>
-<td>Annotations to be added to pods</td>
-</tr>
-<tr>
-<td>tokenRefresh.podSecurityContext</td>
-<td>object</td>
-<td><code>{"runAsNonRoot":true}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the pod</td>
-</tr>
-<tr>
-<td>tokenRefresh.securityContext</td>
-<td>object</td>
-<td><code>{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}</code></td>
-<td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to <code>manager</code> container</td>
-</tr>
-<tr>
-<td>zoraauth.domain</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The domain associated with the tokens</td>
-</tr>
-<tr>
-<td>zoraauth.clientId</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The client id associated with the tokens</td>
-</tr>
-<tr>
-<td>zoraauth.accessToken</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The access token authorizing access to the SaaS API server</td>
-</tr>
-<tr>
-<td>zoraauth.tokenType</td>
-<td>string</td>
-<td><code>"Bearer"</code></td>
-<td>The type of the access token</td>
-</tr>
-<tr>
-<td>zoraauth.refreshToken</td>
-<td>string</td>
-<td><code>""</code></td>
-<td>The refresh token for obtaining a new access token</td>
-</tr>
 </tbody>
 </table>
 <p>Specify each parameter using the <code>--set key=value[,key=value]</code> argument to <code>helm install</code>. For example,</p>
@@ -2538,10 +2411,10 @@ You're not viewing the latest version.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.action.edit", "content.action.view", "content.code.copy", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.footer", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
