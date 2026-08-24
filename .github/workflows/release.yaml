@@ -12,9 +12,7 @@ permissions:
 env:
   CHARTS_REPOSITORY_PATH: charts.undistro.io
   CHART_PATH: charts/zora
-  COMMIT_MESSAGE: "update zora chart"
-  GIT_USER: "undistrobot"
-  GIT_EMAIL: "undistro@getupcloud.com"
+  COMMIT_MESSAGE: "chore(chart): sync Zora Helm chart"
 
 jobs:
   docker:
@@ -57,13 +55,22 @@ jobs:
         with:
           path: main
 
+      - name: generate charts app token
+        id: charts-app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CHARTS_APP_ID }}
+          private-key: ${{ secrets.CHARTS_APP_PRIVATE_KEY }}
+          owner: undistro
+          repositories: helm-charts
+
       - name: checkout charts
         uses: actions/checkout@v7
         with:
           repository: undistro/helm-charts
           ref: main
           fetch-depth: 1
-          token: ${{ secrets.BOT_TOKEN }} # GITHUB_TOKEN is scoped to the current repository, so we need a PAT to checkout a different repository and commit on it.
+          token: ${{ steps.charts-app-token.outputs.token }}
           path: ${{ env.CHARTS_REPOSITORY_PATH }}
 
       - name: sync
@@ -71,10 +78,15 @@ jobs:
 
       - name: commit and push
         working-directory: ${{ env.CHARTS_REPOSITORY_PATH }}
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          git config --global user.email "$GIT_EMAIL"
-          git config --global user.name "$GIT_USER"
-          git add $CHART_PATH
-          git status
-          git diff-index --quiet HEAD || git commit -m "$COMMIT_MESSAGE"
-          git push -u origin HEAD:main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$CHART_PATH"
+          if git diff --cached --quiet; then
+            echo "No chart changes to commit."
+            exit 0
+          fi
+          git commit -m "$COMMIT_MESSAGE for $RELEASE_TAG"
+          git push origin HEAD:main
