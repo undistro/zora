@@ -72,10 +72,15 @@ operator:
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod
   podSecurityContext:
     runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   # -- [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container
   securityContext:
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
   metricsService:
     # -- Type of metrics service
     type: ClusterIP
@@ -167,6 +172,16 @@ scan:
         requests:
           cpu: 10m
           memory: 64Mi
+      # -- Security context applied to the marvin, worker and checks containers
+      securityContext:
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
       # -- Annotations added to the marvin pods
       podAnnotations: {}
       image:
@@ -214,6 +229,16 @@ scan:
         requests:
           cpu: 10m
           memory: 64Mi
+      # -- Security context applied to the trivy, worker and checks containers
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        privileged: false
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
       # -- Annotations added to the trivy pods
       podAnnotations: {}
       image:
@@ -290,6 +315,15 @@ scan:
         requests:
           cpu: 10m
           memory: 64Mi
+      # -- Security context applied to the popeye, worker and checks containers
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
       # -- Annotations added to the popeye pods
       podAnnotations: {}
       image:

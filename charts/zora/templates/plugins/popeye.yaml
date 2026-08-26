@@ -69,8 +69,7 @@ spec:
     {{- toYaml . | nindent 4}}
   {{- end }}
   securityContext:
-    runAsNonRoot: true
-    allowPrivilegeEscalation: false
+    {{- toYaml .Values.scan.plugins.popeye.securityContext | nindent 4 }}
   {{- if .Values.scan.plugins.popeye.podAnnotations }}
   annotations:
     {{- toYaml .Values.scan.plugins.popeye.podAnnotations | nindent 4 }}

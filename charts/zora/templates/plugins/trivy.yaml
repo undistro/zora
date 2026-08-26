@@ -55,9 +55,7 @@ spec:
   {{- end }}
   mountCustomChecksVolume: false
   securityContext:
-    runAsNonRoot: true
-    allowPrivilegeEscalation: false
-    privileged: false
+    {{- toYaml .Values.scan.plugins.trivy.securityContext | nindent 4 }}
   {{- with .Values.scan.plugins.trivy.envFrom }}
   envFrom:
     {{- toYaml . | nindent 4}}
