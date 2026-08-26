@@ -230,10 +230,7 @@ func (r *CronJobMutator) workerContainer() corev1.Container {
 		Resources:       r.Plugin.Spec.WorkerResourcesOrDefault(),
 		VolumeMounts:    commonVolumeMounts,
 		ImagePullPolicy: corev1.PullIfNotPresent,
-		SecurityContext: &corev1.SecurityContext{
-			RunAsNonRoot:             pointer.Bool(true),
-			AllowPrivilegeEscalation: pointer.Bool(false),
-		},
+		SecurityContext: r.pluginSecurityContext(),
 	}
 }
 
@@ -276,11 +273,28 @@ func (r *CronJobMutator) initContainer() corev1.Container {
 		VolumeMounts:    []corev1.VolumeMount{customChecksVolume},
 		ImagePullPolicy: corev1.PullPolicy(r.KubexnsPullPolicy),
 		Resources:       r.Plugin.Spec.WorkerResourcesOrDefault(),
-		SecurityContext: &corev1.SecurityContext{
+		SecurityContext: r.pluginSecurityContext(),
+	}
+}
+
+// pluginSecurityContext returns a copy of the Plugin security context for
+// containers created by the operator. Keep a safe default for Plugin objects
+// created outside the Helm chart, which may not set securityContext.
+func (r *CronJobMutator) pluginSecurityContext() *corev1.SecurityContext {
+	if r.Plugin.Spec.SecurityContext == nil {
+		return &corev1.SecurityContext{
 			RunAsNonRoot:             pointer.Bool(true),
 			AllowPrivilegeEscalation: pointer.Bool(false),
-		},
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: corev1.SeccompProfileTypeRuntimeDefault,
+			},
+		}
 	}
+
+	return r.Plugin.Spec.SecurityContext.DeepCopy()
 }
 
 // pluginEnv returns a list of environment variables to set in the Plugin container

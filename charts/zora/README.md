@@ -1,6 +1,6 @@
 # Zora Helm Chart
 
-![Version: 0.10.9](https://img.shields.io/badge/Version-0.10.9-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.10.9](https://img.shields.io/badge/AppVersion-v0.10.9-informational?style=flat-square&color=3CA9DD)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square&color=3CA9DD) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square&color=3CA9DD) ![AppVersion: v0.11.0](https://img.shields.io/badge/AppVersion-v0.11.0-informational?style=flat-square&color=3CA9DD)
 
 A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.
 
@@ -13,7 +13,7 @@ helm repo add undistro https://charts.undistro.io --force-update
 helm repo update undistro
 helm upgrade --install zora undistro/zora \
   -n zora-system \
-  --version 0.10.9 \
+  --version 0.11.0 \
   --create-namespace \
   --wait \
   --set clusterName="$(kubectl config current-context)"
@@ -71,8 +71,8 @@ The following table lists the configurable parameters of the Zora chart and thei
 | operator.rbac.serviceAccount.annotations | object | `{}` | Annotations to be added to service account |
 | operator.rbac.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | operator.podAnnotations | object | `{"kubectl.kubernetes.io/default-container":"manager"}` | Annotations to be added to pods |
-| operator.podSecurityContext | object | `{"runAsNonRoot":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
-| operator.securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
+| operator.podSecurityContext | object | `{"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to the pod |
+| operator.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context) to add to `manager` container |
 | operator.metricsService.type | string | `"ClusterIP"` | Type of metrics service |
 | operator.metricsService.port | int | `8443` | Port of metrics service |
 | operator.serviceMonitor.enabled | bool | `false` | Specifies whether a Prometheus `ServiceMonitor` should be enabled |
@@ -101,6 +101,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.marvin.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.plugins.marvin.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `marvin` container |
 | scan.plugins.marvin.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
+| scan.plugins.marvin.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context applied to the marvin, worker and checks containers |
 | scan.plugins.marvin.podAnnotations | object | `{}` | Annotations added to the marvin pods |
 | scan.plugins.marvin.image.repository | string | `"ghcr.io/undistro/marvin"` | marvin plugin image repository |
 | scan.plugins.marvin.image.tag | string | `"v0.2"` | marvin plugin image tag |
@@ -117,6 +118,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.trivy.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.plugins.trivy.resources | object | `{"limits":{"cpu":"1500m","memory":"4096Mi"},"requests":{"cpu":"500m","memory":"2048Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `trivy` container |
 | scan.plugins.trivy.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
+| scan.plugins.trivy.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context applied to the trivy, worker and checks containers |
 | scan.plugins.trivy.podAnnotations | object | `{}` | Annotations added to the trivy pods |
 | scan.plugins.trivy.image.repository | string | `"ghcr.io/undistro/trivy"` | trivy plugin image repository |
 | scan.plugins.trivy.image.tag | float | `0.74` | trivy plugin image tag |
@@ -137,6 +139,7 @@ The following table lists the configurable parameters of the Zora chart and thei
 | scan.plugins.popeye.affinity | object | `{}` | Map of node/pod [affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) |
 | scan.plugins.popeye.resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `popeye` container |
 | scan.plugins.popeye.workerResources | object | `{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers) to add to `worker` container |
+| scan.plugins.popeye.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context applied to the popeye, worker and checks containers |
 | scan.plugins.popeye.podAnnotations | object | `{}` | Annotations added to the popeye pods |
 | scan.plugins.popeye.image.repository | string | `"ghcr.io/undistro/popeye"` | popeye plugin image repository |
 | scan.plugins.popeye.image.tag | float | `0.21` | popeye plugin image tag |

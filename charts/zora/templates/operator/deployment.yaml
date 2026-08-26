@@ -37,7 +37,7 @@ data:
   ca.crt: {{ b64enc $ca.Cert }}
 {{- end }}
 ---
-{{- end -}}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
