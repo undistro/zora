@@ -1639,7 +1639,7 @@ You're not viewing the latest version.
 
 
 <h1 id="zora-helm-chart">Zora Helm Chart<a class="headerlink" href="#zora-helm-chart" title="Permanent link">&para;</a></h1>
-<p><img alt="Version: 0.10.9" src="https://img.shields.io/badge/Version-0.10.9-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.10.9" src="https://img.shields.io/badge/AppVersion-v0.10.9-informational?style=flat-square&amp;color=3CA9DD" /></p>
+<p><img alt="Version: 0.11.0" src="https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="Type: application" src="https://img.shields.io/badge/Type-application-informational?style=flat-square&amp;color=3CA9DD" /> <img alt="AppVersion: v0.11.0" src="https://img.shields.io/badge/AppVersion-v0.11.0-informational?style=flat-square&amp;color=3CA9DD" /></p>
 <p>A multi-plugin solution that reports misconfigurations and vulnerabilities by scanning your cluster at scheduled times.</p>
 <h2 id="installing-the-chart">Installing the Chart<a class="headerlink" href="#installing-the-chart" title="Permanent link">&para;</a></h2>
 <p>To install the chart with the release name <code>zora</code> in <code>zora-system</code> namespace:</p>
@@ -1647,7 +1647,7 @@ You're not viewing the latest version.
 <span class="go">helm repo update undistro</span>
 <span class="go">helm upgrade --install zora undistro/zora \</span>
 <span class="go">  -n zora-system \</span>
-<span class="go">  --version 0.10.9 \</span>
+<span class="go">  --version 0.11.0 \</span>
 <span class="go">  --create-namespace \</span>
 <span class="go">  --wait \</span>
 <span class="go">  --set clusterName="$(kubectl config current-context)"</span>
@@ -1814,13 +1814,13 @@ You're not viewing the latest version.
 <tr>
 <td>operator.podSecurityContext</td>
 <td>object</td>
-<td><code>{"runAsNonRoot":true}</code></td>
+<td><code>{"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}</code></td>
 <td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to the pod</td>
 </tr>
 <tr>
 <td>operator.securityContext</td>
 <td>object</td>
-<td><code>{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true}</code></td>
+<td><code>{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}</code></td>
 <td><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context">Security Context</a> to add to <code>manager</code> container</td>
 </tr>
 <tr>
@@ -1992,6 +1992,12 @@ You're not viewing the latest version.
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>worker</code> container</td>
 </tr>
 <tr>
+<td>scan.plugins.marvin.securityContext</td>
+<td>object</td>
+<td><code>{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}</code></td>
+<td>Security context applied to the marvin, worker and checks containers</td>
+</tr>
+<tr>
 <td>scan.plugins.marvin.podAnnotations</td>
 <td>object</td>
 <td><code>{}</code></td>
@@ -2086,6 +2092,12 @@ You're not viewing the latest version.
 <td>object</td>
 <td><code>{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>worker</code> container</td>
+</tr>
+<tr>
+<td>scan.plugins.trivy.securityContext</td>
+<td>object</td>
+<td><code>{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}</code></td>
+<td>Security context applied to the trivy, worker and checks containers</td>
 </tr>
 <tr>
 <td>scan.plugins.trivy.podAnnotations</td>
@@ -2206,6 +2218,12 @@ You're not viewing the latest version.
 <td>object</td>
 <td><code>{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}</code></td>
 <td><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers">Resources</a> to add to <code>worker</code> container</td>
+</tr>
+<tr>
+<td>scan.plugins.popeye.securityContext</td>
+<td>object</td>
+<td><code>{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}</code></td>
+<td>Security context applied to the popeye, worker and checks containers</td>
 </tr>
 <tr>
 <td>scan.plugins.popeye.podAnnotations</td>
