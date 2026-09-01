@@ -12,6 +12,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      kubernetes-dependencies:
+        patterns:
+          - "k8s.io/*"
+          - "sigs.k8s.io/*"
   - package-ecosystem: docker
     directory: /cmd
     schedule:
